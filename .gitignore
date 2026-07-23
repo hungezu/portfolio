@@ -1,0 +1,10 @@
+node_modules/
+.DS_Store
+dist/
+.next/
+.wrangler/
+*.tgz
+tmp/
+public/portfolio.html
+public/assets/
+output/
