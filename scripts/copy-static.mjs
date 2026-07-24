@@ -5,12 +5,17 @@ const root = process.cwd();
 const publicDirectory = resolve(root, "public");
 
 await mkdir(publicDirectory, { recursive: true });
-await cp(resolve(root, "index.html"), resolve(publicDirectory, "portfolio.html"));
+await rm(resolve(publicDirectory, "portfolio.html"), { force: true });
 await rm(resolve(publicDirectory, "assets"), { recursive: true, force: true });
-await mkdir(resolve(publicDirectory, "assets", "visual"), { recursive: true });
+await mkdir(resolve(publicDirectory, "assets"), { recursive: true });
 await cp(
   resolve(root, "assets", "visual"),
   resolve(publicDirectory, "assets", "visual"),
+  { recursive: true },
+);
+await cp(
+  resolve(root, "assets", "portfolio"),
+  resolve(publicDirectory, "assets", "portfolio"),
   { recursive: true },
 );
 await cp(
@@ -19,7 +24,12 @@ await cp(
 );
 await mkdir(resolve(publicDirectory, "assets", "projects"), { recursive: true });
 await cp(
-  resolve(root, "output", "portfolio-images"),
+  resolve(root, "assets", "projects", "covers"),
+  resolve(publicDirectory, "assets", "projects", "covers"),
+  { recursive: true },
+);
+await cp(
+  resolve(root, "assets", "projects", "portfolio-images"),
   resolve(publicDirectory, "assets", "projects", "portfolio-images"),
   { recursive: true },
 );

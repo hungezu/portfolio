@@ -604,7 +604,7 @@ def build_contact() -> Path:
     d.text((M + 48, 980), "UI/UX & INTERACTION DESIGNER", font=F["latin_b"], fill=CYAN)
     d.text((M + 48, 1060), "E  2146953949@qq.com", font=F["meta"], fill=TEXT)
     d.text((M + 48, 1122), "T  136 7011 5683", font=F["meta"], fill=TEXT)
-    d.text((M + 48, 1184), "W  Jiahao0517", font=F["meta"], fill=TEXT)
+    d.text((M + 48, 1184), "W  Hungezu", font=F["meta"], fill=TEXT)
 
     qr = asset("visual/wechat-qr.png")
     if qr.exists():
