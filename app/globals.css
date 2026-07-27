@@ -1046,38 +1046,12 @@ a.contact-item:focus-visible {
   font-size: 12px;
 }
 
-.case-cover {
-  overflow: hidden;
-  border-radius: var(--card-radius);
-  background: #e7e7e5;
-}
-
-.case-cover img {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-
-.case-outcomes {
-  display: grid;
-  width: min(calc(100% - 64px), 1440px);
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin: 0 auto;
-  padding: 88px 0;
-}
-
-.case-outcomes p {
-  padding-top: 18px;
-  border-top: 1px solid var(--line-strong);
-  font-size: 14px;
-}
-
 .case-gallery {
   display: grid;
   width: min(calc(100% - 64px), 1600px);
   gap: clamp(32px, 6vw, 96px);
   margin: 0 auto;
+  padding-top: 24px;
   padding-bottom: 120px;
 }
 
@@ -1440,16 +1414,10 @@ a.contact-item:focus-visible {
     font-size: clamp(2.7rem, 14vw, 4.5rem);
   }
 
-  .case-outcomes {
-    width: calc(100% - 32px);
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 56px 0;
-  }
-
   .case-gallery {
     width: calc(100% - 32px);
     gap: 32px;
+    padding-top: 8px;
     padding-bottom: 72px;
   }
 

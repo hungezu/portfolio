@@ -161,11 +161,11 @@ function BackToTop() {
 function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const reduce = useReducedMotion();
   const links = [
-    ["首页", "#top"],
-    ["核心能力", "#ability"],
-    ["项目", "#work"],
-    ["经历", "#experience"],
-    ["联系", "#contact"],
+    ["首页", "/portfolio#top"],
+    ["核心能力", "/portfolio#ability"],
+    ["项目", "/portfolio#work"],
+    ["经历", "/portfolio#experience"],
+    ["联系", "/portfolio#contact"],
   ];
 
   useEffect(() => {
@@ -667,20 +667,7 @@ function ProjectPage({ project }: { project: Project }) {
               <span>{project.period}</span>
             </div>
           </motion.div>
-          <motion.div
-            className="case-cover"
-            initial={reduce ? false : { opacity: 0, scale: 1.025 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, ease }}
-          >
-            <ImageWithFallback src={project.cover} alt={`${project.title}项目封面`} />
-          </motion.div>
         </header>
-        <section className="case-outcomes">
-          {project.outcomes.map((outcome) => (
-            <p key={outcome}>{outcome}</p>
-          ))}
-        </section>
         <section className="case-gallery" aria-label={`${project.title}项目图片`}>
           {project.gallery.map((image, index) => (
             <motion.figure

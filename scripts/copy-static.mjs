@@ -34,12 +34,22 @@ await cp(
   { recursive: true },
 );
 await cp(
-  resolve(root, "output", "zhaocai-smart-case-refined"),
+  resolve(root, "assets", "projects", "zhaocai-smart"),
   resolve(publicDirectory, "assets", "projects", "zhaocai-smart"),
   { recursive: true },
 );
 await cp(
   resolve(root, "assets", "projects", "tax-cloud"),
   resolve(publicDirectory, "assets", "projects", "tax-cloud"),
+  { recursive: true },
+);
+await cp(
+  resolve(root, "assets", "projects", "energy-tax"),
+  resolve(publicDirectory, "assets", "projects", "energy-tax"),
+  { recursive: true },
+);
+await cp(
+  resolve(root, "assets", "projects", "data-visualisation"),
+  resolve(publicDirectory, "assets", "projects", "data-visualisation"),
   { recursive: true },
 );
