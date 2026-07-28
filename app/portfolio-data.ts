@@ -26,6 +26,19 @@ export type Experience = {
   details: string[];
 };
 
+declare global {
+  interface Window {
+    __PORTFOLIO_BASE__?: string;
+  }
+}
+
+export function publicAsset(path: string) {
+  const base =
+    typeof window === "undefined" ? "" : window.__PORTFOLIO_BASE__ ?? "";
+
+  return base && path.startsWith("/") ? `${base}${path}` : path;
+}
+
 export const abilities: Ability[] = [
   {
     name: "复杂系统处理",
@@ -65,7 +78,7 @@ export const abilities: Ability[] = [
   },
 ];
 
-export const projects: Project[] = [
+const projectData: Project[] = [
   {
     slug: "gkx",
     title: "国科信门户体系",
@@ -221,6 +234,12 @@ export const projects: Project[] = [
     ],
   },
 ];
+
+export const projects: Project[] = projectData.map((project) => ({
+  ...project,
+  cover: publicAsset(project.cover),
+  gallery: project.gallery.map(publicAsset),
+}));
 
 export const experiences: Experience[] = [
   {

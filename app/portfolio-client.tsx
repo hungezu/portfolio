@@ -20,7 +20,13 @@ import {
   useRef,
   useState,
 } from "react";
-import { abilities, experiences, projects, type Project } from "./portfolio-data";
+import {
+  abilities,
+  experiences,
+  projects,
+  publicAsset,
+  type Project,
+} from "./portfolio-data";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const videoUrl =
@@ -42,7 +48,7 @@ function BrandMark() {
     <span className="brand-lockup" aria-label="李家豪作品集">
       <img
         className="brand-logo"
-        src="/assets/visual/hj-logo.png"
+        src={publicAsset("/assets/visual/hj-logo.png")}
         alt=""
         aria-hidden="true"
       />
@@ -83,13 +89,13 @@ function SiteNav({
       transition={{ duration: 0.8, ease }}
     >
       <div className="nav-left">
-        <a className="brand-link" href="/portfolio#top">
+        <a className="brand-link" href="/portfolio/#top">
           <BrandMark />
         </a>
       </div>
       <div className="nav-right">
         {projectView ? (
-          <a className="nav-pill nav-back" href="/portfolio#work">
+          <a className="nav-pill nav-back" href="/portfolio/#work">
             <span className="nav-circle nav-circle-dark">
               <ArrowLeft size={12} strokeWidth={2.6} />
             </span>
@@ -161,11 +167,11 @@ function BackToTop() {
 function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const reduce = useReducedMotion();
   const links = [
-    ["首页", "/portfolio#top"],
-    ["核心能力", "/portfolio#ability"],
-    ["项目", "/portfolio#work"],
-    ["经历", "/portfolio#experience"],
-    ["联系", "/portfolio#contact"],
+    ["首页", "/portfolio/#top"],
+    ["核心能力", "/portfolio/#ability"],
+    ["项目", "/portfolio/#work"],
+    ["经历", "/portfolio/#experience"],
+    ["联系", "/portfolio/#contact"],
   ];
 
   useEffect(() => {
@@ -254,7 +260,7 @@ function Hero() {
           loop
           playsInline
           preload="metadata"
-          poster="/assets/visual/digital-mountain-hero.png"
+          poster={publicAsset("/assets/visual/digital-mountain-hero.png")}
         >
           <source src={videoUrl} type="video/mp4" />
         </video>
@@ -482,7 +488,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <h3>{project.title}</h3>
         <p className="project-summary">{project.summary}</p>
         <p className="project-role">{project.role}</p>
-        <a className="project-link" href={`/portfolio/project/${project.slug}`}>
+        <a
+          className="project-link"
+          href={`/portfolio/project/${project.slug}/`}
+        >
           查看项目案例
           <ArrowUpRight size={16} strokeWidth={1.8} />
         </a>
@@ -610,7 +619,7 @@ function ContactSection() {
 
           <figure className="contact-qr">
             <img
-              src="/assets/visual/wechat-qr-hungezu.jpg"
+              src={publicAsset("/assets/visual/wechat-qr-hungezu.jpg")}
               alt="李家豪的微信二维码"
             />
             <figcaption>微信扫码联系</figcaption>
@@ -686,7 +695,7 @@ function ProjectPage({ project }: { project: Project }) {
           ))}
         </section>
         <footer className="case-footer">
-          <a href="/portfolio#work">
+          <a href="/portfolio/#work">
             <ArrowLeft size={16} strokeWidth={1.8} />
             返回项目列表
           </a>
@@ -704,7 +713,7 @@ export default function PortfolioClient({ projectSlug }: { projectSlug?: string 
     return (
       <main className="not-found">
         <h1>该项目暂时无法访问</h1>
-        <a className="button button-primary" href="/portfolio#work">
+        <a className="button button-primary" href="/portfolio/#work">
           返回作品列表
         </a>
       </main>
