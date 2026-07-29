@@ -245,6 +245,7 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
 
 function Hero() {
   const reduce = useReducedMotion();
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   return (
     <section className="hero" id="top">
@@ -254,13 +255,25 @@ function Hero() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.8, ease }}
       >
+        <picture className="hero-poster" aria-hidden="true">
+          <source
+            media="(max-width: 767px)"
+            srcSet={publicAsset("/assets/visual/hero-poster-mobile.jpg")}
+          />
+          <img
+            src={publicAsset("/assets/visual/hero-poster-desktop.jpg")}
+            alt=""
+          />
+        </picture>
         <video
+          className={isVideoPlaying ? "is-playing" : ""}
           autoPlay
           muted
           loop
           playsInline
           preload="metadata"
-          poster={publicAsset("/assets/visual/digital-mountain-hero.png")}
+          onPlaying={() => setIsVideoPlaying(true)}
+          onError={() => setIsVideoPlaying(false)}
         >
           <source src={videoUrl} type="video/mp4" />
         </video>
@@ -326,7 +339,13 @@ function AbilitySection() {
   const current = abilities[active];
 
   useEffect(() => {
-    if (reduce || paused) return;
+    if (
+      reduce ||
+      paused ||
+      window.matchMedia("(max-width: 767px)").matches
+    ) {
+      return;
+    }
     const timer = window.setInterval(() => {
       setActive((index) => (index + 1) % abilities.length);
     }, 4200);
@@ -390,26 +409,69 @@ function AbilitySection() {
                   );
                 })}
               </svg>
-              {abilities.map((ability, index) => {
-                const angle = (-90 + index * (360 / abilities.length)) * (Math.PI / 180);
-                const x = 50 + Math.cos(angle) * 40.5;
-                const y = 50 + Math.sin(angle) * 40.5;
-                return (
-                <button
-                  key={ability.name}
-                  type="button"
-                  aria-pressed={active === index}
-                  className={`radar-axis-button${active === index ? " is-active" : ""}`}
-                  style={{ left: `${x}%`, top: `${y}%` }}
-                  onClick={() => setActive(index)}
-                >
-                  {ability.name}
-                </button>
-                );
-              })}
+              <div
+                className="ability-switcher"
+                role="tablist"
+                aria-label="核心能力切换"
+              >
+                {abilities.map((ability, index) => {
+                  const angle = (-90 + index * (360 / abilities.length)) * (Math.PI / 180);
+                  const x = 50 + Math.cos(angle) * 40.5;
+                  const y = 50 + Math.sin(angle) * 40.5;
+                  return (
+                    <button
+                      key={ability.name}
+                      id={`ability-tab-${index}`}
+                      type="button"
+                      role="tab"
+                      aria-selected={active === index}
+                      aria-controls="ability-panel"
+                      tabIndex={active === index ? 0 : -1}
+                      className={`radar-axis-button${active === index ? " is-active" : ""}`}
+                      style={{ left: `${x}%`, top: `${y}%` }}
+                      onClick={() => {
+                        setActive(index);
+                        setPaused(true);
+                      }}
+                      onKeyDown={(event) => {
+                        const directions: Record<string, number> = {
+                          ArrowRight: 1,
+                          ArrowDown: 1,
+                          ArrowLeft: -1,
+                          ArrowUp: -1,
+                        };
+                        const direction = directions[event.key];
+                        if (!direction && event.key !== "Home" && event.key !== "End") {
+                          return;
+                        }
+                        event.preventDefault();
+                        const next =
+                          event.key === "Home"
+                            ? 0
+                            : event.key === "End"
+                              ? abilities.length - 1
+                              : (index + direction + abilities.length) % abilities.length;
+                        setActive(next);
+                        setPaused(true);
+                        window.requestAnimationFrame(() => {
+                          document.getElementById(`ability-tab-${next}`)?.focus();
+                        });
+                      }}
+                    >
+                      {ability.name}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-          <div className="ability-detail" role="tabpanel" aria-live="polite">
+          <div
+            className="ability-detail"
+            id="ability-panel"
+            role="tabpanel"
+            aria-labelledby={`ability-tab-${active}`}
+            aria-live="polite"
+          >
             <AnimatePresence mode="wait">
               <motion.div
                 key={current.name}
@@ -452,6 +514,9 @@ function ImageWithFallback({
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const cardRef = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
+  const titleId = `project-${project.slug}-title`;
+  const summaryId = `project-${project.slug}-summary`;
+  const roleId = `project-${project.slug}-role`;
   const { scrollYProgress } = useScroll({
     target: cardRef,
     offset: ["start start", "end start"],
@@ -483,27 +548,31 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       className="project-card"
       style={{ scale, opacity, filter, zIndex: index + 1 }}
     >
-      <div className="project-copy">
-        <p className="project-type">{project.type}</p>
-        <h3>{project.title}</h3>
-        <p className="project-summary">{project.summary}</p>
-        <p className="project-role">{project.role}</p>
-        <a
-          className="project-link"
-          href={`/portfolio/project/${project.slug}/`}
-        >
-          查看项目案例
-          <ArrowUpRight size={16} strokeWidth={1.8} />
-        </a>
-      </div>
-      <div className="project-visual">
-        <ImageWithFallback
-          src={project.cover}
-          alt={`${project.title}项目封面`}
-          loading={index < 2 ? "eager" : "lazy"}
-          style={{ objectPosition: project.coverPosition ?? "center" }}
-        />
-      </div>
+      <a
+        className="project-card-link"
+        href={`/portfolio/project/${project.slug}/`}
+        aria-labelledby={titleId}
+        aria-describedby={`${summaryId} ${roleId}`}
+      >
+        <div className="project-copy">
+          <p className="project-type">{project.type}</p>
+          <h3 id={titleId}>{project.title}</h3>
+          <p className="project-summary" id={summaryId}>{project.summary}</p>
+          <p className="project-role" id={roleId}>{project.role}</p>
+          <span className="project-link" aria-hidden="true">
+            查看项目案例
+            <ArrowUpRight size={16} strokeWidth={1.8} />
+          </span>
+        </div>
+        <div className="project-visual">
+          <ImageWithFallback
+            src={project.cover}
+            alt={`${project.title}项目封面`}
+            loading={index < 2 ? "eager" : "lazy"}
+            style={{ objectPosition: project.coverPosition ?? "center" }}
+          />
+        </div>
+      </a>
     </motion.article>
   );
 }

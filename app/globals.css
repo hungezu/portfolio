@@ -325,11 +325,34 @@ p {
   transform-origin: center;
 }
 
+.hero-poster,
+.hero-poster img {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-poster {
+  display: block;
+}
+
+.hero-poster img {
+  object-fit: cover;
+  filter: grayscale(1) contrast(0.96) brightness(1.08);
+}
+
 .hero-media video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
   filter: grayscale(1) contrast(0.96) brightness(1.08);
+  transition: opacity 480ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-media video.is-playing {
+  opacity: 1;
 }
 
 .hero-video-wash {
@@ -526,6 +549,11 @@ p {
   overflow: visible;
 }
 
+.ability-switcher {
+  position: absolute;
+  inset: 0;
+}
+
 .radar-grid,
 .radar-axis {
   fill: none;
@@ -649,9 +677,7 @@ p {
 .project-card {
   position: sticky;
   top: clamp(100px, 12vh, 124px);
-  display: grid;
   height: clamp(620px, 72dvh, 760px);
-  grid-template-columns: minmax(300px, 0.82fr) minmax(0, 1.5fr);
   overflow: hidden;
   isolation: isolate;
   border: 0;
@@ -662,6 +688,18 @@ p {
     0 4px 8px -6px rgba(17, 17, 17, 0.14);
   transform-origin: top center;
   transition: box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-card-link {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: minmax(300px, 0.82fr) minmax(0, 1.5fr);
+}
+
+.project-card-link:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: -4px;
 }
 
 .project-card::after {
@@ -734,7 +772,7 @@ p {
   transition: transform 180ms ease;
 }
 
-.project-link:hover svg {
+.project-card:is(:hover, :focus-within) .project-link svg {
   transform: translate(2px, -2px);
 }
 
@@ -754,7 +792,7 @@ p {
   transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.project-card:hover .project-visual img {
+.project-card:is(:hover, :focus-within) .project-visual img {
   transform: scale(1.018);
 }
 
@@ -1108,8 +1146,11 @@ a.contact-item:focus-visible {
     max-width: 760px;
   }
 
-  .project-card {
+  .project-card-link {
     grid-template-columns: minmax(260px, 0.76fr) minmax(0, 1.24fr);
+  }
+
+  .project-card {
     min-height: 70dvh;
   }
 
@@ -1194,6 +1235,7 @@ a.contact-item:focus-visible {
     inset: 10%;
   }
 
+  .hero-poster img,
   .hero-media video {
     object-fit: cover;
   }
@@ -1261,43 +1303,103 @@ a.contact-item:focus-visible {
     font-size: clamp(1.55rem, 7.5vw, 2.25rem);
   }
 
+  .ability-section {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+
+  .ability-section .section-intro {
+    margin-bottom: 26px;
+  }
+
   .ability-layout {
-    gap: 48px;
+    gap: 18px;
   }
 
   .ability-radar {
-    margin-top: -24px;
+    display: grid;
+    width: 100%;
+    grid-template-columns: minmax(112px, 0.78fr) minmax(0, 1.22fr);
+    gap: 12px;
+    align-items: center;
+    margin: -8px 0 0;
+  }
+
+  .ability-radar svg {
+    width: min(42vw, 164px);
+    justify-self: center;
+  }
+
+  .ability-switcher {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
   }
 
   .radar-axis-button {
-    min-width: 64px;
-    min-height: 28px;
-    padding: 6px 8px;
-    font-size: 10px;
+    position: static;
+    min-width: 0;
+    min-height: 44px;
+    padding: 7px 6px;
+    transform: none;
+    backdrop-filter: none;
+    font-size: 11px;
+    line-height: 1.25;
+    white-space: normal;
+    box-shadow: none;
+  }
+
+  .radar-axis-button:hover,
+  .radar-axis-button:focus-visible,
+  .radar-axis-button.is-active {
+    transform: none;
   }
 
   .ability-detail {
-    min-height: 410px;
+    min-height: 0;
+    padding-top: 0;
+  }
+
+  .ability-kicker {
+    margin-bottom: 10px;
+  }
+
+  .ability-detail h3 {
+    font-size: clamp(1.75rem, 8.2vw, 2.35rem);
   }
 
   .ability-detail p {
-    font-size: 16px;
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.55;
   }
 
   .ability-detail ul {
-    grid-template-columns: 1fr;
-    margin-top: 30px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 14px;
+    margin-top: 16px;
+  }
+
+  .ability-detail li {
+    padding: 10px 0;
+    font-size: 12px;
   }
 
   .project-card {
     position: relative;
     top: auto;
     height: auto;
-    grid-template-columns: 1fr;
     min-height: auto;
     filter: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .project-card-link {
+    display: flex;
+    height: auto;
+    flex-direction: column;
   }
 
   .project-stack {
@@ -1316,18 +1418,38 @@ a.contact-item:focus-visible {
   }
 
   .project-copy {
-    min-height: 430px;
-    padding: 28px 24px 34px;
+    min-height: 0;
+    padding: 20px 20px 22px;
     border-right: 0;
   }
 
   .project-visual {
-    min-height: 330px;
-    margin: 0 12px 12px;
+    order: -1;
+    aspect-ratio: 1672 / 941;
+    min-height: 0;
+    margin: 8px 8px 0;
   }
 
   .project-copy h3 {
-    font-size: clamp(2.25rem, 11vw, 3.8rem);
+    max-width: none;
+    margin-top: 12px;
+    font-size: clamp(1.75rem, 8.5vw, 2.35rem);
+    line-height: 1.08;
+  }
+
+  .project-summary {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .project-role {
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  .project-link {
+    margin-top: 14px;
   }
 
   .experience-item > button {

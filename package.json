@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext dev",
     "build": "node scripts/copy-static.mjs && WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
-    "build:pages": "node scripts/copy-static.mjs && vite build --config vite.github-pages.config.ts && node scripts/prepare-github-pages.mjs",
+    "build:pages": "node scripts/copy-static.mjs && vite build --config vite.github-pages.config.ts && node scripts/prepare-github-pages.mjs && node scripts/sync-github-pages-root.mjs",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start"
   },
   "dependencies": {

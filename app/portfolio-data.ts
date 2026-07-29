@@ -90,7 +90,7 @@ const projectData: Project[] = [
     role: "主导 UX/UI 设计 · 风格定制 · 规范审核 · 组件体系",
     cover: "/assets/projects/covers/gkx-cover.jpg",
     coverPosition: "center",
-    gallery: ["/assets/visual/digital-mountain-hero.png"],
+    gallery: ["/assets/projects/covers/gkx-cover.jpg"],
     galleryAlt: ["国科信门户体系项目视觉封面"],
   },
   {
