@@ -33,6 +33,8 @@ const heroVideoAsset = "/assets/visual/hero-motion.mp4";
 const heroMobileVideoAsset = "/assets/visual/hero-motion-mobile.mp4";
 const radarValues = [0.9, 0.9, 0.9, 0.9, 0.9, 0.9];
 const radarRadius = 166;
+const radarButtonOrbitX = 54;
+const radarButtonOrbitY = 50;
 
 function getRadarPoints(values: number[], radius = radarRadius) {
   const center = 240;
@@ -432,7 +434,7 @@ function AbilitySection() {
                   return (
                     <line
                       key={ability.name}
-                      className={`radar-axis${active === index ? " is-active" : ""}`}
+                      className="radar-axis"
                       x1="240"
                       y1="240"
                       x2={x}
@@ -470,8 +472,8 @@ function AbilitySection() {
               >
                 {abilities.map((ability, index) => {
                   const angle = (-90 + index * (360 / abilities.length)) * (Math.PI / 180);
-                  const x = 50 + Math.cos(angle) * 40.5;
-                  const y = 50 + Math.sin(angle) * 40.5;
+                  const x = 50 + Math.cos(angle) * radarButtonOrbitX;
+                  const y = 50 + Math.sin(angle) * radarButtonOrbitY;
                   return (
                     <button
                       key={ability.name}

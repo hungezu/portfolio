@@ -632,11 +632,6 @@ p {
   transform: translate(-50%, -50%) scale(1.04);
 }
 
-.radar-axis.is-active {
-  stroke: rgba(17, 17, 17, 0.72);
-  stroke-width: 1.8;
-}
-
 .ability-detail {
   min-height: 390px;
   padding-top: 24px;
