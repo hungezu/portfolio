@@ -3,8 +3,8 @@
 import {
   AnimatePresence,
   motion,
+  useMotionValue,
   useReducedMotion,
-  useScroll,
   useTransform,
 } from "motion/react";
 import {
@@ -29,11 +29,12 @@ import {
 } from "./portfolio-data";
 
 const ease = [0.16, 1, 0.3, 1] as const;
-const videoUrl =
-  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260508_215831_c6a8989c-d716-4d8d-8745-e972a2eec711.mp4";
+const heroVideoAsset = "/assets/visual/hero-motion.mp4";
+const heroMobileVideoAsset = "/assets/visual/hero-motion-mobile.mp4";
 const radarValues = [0.9, 0.9, 0.9, 0.9, 0.9, 0.9];
+const radarRadius = 166;
 
-function getRadarPoints(values: number[], radius = 132) {
+function getRadarPoints(values: number[], radius = radarRadius) {
   const center = 240;
   return values
     .map((value, index) => {
@@ -246,6 +247,34 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
 function Hero() {
   const reduce = useReducedMotion();
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const tryPlay = () => {
+      video.muted = true;
+      video.defaultMuted = true;
+      void video.play()
+        .then(() => setIsVideoPlaying(true))
+        .catch(() => setIsVideoPlaying(false));
+    };
+    const resumeWhenVisible = () => {
+      if (document.visibilityState === "visible") tryPlay();
+    };
+
+    tryPlay();
+    window.addEventListener("pageshow", tryPlay);
+    document.addEventListener("visibilitychange", resumeWhenVisible);
+    window.addEventListener("touchstart", tryPlay, { passive: true, once: true });
+
+    return () => {
+      window.removeEventListener("pageshow", tryPlay);
+      document.removeEventListener("visibilitychange", resumeWhenVisible);
+      window.removeEventListener("touchstart", tryPlay);
+    };
+  }, []);
 
   return (
     <section className="hero" id="top">
@@ -266,16 +295,30 @@ function Hero() {
           />
         </picture>
         <video
+          ref={videoRef}
           className={isVideoPlaying ? "is-playing" : ""}
           autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
+          onCanPlay={(event) => {
+            event.currentTarget.muted = true;
+            event.currentTarget.defaultMuted = true;
+            void event.currentTarget.play()
+              .then(() => setIsVideoPlaying(true))
+              .catch(() => setIsVideoPlaying(false));
+          }}
           onPlaying={() => setIsVideoPlaying(true)}
+          onPause={() => setIsVideoPlaying(false)}
           onError={() => setIsVideoPlaying(false)}
         >
-          <source src={videoUrl} type="video/mp4" />
+          <source
+            media="(max-width: 767px)"
+            src={publicAsset(heroMobileVideoAsset)}
+            type="video/mp4"
+          />
+          <source src={publicAsset(heroVideoAsset)} type="video/mp4" />
         </video>
       </motion.div>
       <div className="hero-video-wash" aria-hidden="true" />
@@ -382,9 +425,18 @@ function AbilitySection() {
                 ))}
                 {abilities.map((ability, index) => {
                   const angle = (-90 + index * (360 / abilities.length)) * (Math.PI / 180);
-                  const x = 240 + Math.cos(angle) * 132;
-                  const y = 240 + Math.sin(angle) * 132;
-                  return <line key={ability.name} className="radar-axis" x1="240" y1="240" x2={x} y2={y} />;
+                  const x = 240 + Math.cos(angle) * radarRadius;
+                  const y = 240 + Math.sin(angle) * radarRadius;
+                  return (
+                    <line
+                      key={ability.name}
+                      className={`radar-axis${active === index ? " is-active" : ""}`}
+                      x1="240"
+                      y1="240"
+                      x2={x}
+                      y2={y}
+                    />
+                  );
                 })}
                 <motion.polygon
                   className="radar-shape"
@@ -395,8 +447,8 @@ function AbilitySection() {
                 />
                 {radarValues.map((value, index) => {
                   const angle = (-90 + index * (360 / radarValues.length)) * (Math.PI / 180);
-                  const x = 240 + Math.cos(angle) * 132 * value;
-                  const y = 240 + Math.sin(angle) * 132 * value;
+                  const x = 240 + Math.cos(angle) * radarRadius * value;
+                  const y = 240 + Math.sin(angle) * radarRadius * value;
                   return (
                     <motion.circle
                       key={abilities[index].name}
@@ -458,7 +510,7 @@ function AbilitySection() {
                         });
                       }}
                     >
-                      {ability.name}
+                      {ability.axisLabel}
                     </button>
                   );
                 })}
@@ -514,31 +566,76 @@ function ImageWithFallback({
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const cardRef = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
+  const fadeProgress = useMotionValue(0);
   const titleId = `project-${project.slug}-title`;
   const summaryId = `project-${project.slug}-summary`;
   const roleId = `project-${project.slug}-role`;
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ["start start", "end start"],
-  });
+
+  useEffect(() => {
+    if (reduce) {
+      fadeProgress.set(0);
+      return;
+    }
+
+    const card = cardRef.current;
+    const nextCard = card?.nextElementSibling as HTMLElement | null;
+    if (!card || !nextCard) {
+      fadeProgress.set(0);
+      return;
+    }
+
+    const documentTop = (element: HTMLElement) => {
+      let top = 0;
+      let current: HTMLElement | null = element;
+      while (current) {
+        top += current.offsetTop;
+        current = current.offsetParent as HTMLElement | null;
+      }
+      return top;
+    };
+
+    let nextCardTop = documentTop(nextCard);
+
+    const update = () => {
+      const stickyTop = Number.parseFloat(window.getComputedStyle(card).top) || 72;
+      const approachDistance = Math.min(380, Math.max(260, window.innerHeight * 0.46));
+      const start = nextCardTop - approachDistance;
+      const end = nextCardTop - stickyTop;
+      const progress = (window.scrollY - start) / Math.max(1, end - start);
+      fadeProgress.set(Math.min(1, Math.max(0, progress)));
+    };
+
+    const measure = () => {
+      nextCardTop = documentTop(nextCard);
+      update();
+    };
+
+    measure();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", measure);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", measure);
+    };
+  }, [fadeProgress, reduce]);
+
   const scale = useTransform(
-    scrollYProgress,
-    [0, 0.72, 0.98, 1],
-    [1, 1, reduce ? 1 : 0.94, reduce ? 1 : 0.94],
+    fadeProgress,
+    [0, 0.28, 1],
+    [1, 0.99, reduce ? 1 : 0.95],
   );
   const opacity = useTransform(
-    scrollYProgress,
-    [0, 0.74, 0.98, 1],
-    [1, 1, reduce ? 1 : 0.18, reduce ? 1 : 0.18],
+    fadeProgress,
+    [0, 0.2, 1],
+    [1, 0.96, reduce ? 1 : 0.2],
   );
   const filter = useTransform(
-    scrollYProgress,
-    [0, 0.72, 0.98, 1],
+    fadeProgress,
+    [0, 0.18, 1],
     [
       "blur(0px)",
-      "blur(0px)",
-      reduce ? "blur(0px)" : "blur(18px)",
-      reduce ? "blur(0px)" : "blur(18px)",
+      "blur(1px)",
+      reduce ? "blur(0px)" : "blur(16px)",
     ],
   );
 
@@ -559,10 +656,6 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           <h3 id={titleId}>{project.title}</h3>
           <p className="project-summary" id={summaryId}>{project.summary}</p>
           <p className="project-role" id={roleId}>{project.role}</p>
-          <span className="project-link" aria-hidden="true">
-            查看项目案例
-            <ArrowUpRight size={16} strokeWidth={1.8} />
-          </span>
         </div>
         <div className="project-visual">
           <ImageWithFallback
@@ -583,7 +676,7 @@ function WorkSection() {
       <div className="section-shell">
         <SectionIntro
           title="精选作品"
-          description="五组案例覆盖政企平台、金融 AI、企业财税与数据可视化。"
+          description="四组案例覆盖金融 AI、企业财税与数据可视化。"
         />
         <div className="project-stack">
           {projects.map((project, index) => (

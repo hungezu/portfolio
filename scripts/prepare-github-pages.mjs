@@ -3,7 +3,6 @@ import { resolve } from "node:path";
 
 const outputDirectory = resolve(process.cwd(), "gh-pages-dist");
 const projectSlugs = [
-  "gkx",
   "zhaocai-smart",
   "tax-cloud",
   "energy-tax",

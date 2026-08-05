@@ -1,11 +1,13 @@
 export type Ability = {
   name: string;
+  axisLabel: string;
   description: string;
   details: string[];
 };
 
 export type Project = {
   slug: string;
+  visible?: boolean;
   title: string;
   shortTitle: string;
   period: string;
@@ -42,36 +44,42 @@ export function publicAsset(path: string) {
 export const abilities: Ability[] = [
   {
     name: "复杂系统处理",
+    axisLabel: "复杂系统",
     description:
       "梳理业务规则、角色权限、数据关系与审批链路，将高复杂度需求整理为可理解、可执行的产品结构。",
     details: ["业务规则与角色关系", "权限与数据边界", "复杂流程拆解", "系统模块规划"],
   },
   {
     name: "信息架构与交互",
+    axisLabel: "信息交互",
     description:
       "围绕用户任务组织导航、表单、筛选与状态反馈，让专业用户在高密度界面中快速定位并完成操作。",
     details: ["信息架构", "任务流程", "表单与筛选", "异常与状态反馈"],
   },
   {
     name: "视觉与设计系统",
+    axisLabel: "设计系统",
     description:
       "以信息层级、栅格和组件规则建立稳定的 B 端视觉语言，支撑多页面、多角色与持续迭代。",
     details: ["信息层级与版式", "组件与状态规范", "多页面一致性", "品牌与业务适配"],
   },
   {
     name: "AI 体验设计",
+    axisLabel: "AI 体验",
     description:
       "针对 AI 产品的不确定性，设计意图澄清、过程反馈、结果解释与依据溯源，增强任务的可控性。",
     details: ["意图澄清", "处理过程反馈", "结果解释", "引用与异常提示"],
   },
   {
     name: "数据可视化",
+    axisLabel: "数据可视化",
     description:
       "围绕指标优先级、空间分布、趋势与异常组织数据视图，建立从整体态势到关键细节的阅读路径。",
     details: ["指标层级", "地图与趋势", "多维对比", "大屏场景适配"],
   },
   {
     name: "跨端交付与协作",
+    axisLabel: "跨端协作",
     description:
       "根据 Web 与 App 的使用场景组织任务，并通过规范、标注、评审与走查推动方案进入研发交付。",
     details: ["Web / App 场景", "高保真与原型", "设计评审", "开发走查"],
@@ -81,6 +89,7 @@ export const abilities: Ability[] = [
 const projectData: Project[] = [
   {
     slug: "gkx",
+    visible: false,
     title: "国科信门户体系",
     shortTitle: "国科信",
     period: "2025.11 - 至今",
@@ -235,11 +244,13 @@ const projectData: Project[] = [
   },
 ];
 
-export const projects: Project[] = projectData.map((project) => ({
-  ...project,
-  cover: publicAsset(project.cover),
-  gallery: project.gallery.map(publicAsset),
-}));
+export const projects: Project[] = projectData
+  .filter((project) => project.visible !== false)
+  .map((project) => ({
+    ...project,
+    cover: publicAsset(project.cover),
+    gallery: project.gallery.map(publicAsset),
+  }));
 
 export const experiences: Experience[] = [
   {
