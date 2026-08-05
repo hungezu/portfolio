@@ -297,7 +297,9 @@ function Hero() {
         <video
           ref={videoRef}
           className={isVideoPlaying ? "is-playing" : ""}
+          aria-hidden="true"
           autoPlay
+          disablePictureInPicture
           muted
           loop
           playsInline
@@ -415,7 +417,7 @@ function AbilitySection() {
               role="group"
               aria-label={`核心能力图，当前为${current.name}`}
             >
-              <svg viewBox="0 0 480 480" aria-hidden="true">
+              <svg viewBox="36 36 408 408" aria-hidden="true">
                 {[0.25, 0.5, 0.75, 1].map((level) => (
                   <polygon
                     key={level}
@@ -627,7 +629,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   const opacity = useTransform(
     fadeProgress,
     [0, 0.2, 1],
-    [1, 0.96, reduce ? 1 : 0.2],
+    [1, 0.96, reduce ? 1 : 0.42],
   );
   const filter = useTransform(
     fadeProgress,
@@ -635,15 +637,20 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     [
       "blur(0px)",
       "blur(1px)",
-      reduce ? "blur(0px)" : "blur(16px)",
+      reduce ? "blur(0px)" : "blur(8px)",
     ],
+  );
+  const y = useTransform(
+    fadeProgress,
+    [0, 0.24, 1],
+    [0, -3, reduce ? 0 : -12],
   );
 
   return (
     <motion.article
       ref={cardRef}
       className="project-card"
-      style={{ scale, opacity, filter, zIndex: index + 1 }}
+      style={{ scale, opacity, filter, y, zIndex: index + 1 }}
     >
       <a
         className="project-card-link"

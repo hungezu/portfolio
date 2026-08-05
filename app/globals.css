@@ -698,6 +698,7 @@ p {
   height: clamp(620px, 72dvh, 760px);
   overflow: hidden;
   isolation: isolate;
+  will-change: transform, opacity, filter;
   border: 0;
   border-radius: var(--card-radius);
   background: #fff;
@@ -1336,38 +1337,44 @@ a.contact-item:focus-visible {
   }
 
   .ability-radar {
-    position: relative;
-    display: block;
+    display: grid;
     width: 100%;
-    height: 286px;
+    min-height: 292px;
+    grid-template-columns: minmax(0, 3fr) minmax(112px, 2fr);
+    gap: clamp(12px, 4vw, 18px);
+    align-items: center;
     margin: -4px 0 0;
   }
 
   .ability-radar svg {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: min(62vw, 232px);
-    transform: translate(-50%, -50%);
+    position: static;
+    width: 100%;
+    justify-self: stretch;
+    transform: none;
   }
 
   .ability-switcher {
-    position: absolute;
-    inset: 0;
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    align-content: center;
   }
 
   .radar-axis-button {
-    position: absolute;
-    min-width: 82px;
+    position: static;
+    width: 100%;
+    min-width: 0;
     min-height: 44px;
     padding: 8px 10px;
-    transform: translate(-50%, -50%);
-    border-color: transparent;
-    background: rgba(247, 247, 245, 0.9);
+    transform: none;
+    border-color: var(--line);
+    background: rgba(255, 255, 255, 0.72);
     backdrop-filter: none;
     color: rgba(17, 17, 17, 0.7);
     font-size: 11.5px;
     line-height: 1.25;
+    text-align: left;
     white-space: normal;
     box-shadow: none;
   }
@@ -1375,7 +1382,7 @@ a.contact-item:focus-visible {
   .radar-axis-button:hover,
   .radar-axis-button:focus-visible,
   .radar-axis-button.is-active {
-    transform: translate(-50%, -50%);
+    transform: none;
   }
 
   .ability-detail {
@@ -1413,6 +1420,19 @@ a.contact-item:focus-visible {
     top: 72px;
     height: clamp(560px, calc(100svh - 112px), 640px);
     min-height: 0;
+    transform-origin: center top;
+  }
+
+  .project-card:nth-child(2) {
+    top: 80px;
+  }
+
+  .project-card:nth-child(3) {
+    top: 88px;
+  }
+
+  .project-card:nth-child(4) {
+    top: 96px;
   }
 
   .project-card-link {
