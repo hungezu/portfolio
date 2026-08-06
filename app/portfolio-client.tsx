@@ -14,6 +14,7 @@ import {
   Plus,
 } from "lucide-react";
 import {
+  type MouseEvent as ReactMouseEvent,
   type ImgHTMLAttributes,
   type ReactNode,
   useEffect,
@@ -35,6 +36,26 @@ const radarValues = [0.9, 0.9, 0.9, 0.9, 0.9, 0.9];
 const radarRadius = 166;
 const radarButtonOrbitX = 54;
 const radarButtonOrbitY = 50;
+
+function returnToProjectLocation(
+  event: ReactMouseEvent<HTMLAnchorElement>,
+) {
+  event.preventDefault();
+  let cameFromPortfolioHome = false;
+  try {
+    const referrer = new URL(document.referrer);
+    cameFromPortfolioHome =
+      referrer.origin === window.location.origin &&
+      /^\/portfolio\/?$/.test(referrer.pathname);
+  } catch {
+    cameFromPortfolioHome = false;
+  }
+  if (cameFromPortfolioHome && window.history.length > 1) {
+    window.history.back();
+    return;
+  }
+  window.location.assign("/portfolio/#work");
+}
 
 function getRadarPoints(values: number[], radius = radarRadius) {
   const center = 240;
@@ -77,9 +98,11 @@ function NavPill({
 
 function SiteNav({
   onMenu,
+  onProjectBack,
   projectView = false,
 }: {
   onMenu: () => void;
+  onProjectBack?: (event: ReactMouseEvent<HTMLAnchorElement>) => void;
   projectView?: boolean;
 }) {
   const reduce = useReducedMotion();
@@ -98,7 +121,11 @@ function SiteNav({
       </div>
       <div className="nav-right">
         {projectView ? (
-          <a className="nav-pill nav-back" href="/portfolio/#work">
+          <a
+            className="nav-pill nav-back"
+            href="/portfolio/#work"
+            onClick={onProjectBack}
+          >
             <span className="nav-circle nav-circle-dark">
               <ArrowLeft size={12} strokeWidth={2.6} />
             </span>
@@ -827,10 +854,17 @@ function HomePage() {
 function ProjectPage({ project }: { project: Project }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const reduce = useReducedMotion();
+  const handleProjectBack = (event: ReactMouseEvent<HTMLAnchorElement>) => {
+    returnToProjectLocation(event);
+  };
 
   return (
     <>
-      <SiteNav onMenu={() => setMenuOpen(true)} projectView />
+      <SiteNav
+        onMenu={() => setMenuOpen(true)}
+        onProjectBack={handleProjectBack}
+        projectView
+      />
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
       <main className="case-page">
         <header className="case-hero">
@@ -866,7 +900,7 @@ function ProjectPage({ project }: { project: Project }) {
           ))}
         </section>
         <footer className="case-footer">
-          <a href="/portfolio/#work">
+          <a href="/portfolio/#work" onClick={handleProjectBack}>
             <ArrowLeft size={16} strokeWidth={1.8} />
             返回项目列表
           </a>
