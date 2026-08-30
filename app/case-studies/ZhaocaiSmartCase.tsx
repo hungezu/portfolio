@@ -551,7 +551,6 @@ export function ZhaocaiSmartCase() {
             <div className="zc-board-actions" role="group" aria-label="看板卡片交互状态">
               <button type="button" aria-pressed={boardMode === "separate"} onClick={() => setBoardMode("separate")}>独立排列</button>
               <button type="button" aria-pressed={boardMode === "merged"} onClick={() => setBoardMode("merged")}>合并为合集</button>
-              <button type="button" disabled={boardOrder.join() === "sales,balance,deposit"} onClick={() => setBoardOrder(["sales", "balance", "deposit"])}>恢复顺序</button>
             </div>
           </header>
 
