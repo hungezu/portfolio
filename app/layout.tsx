@@ -3,13 +3,13 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "李家豪｜高级 UX/UI 设计师",
+  title: "李家豪｜AI 体验产品设计师",
   description:
-    "李家豪（Leo.li）UX/UI 设计作品集，聚焦复杂系统处理、AI 产品体验、企业财税、政企平台与数据可视化。",
+    "李家豪（Leo.li）AI 体验产品设计作品集，聚焦 AI 问答、金融智能产品、复杂系统与 AI 辅助设计工作流。",
   openGraph: {
-    title: "李家豪｜高级 UX/UI 设计师",
+    title: "李家豪｜AI 体验产品设计师",
     description:
-      "高级 UX/UI 设计师，具备复杂系统处理与 AI 产品体验经验。",
+      "AI 体验产品设计师，关注可理解、可控、可信的智能产品体验。",
     images: ["/og.png"],
   },
 };

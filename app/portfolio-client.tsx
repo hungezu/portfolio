@@ -461,11 +461,11 @@ function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8, ease }}
           >
-            <span className="hero-name">I’m 李家豪</span>
+            <span className="hero-name">李家豪</span>
             <span className="hero-statement">
-              把复杂系统理清，
+              AI 体验产品设计师，
               <br />
-              让产品更好用，也更可信。
+              让复杂智能变得清晰、可控。
             </span>
           </motion.h1>
           <motion.div
@@ -543,7 +543,7 @@ function AbilitySection() {
       <div className="section-shell">
         <SectionIntro
           title="核心能力"
-          description="从业务规则与任务路径出发，覆盖系统规划、AI 交互与跨端交付。"
+          description="一方面设计可理解、可控的 AI 产品体验，另一方面用 AI 完成原型验证、界面探索与 Markdown 规范维护；同时保留复杂系统、数据表达和跨端交付能力。"
         />
         <div className="ability-layout">
           <div
@@ -864,7 +864,7 @@ function WorkSection() {
       <div className="section-shell">
         <SectionIntro
           title="精选作品"
-          description="四组案例覆盖金融 AI、企业财税与数据可视化。"
+          description="首个案例聚焦金融 AI 问数，展示意图澄清、过程反馈、结果解释与看板沉淀；其余案例补充复杂 B 端系统与数据设计能力。"
         />
         <div className="project-stack">
           {projects.map((project, index) => (
@@ -884,7 +884,7 @@ function ExperienceSection() {
       <div className="section-shell">
         <SectionIntro
           title="工作经历"
-          description="经历覆盖工具型产品、企业财税、政企系统与 AI 产品体验。"
+          description="经历覆盖 AI 问答、金融智能产品、AI 陪伴硬件，以及复杂企业系统与跨端交付。"
         />
         <div className="experience-list">
           {experiences.map((experience, index) => {

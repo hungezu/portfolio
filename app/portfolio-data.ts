@@ -43,6 +43,20 @@ export function publicAsset(path: string) {
 
 export const abilities: Ability[] = [
   {
+    name: "AI 体验设计",
+    axisLabel: "AI 体验",
+    description:
+      "针对 AI 产品的不确定性，设计意图澄清、过程反馈、结果解释与依据溯源，增强任务的可控性。",
+    details: ["意图澄清", "处理过程反馈", "结果解释", "引用与异常提示"],
+  },
+  {
+    name: "AI 工作流设计",
+    axisLabel: "AI 工作流",
+    description:
+      "将 AI 融入从需求梳理到设计交付的完整流程，用于快速搭建交互原型、辅助界面设计，并通过 Markdown 持续沉淀和维护设计规范，提升方案验证与协作效率。",
+    details: ["AI 原型快速验证", "界面方案辅助设计", "设计规范 Markdown 化", "设计资产持续维护"],
+  },
+  {
     name: "复杂系统处理",
     axisLabel: "复杂系统",
     description:
@@ -50,25 +64,11 @@ export const abilities: Ability[] = [
     details: ["业务规则与角色关系", "权限与数据边界", "复杂流程拆解", "系统模块规划"],
   },
   {
-    name: "信息架构与交互",
-    axisLabel: "信息交互",
-    description:
-      "围绕用户任务组织导航、表单、筛选与状态反馈，让专业用户在高密度界面中快速定位并完成操作。",
-    details: ["信息架构", "任务流程", "表单与筛选", "异常与状态反馈"],
-  },
-  {
     name: "视觉与设计系统",
     axisLabel: "设计系统",
     description:
       "以信息层级、栅格和组件规则建立稳定的 B 端视觉语言，支撑多页面、多角色与持续迭代。",
     details: ["信息层级与版式", "组件与状态规范", "多页面一致性", "品牌与业务适配"],
-  },
-  {
-    name: "AI 体验设计",
-    axisLabel: "AI 体验",
-    description:
-      "针对 AI 产品的不确定性，设计意图澄清、过程反馈、结果解释与依据溯源，增强任务的可控性。",
-    details: ["意图澄清", "处理过程反馈", "结果解释", "引用与异常提示"],
   },
   {
     name: "数据可视化",
@@ -107,7 +107,7 @@ const projectData: Project[] = [
     title: "招财 Smart",
     shortTitle: "招财 Smart",
     period: "2025.07 - 2025.11",
-    type: "财务智能问数 / Web",
+    type: "AI 财务智能问数 / Web",
     summary:
       "面向企业经营分析场景，构建“提问—澄清—执行—解释—沉淀”的智能问数链路，并统一图表、表格、引用与代码等输出规范。",
     role: "UX/UI 设计 · 语义澄清 · 过程反馈 · 看板交互 · 输出规范",

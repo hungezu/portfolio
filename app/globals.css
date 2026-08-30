@@ -1,6 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
 
 :root {
+  /* Typography scale: caption 12, meta 13, label 14, body 16, lead 18. */
+  --type-caption: 12px;
+  --type-meta: 13px;
+  --type-label: 14px;
+  --type-body: 16px;
+  --type-lead: 18px;
   --page: #f7f7f5;
   --surface: #ffffff;
   --surface-soft: #f0f0ee;
@@ -93,7 +99,9 @@ body {
   background: var(--page);
   color: var(--ink);
   font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: var(--type-body);
   font-weight: 400;
+  line-height: 1.5;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -217,7 +225,7 @@ p {
 }
 
 .brand-name {
-  font-size: 15px;
+  font-size: var(--type-label);
   font-weight: 600;
   letter-spacing: -0.02em;
 }
@@ -296,7 +304,7 @@ p {
 }
 
 .nav-pill > span:last-child {
-  font-size: 11px;
+  font-size: var(--type-caption);
   font-weight: 500;
   white-space: nowrap;
 }
@@ -347,7 +355,7 @@ p {
 .menu-contact {
   display: flex;
   gap: 28px;
-  font-size: 12px;
+  font-size: var(--type-caption);
   color: var(--muted);
 }
 
@@ -481,7 +489,7 @@ p {
   align-items: center;
   gap: 12px;
   color: var(--ink);
-  font-size: 13px;
+  font-size: var(--type-meta);
   font-weight: 500;
   transition: gap 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -517,7 +525,7 @@ p {
   gap: 8px;
   padding: 0 19px;
   border-radius: var(--pill);
-  font-size: 13px;
+  font-size: var(--type-meta);
   font-weight: 500;
   white-space: nowrap;
   transition: transform 180ms ease, background 180ms ease, color 180ms ease;
@@ -581,7 +589,7 @@ p {
 .contact-copy p {
   max-width: 54ch;
   color: var(--muted);
-  font-size: clamp(15px, 1.4vw, 19px);
+  font-size: clamp(var(--type-body), 1.4vw, 19px);
   line-height: 1.65;
 }
 
@@ -665,7 +673,7 @@ p {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
   color: var(--muted);
-  font-size: 12px;
+  font-size: var(--type-caption);
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
@@ -695,7 +703,7 @@ p {
   display: block;
   margin-bottom: 20px;
   color: var(--quiet);
-  font-size: 11px;
+  font-size: var(--type-caption);
   font-weight: 500;
   letter-spacing: 0.12em;
 }
@@ -728,7 +736,7 @@ p {
   padding: 15px 0;
   border-top: 1px solid var(--line);
   color: rgba(17, 17, 17, 0.78);
-  font-size: 13px;
+  font-size: var(--type-meta);
 }
 
 .work-section {
@@ -855,7 +863,7 @@ html.portfolio-transitioning body {
 
 .project-type {
   color: var(--quiet);
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 
 .project-copy h3 {
@@ -872,14 +880,14 @@ html.portfolio-transitioning body {
   max-width: 38ch;
   margin-top: 26px;
   color: var(--muted);
-  font-size: 15px;
+  font-size: var(--type-body);
   line-height: 1.65;
 }
 
 .project-role {
   margin-top: 18px;
   color: var(--quiet);
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 
 .project-link {
@@ -890,7 +898,7 @@ html.portfolio-transitioning body {
   margin-top: 34px;
   padding-bottom: 5px;
   border-bottom: 1px solid var(--ink);
-  font-size: 13px;
+  font-size: var(--type-meta);
   font-weight: 500;
   opacity: 0.72;
   transition:
@@ -1019,7 +1027,7 @@ html.portfolio-transitioning body {
   min-height: 360px;
   background: #e9e9e7;
   color: var(--quiet);
-  font-size: 13px;
+  font-size: var(--type-meta);
 }
 
 .experience-list {
@@ -1062,7 +1070,7 @@ html.portfolio-transitioning body {
 .experience-role,
 .experience-period {
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--type-meta);
 }
 
 .experience-toggle {
@@ -1115,7 +1123,7 @@ html.portfolio-transitioning body {
 
 .experience-panel p {
   color: var(--muted);
-  font-size: 15px;
+  font-size: var(--type-body);
   line-height: 1.7;
 }
 
@@ -1129,7 +1137,7 @@ html.portfolio-transitioning body {
 
 .experience-panel li {
   color: rgba(17, 17, 17, 0.78);
-  font-size: 14px;
+  font-size: var(--type-label);
   line-height: 1.65;
 }
 
@@ -1233,14 +1241,14 @@ a.contact-item:focus-visible {
 
 .contact-label {
   color: var(--quiet);
-  font-size: 11px;
+  font-size: var(--type-caption);
   letter-spacing: 0.04em;
 }
 
 .contact-value {
   min-width: 0;
   overflow-wrap: anywhere;
-  font-size: 14px;
+  font-size: var(--type-label);
 }
 
 .contact-qr {
@@ -1264,7 +1272,7 @@ a.contact-item:focus-visible {
 
 .contact-qr figcaption {
   color: var(--quiet);
-  font-size: 10px;
+  font-size: var(--type-caption);
   line-height: 1.3;
   text-align: center;
 }
@@ -1276,7 +1284,7 @@ a.contact-item:focus-visible {
   padding-top: 24px;
   border-top: 1px solid var(--line);
   color: var(--quiet);
-  font-size: 12px;
+  font-size: var(--type-caption);
   text-align: center;
 }
 
@@ -1302,7 +1310,7 @@ a.contact-item:focus-visible {
 .case-heading > p {
   grid-column: 1 / -1;
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--type-meta);
 }
 
 .case-heading h1 {
@@ -1350,13 +1358,13 @@ a.contact-item:focus-visible {
 .case-summary p {
   max-width: 48ch;
   color: var(--muted);
-  font-size: 16px;
+  font-size: var(--type-body);
   line-height: 1.65;
 }
 
 .case-summary span {
   color: var(--quiet);
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 
 .case-gallery {
@@ -1429,7 +1437,7 @@ a.contact-item:focus-visible {
   justify-content: flex-end;
   padding: 11px 12px;
   color: var(--zsc-muted);
-  font-size: 11px;
+  font-size: var(--type-caption);
   line-height: 1;
   white-space: nowrap;
   transition:
@@ -1592,7 +1600,7 @@ a.contact-item:focus-visible {
   border-radius: var(--pill);
   background: var(--zsc-accent-soft);
   color: var(--zsc-accent);
-  font-size: 12px;
+  font-size: var(--type-caption);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -1692,7 +1700,7 @@ a.contact-item:focus-visible {
 .zsc-original-product figcaption {
   margin-top: 10px;
   color: var(--zsc-muted);
-  font-size: 11px;
+  font-size: var(--type-caption);
   text-align: right;
 }
 
@@ -1767,14 +1775,14 @@ a.contact-item:focus-visible {
   border-radius: 50%;
   background: var(--page);
   color: var(--zsc-accent);
-  font-size: 11px;
+  font-size: var(--type-caption);
   font-weight: 600;
 }
 
 .zsc-flow h3 {
   min-height: 2.4em;
   margin-top: 20px;
-  font-size: 15px;
+  font-size: var(--type-body);
   line-height: 1.2;
 }
 
@@ -1788,7 +1796,7 @@ a.contact-item:focus-visible {
   padding: 10px 0;
   border-top: 1px solid var(--zsc-line);
   color: #616477;
-  font-size: 12px;
+  font-size: var(--type-caption);
   text-align: left;
 }
 
@@ -1879,7 +1887,7 @@ a.contact-item:focus-visible {
 
 .zsc-challenge-grid p {
   margin-top: 18px;
-  font-size: 14px;
+  font-size: var(--type-label);
 }
 
 .zsc-demo-tabs {
@@ -1894,7 +1902,7 @@ a.contact-item:focus-visible {
   border-radius: var(--pill);
   background: #f2f1f7;
   color: #6a6d78;
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 
 .zsc-demo-tabs button.is-active {
@@ -1935,7 +1943,7 @@ a.contact-item:focus-visible {
   border-radius: 12px 12px 3px 12px;
   background: #eeeaff;
   color: #4f466e !important;
-  font-size: 13px !important;
+  font-size: var(--type-meta) !important;
 }
 
 .zsc-thinking-state,
@@ -1945,7 +1953,7 @@ a.contact-item:focus-visible {
   gap: 12px;
   margin-top: 32px;
   color: var(--zsc-muted);
-  font-size: 13px;
+  font-size: var(--type-meta);
 }
 
 .zsc-thinking-state > span,
@@ -1996,7 +2004,7 @@ a.contact-item:focus-visible {
 .zsc-result-card span,
 .zsc-process-output small {
   color: var(--zsc-muted);
-  font-size: 11px;
+  font-size: var(--type-caption);
 }
 
 .zsc-result-card span {
@@ -2005,7 +2013,7 @@ a.contact-item:focus-visible {
 }
 
 .zsc-result-card p {
-  font-size: 13px;
+  font-size: var(--type-meta);
 }
 
 .zsc-strategy-copy {
@@ -2023,7 +2031,7 @@ a.contact-item:focus-visible {
 .zsc-strategy-copy h4 {
   margin: 0;
   color: var(--zsc-ink);
-  font-size: 15px;
+  font-size: var(--type-body);
   font-weight: 600;
 }
 
@@ -2047,7 +2055,7 @@ a.contact-item:focus-visible {
 
 .zsc-process-steps button span {
   color: #8d909d;
-  font-size: 10px;
+  font-size: var(--type-caption);
 }
 
 .zsc-process-steps button.is-active {
@@ -2076,7 +2084,7 @@ a.contact-item:focus-visible {
 
 .zsc-process-message p {
   margin-top: 5px;
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 
 .zsc-data-table {
@@ -2098,7 +2106,7 @@ a.contact-item:focus-visible {
   padding: 11px 14px;
   border-bottom: 1px solid var(--zsc-line);
   color: #656875;
-  font-size: 11px;
+  font-size: var(--type-caption);
 }
 
 .zsc-data-table > div:last-child {
@@ -2152,7 +2160,7 @@ a.contact-item:focus-visible {
   border-radius: var(--pill);
   background: #fff;
   color: var(--zsc-muted);
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 
 .zsc-board-demo > header button[aria-pressed="true"] {
@@ -2168,7 +2176,7 @@ a.contact-item:focus-visible {
   border-radius: var(--pill);
   background: #f2f1f6;
   color: var(--zsc-muted);
-  font-size: 11px;
+  font-size: var(--type-caption);
   transition:
     background 180ms ease,
     color 180ms ease;
@@ -2205,7 +2213,7 @@ a.contact-item:focus-visible {
   justify-content: space-between;
   gap: 16px;
   min-height: 30px;
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 
 .zsc-card-menu {
@@ -2332,7 +2340,7 @@ a.contact-item:focus-visible {
 .zsc-kpi-card small,
 .zsc-board-demo > p {
   color: var(--zsc-muted);
-  font-size: 11px;
+  font-size: var(--type-caption);
 }
 
 .zsc-board-demo > p {
@@ -2377,7 +2385,7 @@ a.contact-item:focus-visible {
 .zsc-markdown-tabs > strong {
   padding: 18px;
   color: var(--zsc-ink);
-  font-size: 18px;
+  font-size: var(--type-lead);
   text-transform: uppercase;
 }
 
@@ -2414,7 +2422,7 @@ a.contact-item:focus-visible {
 
 .zsc-markdown-preview > header span {
   color: var(--zsc-muted);
-  font-size: 11px;
+  font-size: var(--type-caption);
 }
 
 .zsc-markdown-preview > header strong {
@@ -2435,13 +2443,13 @@ a.contact-item:focus-visible {
 .zsc-preview-query span,
 .zsc-preview-footer span {
   color: var(--zsc-muted);
-  font-size: 11px;
+  font-size: var(--type-caption);
   white-space: nowrap;
 }
 
 .zsc-preview-query p {
   color: #4e4f5a;
-  font-size: 12px;
+  font-size: var(--type-caption);
   text-align: right;
 }
 
@@ -2477,7 +2485,7 @@ a.contact-item:focus-visible {
   width: 100%;
   min-width: 620px;
   border-collapse: collapse;
-  font-size: 12px;
+  font-size: var(--type-caption);
 }
 
 .zsc-markdown-preview th,
@@ -2507,7 +2515,7 @@ a.contact-item:focus-visible {
   display: block;
   margin-top: 18px;
   color: var(--zsc-muted);
-  font-size: 12px;
+  font-size: var(--type-caption);
   font-style: normal;
 }
 
@@ -2538,7 +2546,7 @@ a.contact-item:focus-visible {
   border-radius: 12px;
   background: #202024;
   color: #f5f5f7;
-  font-size: 13px;
+  font-size: var(--type-meta);
   line-height: 1.7;
 }
 
@@ -2574,7 +2582,7 @@ a.contact-item:focus-visible {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: var(--type-meta);
 }
 
 .not-found {
@@ -2822,7 +2830,7 @@ a.contact-item:focus-visible {
     background: rgba(255, 255, 255, 0.72);
     backdrop-filter: none;
     color: rgba(17, 17, 17, 0.7);
-    font-size: 11.5px;
+    font-size: var(--type-caption);
     line-height: 1.25;
     text-align: left;
     white-space: nowrap;
@@ -2850,7 +2858,7 @@ a.contact-item:focus-visible {
 
   .ability-detail p {
     margin-top: 10px;
-    font-size: 14px;
+    font-size: var(--type-label);
     line-height: 1.52;
   }
 
@@ -2862,7 +2870,7 @@ a.contact-item:focus-visible {
 
   .ability-detail li {
     padding: 9px 0;
-    font-size: 11.5px;
+    font-size: var(--type-caption);
   }
 
   .project-card {
@@ -2939,19 +2947,19 @@ a.contact-item:focus-visible {
 
   .project-summary {
     margin-top: 14px;
-    font-size: 13px;
+    font-size: var(--type-meta);
     line-height: 1.5;
   }
 
   .project-role {
     margin-top: 12px;
-    font-size: 11px;
+    font-size: var(--type-caption);
     line-height: 1.45;
   }
 
   .project-link {
     margin-top: 20px;
-    font-size: 12px;
+    font-size: var(--type-caption);
   }
 
   .experience-item > button {
@@ -3002,7 +3010,7 @@ a.contact-item:focus-visible {
   }
 
   .contact-value {
-    font-size: 13px;
+    font-size: var(--type-meta);
   }
 
   .contact-qr {
@@ -3017,7 +3025,7 @@ a.contact-item:focus-visible {
   }
 
   .contact-qr figcaption {
-    font-size: 9px;
+    font-size: var(--type-caption);
   }
 
   .contact-copyright {
@@ -3345,7 +3353,7 @@ a.contact-item:focus-visible {
 
   .zsc-markdown-tabs > strong {
     padding: 14px 10px;
-    font-size: 14px;
+    font-size: var(--type-label);
   }
 
   .zsc-markdown-tabs button {
