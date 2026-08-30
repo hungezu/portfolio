@@ -7,17 +7,16 @@ import {
   useReducedMotion,
   useTransform,
 } from "motion/react";
-import {
-  ArrowLeft,
-  ArrowUp,
-  ArrowUpRight,
-  Plus,
-} from "lucide-react";
+import ArrowLeft from "lucide-react/dist/esm/icons/arrow-left.mjs";
+import ArrowUp from "lucide-react/dist/esm/icons/arrow-up.mjs";
+import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
+import Plus from "lucide-react/dist/esm/icons/plus.mjs";
 import {
   type MouseEvent as ReactMouseEvent,
   type ImgHTMLAttributes,
   type ReactNode,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -28,6 +27,7 @@ import {
   publicAsset,
   type Project,
 } from "./portfolio-data";
+import { ZhaocaiSmartCase } from "./case-studies/ZhaocaiSmartCase";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const heroVideoAsset = "/assets/visual/hero-motion.mp4";
@@ -37,24 +37,57 @@ const radarRadius = 166;
 const radarButtonOrbitX = 54;
 const radarButtonOrbitY = 50;
 
-function returnToProjectLocation(
+function openProjectFromPortfolio(
   event: ReactMouseEvent<HTMLAnchorElement>,
+  slug: string,
 ) {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
   event.preventDefault();
-  let cameFromPortfolioHome = false;
-  try {
-    const referrer = new URL(document.referrer);
-    cameFromPortfolioHome =
-      referrer.origin === window.location.origin &&
-      /^\/portfolio\/?$/.test(referrer.pathname);
-  } catch {
-    cameFromPortfolioHome = false;
-  }
-  if (cameFromPortfolioHome && window.history.length > 1) {
-    window.history.back();
+  const returnY = Math.max(0, Math.round(window.scrollY));
+  const destination = `/portfolio/project/${slug}/?from=portfolio&returnProject=${encodeURIComponent(slug)}&returnY=${returnY}`;
+  const card = event.currentTarget.closest<HTMLElement>(".project-card");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!card || reduceMotion) {
+    window.location.assign(destination);
     return;
   }
-  window.location.assign("/portfolio/#work");
+
+  const rect = card.getBoundingClientRect();
+  const overlay = document.createElement("div");
+  overlay.className = "project-transition-shell";
+  overlay.style.setProperty("--project-transition-x", `${rect.left}px`);
+  overlay.style.setProperty("--project-transition-y", `${rect.top}px`);
+  overlay.style.setProperty("--project-transition-scale-x", `${rect.width / window.innerWidth}`);
+  overlay.style.setProperty("--project-transition-scale-y", `${rect.height / window.innerHeight}`);
+  document.body.appendChild(overlay);
+  card.classList.add("is-opening");
+  document.documentElement.classList.add("portfolio-transitioning");
+
+  let navigated = false;
+  const navigate = () => {
+    if (navigated) return;
+    navigated = true;
+    window.location.assign(destination);
+  };
+
+  window.requestAnimationFrame(() => overlay.classList.add("is-expanded"));
+  window.setTimeout(navigate, 540);
+}
+
+function returnToProjectLocation(
+  event: ReactMouseEvent<HTMLAnchorElement>,
+  projectSlug: string,
+) {
+  event.preventDefault();
+  const params = new URLSearchParams(window.location.search);
+  const returnY = Number.parseInt(params.get("returnY") ?? "", 10);
+  const returnProject = params.get("returnProject");
+  if (Number.isFinite(returnY) && returnProject === projectSlug) {
+    window.location.assign(`/portfolio/?returnProject=${encodeURIComponent(projectSlug)}&returnY=${returnY}`);
+    return;
+  }
+  window.location.assign("/portfolio/?returnSection=work");
 }
 
 function getRadarPoints(values: number[], radius = radarRadius) {
@@ -72,8 +105,11 @@ function BrandMark() {
     <span className="brand-lockup" aria-label="李家豪作品集">
       <img
         className="brand-logo"
-        src={publicAsset("/assets/visual/hj-logo.png")}
+        src={publicAsset("/assets/visual/hj-logo-112.png")}
         alt=""
+        width="112"
+        height="112"
+        decoding="async"
         aria-hidden="true"
       />
       <span className="brand-name">Leo.li</span>
@@ -196,6 +232,8 @@ function BackToTop() {
 
 function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const reduce = useReducedMotion();
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const links = [
     ["首页", "/portfolio/#top"],
     ["核心能力", "/portfolio/#ability"],
@@ -206,14 +244,47 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
 
   useEffect(() => {
     if (!open) return;
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const pageMain = document.querySelector<HTMLElement>("main");
+    const siteNav = document.querySelector<HTMLElement>(".site-nav");
+
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+      const focusable = overlayRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable?.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
+
+    pageMain?.setAttribute("inert", "");
+    siteNav?.setAttribute("inert", "");
     window.addEventListener("keydown", onKey);
     document.body.classList.add("menu-is-open");
+    const focusFrame = window.requestAnimationFrame(() => closeButtonRef.current?.focus());
+
     return () => {
+      window.cancelAnimationFrame(focusFrame);
       window.removeEventListener("keydown", onKey);
       document.body.classList.remove("menu-is-open");
+      pageMain?.removeAttribute("inert");
+      siteNav?.removeAttribute("inert");
+      window.requestAnimationFrame(() => previouslyFocused?.focus());
     };
   }, [open, onClose]);
 
@@ -221,6 +292,7 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
     <AnimatePresence>
       {open ? (
         <motion.div
+          ref={overlayRef}
           className="menu-overlay"
           initial={reduce ? false : { opacity: 0, clipPath: "inset(0 0 100% 0)" }}
           animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
@@ -231,6 +303,7 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
           aria-label="导航菜单"
         >
           <motion.button
+            ref={closeButtonRef}
             className="menu-close nav-pill nav-pill-dark"
             type="button"
             aria-label="关闭导航菜单"
@@ -277,31 +350,50 @@ function Hero() {
   const reduce = useReducedMotion();
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const heroVisibleRef = useRef(true);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const tryPlay = () => {
+      if (document.visibilityState !== "visible" || !heroVisibleRef.current) {
+        video.pause();
+        return;
+      }
       video.muted = true;
       video.defaultMuted = true;
       void video.play()
         .then(() => setIsVideoPlaying(true))
         .catch(() => setIsVideoPlaying(false));
     };
-    const resumeWhenVisible = () => {
-      if (document.visibilityState === "visible") tryPlay();
+    const syncPlayback = () => {
+      if (document.visibilityState === "visible" && heroVisibleRef.current) {
+        tryPlay();
+      } else {
+        video.pause();
+      }
     };
 
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        heroVisibleRef.current = entry.isIntersecting;
+        syncPlayback();
+      },
+      { threshold: 0.08 },
+    );
+
     tryPlay();
-    window.addEventListener("pageshow", tryPlay);
-    document.addEventListener("visibilitychange", resumeWhenVisible);
-    window.addEventListener("touchstart", tryPlay, { passive: true, once: true });
+    observer.observe(video.closest(".hero") ?? video);
+    window.addEventListener("pageshow", syncPlayback);
+    document.addEventListener("visibilitychange", syncPlayback);
+    window.addEventListener("touchstart", syncPlayback, { passive: true, once: true });
 
     return () => {
-      window.removeEventListener("pageshow", tryPlay);
-      document.removeEventListener("visibilitychange", resumeWhenVisible);
-      window.removeEventListener("touchstart", tryPlay);
+      observer.disconnect();
+      window.removeEventListener("pageshow", syncPlayback);
+      document.removeEventListener("visibilitychange", syncPlayback);
+      window.removeEventListener("touchstart", syncPlayback);
     };
   }, []);
 
@@ -309,9 +401,9 @@ function Hero() {
     <section className="hero" id="top">
       <motion.div
         className="hero-media"
-        initial={reduce ? false : { opacity: 0, scale: 1.05 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.8, ease }}
+        initial={reduce ? false : { opacity: 0, scale: 1.035, clipPath: "inset(0 0 8% 0)" }}
+        animate={{ opacity: 1, scale: 1, clipPath: "inset(0 0 0% 0)" }}
+        transition={{ duration: 1.25, ease }}
       >
         <picture className="hero-poster" aria-hidden="true">
           <source
@@ -332,8 +424,12 @@ function Hero() {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           onCanPlay={(event) => {
+            if (document.visibilityState !== "visible" || !heroVisibleRef.current) {
+              event.currentTarget.pause();
+              return;
+            }
             event.currentTarget.muted = true;
             event.currentTarget.defaultMuted = true;
             void event.currentTarget.play()
@@ -398,11 +494,27 @@ function SectionIntro({
   title: string;
   description?: string;
 }) {
+  const reduce = useReducedMotion();
+
   return (
-    <div className="section-intro">
+    <motion.div
+      className="section-intro"
+      initial={reduce ? false : { opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.55 }}
+      transition={{ duration: 0.52, ease }}
+    >
       <h2>{title}</h2>
       {description ? <p>{description}</p> : null}
-    </div>
+      <motion.span
+        className="section-intro-rule"
+        aria-hidden="true"
+        initial={reduce ? false : { scaleX: 0.18, opacity: 0.3 }}
+        whileInView={{ scaleX: 1, opacity: 1 }}
+        viewport={{ once: true, amount: 0.8 }}
+        transition={{ duration: 0.7, delay: 0.08, ease }}
+      />
+    </motion.div>
   );
 }
 
@@ -585,13 +697,29 @@ function AbilitySection() {
 function ImageWithFallback({
   alt,
   className = "",
+  decoding = "async",
   ...props
 }: ImgHTMLAttributes<HTMLImageElement>) {
   const [failed, setFailed] = useState(false);
   if (failed) {
     return <div className={`image-fallback ${className}`}>项目图片暂时无法加载</div>;
   }
-  return <img alt={alt} className={className} {...props} onError={() => setFailed(true)} />;
+  const webpSource = typeof props.src === "string" && /\/assets\/projects\/.*\.(?:png|jpe?g)(?:\?.*)?$/i.test(props.src)
+    ? props.src.replace(/\.(?:png|jpe?g)(\?.*)?$/i, ".webp$1")
+    : null;
+
+  return (
+    <picture className="optimized-picture">
+      {webpSource ? <source srcSet={webpSource} type="image/webp" /> : null}
+      <img
+        alt={alt}
+        className={className}
+        decoding={decoding}
+        {...props}
+        onError={() => setFailed(true)}
+      />
+    </picture>
+  );
 }
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
@@ -616,19 +744,24 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
     }
 
     const documentTop = (element: HTMLElement) => {
-      let top = 0;
-      let current: HTMLElement | null = element;
-      while (current) {
-        top += current.offsetTop;
-        current = current.offsetParent as HTMLElement | null;
+      const parent = element.parentElement;
+      if (!parent) return element.getBoundingClientRect().top + window.scrollY;
+
+      let top = parent.getBoundingClientRect().top + window.scrollY;
+      for (const child of Array.from(parent.children)) {
+        if (!(child instanceof HTMLElement)) continue;
+        top += Number.parseFloat(window.getComputedStyle(child).marginTop) || 0;
+        if (child === element) return top;
+        top += child.offsetHeight;
       }
-      return top;
+      return element.getBoundingClientRect().top + window.scrollY;
     };
 
     let nextCardTop = documentTop(nextCard);
+    let stickyTop = 72;
+    let frame = 0;
 
-    const update = () => {
-      const stickyTop = Number.parseFloat(window.getComputedStyle(card).top) || 72;
+    const render = () => {
       const approachDistance = Math.min(380, Math.max(260, window.innerHeight * 0.46));
       const start = nextCardTop - approachDistance;
       const end = nextCardTop - stickyTop;
@@ -636,15 +769,25 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       fadeProgress.set(Math.min(1, Math.max(0, progress)));
     };
 
+    const update = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        render();
+      });
+    };
+
     const measure = () => {
       nextCardTop = documentTop(nextCard);
-      update();
+      stickyTop = Number.parseFloat(window.getComputedStyle(card).top) || 72;
+      render();
     };
 
     measure();
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", measure);
     return () => {
+      window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", measure);
     };
@@ -653,37 +796,39 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   const scale = useTransform(
     fadeProgress,
     [0, 0.28, 1],
-    [1, 0.99, reduce ? 1 : 0.95],
+    [1, 0.992, reduce ? 1 : 0.97],
   );
   const opacity = useTransform(
     fadeProgress,
     [0, 0.2, 1],
-    [1, 0.96, reduce ? 1 : 0.42],
+    [1, 0.97, reduce ? 1 : 0.68],
   );
   const filter = useTransform(
     fadeProgress,
     [0, 0.18, 1],
     [
       "blur(0px)",
-      "blur(1px)",
-      reduce ? "blur(0px)" : "blur(8px)",
+      "blur(0.5px)",
+      reduce ? "blur(0px)" : "blur(3px)",
     ],
   );
   const y = useTransform(
     fadeProgress,
     [0, 0.24, 1],
-    [0, -3, reduce ? 0 : -12],
+    [0, -2, reduce ? 0 : -8],
   );
 
   return (
     <motion.article
       ref={cardRef}
       className="project-card"
+      data-project={project.slug}
       style={{ scale, opacity, filter, y, zIndex: index + 1 }}
     >
       <a
         className="project-card-link"
         href={`/portfolio/project/${project.slug}/`}
+        onClick={event => openProjectFromPortfolio(event, project.slug)}
         aria-labelledby={titleId}
         aria-describedby={`${summaryId} ${roleId}`}
       >
@@ -692,12 +837,19 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           <h3 id={titleId}>{project.title}</h3>
           <p className="project-summary" id={summaryId}>{project.summary}</p>
           <p className="project-role" id={roleId}>{project.role}</p>
+          <span className="project-link" aria-hidden="true">
+            查看项目
+            <ArrowUpRight size={15} strokeWidth={1.8} />
+          </span>
         </div>
         <div className="project-visual">
           <ImageWithFallback
             src={project.cover}
             alt={`${project.title}项目封面`}
-            loading={index < 2 ? "eager" : "lazy"}
+            width={1672}
+            height={941}
+            loading={index < 4 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"}
             style={{ objectPosition: project.coverPosition ?? "center" }}
           />
         </div>
@@ -819,6 +971,8 @@ function ContactSection() {
             <img
               src={publicAsset("/assets/visual/wechat-qr-hungezu.jpg")}
               alt="李家豪的微信二维码"
+              loading="lazy"
+              decoding="async"
             />
             <figcaption>微信扫码联系</figcaption>
           </figure>
@@ -835,11 +989,64 @@ function ContactSection() {
 function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  useLayoutEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const returnProject = params.get("returnProject");
+    const returnY = Number.parseInt(params.get("returnY") ?? "", 10);
+    const shouldRestoreWork = params.get("returnSection") === "work";
+    if (!returnProject && !shouldRestoreWork) return;
+
+    const root = document.documentElement;
+    const previousBehavior = root.style.scrollBehavior;
+    root.classList.add("portfolio-restoring");
+    root.style.scrollBehavior = "auto";
+
+    const restore = () => {
+      const projectCard = returnProject
+        ? [...document.querySelectorAll<HTMLElement>("[data-project]")]
+            .find(element => element.dataset.project === returnProject) ?? null
+        : null;
+      const workSection = document.getElementById("work");
+      const targetY = Number.isFinite(returnY)
+        ? returnY
+        : Math.max(0, (projectCard ?? workSection)?.offsetTop ?? 0);
+      window.scrollTo({ top: targetY, left: 0, behavior: "auto" });
+    };
+    const frame = window.requestAnimationFrame(() => {
+      restore();
+      window.requestAnimationFrame(restore);
+    });
+    const timers = [80, 260, 620].map(delay => window.setTimeout(restore, delay));
+    const targetImage = returnProject
+      ? [...document.querySelectorAll<HTMLElement>("[data-project]")]
+          .find(element => element.dataset.project === returnProject)
+          ?.querySelector<HTMLImageElement>("img") ?? null
+      : null;
+    targetImage?.addEventListener("load", restore, { once: true });
+    void document.fonts?.ready.then(restore);
+
+    const finish = window.setTimeout(() => {
+      restore();
+      root.classList.remove("portfolio-restoring");
+      root.style.scrollBehavior = previousBehavior;
+      window.history.replaceState(window.history.state, "", "/portfolio/#work");
+    }, 760);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      timers.forEach(timer => window.clearTimeout(timer));
+      window.clearTimeout(finish);
+      targetImage?.removeEventListener("load", restore);
+      root.classList.remove("portfolio-restoring");
+      root.style.scrollBehavior = previousBehavior;
+    };
+  }, []);
+
   return (
     <>
       <SiteNav onMenu={() => setMenuOpen(true)} />
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
-      <main>
+      <main className="portfolio-home">
         <Hero />
         <AbilitySection />
         <WorkSection />
@@ -851,11 +1058,41 @@ function HomePage() {
   );
 }
 
+function ProjectImageGallery({
+  project,
+  reduce,
+}: {
+  project: Project;
+  reduce: boolean | null;
+}) {
+  return (
+    <section className="case-gallery" aria-label={`${project.title}项目图片`}>
+      {project.gallery.map((image, index) => (
+        <motion.figure
+          key={image}
+          initial={reduce ? false : { opacity: 0, y: 24, clipPath: "inset(0 0 6% 0)" }}
+          whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
+          viewport={{ once: true, amount: 0.12 }}
+          transition={{ duration: 0.58, ease }}
+        >
+          <ImageWithFallback
+            src={image}
+            alt={project.galleryAlt?.[index] ?? `${project.title}项目展示 ${index + 1}`}
+            loading={index === 0 ? "eager" : "lazy"}
+            fetchPriority={index === 0 ? "high" : "auto"}
+          />
+        </motion.figure>
+      ))}
+    </section>
+  );
+}
+
 function ProjectPage({ project }: { project: Project }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const reduce = useReducedMotion();
+  const isZhaocaiCase = project.slug === "zhaocai-smart";
   const handleProjectBack = (event: ReactMouseEvent<HTMLAnchorElement>) => {
-    returnToProjectLocation(event);
+    returnToProjectLocation(event, project.slug);
   };
 
   return (
@@ -866,8 +1103,11 @@ function ProjectPage({ project }: { project: Project }) {
         projectView
       />
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
-      <main className="case-page">
-        <header className="case-hero">
+      <main
+        className={`case-page${isZhaocaiCase ? " case-page-zhaocai" : ""}`}
+        data-project={project.slug}
+      >
+        {!isZhaocaiCase ? <header className="case-hero">
           <motion.div
             className="case-heading"
             initial={reduce ? false : { opacity: 0, y: 24 }}
@@ -881,30 +1121,20 @@ function ProjectPage({ project }: { project: Project }) {
               <span>{project.period}</span>
             </div>
           </motion.div>
-        </header>
-        <section className="case-gallery" aria-label={`${project.title}项目图片`}>
-          {project.gallery.map((image, index) => (
-            <motion.figure
-              key={image}
-              initial={reduce ? false : { opacity: 0, y: 36 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.12 }}
-              transition={{ duration: 0.78, ease }}
-            >
-              <ImageWithFallback
-                src={image}
-                alt={project.galleryAlt?.[index] ?? `${project.title}项目展示 ${index + 1}`}
-                loading={index < 2 ? "eager" : "lazy"}
-              />
-            </motion.figure>
-          ))}
-        </section>
-        <footer className="case-footer">
-          <a href="/portfolio/#work" onClick={handleProjectBack}>
-            <ArrowLeft size={16} strokeWidth={1.8} />
-            返回项目列表
-          </a>
-        </footer>
+        </header> : null}
+        {isZhaocaiCase ? (
+          <ZhaocaiSmartCase />
+        ) : (
+          <ProjectImageGallery project={project} reduce={reduce} />
+        )}
+        {!isZhaocaiCase ? (
+          <footer className="case-footer">
+            <a href="/portfolio/#work" onClick={handleProjectBack}>
+              <ArrowLeft size={16} strokeWidth={1.8} />
+              返回项目列表
+            </a>
+          </footer>
+        ) : null}
       </main>
       <BackToTop />
     </>

@@ -111,7 +111,7 @@ const projectData: Project[] = [
     summary:
       "面向企业经营分析场景，构建“提问—澄清—执行—解释—沉淀”的智能问数链路，并统一图表、表格、引用与代码等输出规范。",
     role: "UX/UI 设计 · 语义澄清 · 过程反馈 · 看板交互 · 输出规范",
-    cover: "/assets/projects/covers/zhaocai-smart-cover.jpg",
+    cover: "/assets/projects/covers/zhaocai-smart-cover-20260828.jpg",
     gallery: [
       "/assets/projects/zhaocai-smart/11-project-background.png",
       "/assets/projects/zhaocai-smart/12-smart-query-introduction.png",
@@ -140,7 +140,7 @@ const projectData: Project[] = [
     summary:
       "面向企业财税决策、管理和执行角色，主导税纪云 2.0 Web / App 体验改版，重构申报、审批、风险预警与法规查询等高频任务。",
     role: "主导 2.0 体验改版 · 复杂流程 · 设计系统 · 跨端协同",
-    cover: "/assets/projects/covers/tax-cloud-cover.jpg",
+    cover: "/assets/projects/covers/tax-cloud-cover-20260828.jpg",
     gallery: [
       "/assets/projects/tax-cloud/13-project-background.png",
       "/assets/projects/tax-cloud/02-lean-canvas.png",
@@ -193,7 +193,7 @@ const projectData: Project[] = [
     summary:
       "面向国家能源集团报税业务，独立负责平台从 0 到 1 的 UI 设计，覆盖首页、纳税申报与综合管理工作台，并建立栅格、组件及空缺省规范。",
     role: "UI 设计师（独立负责） · 从 0 到 1 · 页面与规范设计",
-    cover: "/assets/projects/covers/energy-tax-cover.jpg",
+    cover: "/assets/projects/covers/energy-tax-cover-20260828.jpg",
     gallery: [
       "/assets/projects/energy-tax/01-project-background.png",
       "/assets/projects/energy-tax/02-design-goals.png",
@@ -226,7 +226,7 @@ const projectData: Project[] = [
     summary:
       "汇集汽车、轨道交通、新能源、电子及地产等行业的税务数智大屏，以地图、指标、趋势与排行组织高密度信息，并沉淀适用于大屏项目的布局与视觉规范。",
     role: "大屏视觉设计 · 信息层级 · 图表编排 · 规范沉淀",
-    cover: "/assets/projects/covers/data-visualisation-cover.jpg",
+    cover: "/assets/projects/covers/data-visualisation-cover-20260828.jpg",
     gallery: [
       "/assets/projects/data-visualisation/01-project-overview.png",
       "/assets/projects/data-visualisation/02-multi-industry-dashboard.png",
@@ -258,10 +258,12 @@ export const experiences: Experience[] = [
     role: "UED & UI 设计师",
     period: "2025.07 - 至今",
     summary:
-      "负责 AI 问答、金融智能产品、单证识别与政企门户体系的 UX/UI 设计。",
+      "负责 AI 问答、金融智能产品、AI 陪伴硬件、单证识别与政企门户体系的 UX/UI 设计。",
     details: [
       "参与「问数」AI 问答平台的核心体验设计，覆盖提问、意图澄清、处理过程反馈与结果呈现。",
       "负责招财 Smart UX/UI 设计，建立从问题输入、主动澄清到结果解释与看板沉淀的任务链路。",
+      "参与中国银行澳门分行 AI 系统的 UX/UI 设计，覆盖业务流程梳理、交互方案与界面落地；项目成功上线并获得客户好评。",
+      "参与火火兔 AI 陪伴硬件端的 UX/UI 设计，负责 AI 宠物相关页面与交互体验；产品面向海外市场成功上线。",
       "主导国科信门户体系 UX/UI 设计，覆盖门户、后台管理、高端智库三套系统及其子系统。",
       "负责国科信整体风格定制、页面规范审核与定制组件建设，控制协作设计质量。",
       "参与单证识别及金融定制项目的界面与体验设计。",
