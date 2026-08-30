@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import ArrowRight from "lucide-react/dist/esm/icons/arrow-right.mjs";
 import Bot from "lucide-react/dist/esm/icons/bot.mjs";
 import CheckCircle2 from "lucide-react/dist/esm/icons/circle-check.mjs";
-import Database from "lucide-react/dist/esm/icons/database.mjs";
 import { publicAsset } from "../portfolio-data";
 import "./zhaocai-smart.css";
 
@@ -148,6 +147,65 @@ function BoardKpiCard() {
         <div><dt>统计范围</dt><dd>集团</dd></div>
       </dl>
     </article>
+  );
+}
+
+function ProcessStageContent({ step }: { step: number }) {
+  if (step === 0) {
+    return (
+      <section className="zc-stage-content zc-condition-sheet">
+        <header><strong>条件识别结果</strong><span>3 项已确认，1 项待确认</span></header>
+        <dl className="zc-condition-grid">
+          <div><dt>分析主题</dt><dd>集团利润变化</dd></div>
+          <div><dt>时间范围</dt><dd>本年度</dd></div>
+          <div><dt>组织范围</dt><dd>集团</dd></div>
+          <div><dt>指标口径</dt><dd>待确认利润类型</dd></div>
+        </dl>
+        <footer>保留已识别条件，只补充影响查询结果的必要信息。</footer>
+      </section>
+    );
+  }
+
+  if (step === 1) {
+    return (
+      <section className="zc-stage-content zc-source-list">
+        <header><span>数据来源</span><span>匹配依据</span><span>状态</span></header>
+        {[
+          ["财务指标库", "匹配利润相关指标"],
+          ["年度经营数据", "定位对应时间范围"],
+          ["组织维度", "匹配集团统计范围"],
+          ["指标口径", "关联已确认的利润类型"],
+        ].map(([title, text]) => (
+          <div key={title}><strong>{title}</strong><span>{text}</span><em>已匹配</em></div>
+        ))}
+      </section>
+    );
+  }
+
+  if (step === 2) {
+    return (
+      <ol className="zc-stage-content zc-analysis-flow">
+        <li data-state="done"><span>01</span><div><strong>口径校验</strong><p>核对时间、组织与指标口径</p></div><em>已完成</em></li>
+        <li data-state="active"><span>02</span><div><strong>数据聚合</strong><p>按年度和组织范围汇总结果</p></div><em>处理中</em></li>
+        <li data-state="waiting"><span>03</span><div><strong>异常检查</strong><p>识别缺失值与异常波动</p></div><em>等待</em></li>
+      </ol>
+    );
+  }
+
+  if (step === 3) {
+    return (
+      <div className="zc-stage-content zc-compose-grid">
+        <div className="zc-compose-chart"><span>趋势预览</span><MiniTrend /></div>
+        <div className="zc-answer-outline"><strong>回答结构</strong><ol><li><b>结论</b><span>先给出核心判断</span></li><li><b>趋势</b><span>呈现年度变化</span></li><li><b>依据</b><span>关联数据来源</span></li><li><b>说明</b><span>补充异常情况</span></li></ol></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="zc-stage-content zc-result-preview">
+      <div className="zc-compose-chart"><span>结果预览</span><MiniTrend /></div>
+      <div className="zc-result-summary"><strong>结果已生成</strong><p>结论、趋势和数据依据已完成组织。</p><ul><li><b>继续追问</b><span>沿用当前查询条件</span></li><li><b>保存看板</b><span>沉淀为长期追踪卡片</span></li><li><b>调整条件</b><span>返回修改时间或范围</span></li></ul></div>
+    </div>
   );
 }
 
@@ -437,7 +495,7 @@ export function ZhaocaiSmartCase() {
         <div className="zc-process-workbench">
           <header className="zc-process-summary">
             <div><span>当前查询</span><strong>查看今年集团利润变化</strong></div>
-            <div><span>任务状态</span><strong>{processStep === 4 ? "已完成" : `执行中 · ${process[processStep].title}`}</strong></div>
+            <div><span>任务进度</span><strong><em>{String(processStep + 1).padStart(2, "0")}</em> / 05 · {processStep === 4 ? "已完成" : "执行中"}</strong></div>
           </header>
 
           <div className="zc-process-demo">
@@ -457,16 +515,16 @@ export function ZhaocaiSmartCase() {
             </div>
 
             <div className="zc-process-canvas" aria-live="polite">
-              <header><span>AI 执行过程</span><strong>{processStep === 4 ? "处理完成" : "正在处理"}</strong></header>
-              <div className="zc-process-current" key={processStep}>
-                <div className="zc-process-symbol"><Database size={22} /></div>
-                <div><small>当前步骤</small><h3>{process[processStep].title}</h3><p>{process[processStep].detail}</p></div>
+              <header>
+                <span>AI 执行过程</span>
+                <div className="zc-process-progress" aria-hidden="true"><i style={{ width: `${((processStep + 1) / process.length) * 100}%` }} /></div>
+              </header>
+              <div className="zc-process-stage" key={processStep}>
+                <div className="zc-process-current">
+                  <small>当前步骤</small><h3>{process[processStep].title}</h3><p>{process[processStep].detail}</p>
+                </div>
+                <ProcessStageContent step={processStep} />
               </div>
-              {processStep < 4 ? (
-                <div className="zc-data-preview"><span /><span /><span /><span /><span /></div>
-              ) : (
-                <div className="zc-result-preview"><MiniTrend /><p><strong>结果已生成</strong><span>结论、趋势和数据依据已完成组织。</span></p></div>
-              )}
             </div>
           </div>
 
