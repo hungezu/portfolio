@@ -1,0 +1,563 @@
+{
+  "version": "1.0.0",
+  "renderer": "measured-rectangles",
+  "note": "Raw PNG files are unchanged. Cropping and alignment are applied by the runtime renderer.",
+  "sources": {
+    "actions": {
+      "file": "actions.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "bytes": 1407523
+    },
+    "curious": {
+      "file": "curious.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "bytes": 896182
+    },
+    "idle": {
+      "file": "idle.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "bytes": 904839
+    },
+    "jump": {
+      "file": "jump.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "bytes": 1347997
+    },
+    "peek": {
+      "file": "peek.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "bytes": 1215558
+    },
+    "walk": {
+      "file": "walk.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "bytes": 1517850
+    },
+    "wave": {
+      "file": "wave.png",
+      "width": 1254,
+      "height": 1254,
+      "alpha": true,
+      "bytes": 934480
+    }
+  },
+  "states": {
+    "idle": {
+      "source": "idle",
+      "frames": [
+        {
+          "rect": [
+            299,
+            76,
+            661,
+            1119
+          ],
+          "scale": 0.00081413,
+          "left": 0.231336,
+          "top": 0.028986,
+          "width": 0.538141,
+          "height": 0.911014
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "wave": {
+      "source": "wave",
+      "frames": [
+        {
+          "rect": [
+            290,
+            54,
+            685,
+            1140
+          ],
+          "scale": 0.00078519,
+          "left": 0.231467,
+          "top": 0.044889,
+          "width": 0.537852,
+          "height": 0.895111
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "curious": {
+      "source": "curious",
+      "frames": [
+        {
+          "rect": [
+            280,
+            56,
+            697,
+            1142
+          ],
+          "scale": 0.00077147,
+          "left": 0.231528,
+          "top": 0.058981,
+          "width": 0.537715,
+          "height": 0.881019
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "point": {
+      "source": "actions",
+      "frames": [
+        {
+          "rect": [
+            86,
+            11,
+            312,
+            450
+          ],
+          "scale": 0.00185965,
+          "left": 0.226632,
+          "top": 0.103158,
+          "width": 0.580211,
+          "height": 0.836842
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "thinking": {
+      "source": "actions",
+      "frames": [
+        {
+          "rect": [
+            463,
+            11,
+            300,
+            451
+          ],
+          "scale": 0.00182759,
+          "left": 0.226776,
+          "top": 0.115759,
+          "width": 0.548276,
+          "height": 0.824241
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "success": {
+      "source": "actions",
+      "frames": [
+        {
+          "rect": [
+            872,
+            16,
+            298,
+            446
+          ],
+          "scale": 0.00184028,
+          "left": 0.226719,
+          "top": 0.119236,
+          "width": 0.548403,
+          "height": 0.820764
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "sleep": {
+      "source": "actions",
+      "frames": [
+        {
+          "rect": [
+            72,
+            479,
+            298,
+            378
+          ],
+          "scale": 0.00184028,
+          "left": 0.226719,
+          "top": 0.244375,
+          "width": 0.548403,
+          "height": 0.695625
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "sit": {
+      "source": "actions",
+      "frames": [
+        {
+          "rect": [
+            471,
+            474,
+            303,
+            383
+          ],
+          "scale": 0.00180887,
+          "left": 0.22686,
+          "top": 0.247201,
+          "width": 0.548089,
+          "height": 0.692799
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "stretch": {
+      "source": "actions",
+      "frames": [
+        {
+          "rect": [
+            863,
+            461,
+            308,
+            419
+          ],
+          "scale": 0.00177852,
+          "left": 0.226997,
+          "top": 0.194799,
+          "width": 0.547785,
+          "height": 0.745201
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "dragged": {
+      "source": "actions",
+      "frames": [
+        {
+          "rect": [
+            60,
+            853,
+            304,
+            394
+          ],
+          "scale": 0.00205426,
+          "left": 0.151802,
+          "top": 0.13062,
+          "width": 0.624496,
+          "height": 0.80938
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "landing": {
+      "source": "actions",
+      "frames": [
+        {
+          "rect": [
+            456,
+            884,
+            325,
+            356
+          ],
+          "scale": 0.00188612,
+          "left": 0.173701,
+          "top": 0.268541,
+          "width": 0.612989,
+          "height": 0.671459
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "walk-right": {
+      "source": "walk",
+      "frames": [
+        {
+          "rect": [
+            53,
+            72,
+            364,
+            580
+          ],
+          "scale": 0.00149929,
+          "left": 0.227878,
+          "top": 0.07041,
+          "width": 0.545743,
+          "height": 0.86959
+        },
+        {
+          "rect": [
+            461,
+            73,
+            360,
+            581
+          ],
+          "scale": 0.00149929,
+          "left": 0.230877,
+          "top": 0.068911,
+          "width": 0.539745,
+          "height": 0.871089
+        },
+        {
+          "rect": [
+            857,
+            73,
+            359,
+            581
+          ],
+          "scale": 0.00149929,
+          "left": 0.231627,
+          "top": 0.068911,
+          "width": 0.538246,
+          "height": 0.871089
+        },
+        {
+          "rect": [
+            54,
+            664,
+            370,
+            571
+          ],
+          "scale": 0.00149929,
+          "left": 0.22338,
+          "top": 0.083904,
+          "width": 0.554738,
+          "height": 0.856096
+        },
+        {
+          "rect": [
+            459,
+            666,
+            363,
+            575
+          ],
+          "scale": 0.00149929,
+          "left": 0.228628,
+          "top": 0.077907,
+          "width": 0.544243,
+          "height": 0.862093
+        },
+        {
+          "rect": [
+            855,
+            667,
+            364,
+            574
+          ],
+          "scale": 0.00149929,
+          "left": 0.227878,
+          "top": 0.079406,
+          "width": 0.545743,
+          "height": 0.860594
+        }
+      ],
+      "fps": 8,
+      "loop": true,
+      "mirror": false
+    },
+    "walk-left": {
+      "source": "walk",
+      "frames": [
+        {
+          "rect": [
+            53,
+            72,
+            364,
+            580
+          ],
+          "scale": 0.00149929,
+          "left": 0.227878,
+          "top": 0.07041,
+          "width": 0.545743,
+          "height": 0.86959
+        },
+        {
+          "rect": [
+            461,
+            73,
+            360,
+            581
+          ],
+          "scale": 0.00149929,
+          "left": 0.230877,
+          "top": 0.068911,
+          "width": 0.539745,
+          "height": 0.871089
+        },
+        {
+          "rect": [
+            857,
+            73,
+            359,
+            581
+          ],
+          "scale": 0.00149929,
+          "left": 0.231627,
+          "top": 0.068911,
+          "width": 0.538246,
+          "height": 0.871089
+        },
+        {
+          "rect": [
+            54,
+            664,
+            370,
+            571
+          ],
+          "scale": 0.00149929,
+          "left": 0.22338,
+          "top": 0.083904,
+          "width": 0.554738,
+          "height": 0.856096
+        },
+        {
+          "rect": [
+            459,
+            666,
+            363,
+            575
+          ],
+          "scale": 0.00149929,
+          "left": 0.228628,
+          "top": 0.077907,
+          "width": 0.544243,
+          "height": 0.862093
+        },
+        {
+          "rect": [
+            855,
+            667,
+            364,
+            574
+          ],
+          "scale": 0.00149929,
+          "left": 0.227878,
+          "top": 0.079406,
+          "width": 0.545743,
+          "height": 0.860594
+        }
+      ],
+      "fps": 8,
+      "loop": true,
+      "mirror": true
+    },
+    "jump": {
+      "source": "jump",
+      "frames": [
+        {
+          "rect": [
+            163,
+            47,
+            418,
+            602
+          ],
+          "scale": 0.00130381,
+          "left": 0.228155,
+          "top": 0.07,
+          "width": 0.544994,
+          "height": 0.784895
+        },
+        {
+          "rect": [
+            690,
+            23,
+            405,
+            630
+          ],
+          "scale": 0.00130381,
+          "left": 0.23663,
+          "top": 0.07,
+          "width": 0.528044,
+          "height": 0.821402
+        },
+        {
+          "rect": [
+            142,
+            653,
+            433,
+            572
+          ],
+          "scale": 0.00130381,
+          "left": 0.212509,
+          "top": 0.07,
+          "width": 0.564551,
+          "height": 0.745781
+        },
+        {
+          "rect": [
+            680,
+            672,
+            424,
+            572
+          ],
+          "scale": 0.00130381,
+          "left": 0.218376,
+          "top": 0.07,
+          "width": 0.552817,
+          "height": 0.745781
+        }
+      ],
+      "fps": 7,
+      "loop": false,
+      "mirror": false
+    },
+    "peek-left": {
+      "source": "peek",
+      "frames": [
+        {
+          "rect": [
+            247,
+            25,
+            877,
+            1192
+          ],
+          "scale": 0.00061556,
+          "left": 0.231614,
+          "top": 0.07,
+          "width": 0.539849,
+          "height": 0.733751
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": false
+    },
+    "peek-right": {
+      "source": "peek",
+      "frames": [
+        {
+          "rect": [
+            247,
+            25,
+            877,
+            1192
+          ],
+          "scale": 0.00061556,
+          "left": 0.231614,
+          "top": 0.07,
+          "width": 0.539849,
+          "height": 0.733751
+        }
+      ],
+      "fps": 0,
+      "loop": false,
+      "mirror": true
+    }
+  }
+}

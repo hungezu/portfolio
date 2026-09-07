@@ -1,0 +1,167 @@
+/* Homepage presentation only. Both image elements use the same unchanged PNG. */
+.zch {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 40px 24px;
+  color: #20242e;
+  background: #f7f6f2;
+  font: 400 16px/1.75 var(--zcs-font, "Poppins", "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif);
+  isolation: isolate;
+}
+.zch * { box-sizing: border-box; }
+.zch :where(h1, p, figure) { margin: 0; }
+.zch .zch-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1120 / 704;
+  container-type: inline-size;
+}
+.zch .zch-heading {
+  position: absolute;
+  z-index: 2;
+  inset: 10.4% auto auto 0;
+  width: 27%;
+}
+.zch .zch-heading h1 {
+  margin: 0;
+  color: #17191d;
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: -.055em;
+}
+.zch .zch-title-cn {
+  display: block;
+  font-size: clamp(36px, 5.1vw, 64px);
+  font-size: clamp(36px, 5.72cqw, 64px);
+  line-height: 1.08;
+  letter-spacing: -.045em;
+  font-weight: 800;
+}
+.zch .zch-title-en {
+  display: block;
+  margin-top: 8px;
+  font-family: "Arial", "Helvetica Neue", sans-serif;
+  font-size: clamp(56px, 7.7vw, 96px);
+  font-size: clamp(56px, 8.57cqw, 96px);
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -.06em;
+}
+.zch .zch-subtitle {
+  position: relative;
+  margin-top: 24px;
+  padding-top: 24px;
+  color: #62646d;
+  font-size: 16px;
+  line-height: 28px;
+  letter-spacing: .075em;
+}
+.zch .zch-subtitle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 3px;
+  border-radius: 1px;
+  background: #7050d4;
+}
+.zch .zch-main-figure {
+  position: absolute;
+  top: 8.6%;
+  left: 27%;
+  width: 70.8%;
+  perspective: 1800px;
+  perspective: 160cqw;
+  perspective-origin: 50% 50%;
+}
+.zch .zch-screen {
+  transform: rotateY(-12deg) rotateX(2deg) rotateZ(-2.6deg);
+  transform-origin: 50% 50%;
+  border: 1px solid #d8d5df;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow:
+    0 2px 2px rgb(32 36 46 / .035),
+    0 20px 34px -22px rgb(51 41 73 / .24),
+    4px 40px 48px -38px rgb(112 80 212 / .24);
+}
+.zch .zch-screen-clip {
+  width: 100%;
+  aspect-ratio: 1440 / 800;
+  overflow: hidden;
+  border-radius: 11px;
+}
+/* Display-only removal of the screenshot's 5px black capture edge. */
+.zch .zch-homepage-image {
+  display: block;
+  width: calc(100% * 1445 / 1440);
+  max-width: none;
+  height: auto;
+  margin-left: calc(-100% * 5 / 1440);
+}
+.zch .zch-detail-figure {
+  position: absolute;
+  z-index: 3;
+  top: 77.2%;
+  left: 0;
+  width: 47.5%;
+}
+.zch .zch-detail-card {
+  padding: 16px 20px;
+  overflow: hidden;
+  transform: rotateZ(1.2deg);
+  border: 1px solid #d8d5df;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgb(32 36 46 / .025), 0 20px 32px -24px rgb(51 41 73 / .24);
+}
+.zch .zch-composer-crop {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 812 / 134;
+  overflow: hidden;
+}
+/* Original pixels x=419..1231, y=290..424; no synthetic UI or raster editing. */
+.zch .zch-composer-image {
+  position: absolute;
+  width: calc(100% * 1445 / 812);
+  max-width: none;
+  height: auto;
+  left: calc(-100% * 419 / 812);
+  top: calc(-100% * 290 / 134);
+}
+.zch .zch-detail-figure figcaption {
+  margin-top: 16px;
+  color: #687180;
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: .04em;
+}
+@media (max-width: 1000px) and (min-width: 761px) {
+  .zch { padding-top: 32px; }
+  .zch .zch-stage { aspect-ratio: 1120 / 760; }
+  .zch .zch-heading { top: 8%; }
+  .zch .zch-subtitle { margin-top: 20px; padding-top: 20px; letter-spacing: 0; }
+  .zch .zch-detail-figure { top: 72%; width: 54%; }
+  .zch .zch-detail-card { padding: 12px 16px; }
+}
+@media (max-width: 760px) {
+  .zch { padding: 40px 20px 8px; }
+  .zch .zch-stage { display: flex; flex-direction: column; aspect-ratio: auto; }
+  .zch .zch-heading { position: relative; inset: auto; width: 100%; }
+  .zch .zch-title-cn { font-size: 40px; line-height: 48px; }
+  .zch .zch-title-en { margin-top: 0; font-size: 64px; line-height: 68px; }
+  .zch .zch-subtitle { margin-top: 20px; padding-top: 20px; letter-spacing: .04em; }
+  .zch .zch-main-figure { position: relative; inset: auto; width: 100%; margin-top: 36px; perspective: none; }
+  .zch .zch-screen { transform: none; border-radius: 8px; box-shadow: 0 12px 24px -20px rgb(51 41 73 / .2); }
+  .zch .zch-screen-clip { border-radius: 7px; }
+  .zch .zch-detail-figure { position: relative; inset: auto; width: 100%; margin-top: 28px; }
+  .zch .zch-detail-card { padding: 12px; transform: none; border-radius: 8px; box-shadow: 0 10px 24px -20px rgb(51 41 73 / .16); }
+  .zch .zch-detail-figure figcaption { margin-top: 12px; }
+}
+@media print {
+  .zch .zch-screen, .zch .zch-detail-card { transform: none; box-shadow: none; }
+}

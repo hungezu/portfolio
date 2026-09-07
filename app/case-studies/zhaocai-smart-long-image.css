@@ -1,0 +1,74 @@
+.zcli-page {
+  min-height: 100vh;
+  overflow-x: clip;
+  background: #f7f6f2;
+  color: var(--ink);
+}
+
+.zcli-content {
+  width: min(1200px, 100%);
+  margin-inline: auto;
+}
+
+.zcli-content :is(
+  #zcs-homepage,
+  #zcs-trust-mechanism,
+  #zcs-process-feedback,
+  #zcs-original-output,
+  #zcs-markdown-system
+) {
+  scroll-margin-top: 96px;
+}
+
+.zcli-loading,
+.zcli-error {
+  width: min(1120px, calc(100% - 48px));
+  margin-inline: auto;
+  padding: 144px 0;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.zcli-error h1 {
+  margin: 0 0 16px;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+}
+
+.zcli-error p {
+  margin: 0;
+  color: var(--muted);
+}
+
+@media (max-width: 1350px) and (min-width: 1121px) {
+  .zcli-content {
+    width: calc(100% - 116px);
+    margin-right: 92px;
+    margin-left: 24px;
+  }
+}
+
+@media (max-width: 1120px) {
+  .zcli-content {
+    width: 100%;
+  }
+
+  .zcli-content :is(
+    #zcs-homepage,
+    #zcs-trust-mechanism,
+    #zcs-process-feedback,
+    #zcs-original-output,
+    #zcs-markdown-system
+  ) {
+    scroll-margin-top: 132px;
+  }
+}
+
+@media (max-width: 560px) {
+  .zcli-loading,
+  .zcli-error {
+    width: calc(100% - 32px);
+    padding: 96px 0;
+  }
+}

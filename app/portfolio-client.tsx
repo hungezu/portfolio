@@ -5,14 +5,21 @@ import {
   motion,
   useMotionValue,
   useReducedMotion,
+  useSpring,
   useTransform,
 } from "motion/react";
 import ArrowLeft from "lucide-react/dist/esm/icons/arrow-left.mjs";
 import ArrowUp from "lucide-react/dist/esm/icons/arrow-up.mjs";
 import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
+import MessageCircle from "lucide-react/dist/esm/icons/message-circle.mjs";
 import Plus from "lucide-react/dist/esm/icons/plus.mjs";
+import RotateCcw from "lucide-react/dist/esm/icons/rotate-ccw.mjs";
+import Send from "lucide-react/dist/esm/icons/send.mjs";
+import X from "lucide-react/dist/esm/icons/x.mjs";
 import {
+  type CSSProperties,
   type MouseEvent as ReactMouseEvent,
+  type PointerEvent as ReactPointerEvent,
   type ImgHTMLAttributes,
   type ReactNode,
   useEffect,
@@ -25,14 +32,25 @@ import {
   experiences,
   projects,
   publicAsset,
+  type AbilityId,
   type Project,
 } from "./portfolio-data";
+import {
+  buildLocalChatReply,
+  CHAT_QUICK_PROMPTS,
+  OUT_OF_SCOPE_REPLY,
+  type ChatReference,
+} from "./chat-knowledge";
+import portfolioPetAssets from "../assets/visual/sidebar-character/assets.json";
 import { ZhaocaiSmartCase } from "./case-studies/ZhaocaiSmartCase";
+import { GkxCase } from "./case-studies/GkxCase";
+import { GkxDesignSystemInteractive, NationalSciencePlatformCase, ProjectSubnav, type NationalPlatformView } from "./case-studies/NationalSciencePlatformCase";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const heroVideoAsset = "/assets/visual/hero-motion.mp4";
 const heroMobileVideoAsset = "/assets/visual/hero-motion-mobile.mp4";
-const radarValues = [0.9, 0.9, 0.9, 0.9, 0.9, 0.9];
+const abilityLabelById = new Map(abilities.map(ability => [ability.id, ability.axisLabel]));
+const radarValues = abilities.map(() => .9);
 const radarRadius = 166;
 const radarButtonOrbitX = 54;
 const radarButtonOrbitY = 50;
@@ -52,16 +70,27 @@ function openProjectFromPortfolio(
     window.location.assign(destination);
     return;
   }
+  if (card.classList.contains("is-opening")) return;
 
   const rect = card.getBoundingClientRect();
   const overlay = document.createElement("div");
   overlay.className = "project-transition-shell";
+  overlay.setAttribute("aria-hidden", "true");
   overlay.style.setProperty("--project-transition-x", `${rect.left}px`);
   overlay.style.setProperty("--project-transition-y", `${rect.top}px`);
   overlay.style.setProperty("--project-transition-scale-x", `${rect.width / window.innerWidth}`);
   overlay.style.setProperty("--project-transition-scale-y", `${rect.height / window.innerHeight}`);
+  const source = card.querySelector<HTMLElement>(".project-card-link");
+  if (source) {
+    const preview = source.cloneNode(true) as HTMLElement;
+    preview.classList.add("project-transition-preview");
+    preview.removeAttribute("href");
+    preview.querySelectorAll("[id]").forEach(element => element.removeAttribute("id"));
+    overlay.appendChild(preview);
+  }
   document.body.appendChild(overlay);
   card.classList.add("is-opening");
+  card.setAttribute("aria-busy", "true");
   document.documentElement.classList.add("portfolio-transitioning");
 
   let navigated = false;
@@ -71,8 +100,25 @@ function openProjectFromPortfolio(
     window.location.assign(destination);
   };
 
-  window.requestAnimationFrame(() => overlay.classList.add("is-expanded"));
-  window.setTimeout(navigate, 540);
+  overlay.addEventListener("transitionend", event => {
+    if (event.target === overlay && event.propertyName === "transform") navigate();
+  }, { once: true });
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => overlay.classList.add("is-expanded"));
+  });
+  window.setTimeout(navigate, 560);
+}
+
+function openProjectEvidence(
+  event: ReactMouseEvent<HTMLAnchorElement>,
+  slug: string,
+  anchor?: string,
+) {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  event.preventDefault();
+  const returnY = Math.max(0, Math.round(window.scrollY));
+  const destination = `/portfolio/project/${slug}/?from=portfolio&returnProject=${encodeURIComponent(slug)}&returnY=${returnY}${anchor ? `#${anchor}` : ""}`;
+  window.location.assign(destination);
 }
 
 function returnToProjectLocation(
@@ -346,6 +392,899 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
   );
 }
 
+declare global {
+  interface Window {
+    /** 可选的跨域对话服务地址；未配置时使用同源 /api/chat。 */
+    __PORTFOLIO_CHAT_API__?: string;
+  }
+}
+
+type PortfolioChatMode = "unknown" | "api" | "local" | "local-fallback" | "guardrail";
+
+type PortfolioChatMessage = {
+  id: string;
+  role: "assistant" | "user";
+  content: string;
+  references?: ChatReference[];
+};
+
+const CHAT_WELCOME_MESSAGE: PortfolioChatMessage = {
+  id: "welcome",
+  role: "assistant",
+  content:
+    "你好，我是 Leo。\n想了解我的经历、项目，还是某个设计取舍？",
+};
+
+function createWelcomeMessage(): PortfolioChatMessage {
+  return {
+    ...CHAT_WELCOME_MESSAGE,
+    id: createChatMessageId(),
+  };
+}
+
+function createChatMessageId() {
+  return `chat-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function waitForChatReply(startedAt: number, minimumMs: number) {
+  const remaining = minimumMs - (performance.now() - startedAt);
+  if (remaining <= 0) return Promise.resolve();
+  return new Promise<void>(resolve => window.setTimeout(resolve, remaining));
+}
+
+function getChatEndpoint() {
+  if (typeof window !== "undefined" && window.__PORTFOLIO_CHAT_API__?.trim()) {
+    return window.__PORTFOLIO_CHAT_API__.trim();
+  }
+  return "/api/chat";
+}
+
+function getPortfolioRoute(href: string) {
+  if (!href.startsWith("/portfolio") || typeof window === "undefined") return href;
+  const base = window.__PORTFOLIO_BASE__?.trim();
+  if (!base || base === "/portfolio") return href;
+  return `${base.replace(/\/$/, "")}${href.slice("/portfolio".length)}` || "/";
+}
+
+function parseChatReferences(value: unknown): ChatReference[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((item): item is { label?: unknown; href?: unknown; kind?: unknown } => Boolean(item) && typeof item === "object")
+    .map(item => ({
+      label: typeof item.label === "string" ? item.label.trim().slice(0, 80) : "",
+      href: typeof item.href === "string" ? item.href.trim() : "",
+      kind: item.kind === "section" ? "section" as const : "project" as const,
+    }))
+    .filter(reference => reference.label && reference.href.startsWith("/") && !reference.href.startsWith("//"))
+    .slice(0, 4);
+}
+
+function chatModeLabel(mode: PortfolioChatMode) {
+  if (mode === "api") return "我找到相关内容了";
+  if (mode === "guardrail") return "这个我不方便展开";
+  if (mode === "local" || mode === "local-fallback") return "我先从作品集里找";
+  return "想聊哪个项目？";
+}
+
+type PortfolioPetState =
+  | "idle"
+  | "waving"
+  | "thinking"
+  | "success"
+  | "curious"
+  | "pointing"
+  | "jumping"
+  | "dragged"
+  | "landing";
+
+type PortfolioCharacterFrame = {
+  rect: [number, number, number, number];
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+};
+
+type PortfolioCharacterState = {
+  source: string;
+  frames: PortfolioCharacterFrame[];
+  fps: number;
+  loop: boolean;
+  mirror: boolean;
+};
+
+const portfolioCharacterMap = portfolioPetAssets as {
+  sources: Record<string, { file: string; width: number; height: number }>;
+  states: Record<string, PortfolioCharacterState>;
+};
+
+const portfolioPetStateMap: Record<PortfolioPetState, string> = {
+  idle: "idle",
+  waving: "wave",
+  thinking: "thinking",
+  success: "success",
+  curious: "curious",
+  pointing: "point",
+  jumping: "jump",
+  dragged: "dragged",
+  landing: "landing",
+};
+
+type PortfolioPetDrag = {
+  x: number;
+  y: number;
+};
+
+const PORTFOLIO_PET_DETACH_DISTANCE = 16;
+
+type PortfolioChatContext = {
+  id: string;
+  elementId: string;
+  text: string;
+};
+
+const HOME_CHAT_CONTEXTS: PortfolioChatContext[] = [
+  { id: "home", elementId: "top", text: "这里是首页开场，先看我关注的方向和工作方式。" },
+  { id: "ability", elementId: "ability", text: "这里是核心能力，讲我怎么把复杂体验拆清楚。" },
+  { id: "work", elementId: "work", text: "这里是精选作品，点进项目可以继续看背景和取舍。" },
+  { id: "experience", elementId: "experience", text: "这里是工作经历，能看到我在不同项目里的工作范围。" },
+  { id: "contact", elementId: "contact", text: "这里是联系方式，如果想聊项目可以从这里找到我。" },
+];
+
+const PROJECT_CHAT_CONTEXTS: Record<string, PortfolioChatContext[]> = {
+  gkx: [
+    { id: "nsp-overview", elementId: "nsp-overview", text: "这是国科信案例，先看项目范围。" },
+    { id: "nsp-structure", elementId: "nsp-structure", text: "这里讲多系统怎么拆成可执行的结构。" },
+    { id: "nsp-prototype", elementId: "nsp-prototype", text: "这段是可运行原型，我用它验证流程和状态。" },
+    { id: "nsp-products", elementId: "nsp-products", text: "这里看系统实景，具体页面都在这一段。" },
+    { id: "nsp-rules", elementId: "nsp-rules", text: "这里沉淀设计规范，方便多人一起交付。" },
+    { id: "nsp-result", elementId: "nsp-result", text: "最后收束一下：AI 做辅助，设计判断由我负责。" },
+  ],
+  "zhaocai-smart": [
+    { id: "overview", elementId: "overview", text: "这里是招财 Smart 项目概览，先看它解决的任务。" },
+    { id: "strategy", elementId: "strategy", text: "这是招财 Smart，先看问数链路如何串起三个体验断点。" },
+    { id: "core", elementId: "core", text: "这里进入核心交互，几个关键状态会连续展开。" },
+    { id: "clarification", elementId: "clarification", text: "这里讲怎么把模糊问题说清楚。" },
+    { id: "process", elementId: "process", text: "这里讲处理中怎样让人知道发生了什么。" },
+    { id: "board", elementId: "board", text: "这里讲结果怎样变成可持续追踪的看板。" },
+    { id: "markdown", elementId: "markdown", text: "这里是输出规范，讲不同结果怎样保持一致、易读。" },
+    { id: "gallery", elementId: "gallery", text: "这里是补充交付，能看到更多页面和规范材料。" },
+  ],
+};
+
+function getPortfolioChatContexts() {
+  const projectRoot = document.querySelector<HTMLElement>("main[data-project]");
+  const projectSlug = projectRoot?.dataset.project;
+  if (projectSlug && PROJECT_CHAT_CONTEXTS[projectSlug]) return PROJECT_CHAT_CONTEXTS[projectSlug];
+  if (projectRoot) {
+    return [{ id: "case", elementId: "", text: "这是项目案例，往下看会有页面和设计过程。" }];
+  }
+  return HOME_CHAT_CONTEXTS;
+}
+
+function getNearestPortfolioChatContext(contexts: PortfolioChatContext[]) {
+  const viewportBottom = window.innerHeight;
+  const focusY = viewportBottom * 0.42;
+  let active = contexts[0];
+  let bestDistance = Number.POSITIVE_INFINITY;
+  const containing: Array<{ context: PortfolioChatContext; top: number; height: number }> = [];
+  for (const context of contexts) {
+    const element = context.elementId
+      ? document.getElementById(context.elementId)
+      : document.querySelector<HTMLElement>("main[data-project]");
+    if (!element) continue;
+    const rect = element.getBoundingClientRect();
+    if (rect.top <= focusY && rect.bottom > focusY) {
+      containing.push({ context, top: rect.top, height: rect.height });
+      continue;
+    }
+    const distance = rect.top > focusY
+      ? rect.top - focusY
+      : focusY - rect.bottom;
+    if (distance < bestDistance) {
+      active = context;
+      bestDistance = distance;
+    }
+  }
+
+  if (containing.length) {
+    // 子章节和父章节同时命中时，取视线中更靠后的那一段。
+    containing.sort((a, b) => b.top - a.top || a.height - b.height);
+    active = containing[0].context;
+  }
+  return active;
+}
+
+function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peeking: boolean }) {
+  const reduce = useReducedMotion();
+  const requestedAssetState = peeking && state === "idle" ? "peek-right" : portfolioPetStateMap[state];
+  const [assetState, setAssetState] = useState(requestedAssetState);
+  const config = portfolioCharacterMap.states[assetState];
+  const [frameIndex, setFrameIndex] = useState(0);
+
+  useEffect(() => {
+    const sources = ["actions", "curious", "idle", "jump", "peek", "wave"];
+    const preloaders = sources.map(sourceId => {
+      const image = new Image();
+      image.src = publicAsset(`/assets/visual/sidebar-character/${portfolioCharacterMap.sources[sourceId].file}`);
+      return image;
+    });
+    return () => preloaders.forEach(image => {
+      image.onload = null;
+      image.onerror = null;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (requestedAssetState === assetState) return;
+    const nextConfig = portfolioCharacterMap.states[requestedAssetState];
+    const nextSource = portfolioCharacterMap.sources[nextConfig.source];
+    const image = new Image();
+    let active = true;
+    const showNextState = () => {
+      if (active) setAssetState(requestedAssetState);
+    };
+    image.onload = showNextState;
+    image.onerror = () => undefined;
+    image.src = publicAsset(`/assets/visual/sidebar-character/${nextSource.file}`);
+    if (image.complete) showNextState();
+    return () => {
+      active = false;
+      image.onload = null;
+      image.onerror = null;
+    };
+  }, [assetState, requestedAssetState]);
+
+  useEffect(() => {
+    setFrameIndex(0);
+    if (reduce || config.frames.length < 2 || config.fps <= 0) return;
+
+    const timer = window.setInterval(() => {
+      setFrameIndex(current => {
+        if (config.loop) return (current + 1) % config.frames.length;
+        return Math.min(current + 1, config.frames.length - 1);
+      });
+    }, 1000 / config.fps);
+
+    return () => window.clearInterval(timer);
+  }, [assetState, config.fps, config.frames.length, config.loop, reduce]);
+
+  const frame = config.frames[Math.min(frameIndex, config.frames.length - 1)];
+  const [x, y, width, height] = frame.rect;
+  const source = portfolioCharacterMap.sources[config.source];
+
+  return (
+    <span
+      className={`portfolio-pet-sprite pet-state-${state}`}
+      data-character-state={assetState}
+      aria-hidden="true"
+    >
+      <span className="portfolio-pet-character-motion">
+        <span
+          className="portfolio-pet-character-mirror"
+          style={{ transform: config.mirror ? "scaleX(-1)" : undefined }}
+        >
+          <span
+            className="portfolio-pet-character-crop"
+            style={{
+              left: `${frame.left * 100}%`,
+              top: `${frame.top * 100}%`,
+              width: `${frame.width * 100}%`,
+              height: `${frame.height * 100}%`,
+            }}
+          >
+            <img
+              src={publicAsset(`/assets/visual/sidebar-character/${source.file}`)}
+              alt=""
+              draggable={false}
+              decoding="async"
+              style={{
+                width: `${source.width / width * 100}%`,
+                height: `${source.height / height * 100}%`,
+                left: `${-x / width * 100}%`,
+                top: `${-y / height * 100}%`,
+              }}
+            />
+          </span>
+        </span>
+      </span>
+    </span>
+  );
+}
+
+function PortfolioChat() {
+  const reduce = useReducedMotion();
+  const [open, setOpen] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [sending, setSending] = useState(false);
+  const [mode, setMode] = useState<PortfolioChatMode>("unknown");
+  const [messages, setMessages] = useState<PortfolioChatMessage[]>(() => [createWelcomeMessage()]);
+  const [context, setContext] = useState<PortfolioChatContext>(HOME_CHAT_CONTEXTS[0]);
+  const [contextVisible, setContextVisible] = useState(false);
+  const [petState, setPetState] = useState<PortfolioPetState>("idle");
+  const [petDrag, setPetDrag] = useState<PortfolioPetDrag>({ x: 0, y: 0 });
+  const [petDragging, setPetDragging] = useState(false);
+  const panelRef = useRef<HTMLElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const messageEndRef = useRef<HTMLDivElement>(null);
+  const contextIdRef = useRef(HOME_CHAT_CONTEXTS[0].id);
+  const contextTimerRef = useRef<number | null>(null);
+  const scrollTimerRef = useRef<number | null>(null);
+  const petTimerRef = useRef<number | null>(null);
+  const requestRef = useRef<AbortController | null>(null);
+  const conversationIdRef = useRef(0);
+  const sendingRef = useRef(sending);
+  const petDragRef = useRef({
+    active: false,
+    pointerId: -1,
+    startX: 0,
+    startY: 0,
+    startOffset: { x: 0, y: 0 } as PortfolioPetDrag,
+    startRect: { left: 0, top: 0, right: 0, bottom: 0 },
+    moved: false,
+  });
+  const suppressPetClickRef = useRef(false);
+  sendingRef.current = sending;
+
+  const pulsePet = (nextState: PortfolioPetState, duration = 1100) => {
+    setPetState(nextState);
+    if (petTimerRef.current !== null) window.clearTimeout(petTimerRef.current);
+    petTimerRef.current = window.setTimeout(() => {
+      setPetState(sendingRef.current ? "thinking" : "idle");
+      petTimerRef.current = null;
+    }, duration);
+  };
+
+  const handlePetPointerDown = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    if (open || event.pointerType === "touch" || event.button !== 0) return;
+    const drag = petDragRef.current;
+    drag.active = true;
+    drag.pointerId = event.pointerId;
+    drag.startX = event.clientX;
+    drag.startY = event.clientY;
+    drag.startOffset = petDrag;
+    const rect = event.currentTarget.getBoundingClientRect();
+    drag.startRect = {
+      left: rect.left,
+      top: rect.top,
+      right: rect.right,
+      bottom: rect.bottom,
+    };
+    drag.moved = false;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handlePetPointerMove = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = petDragRef.current;
+    if (!drag.active || drag.pointerId !== event.pointerId) return;
+    const dx = event.clientX - drag.startX;
+    const dy = event.clientY - drag.startY;
+    if (!drag.moved && Math.hypot(dx, dy) < 4) return;
+    drag.moved = true;
+    setPetDragging(true);
+    event.preventDefault();
+    const horizontalDelta = Math.max(
+      8 - drag.startRect.left,
+      Math.min(-drag.startOffset.x, dx),
+    );
+    const verticalDelta = Math.max(
+      8 - drag.startRect.top,
+      Math.min(window.innerHeight - 8 - drag.startRect.bottom, dy),
+    );
+    setPetDrag({
+      x: Math.round(drag.startOffset.x + horizontalDelta),
+      y: Math.round(drag.startOffset.y + verticalDelta),
+    });
+  };
+
+  const finishPetDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = petDragRef.current;
+    if (!drag.active || drag.pointerId !== event.pointerId) return;
+    if (drag.moved) {
+      suppressPetClickRef.current = true;
+      window.setTimeout(() => {
+        suppressPetClickRef.current = false;
+      }, 120);
+    }
+    drag.active = false;
+    drag.pointerId = -1;
+    setPetDragging(false);
+    if (drag.moved) pulsePet("landing", 420);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
+
+  useEffect(() => {
+    const contexts = getPortfolioChatContexts();
+    let frame = 0;
+
+    const revealContext = () => {
+      setContextVisible(true);
+      if (contextTimerRef.current !== null) window.clearTimeout(contextTimerRef.current);
+      contextTimerRef.current = window.setTimeout(() => {
+        setContextVisible(false);
+        contextTimerRef.current = null;
+      }, 4200);
+    };
+
+    const syncContext = (show = false) => {
+      const next = getNearestPortfolioChatContext(contexts);
+      const changed = next.id !== contextIdRef.current;
+      if (!changed) return false;
+      contextIdRef.current = next.id;
+      setContext(next);
+      if (show) {
+        revealContext();
+        pulsePet("pointing", 1500);
+      }
+      return true;
+    };
+
+    // 项目页的第一段不一定和首页相同，挂载后立即校准一次。
+    syncContext();
+
+    const onScroll = () => {
+      if (scrollTimerRef.current !== null) window.clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = window.setTimeout(() => {
+        if (!sendingRef.current) setPetState("idle");
+        scrollTimerRef.current = null;
+      }, 520);
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        syncContext(true);
+      });
+    };
+
+    const onResize = () => syncContext();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+      if (contextTimerRef.current !== null) window.clearTimeout(contextTimerRef.current);
+      if (scrollTimerRef.current !== null) window.clearTimeout(scrollTimerRef.current);
+      if (petTimerRef.current !== null) window.clearTimeout(petTimerRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!open) return;
+    const previouslyFocused = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+    const focusFrame = window.requestAnimationFrame(() => inputRef.current?.focus());
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setOpen(false);
+        setContextVisible(false);
+        setPetState("idle");
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable?.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      window.removeEventListener("keydown", onKeyDown);
+      window.requestAnimationFrame(() => {
+        if (
+          previouslyFocused &&
+          previouslyFocused !== document.body &&
+          document.contains(previouslyFocused)
+        ) previouslyFocused.focus();
+        else launcherRef.current?.focus();
+      });
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    messageEndRef.current?.scrollIntoView({
+      behavior: reduce ? "auto" : "smooth",
+      block: "nearest",
+    });
+  }, [messages, sending, open, reduce]);
+
+  const sendMessage = async (rawValue: string) => {
+    if (sending || sendingRef.current) return;
+    const conversationId = conversationIdRef.current;
+    const startedAt = performance.now();
+    const minimumReplyDelay = reduce ? 140 : 480;
+    const query = rawValue.trim().slice(0, 600);
+    if (!query) return;
+    sendingRef.current = true;
+
+    const userMessage: PortfolioChatMessage = {
+      id: createChatMessageId(),
+      role: "user",
+      content: query,
+    };
+    const nextConversation = [...messages, userMessage];
+    setMessages(nextConversation);
+    setDraft("");
+    setSending(true);
+    setPetState("thinking");
+
+    const userContext = nextConversation
+      .filter(message => message.role === "user")
+      .slice(-3)
+      .map(message => message.content)
+      .join(" ");
+    // GitHub Pages 只提供静态文件；已知静态基路径时直接走同一份本地白名单，避免等待一个必然 404 的请求。
+    if (window.__PORTFOLIO_BASE__ && !window.__PORTFOLIO_CHAT_API__) {
+      await waitForChatReply(startedAt, minimumReplyDelay);
+      if (conversationId !== conversationIdRef.current) return;
+      const local = buildLocalChatReply(query, userContext);
+      setMode(local.reply === OUT_OF_SCOPE_REPLY ? "guardrail" : "local");
+      pulsePet(local.reply === OUT_OF_SCOPE_REPLY ? "curious" : "success");
+      setMessages(current => [
+        ...current,
+        {
+          id: createChatMessageId(),
+          role: "assistant",
+          content: local.reply,
+          references: local.entries.flatMap(entry => entry.references ?? []).filter((reference, index, all) =>
+            all.findIndex(item => item.href === reference.href) === index,
+          ).slice(0, 4),
+        },
+      ]);
+      sendingRef.current = false;
+      setSending(false);
+      window.requestAnimationFrame(() => inputRef.current?.focus());
+      return;
+    }
+
+    const controller = new AbortController();
+    requestRef.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 11_000);
+    try {
+      const response = await fetch(getChatEndpoint(), {
+        method: "POST",
+        signal: controller.signal,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: nextConversation.slice(-8).map(message => ({
+            role: message.role,
+            content: message.content,
+          })),
+        }),
+      });
+      const payload = await response.json().catch(() => null) as {
+        reply?: unknown;
+        mode?: unknown;
+        references?: unknown;
+      } | null;
+      if (!response.ok || typeof payload?.reply !== "string" || !payload.reply.trim()) {
+        throw new Error("chat endpoint unavailable");
+      }
+      await waitForChatReply(startedAt, minimumReplyDelay);
+      if (conversationId !== conversationIdRef.current) return;
+
+      const responseMode: PortfolioChatMode = payload.mode === "api"
+        ? "api"
+        : payload.mode === "guardrail"
+          ? "guardrail"
+          : "local";
+      setMode(responseMode);
+      pulsePet(payload.reply!.trim() === OUT_OF_SCOPE_REPLY ? "curious" : "success");
+      setMessages(current => [
+        ...current,
+        {
+          id: createChatMessageId(),
+          role: "assistant",
+          content: payload.reply!.trim(),
+          references: parseChatReferences(payload.references),
+        },
+      ]);
+    } catch {
+      await waitForChatReply(startedAt, minimumReplyDelay);
+      if (conversationId !== conversationIdRef.current) return;
+      const local = buildLocalChatReply(query, userContext);
+      setMode(local.reply === OUT_OF_SCOPE_REPLY ? "guardrail" : "local-fallback");
+      pulsePet(local.reply === OUT_OF_SCOPE_REPLY ? "curious" : "success");
+      setMessages(current => [
+        ...current,
+        {
+          id: createChatMessageId(),
+          role: "assistant",
+          content: local.reply,
+          references: local.entries.flatMap(entry => entry.references ?? []).filter((reference, index, all) =>
+            all.findIndex(item => item.href === reference.href) === index,
+          ).slice(0, 4),
+        },
+      ]);
+    } finally {
+      window.clearTimeout(timeout);
+      if (requestRef.current === controller) requestRef.current = null;
+      if (conversationId === conversationIdRef.current) {
+        sendingRef.current = false;
+        setSending(false);
+        window.requestAnimationFrame(() => inputRef.current?.focus());
+      }
+    }
+  };
+
+  const startNewConversation = () => {
+    conversationIdRef.current += 1;
+    requestRef.current?.abort();
+    requestRef.current = null;
+    sendingRef.current = false;
+    setMessages([createWelcomeMessage()]);
+    setDraft("");
+    setSending(false);
+    setMode("unknown");
+    pulsePet("jumping", 800);
+    window.requestAnimationFrame(() => inputRef.current?.focus());
+  };
+
+  const closeChat = () => {
+    setOpen(false);
+    setContextVisible(false);
+    setPetState("idle");
+  };
+
+  const toggleChat = () => {
+    if (open) {
+      closeChat();
+      return;
+    }
+    setOpen(true);
+    setContextVisible(false);
+    pulsePet("waving", 1100);
+  };
+
+  const handlePetClick = () => {
+    if (suppressPetClickRef.current) {
+      suppressPetClickRef.current = false;
+      return;
+    }
+    toggleChat();
+  };
+
+  const visiblePetState: PortfolioPetState = petDragging
+    ? "dragged"
+    : sending
+      ? "thinking"
+      : petState;
+  const petDetached = petDrag.x <= -PORTFOLIO_PET_DETACH_DISTANCE;
+  const isProjectContext = !HOME_CHAT_CONTEXTS.some(item => item.id === context.id);
+  const petPositionStyle = {
+    "--pet-drag-right": `${-petDrag.x}px`,
+    "--pet-drag-bottom": `${-petDrag.y}px`,
+  } as CSSProperties;
+
+  return (
+    <div
+      className="portfolio-chat"
+      style={petPositionStyle}
+      data-chat-mode={mode}
+      data-pet-state={visiblePetState}
+      data-pet-detached={petDetached ? "true" : "false"}
+    >
+      <AnimatePresence initial={false}>
+        {!open && contextVisible && !isProjectContext ? (
+          <motion.div
+            className="portfolio-pet-context"
+            key={context.id}
+            role="status"
+            initial={reduce ? false : { opacity: 0, x: 10, y: 4 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={reduce ? undefined : { opacity: 0, x: 8, y: 3 }}
+            transition={{ duration: reduce ? 0 : 0.22, ease }}
+          >
+            {context.text}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+      <motion.button
+        ref={launcherRef}
+        className={`portfolio-pet-trigger${open ? " is-revealed" : ""}${petDragging ? " is-dragging" : ""}`}
+        type="button"
+        data-pet-drag-react="true"
+        aria-label={open ? "关闭作品集助手" : "打开作品集助手"}
+        aria-controls="portfolio-chat-panel"
+        aria-expanded={open}
+        title={open ? "关闭作品集助手" : "打开作品集助手"}
+        onClick={handlePetClick}
+        onPointerDown={handlePetPointerDown}
+        onPointerMove={handlePetPointerMove}
+        onPointerUp={finishPetDrag}
+        onPointerCancel={finishPetDrag}
+        whileTap={reduce ? undefined : { scale: 0.96 }}
+      >
+        <span className="portfolio-pet-window" aria-hidden="true">
+          <PortfolioPetSprite state={visiblePetState} peeking={!open && !petDetached} />
+        </span>
+      </motion.button>
+
+      <AnimatePresence>
+        {open ? (
+          <motion.section
+            ref={panelRef}
+            id="portfolio-chat-panel"
+            className="portfolio-chat-panel"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="portfolio-chat-title"
+            initial={reduce ? false : { opacity: 0, y: 18, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={reduce ? undefined : { opacity: 0, y: 12, scale: 0.98 }}
+            transition={{ duration: reduce ? 0 : 0.28, ease }}
+          >
+            <header className="portfolio-chat-header">
+              <div className="portfolio-chat-title-wrap">
+                <span className="portfolio-chat-mark" aria-hidden="true">
+                  <MessageCircle size={16} strokeWidth={2.1} />
+                </span>
+                <div>
+                  <h2 id="portfolio-chat-title">和 Leo 聊聊</h2>
+                  <p>{chatModeLabel(mode)}</p>
+                </div>
+              </div>
+              <div className="portfolio-chat-actions">
+                <button
+                  className="portfolio-chat-new"
+                  type="button"
+                  aria-label="开始新对话"
+                  title="开始新对话"
+                  onClick={startNewConversation}
+                >
+                  <RotateCcw size={14} strokeWidth={2} />
+                  <span>新对话</span>
+                </button>
+                <button
+                  className="portfolio-chat-close"
+                  type="button"
+                  aria-label="关闭作品集助手"
+                  onClick={closeChat}
+                >
+                  <X size={17} strokeWidth={2} />
+                </button>
+              </div>
+            </header>
+
+            <div
+              className="portfolio-chat-messages"
+              role="log"
+              aria-live="polite"
+              aria-busy={sending}
+              aria-label="对话内容"
+            >
+              <AnimatePresence initial={false} mode="popLayout">
+                {messages.map(message => (
+                  <motion.div
+                    className={`portfolio-chat-message is-${message.role}`}
+                    key={message.id}
+                    layout="position"
+                    initial={reduce ? false : { opacity: 0, y: 10, scale: 0.985 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={reduce ? undefined : { opacity: 0, y: -5, scale: 0.99 }}
+                    transition={{ duration: reduce ? 0 : 0.24, ease }}
+                  >
+                    {message.role === "assistant" ? (
+                      <span className="portfolio-chat-avatar" aria-hidden="true">Leo</span>
+                    ) : null}
+                    <div className="portfolio-chat-bubble-wrap">
+                      <div className="portfolio-chat-bubble">{message.content}</div>
+                      {message.references?.length ? (
+                        <div className="portfolio-chat-references">
+                          <span>相关内容</span>
+                          <div>
+                            {message.references.map(reference => (
+                              <a
+                                key={`${message.id}-${reference.href}`}
+                                href={getPortfolioRoute(reference.href)}
+                                onClick={closeChat}
+                              >
+                                <span>{reference.label}</span>
+                                <ArrowUpRight size={12} strokeWidth={1.9} aria-hidden="true" />
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                    </div>
+                  </motion.div>
+                ))}
+                {messages.length === 1 ? (
+                  <motion.div
+                    className="portfolio-chat-quick-prompts"
+                    aria-label="常用问题"
+                    key="quick-prompts"
+                    layout="position"
+                    initial={reduce ? false : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={reduce ? undefined : { opacity: 0, y: -6 }}
+                    transition={{ duration: reduce ? 0 : 0.22, ease }}
+                  >
+                    {CHAT_QUICK_PROMPTS.map(prompt => (
+                      <button
+                        key={prompt}
+                        type="button"
+                        disabled={sending}
+                        aria-label={`提问：${prompt}`}
+                        onClick={() => void sendMessage(prompt)}
+                      >
+                        {prompt}
+                      </button>
+                    ))}
+                  </motion.div>
+                ) : null}
+                {sending ? (
+                  <motion.div
+                    className="portfolio-chat-message is-assistant is-loading"
+                    aria-label="助手正在回复"
+                    key="loading"
+                    layout="position"
+                    initial={reduce ? false : { opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={reduce ? undefined : { opacity: 0, y: -4 }}
+                    transition={{ duration: reduce ? 0 : 0.2, ease }}
+                  >
+                    <span className="portfolio-chat-avatar" aria-hidden="true">Leo</span>
+                    <div className="portfolio-chat-bubble portfolio-chat-loading-bubble">
+                      <span /><span /><span />
+                    </div>
+                  </motion.div>
+                ) : null}
+              </AnimatePresence>
+              <div ref={messageEndRef} aria-hidden="true" />
+            </div>
+
+            <form
+              className="portfolio-chat-composer"
+              onSubmit={event => {
+                event.preventDefault();
+                void sendMessage(draft);
+              }}
+            >
+              <input
+                ref={inputRef}
+                value={draft}
+                onChange={event => setDraft(event.target.value)}
+                type="text"
+                maxLength={600}
+                placeholder="问经历、项目难点或设计方法…"
+                aria-label="输入关于李家豪及其设计作品的问题"
+                disabled={sending}
+                autoComplete="off"
+                enterKeyHint="send"
+              />
+              <button
+                type="submit"
+                aria-label="发送问题"
+                disabled={sending || !draft.trim()}
+              >
+                <Send size={16} strokeWidth={2.1} />
+              </button>
+            </form>
+          </motion.section>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 function Hero() {
   const reduce = useReducedMotion();
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -518,23 +1457,32 @@ function SectionIntro({
   );
 }
 
-function AbilitySection() {
+function AbilitySection({
+  onShowProjects,
+}: {
+  onShowProjects: (abilityId: AbilityId) => void;
+}) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const reduce = useReducedMotion();
   const current = abilities[active];
+  const projectCount = new Set(current.evidence.map(item => item.projectSlug)).size;
+  const groupedEvidence = current.evidence.reduce<Array<{
+    projectSlug: string;
+    projectTitle: string;
+    items: typeof current.evidence;
+  }>>((groups, item) => {
+    const group = groups.find(entry => entry.projectSlug === item.projectSlug);
+    if (group) group.items.push(item);
+    else groups.push({ projectSlug: item.projectSlug, projectTitle: item.projectTitle, items: [item] });
+    return groups;
+  }, []);
 
   useEffect(() => {
-    if (
-      reduce ||
-      paused ||
-      window.matchMedia("(max-width: 767px)").matches
-    ) {
-      return;
-    }
+    if (reduce || paused) return;
     const timer = window.setInterval(() => {
-      setActive((index) => (index + 1) % abilities.length);
-    }, 4200);
+      setActive(index => (index + 1) % abilities.length);
+    }, 4800);
     return () => window.clearInterval(timer);
   }, [paused, reduce]);
 
@@ -543,50 +1491,35 @@ function AbilitySection() {
       <div className="section-shell">
         <SectionIntro
           title="核心能力"
-          description="一方面设计可理解、可控的 AI 产品体验，另一方面用 AI 完成原型验证、界面探索与 Markdown 规范维护；同时保留复杂系统、数据表达和跨端交付能力。"
+          description="我以 AI 体验设计与交互策略为核心，把复杂业务转化为可理解、可验证、可落地的产品体验，并用 AI 工作流贯穿原型验证、界面探索、设计系统与数据表达。"
         />
-        <div className="ability-layout">
-          <div
-            className="ability-visual"
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
-            onFocusCapture={() => setPaused(true)}
-            onBlurCapture={() => setPaused(false)}
-          >
-            <div
-              className="ability-radar"
-              role="group"
-              aria-label={`核心能力图，当前为${current.name}`}
-            >
+        <div
+          className={`ability-layout${paused ? " is-paused" : ""}`}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocusCapture={() => setPaused(true)}
+          onBlurCapture={event => {
+            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false);
+          }}
+        >
+          <div className="ability-visual">
+            <div className="ability-radar" role="group" aria-label={`核心能力雷达图，当前为${current.name}`}>
               <svg viewBox="36 36 408 408" aria-hidden="true">
-                {[0.25, 0.5, 0.75, 1].map((level) => (
-                  <polygon
-                    key={level}
-                    className="radar-grid"
-                    points={getRadarPoints(Array(abilities.length).fill(level))}
-                  />
+                {[.25, .5, .75, 1].map(level => (
+                  <polygon key={level} className="radar-grid" points={getRadarPoints(Array(abilities.length).fill(level))} />
                 ))}
                 {abilities.map((ability, index) => {
                   const angle = (-90 + index * (360 / abilities.length)) * (Math.PI / 180);
                   const x = 240 + Math.cos(angle) * radarRadius;
                   const y = 240 + Math.sin(angle) * radarRadius;
-                  return (
-                    <line
-                      key={ability.name}
-                      className="radar-axis"
-                      x1="240"
-                      y1="240"
-                      x2={x}
-                      y2={y}
-                    />
-                  );
+                  return <line key={ability.id} className="radar-axis" x1="240" y1="240" x2={x} y2={y} />;
                 })}
                 <motion.polygon
                   className="radar-shape"
                   points={getRadarPoints(radarValues)}
                   initial={false}
                   animate={{ points: getRadarPoints(radarValues) }}
-                  transition={{ duration: reduce ? 0 : 0.62, ease }}
+                  transition={{ duration: reduce ? 0 : .62, ease }}
                 />
                 {radarValues.map((value, index) => {
                   const angle = (-90 + index * (360 / radarValues.length)) * (Math.PI / 180);
@@ -594,28 +1527,25 @@ function AbilitySection() {
                   const y = 240 + Math.sin(angle) * radarRadius * value;
                   return (
                     <motion.circle
-                      key={abilities[index].name}
+                      key={abilities[index].id}
                       className={`radar-point${active === index ? " is-active" : ""}`}
                       initial={false}
                       animate={{ cx: x, cy: y }}
-                      transition={{ duration: reduce ? 0 : 0.62, ease }}
+                      transition={{ duration: reduce ? 0 : .62, ease }}
                       r={active === index ? 7 : 4}
                     />
                   );
                 })}
               </svg>
-              <div
-                className="ability-switcher"
-                role="tablist"
-                aria-label="核心能力切换"
-              >
+
+              <div className="ability-switcher" role="tablist" aria-label="核心能力切换">
                 {abilities.map((ability, index) => {
                   const angle = (-90 + index * (360 / abilities.length)) * (Math.PI / 180);
                   const x = 50 + Math.cos(angle) * radarButtonOrbitX;
                   const y = 50 + Math.sin(angle) * radarButtonOrbitY;
                   return (
                     <button
-                      key={ability.name}
+                      key={ability.id}
                       id={`ability-tab-${index}`}
                       type="button"
                       role="tab"
@@ -636,16 +1566,13 @@ function AbilitySection() {
                           ArrowUp: -1,
                         };
                         const direction = directions[event.key];
-                        if (!direction && event.key !== "Home" && event.key !== "End") {
-                          return;
-                        }
+                        if (!direction && event.key !== "Home" && event.key !== "End") return;
                         event.preventDefault();
-                        const next =
-                          event.key === "Home"
-                            ? 0
-                            : event.key === "End"
-                              ? abilities.length - 1
-                              : (index + direction + abilities.length) % abilities.length;
+                        const next = event.key === "Home"
+                          ? 0
+                          : event.key === "End"
+                            ? abilities.length - 1
+                            : (index + direction + abilities.length) % abilities.length;
                         setActive(next);
                         setPaused(true);
                         window.requestAnimationFrame(() => {
@@ -675,9 +1602,6 @@ function AbilitySection() {
                 exit={reduce ? undefined : { opacity: 0, y: -8 }}
                 transition={{ duration: 0.42, ease }}
               >
-                <span className="ability-kicker">
-                  {String(active + 1).padStart(2, "0")} / {String(abilities.length).padStart(2, "0")}
-                </span>
                 <h3>{current.name}</h3>
                 <p>{current.description}</p>
                 <ul>
@@ -685,6 +1609,33 @@ function AbilitySection() {
                     <li key={detail}>{detail}</li>
                   ))}
                 </ul>
+                <section className="ability-proof ability-proof-compact" aria-label={`${current.name}对应项目`}>
+                  <header>
+                    <span>对应项目</span>
+                    <button type="button" onClick={() => onShowProjects(current.id)}>
+                      突出相关项目（{projectCount}）
+                    </button>
+                  </header>
+                  <div className="ability-jump-list">
+                    {groupedEvidence.map(group => (
+                      <div className="ability-project-group" key={group.projectSlug}>
+                        <strong>{group.projectTitle}</strong>
+                        <div>
+                          {group.items.map(item => (
+                            <a
+                              key={item.section}
+                              href={`/portfolio/project/${item.projectSlug}/${item.anchor ? `#${item.anchor}` : ""}`}
+                              onClick={event => openProjectEvidence(event, item.projectSlug, item.anchor)}
+                            >
+                              <span>{item.section}</span>
+                              <ArrowUpRight size={14} strokeWidth={1.8} aria-hidden="true" />
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
               </motion.div>
             </AnimatePresence>
           </div>
@@ -722,13 +1673,32 @@ function ImageWithFallback({
   );
 }
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({
+  project,
+  index,
+  highlightedAbilityId,
+}: {
+  project: Project;
+  index: number;
+  highlightedAbilityId: AbilityId | null;
+}) {
   const cardRef = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
   const fadeProgress = useMotionValue(0);
+  const smoothProgress = useSpring(fadeProgress, {
+    stiffness: 260,
+    damping: 34,
+    mass: .45,
+    restDelta: .002,
+  });
   const titleId = `project-${project.slug}-title`;
   const summaryId = `project-${project.slug}-summary`;
-  const roleId = `project-${project.slug}-role`;
+  const abilityMatch = highlightedAbilityId
+    ? project.abilityIds.includes(highlightedAbilityId)
+    : false;
+  const highlightedAbilityLabel = highlightedAbilityId
+    ? abilityLabelById.get(highlightedAbilityId)
+    : null;
 
   useEffect(() => {
     if (reduce) {
@@ -783,37 +1753,34 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       render();
     };
 
+    const resizeObserver = typeof ResizeObserver !== "undefined"
+      ? new ResizeObserver(measure)
+      : null;
+    resizeObserver?.observe(card);
+    resizeObserver?.observe(nextCard);
     measure();
     window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", measure);
     return () => {
       window.cancelAnimationFrame(frame);
+      resizeObserver?.disconnect();
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", measure);
     };
   }, [fadeProgress, reduce]);
 
   const scale = useTransform(
-    fadeProgress,
+    smoothProgress,
     [0, 0.28, 1],
     [1, 0.992, reduce ? 1 : 0.97],
   );
   const opacity = useTransform(
-    fadeProgress,
+    smoothProgress,
     [0, 0.2, 1],
     [1, 0.97, reduce ? 1 : 0.68],
   );
-  const filter = useTransform(
-    fadeProgress,
-    [0, 0.18, 1],
-    [
-      "blur(0px)",
-      "blur(0.5px)",
-      reduce ? "blur(0px)" : "blur(3px)",
-    ],
-  );
   const y = useTransform(
-    fadeProgress,
+    smoothProgress,
     [0, 0.24, 1],
     [0, -2, reduce ? 0 : -8],
   );
@@ -821,22 +1788,32 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <motion.article
       ref={cardRef}
-      className="project-card"
+      className={`project-card${abilityMatch ? " is-ability-match" : ""}`}
       data-project={project.slug}
-      style={{ scale, opacity, filter, y, zIndex: index + 1 }}
+      data-ability-match={abilityMatch ? "true" : undefined}
+      style={{ scale, opacity, y, zIndex: index + 1 }}
     >
       <a
         className="project-card-link"
         href={`/portfolio/project/${project.slug}/`}
         onClick={event => openProjectFromPortfolio(event, project.slug)}
         aria-labelledby={titleId}
-        aria-describedby={`${summaryId} ${roleId}`}
+        aria-describedby={summaryId}
       >
+        {abilityMatch && highlightedAbilityLabel ? (
+          <span className="project-match-indicator" aria-hidden="true">
+            匹配 · {highlightedAbilityLabel}
+          </span>
+        ) : null}
         <div className="project-copy">
           <p className="project-type">{project.type}</p>
           <h3 id={titleId}>{project.title}</h3>
           <p className="project-summary" id={summaryId}>{project.summary}</p>
-          <p className="project-role" id={roleId}>{project.role}</p>
+          <div className="project-ability-tags" aria-label="项目对应能力">
+            {project.abilityIds.slice(0, 3).map(abilityId => (
+              <span key={abilityId}>{abilityLabelById.get(abilityId)}</span>
+            ))}
+          </div>
           <span className="project-link" aria-hidden="true">
             查看项目
             <ArrowUpRight size={15} strokeWidth={1.8} />
@@ -844,7 +1821,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         </div>
         <div className="project-visual">
           <ImageWithFallback
-            src={project.cover}
+            src={project.cardCover ?? project.cover}
             alt={`${project.title}项目封面`}
             width={1672}
             height={941}
@@ -858,17 +1835,39 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
   );
 }
 
-function WorkSection() {
+function WorkSection({
+  highlightedAbilityId,
+  onClearHighlight,
+}: {
+  highlightedAbilityId: AbilityId | null;
+  onClearHighlight: () => void;
+}) {
+  const highlightedAbility = abilities.find(ability => ability.id === highlightedAbilityId);
+  const matchedCount = highlightedAbilityId
+    ? projects.filter(project => project.abilityIds.includes(highlightedAbilityId)).length
+    : 0;
+
   return (
-    <section className="section work-section" id="work">
+    <section className={`section work-section${highlightedAbility ? " has-ability-highlight" : ""}`} id="work">
       <div className="section-shell">
         <SectionIntro
           title="精选作品"
-          description="首个案例聚焦金融 AI 问数，展示意图澄清、过程反馈、结果解释与看板沉淀；其余案例补充复杂 B 端系统与数据设计能力。"
+          description="旗舰案例展示如何用 Codex 支撑大型多系统平台的设计与协作，其余案例覆盖金融 AI、复杂 B 端系统与数据体验。"
         />
+        {highlightedAbility ? (
+          <div className="project-highlight-status" aria-live="polite">
+            <span>正在突出“{highlightedAbility.name}”对应的 {matchedCount} 个项目</span>
+            <button type="button" onClick={onClearHighlight}>显示全部项目</button>
+          </div>
+        ) : null}
         <div className="project-stack">
           {projects.map((project, index) => (
-            <ProjectCard key={project.slug} project={project} index={index} />
+            <ProjectCard
+              key={project.slug}
+              project={project}
+              index={index}
+              highlightedAbilityId={highlightedAbilityId}
+            />
           ))}
         </div>
       </div>
@@ -884,7 +1883,7 @@ function ExperienceSection() {
       <div className="section-shell">
         <SectionIntro
           title="工作经历"
-          description="经历覆盖 AI 问答、金融智能产品、AI 陪伴硬件，以及复杂企业系统与跨端交付。"
+          description="从财税 B 端与数据可视化，到 AI 产品和政企平台，持续负责复杂业务梳理、交互设计、视觉系统与研发交付。"
         />
         <div className="experience-list">
           {experiences.map((experience, index) => {
@@ -915,9 +1914,22 @@ function ExperienceSection() {
                       <div>
                         <p>{experience.summary}</p>
                         <ul>
-                          {experience.details.map((detail) => (
-                            <li key={detail}>{detail}</li>
-                          ))}
+                          {experience.details.map((detail) => {
+                            const [label, ...contentParts] = detail.split("｜");
+                            const content = contentParts.join("｜");
+                            return (
+                              <li key={detail}>
+                                {content ? (
+                                  <>
+                                    <strong>{label}</strong>
+                                    <span>{content}</span>
+                                  </>
+                                ) : (
+                                  <span>{detail}</span>
+                                )}
+                              </li>
+                            );
+                          })}
                         </ul>
                       </div>
                     </motion.div>
@@ -941,14 +1953,7 @@ function ContactSection() {
             <span className="contact-name">我是李家豪</span>
             <span className="contact-invite">期待与你讨论</span>
           </h2>
-          <p>
-            <span className="contact-copy-desktop">
-              如需了解项目细节，欢迎通过右侧联系方式与我联系。
-            </span>
-            <span className="contact-copy-mobile">
-              如需了解项目细节，欢迎通过下方联系方式与我联系。
-            </span>
-          </p>
+          <p>如果你正在寻找利用 AI 能够把复杂业务与设计交付连接起来的设计师，欢迎联系我。</p>
         </div>
 
         <aside className="contact-panel" aria-label="联系方式">
@@ -988,6 +1993,24 @@ function ContactSection() {
 
 function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [highlightedAbilityId, setHighlightedAbilityId] = useState<AbilityId | null>(null);
+  const reduce = useReducedMotion();
+
+  const showRelatedProjects = (abilityId: AbilityId) => {
+    setHighlightedAbilityId(abilityId);
+    const firstProject = projects.find(project => project.abilityIds.includes(abilityId));
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const target = firstProject
+          ? document.querySelector<HTMLElement>(`[data-project="${firstProject.slug}"]`)
+          : document.getElementById("work");
+        target?.scrollIntoView({
+          behavior: reduce ? "auto" : "smooth",
+          block: "start",
+        });
+      });
+    });
+  };
 
   useLayoutEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -1048,12 +2071,16 @@ function HomePage() {
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
       <main className="portfolio-home">
         <Hero />
-        <AbilitySection />
-        <WorkSection />
+        <AbilitySection onShowProjects={showRelatedProjects} />
+        <WorkSection
+          highlightedAbilityId={highlightedAbilityId}
+          onClearHighlight={() => setHighlightedAbilityId(null)}
+        />
         <ExperienceSection />
         <ContactSection />
       </main>
       <BackToTop />
+      <PortfolioChat />
     </>
   );
 }
@@ -1087,10 +2114,13 @@ function ProjectImageGallery({
   );
 }
 
-function ProjectPage({ project }: { project: Project }) {
+function ProjectPage({ project, projectView }: { project: Project; projectView?: NationalPlatformView }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const reduce = useReducedMotion();
   const isZhaocaiCase = project.slug === "zhaocai-smart";
+  const isNationalPlatformCase = project.slug === "gkx";
+  const isNationalPlatformSubpage = isNationalPlatformCase && projectView !== undefined && projectView !== "story";
+  const isCustomCase = isZhaocaiCase || isNationalPlatformCase;
   const handleProjectBack = (event: ReactMouseEvent<HTMLAnchorElement>) => {
     returnToProjectLocation(event, project.slug);
   };
@@ -1104,10 +2134,10 @@ function ProjectPage({ project }: { project: Project }) {
       />
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
       <main
-        className={`case-page${isZhaocaiCase ? " case-page-zhaocai" : ""}`}
+        className={`case-page${isZhaocaiCase ? " case-page-zhaocai" : ""}${isNationalPlatformCase ? isNationalPlatformSubpage ? " case-page-national-platform" : " case-page-gkx" : ""}`}
         data-project={project.slug}
       >
-        {!isZhaocaiCase ? <header className="case-hero">
+        {!isCustomCase ? <header className="case-hero">
           <motion.div
             className="case-heading"
             initial={reduce ? false : { opacity: 0, y: 24 }}
@@ -1124,10 +2154,12 @@ function ProjectPage({ project }: { project: Project }) {
         </header> : null}
         {isZhaocaiCase ? (
           <ZhaocaiSmartCase />
+        ) : isNationalPlatformCase ? (
+          isNationalPlatformSubpage ? <NationalSciencePlatformCase view={projectView} /> : <GkxCase project={project} subNavigation={<ProjectSubnav active="story" />} mdInteractiveContent={<GkxDesignSystemInteractive />} />
         ) : (
           <ProjectImageGallery project={project} reduce={reduce} />
         )}
-        {!isZhaocaiCase ? (
+        {!isCustomCase ? (
           <footer className="case-footer">
             <a href="/portfolio/#work" onClick={handleProjectBack}>
               <ArrowLeft size={16} strokeWidth={1.8} />
@@ -1137,11 +2169,12 @@ function ProjectPage({ project }: { project: Project }) {
         ) : null}
       </main>
       <BackToTop />
+      <PortfolioChat />
     </>
   );
 }
 
-export default function PortfolioClient({ projectSlug }: { projectSlug?: string }) {
+export default function PortfolioClient({ projectSlug, projectView }: { projectSlug?: string; projectView?: NationalPlatformView }) {
   if (!projectSlug) return <HomePage />;
   const project = projects.find((item) => item.slug === projectSlug);
   if (!project) {
@@ -1154,5 +2187,5 @@ export default function PortfolioClient({ projectSlug }: { projectSlug?: string 
       </main>
     );
   }
-  return <ProjectPage project={project} />;
+  return <ProjectPage project={project} projectView={projectView} />;
 }

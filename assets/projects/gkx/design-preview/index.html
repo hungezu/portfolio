@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>组件规范 · 国科信设计规范</title>
+  <script>if(new URLSearchParams(location.search).has('embed'))document.documentElement.classList.add('embedded-preview')</script>
+  <link rel="stylesheet" href="./styles.css?v=20260830-portfolio-embed">
+</head>
+<body class="docs-page">
+  <div class="shell docs-shell" id="shell">
+    <aside class="sidebar">
+      <div class="brand"><img src="./assets/gkx-logo.png" alt="国科信标志"><b>国科信设计规范</b></div>
+      <nav class="component-nav" id="componentNav" aria-label="组件规范导航"></nav>
+      <div class="component-scrollbar" aria-hidden="true"><i id="componentScrollThumb"></i></div>
+    </aside>
+    <main class="main">
+      <div class="glass">
+        <div class="breadcrumb"><span>设计规范</span><span>/</span><b id="currentCrumb">组件</b></div>
+        <div class="work-card">
+          <div class="doc-layout">
+            <article class="doc-content" id="docContent"></article>
+            <aside class="doc-toc"><b>页面内容</b><a href="#interaction">交互演示</a><a href="#demo">结构参考</a><a href="#spec">规格参数</a><a href="#usage">使用规则</a></aside>
+          </div>
+          <div class="confidential-mask" role="note" aria-label="保密内容提示">
+            <div><strong>因项目保密要求，仅展示部分规范内容</strong><p>目录结构与页面类型可浏览，具体规则、交互说明及实现细节暂不对外展示。</p></div>
+          </div>
+          <div class="footer-note">每个规范条目均包含独立 URL、具体样式和可操作交互；演示数据不作为业务字段来源</div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="toast-stack" id="toastStack"></div>
+  <script src="./icons.js?v=20260817-global-icons-3"></script>
+  <script src="./page-docs.js?v=20260817-native-controls-1"></script>
+  <script src="./interaction-docs.js?v=20260817-global-icons-3"></script>
+  <script src="./component-docs.js?v=20260827-nav-spacing-1"></script>
+  <script src="./app.js?v=20260817-global-icons-3"></script>
+</body>
+</html>

@@ -53,3 +53,8 @@ await cp(
   resolve(publicDirectory, "assets", "projects", "data-visualisation"),
   { recursive: true },
 );
+await cp(
+  resolve(root, "assets", "projects", "gkx"),
+  resolve(publicDirectory, "assets", "projects", "gkx"),
+  { recursive: true },
+);

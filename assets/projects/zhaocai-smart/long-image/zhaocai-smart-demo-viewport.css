@@ -1,0 +1,48 @@
+/* Shared height for all interactive demonstrations. Page width and type stay intact. */
+:where(.zcs-case,.zcf,.zmd,.zqa-additions){
+ --zcs-demo-height:min(760px,calc(100vh - 96px));
+ --zcs-demo-height:min(760px,calc(100dvh - 96px));
+}
+.zcf .zcf-app,.zmd .zmd-lab,.zqa-additions .zqa-workspace{
+ display:grid;
+ grid-template-rows:auto minmax(0,1fr);
+ height:var(--zcs-demo-height);
+ max-height:var(--zcs-demo-height);
+ min-height:0;
+ overflow:hidden;
+ scroll-margin-block:48px;
+}
+.zcf .zcf-app-header,.zmd .zmd-lab-header,.zqa-additions .zqa-app-topbar{min-width:0}
+.zcf .zcf-workspace,.zmd .zmd-workspace,.zqa-additions .zqa-app-layout{
+ height:100%;min-height:0;min-width:0;overflow:hidden;grid-template-rows:minmax(0,1fr);
+}
+.zcf .zcf-main,.zcf .zcf-audit,.zmd .zmd-nav,.zmd .zmd-main,
+.zqa-additions .zqa-sidebar,.zqa-additions .zqa-conversation,.zqa-additions .zqa-report-doc{
+ min-height:0;min-width:0;overflow:auto;scrollbar-width:thin;scrollbar-color:#c1c6d0 transparent;scrollbar-gutter:stable;
+}
+/* The Markdown pane owns scrolling, so headings, rules and answers remain reachable. */
+.zmd .zmd-reading-scroll{max-height:none;overflow:visible;overscroll-behavior:auto}
+.zmd .zmd-read-panel{min-height:0}
+.zqa-additions .zqa-conversation>*{flex-shrink:0}
+.zcf :where(.zcf-main,.zcf-audit):focus-visible,.zmd .zmd-main:focus-visible,
+.zqa-additions :where(.zqa-conversation,.zqa-report-doc):focus-visible{outline:2px solid #7050d4;outline-offset:-4px}
+@media(max-width:900px){
+ /* A single scroll pane holds the task and its records when the sidebar stacks. */
+ .zcf .zcf-workspace{display:block;overflow:auto;scrollbar-width:thin;scrollbar-gutter:stable}
+ .zcf .zcf-main,.zcf .zcf-audit{overflow:visible;scrollbar-gutter:auto}
+}
+@media(max-width:760px){
+ :where(.zcs-case,.zcf,.zmd,.zqa-additions){
+  --zcs-demo-height:min(760px,calc(100vh - 48px));
+  --zcs-demo-height:min(760px,calc(100dvh - 48px));
+ }
+ .zmd .zmd-workspace,.zqa-additions .zqa-app-layout{grid-template-rows:auto minmax(0,1fr)}
+ .zmd .zmd-nav,.zqa-additions .zqa-sidebar{overflow:hidden;scrollbar-gutter:auto}
+ .zqa-additions .zqa-workspace--report .zqa-app-layout{grid-template-rows:minmax(0,1fr)}
+}
+@media print{
+ .zcf .zcf-app,.zmd .zmd-lab,.zqa-additions .zqa-workspace{height:auto;max-height:none;display:block}
+ .zcf .zcf-workspace,.zmd .zmd-workspace,.zqa-additions .zqa-app-layout,
+ .zcf .zcf-main,.zcf .zcf-audit,.zmd .zmd-nav,.zmd .zmd-main,
+ .zqa-additions .zqa-sidebar,.zqa-additions .zqa-conversation,.zqa-additions .zqa-report-doc{height:auto;max-height:none;overflow:visible}
+}

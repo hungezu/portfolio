@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 
 const outputDirectory = resolve(process.cwd(), "gh-pages-dist");
 const projectSlugs = [
+  "gkx",
   "zhaocai-smart",
   "tax-cloud",
   "energy-tax",
@@ -17,6 +18,15 @@ await copyFile(
 
 for (const slug of projectSlugs) {
   const routeDirectory = resolve(outputDirectory, "project", slug);
+  await mkdir(routeDirectory, { recursive: true });
+  await copyFile(
+    resolve(outputDirectory, "index.html"),
+    resolve(routeDirectory, "index.html"),
+  );
+}
+
+for (const view of ["systems", "design-system"]) {
+  const routeDirectory = resolve(outputDirectory, "project", "gkx", view);
   await mkdir(routeDirectory, { recursive: true });
   await copyFile(
     resolve(outputDirectory, "index.html"),

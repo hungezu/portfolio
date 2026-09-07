@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>招财 Smart · 首页、可信机制与输出规范</title><link rel="stylesheet" href="./zhaocai-smart-02.css"><link rel="stylesheet" href="./zhaocai-smart-03.css"><link rel="stylesheet" href="./zhaocai-smart-04.css"><link rel="stylesheet" href="./zhaocai-smart-tokens.css"><link rel="stylesheet" href="./zhaocai-smart-case.css"><style>body{margin:0;background:#f7f6f2}.zcs-page-title{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}</style><script defer src="./zhaocai-smart-03.js"></script><script defer src="./vendor/marked.umd.js"></script><script defer src="./zhaocai-smart-04-data.js"></script><script defer src="./zhaocai-smart-04.js"></script><link rel="stylesheet" href="./zhaocai-smart-ui-evidence.css"><link rel="stylesheet" href="./zhaocai-smart-demo-viewport.css"><link rel="stylesheet" href="./zhaocai-smart-homepage.css"></head><body><main class="zcs-case" aria-label="招财 Smart 项目展示、可信机制与输出规范"><!-- BEGIN ZCH HOMEPAGE SHOWCASE -->
+<section class="zch" id="zcs-homepage" aria-labelledby="zch-title">
+  <div class="zch-stage">
+    <header class="zch-heading">
+      <h1 id="zch-title"><span class="zch-title-cn">招财</span> <span class="zch-title-en" lang="en">Smart</span></h1>
+      <p class="zch-subtitle">财务智能化平台</p>
+    </header>
+    <figure class="zch-main-figure">
+      <div class="zch-screen">
+        <div class="zch-screen-clip">
+          <img class="zch-homepage-image" src="./assets/homepage-original.png" width="1445" height="800" fetchpriority="high" decoding="async" alt="招财 Smart 原始首页。左侧为财务智能体、招商智能体和历史对话；中央是“智汇财务，数创未来”、问题输入区，以及报销助手、财务报告、财务问策入口。">
+        </div>
+      </div>
+    </figure>
+    <figure class="zch-detail-figure">
+      <div class="zch-detail-card">
+        <div class="zch-composer-crop">
+          <img class="zch-composer-image" src="./assets/homepage-original.png" width="1445" height="800" decoding="async" alt="同一张原始首页的输入区局部：输入您的问题或需求、深度思考、联网搜索和发送图标。">
+        </div>
+      </div>
+      <figcaption>输入区细节</figcaption>
+    </figure>
+  </div>
+</section>
+<!-- END ZCH HOMEPAGE SHOWCASE -->
+<section class="zct" id="zcs-trust-mechanism" aria-labelledby="zcs-trust-title">
+<header class="zct-heading"><p class="zct-eyebrow">02 · 设计方法</p><h2 id="zcs-trust-title">可信机制的建立</h2><p>查询前对齐业务口径，执行中呈现进展，结束后保留核对依据。</p></header>
+<div class="zcs-business" id="zcs-business-scenario"><figure class="zct-framework" aria-labelledby="zct-framework-title">
+ <div class="zct-framework-scroll" role="region" tabindex="0" aria-label="问题与设计决策图片，可横向滚动">
+  <img class="zct-framework-picture" src="./zhaocai-smart-framework-restored.png" width="1120" height="560" decoding="async" alt="招财 Smart 设计框架：四类问题对应四项设计决策，汇聚为更易用、更可信、更高效。" aria-describedby="zct-framework-description">
+ </div>
+ <figcaption class="zct-sr-only" id="zct-framework-description"><span id="zct-framework-title">问题背景、设计决策与价值目标</span><dl><dt>问题不清楚</dt><dd>查询前对齐意图。将模糊提问转为可确认条件，避免等待后反复重问。先确认时间、范围与口径再查询；让用户看见并修正理解偏差。</dd><dt>判断难</dt><dd>建立可信机制 · 依据核对。从 AI 生成到可审校、可追踪。来源、审校、数据联动、流程留痕。AI 需要能解释来源、能定位问题；AI 提建议，系统给依据，用户做判断</dd><dt>专业门槛高</dt><dd>降低专业门槛。把专业指标与查询规则，转成用户能描述和确认的任务。AI 连接业务语言与专业查询规则，让用户用熟悉的表达完成问数。</dd><dt>流程闭环难</dt><dd>重构任务工作流。将查询、核对、保存与复用组织成连续的工作过程，让 AI 从单次回答延伸到结果复用。</dd></dl><p>价值目标：更易用、更可信、更高效；AI 与人协同完成业务分析。</p></figcaption>
+ <p class="zct-framework-hint">窄屏可左右滑动查看完整图片</p>
+</figure>
+<section class="zcs-native-flow" aria-labelledby="zcs-flow-title">
+    <header><p class="zct-method-label">查询前 · 对齐业务口径</p>
+      <h3 class="zcs-title" id="zcs-flow-title">人机协作：从业务提问到分析结果</h3>
+      <p class="zcs-intro">用户确认业务含义，AI 整理条件，数据服务执行查询。</p>
+    </header>
+  <figure class="zcs-figure" aria-label="用户、AI 助手与数据服务的查询协作流程">
+    <div class="zcs-scroll" tabindex="0" role="region" aria-label="查询流程图，可横向滚动" aria-describedby="zcs-flow-description">
+      <div class="zcs-chart">
+        <ol class="zcs-stages" aria-label="查询阶段">
+          <li class="zcs-stage">提出问题</li><li class="zcs-stage">识别条件</li>
+          <li class="zcs-stage zcs-stage--confirm">确认口径</li>
+          <li class="zcs-stage">执行查询</li><li class="zcs-stage">结果复用</li>
+        </ol>
+        <p class="zcs-role" style="--y:28.888889%">业务用户</p>
+        <p class="zcs-role" style="--y:58.333333%">AI 助手</p>
+        <p class="zcs-role" style="--y:86.666667%">数据服务</p>
+
+        <!-- 仅连线、箭头、辅助线用 inline SVG；节点与所有文字均为 HTML。 -->
+        <svg class="zcs-wires" viewBox="0 0 1200 720" aria-hidden="true" focusable="false">
+          <defs>
+            <marker id="zcs-arrow-neutral" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L8 4L0 8Z" fill="#777580"/></marker>
+            <marker id="zcs-arrow-purple" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L8 4L0 8Z" fill="#7456d7"/></marker>
+          </defs>
+          <path class="zcs-guide" d="M0 312H1188 M0 524H1188"/>
+          <path class="zcs-guide zcs-guide--vertical" d="M124 124V700 M340 124V700 M552 124V700 M764 124V700 M976 124V700"/>
+          <!-- 连线在节点边缘外留出 12 个设计单位，文字注释放在线侧。 -->
+          <path class="zcs-wire" d="M234 258V408Q234 420 246 420H341" marker-end="url(#zcs-arrow-neutral)"/>
+          <path class="zcs-wire" d="M551 420H658"/>
+          <path class="zcs-wire" d="M658 420H765" marker-end="url(#zcs-arrow-neutral)"/>
+          <path class="zcs-wire zcs-wire--confirm zcs-wire--optional" d="M446 370V220Q446 208 458 208H553" marker-end="url(#zcs-arrow-purple)"/>
+          <path class="zcs-wire zcs-wire--confirm" d="M658 258V408" marker-end="url(#zcs-arrow-purple)"/>
+          <circle class="zcs-junction" cx="658" cy="420" r="5"/>
+          <path class="zcs-wire" d="M870 470V574" marker-end="url(#zcs-arrow-neutral)"/>
+          <path class="zcs-wire" d="M975 624H1070Q1082 624 1082 612V470" marker-end="url(#zcs-arrow-neutral)"/>
+          <path class="zcs-wire" d="M1082 370V258" marker-end="url(#zcs-arrow-neutral)"/>
+          <!-- 关键点一：识别歧义后交由用户确认。几何与上方对应连线完全一致。 -->
+          <g class="zcs-signal zcs-signal--clarify">
+            <path class="zcs-signal-trace zcs-signal-trace--halo" pathLength="100" d="M446 370V220Q446 208 458 208H553"/>
+            <path class="zcs-signal-trace zcs-signal-trace--core" pathLength="100" d="M446 370V220Q446 208 458 208H553"/>
+          </g>
+          <!-- 关键点二：业务数据返回后生成分析。错开光效，保持单个阅读重点。 -->
+          <g class="zcs-signal zcs-signal--result" style="--zcs-glow-delay:5s">
+            <path class="zcs-signal-trace zcs-signal-trace--halo" pathLength="100" d="M975 624H1070Q1082 624 1082 612V470"/>
+            <path class="zcs-signal-trace zcs-signal-trace--core" pathLength="100" d="M975 624H1070Q1082 624 1082 612V470"/>
+          </g>
+        </svg>
+
+        <p class="zcs-node" style="--x:19.5%;--y:28.888889%">提出分析问题</p>
+        <p class="zcs-node" style="--x:37.166667%;--y:58.333333%">识别查询条件</p>
+        <p class="zcs-node zcs-node--confirm zcs-node--key" style="--x:54.833333%;--y:28.888889%">确认利润口径</p>
+        <p class="zcs-node" style="--x:72.5%;--y:58.333333%">发起数据查询</p>
+        <p class="zcs-node" style="--x:72.5%;--y:86.666667%">查询业务数据</p>
+        <p class="zcs-node zcs-node--key" style="--x:90.166667%;--y:58.333333%;--zcs-glow-delay:5s">生成分析结果</p>
+        <p class="zcs-node" style="--x:90.166667%;--y:28.888889%">查看并保存</p>
+
+        <span class="zcs-caption zcs-caption--optional" style="--x:38.5%;--y:38.888889%">存在歧义</span>
+        <span class="zcs-caption" style="--x:56.166667%;--y:38.888889%">确认后继续</span>
+        <span class="zcs-caption" style="--x:46%;--y:63.333333%">条件完整，直接查询</span>
+        <span class="zcs-caption" style="--x:73.833333%;--y:69.444444%">查询条件</span>
+        <span class="zcs-caption" style="--x:91.5%;--y:77.5%">返回数据</span>
+      </div>
+    </div>
+    <p class="zcs-scroll-hint">左右滑动查看完整流程</p>
+    <figcaption class="zcs-note"><span>仅在关键条件存在歧义时，请用户确认。</span></figcaption>
+    <p class="zcs-sr-only" id="zcs-flow-description">用户提出问题后，AI 识别查询条件。条件完整时直接发起查询；存在歧义时请用户确认利润口径，再继续查询。数据服务返回数据后，AI 生成分析结果，用户查看并保存。</p>
+  </figure>
+
+  <div class="zcs-rules">
+    <h4>何时直接查询，何时需要澄清</h4>
+    <p class="zcs-rules-intro">按已识别条件推进，只补齐影响查询的关键信息。</p>
+    <div class="zcs-examples">
+      <article class="zcs-example" aria-label="条件完整的提问示例">
+        <span class="zcs-example-label">条件完整</span>
+        <span class="zcs-example-title">查看 2024 年全集团<br>净利润变化</span>
+        <span class="zcs-example-copy">时间、范围与指标均已明确。<br>直接查询，保持任务连续。</span>
+      </article>
+      <article class="zcs-example zcs-example--ambiguous" aria-label="口径存在歧义的提问示例">
+        <span class="zcs-example-label">口径存在歧义</span>
+        <span class="zcs-example-title">查看 2024 年全集团<br><u>利润</u>变化</span>
+        <span class="zcs-example-copy">「利润」可能对应不同统计口径。<br>只确认歧义项，保留已识别条件。</span>
+      </article>
+    </div>
+    <p class="zcs-boundary"><strong>协作边界：</strong>AI 整理与执行，用户确认业务含义。</p>
+  </div>
+  </section></div>
+<!-- BEGIN COMPONENT -->
+<section class="zcf" data-zcf id="zcs-process-feedback" aria-labelledby="zcf-section-title">
+  <header class="zcf-section-heading">
+    <p class="zcf-eyebrow">执行中与结束后 · 反馈与留痕</p>
+    <h3 class="zcf-title" id="zcf-section-title">执行时看见进展，<br>结束后查得到记录</h3>
+    <p class="zcf-intro">将处理过程收拢为三个可读阶段，保留条件确认、数据来源与每次执行记录。</p>
+  </header>
+  <div class="zcf-demo-tools" aria-label="交互方案演示控制">
+    <span class="zcf-demo-label">交互方案 · 示例数据</span>
+    <div class="zcf-demo-actions">
+      <label class="zcf-sr-only" for="zcf-demo-scenario">演示场景</label>
+      <select class="zcf-select" id="zcf-demo-scenario" data-zcf-scenario><option value="slow">等待超过 10 秒</option><option value="timeout">查询超时与重试</option><option value="empty">未查到匹配数据</option><option value="success">顺利完成查询</option></select>
+      <button class="zcf-button zcf-button--primary" type="button" data-zcf-start><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7Z"/></svg>演示一次查询</button>
+    </div>
+  </div>
+  <article class="zcf-app" data-zcf-app data-records="open" aria-label="招财 Smart 问数任务界面">
+    <header class="zcf-app-header">
+      <div class="zcf-brand"><span class="zcf-brand-mark"><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4Z"/></svg></span>招财 Smart</div>
+      <div class="zcf-header-tools"><span class="zcf-task-label" data-zcf-task-id>任务 ZC-0248</span><button class="zcf-button zcf-record-toggle" type="button" data-zcf-toggle-records aria-expanded="true" aria-controls="zcf-audit"><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2Z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>查询记录</button></div>
+    </header>
+    <div class="zcf-workspace">
+      <div class="zcf-main" tabindex="0" role="region" aria-label="当前问数任务">
+        <p class="zcf-question-label">当前查询</p>
+        <h3 class="zcf-question" data-zcf-question>查看 2024 年全集团利润变化</h3>
+        <dl class="zcf-condition"><div><dt>统计时间</dt><dd data-zcf-year>2024 年</dd></div><div><dt>组织范围</dt><dd>全集团</dd></div><div><dt>指标口径</dt><dd>净利润</dd></div></dl>
+        <p class="zcf-condition-note"><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>「利润」已由用户确认为「净利润」</p>
+        <section class="zcf-execution" aria-label="执行过程">
+          <header class="zcf-panel-heading"><h3>执行过程</h3><span class="zcf-status" data-zcf-status data-tone="completed" role="status">已完成</span></header>
+          <ol class="zcf-steps" data-zcf-steps></ol>
+          <details class="zcf-detail-log">
+            <summary>查看处理明细<span>7 个业务节点</span></summary>
+            <ol data-zcf-detail-log aria-label="业务处理明细"></ol>
+          </details>
+        </section>
+        <div data-zcf-feedback></div>
+        <div class="zcf-skeleton" data-zcf-skeleton hidden aria-hidden="true"><div></div><div></div><div></div><div></div></div>
+        <section class="zcf-result" data-zcf-result aria-label="本次分析结果">
+          <p class="zcf-result-label"><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></svg>分析结果</p>
+          <div class="zcf-result-summary"><h3 data-zcf-result-title>2024 年集团净利润</h3><p class="zcf-result-metric"><span class="zcf-sr-only">全年合计 </span><strong data-zcf-result-total>6.08</strong><span>亿元</span></p></div>
+          <figure class="zcf-chart" data-zcf-chart aria-label="2024 年季度净利润示例：一季度1.32亿元、二季度1.46亿元、三季度1.59亿元、四季度1.71亿元。合计6.08亿元。">
+            <div class="zcf-chart-header"><span>季度净利润</span><span>单位：亿元</span></div>
+            <div class="zcf-bars" data-zcf-bars aria-hidden="true"><div class="zcf-bar" style="--value:66%"><span>1.32</span></div><div class="zcf-bar" style="--value:73%"><span>1.46</span></div><div class="zcf-bar" style="--value:79.5%"><span>1.59</span></div><div class="zcf-bar" style="--value:85.5%"><span>1.71</span></div></div>
+            <div class="zcf-chart-labels" aria-hidden="true"><span>一季度</span><span>二季度</span><span>三季度</span><span>四季度</span></div>
+          </figure>
+          <div class="zcf-result-footer"><span class="zcf-result-version" data-zcf-result-version>第 2 次执行 · 已关联查询快照</span><button class="zcf-button zcf-button--text" type="button" data-zcf-open-snapshot>查看口径与数据依据 <span aria-hidden="true">↗</span></button></div>
+        </section>
+        <section class="zcf-source" data-zcf-source hidden aria-label="已返回的业务数据">
+          <div class="zcf-source-icon"><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16M4 15h16"/></svg></div>
+          <div><h3>集团经营指标表</h3><p data-zcf-source-meta>2024 年 · 4 条季度数据 · 示例</p></div>
+          <button class="zcf-button zcf-button--text" type="button" data-zcf-view-table>查看原始表格 <span aria-hidden="true">↗</span></button>
+        </section>
+      </div>
+      <aside class="zcf-audit" tabindex="0" id="zcf-audit" aria-label="本次查询记录" data-zcf-audit>
+        <div class="zcf-audit-heading"><h3>本次查询记录</h3><p data-zcf-audit-meta>同一任务 · 2 次执行</p></div>
+        <div class="zcf-tabs" role="tablist" aria-label="记录类型"><button class="zcf-tab" type="button" role="tab" id="zcf-history-tab" aria-controls="zcf-history-panel" aria-selected="true" data-zcf-tab="history">过程记录</button><button class="zcf-tab" type="button" role="tab" id="zcf-snapshot-tab" aria-controls="zcf-snapshot-panel" aria-selected="false" tabindex="-1" data-zcf-tab="snapshot">查询快照</button></div>
+        <div id="zcf-history-panel" role="tabpanel" aria-labelledby="zcf-history-tab" data-zcf-panel="history"><ol class="zcf-log" data-zcf-log aria-label="按时间排列的操作记录"></ol><p class="zcf-audit-footnote">条件变更与每次执行分别记录，回看时可定位当时的口径。</p></div>
+        <div class="zcf-snapshot" id="zcf-snapshot-panel" role="tabpanel" aria-labelledby="zcf-snapshot-tab" data-zcf-panel="snapshot" hidden>
+          <p class="zcf-snapshot-label">执行时的条件与数据</p>
+          <label class="zcf-sr-only" for="zcf-snapshot-version">查看哪次执行的快照</label><select class="zcf-select zcf-version-select" id="zcf-snapshot-version" data-zcf-snapshot-version></select>
+          <dl><div><dt>原始提问</dt><dd data-zcf-snapshot-question>查看 2024 年全集团利润变化</dd></div><div><dt>口径确认</dt><dd>利润 → 净利润<br>由用户确认</dd></div><div><dt>查询范围</dt><dd data-zcf-snapshot-range>2024.01.01—2024.12.31<br>全集团 · 按季度汇总</dd></div></dl>
+          <div class="zcf-snapshot-rule"></div>
+          <dl><div><dt>数据来源</dt><dd>集团经营指标表（示例）</dd></div><div><dt>返回数据</dt><dd data-zcf-snapshot-data>4 条季度汇总数据</dd></div><div><dt>关联结果</dt><dd data-zcf-snapshot-result>第 2 次执行的分析结果</dd></div></dl>
+          <button class="zcf-button zcf-button--text" type="button" data-zcf-snapshot-table>查看本次原始表格 <span aria-hidden="true">↗</span></button>
+          <p class="zcf-snapshot-status">快照随本次执行保留，回看时使用当时的查询条件。</p>
+        </div>
+      </aside>
+    </div>
+  </article>
+  <section class="zcf-timing" aria-labelledby="zcf-timing-title">
+    <div class="zcf-timing-heading"><span class="zcf-small-index">等待反馈</span><h3 id="zcf-timing-title">随着等待时间，补充必要的信息</h3></div>
+    <div class="zcf-timing-grid">
+      <article><p class="zcf-time-range">0—3 <span>秒</span></p><h4>及时响应</h4><p>立即显示当前阶段，已返回的内容先呈现。</p></article>
+      <article><p class="zcf-time-range">3—10 <span>秒</span></p><h4>保留进行状态</h4><p>突出当前执行步骤，用骨架屏预留数据位置。</p></article>
+      <article><p class="zcf-time-range">10 <span>秒以上</span></p><h4>说明等待情况</h4><p>提示查询仍在进行，提供停止操作，保留已确认条件。</p></article>
+    </div>
+  </section>
+  <div class="zcf-explanation">
+    <article><span class="zcf-small-index">异常恢复</span><h3>保留条件，继续下一步</h3><p><strong>查询超时</strong>时从失败步骤重试；<strong>没有数据</strong>时调整统计范围。两种情况分别反馈，并保留此前的查询记录。</p></article>
+    <article><span class="zcf-small-index">流程留痕</span><h3>从结果，找到当时的依据</h3><p><strong>条件、操作、数据与结果</strong>关联到每次执行。用户可切换快照核对口径，也可打开该次查询的原始表格。</p></article>
+  </div>
+  <dialog class="zcf-dialog" data-zcf-table-dialog aria-labelledby="zcf-table-title">
+    <div class="zcf-dialog-heading"><div><p class="zcf-small-index" data-zcf-table-version>数据依据</p><h3 id="zcf-table-title">集团经营指标表</h3></div><button class="zcf-button zcf-dialog-close" type="button" data-zcf-close-dialog aria-label="关闭原始表格">×</button></div>
+    <p class="zcf-dialog-copy" data-zcf-table-scope></p>
+    <div class="zcf-table-scroll"><table class="zcf-data-table"><caption class="zcf-sr-only" data-zcf-table-caption>季度净利润数据</caption><thead><tr><th scope="col">统计季度</th><th scope="col">组织范围</th><th scope="col">净利润（亿元）</th></tr></thead><tbody data-zcf-table-body></tbody><tfoot><tr><th scope="row" colspan="2">全年合计</th><td data-zcf-table-total></td></tr></tfoot></table></div>
+    <p class="zcf-table-note">本页为示例数据；图表、合计与查询快照使用同一份返回数据。</p>
+    <div class="zcf-dialog-actions"><button class="zcf-button" type="button" data-zcf-close-dialog>返回查询</button></div>
+  </dialog>
+  <dialog class="zcf-dialog zcf-dialog--small" data-zcf-range-dialog aria-labelledby="zcf-range-title">
+    <div class="zcf-dialog-heading"><div><p class="zcf-small-index">调整查询范围</p><h3 id="zcf-range-title">保留口径，修改统计时间</h3></div><button class="zcf-button zcf-dialog-close" type="button" data-zcf-close-dialog aria-label="取消调整">×</button></div>
+    <p class="zcf-dialog-copy">全集团 · 净利润 · 按季度汇总</p>
+    <form data-zcf-range-form>
+      <label class="zcf-field-label" for="zcf-range-year">统计年份</label>
+      <select class="zcf-select" id="zcf-range-year" data-zcf-range-year><option value="2024">2024 年</option><option value="2023">2023 年</option></select>
+      <p class="zcf-table-note">修改后开始新一次执行，之前的空结果与条件仍可回看。</p>
+      <div class="zcf-dialog-actions"><button class="zcf-button" type="button" data-zcf-close-dialog>取消</button><button class="zcf-button zcf-button--primary" type="submit">确认并重新查询</button></div>
+    </form>
+  </dialog>
+  <noscript><p class="zcf-feedback">请在浏览器中打开并启用 JavaScript，以查看执行状态、处理明细与查询记录。</p></noscript>
+  <p class="zcf-sr-only" role="status" aria-live="polite" data-zcf-announcement></p>
+</section>
+<!-- END COMPONENT -->
+<!-- BEGIN ORIGINAL UI EVIDENCE -->
+<section class="zcu-evidence" id="zcs-original-output" data-zcu-evidence aria-labelledby="zcu-evidence-title">
+  <svg class="zcu-filter-definitions" width="0" height="0" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><defs><filter id="zcu-original-legibility" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceGraphic" stdDeviation="0.35" result="zcu-soft"/><feComposite in="SourceGraphic" in2="zcu-soft" operator="arithmetic" k1="0" k2="1.35" k3="-0.35" k4="0" result="zcu-sharp"/><feComponentTransfer in="zcu-sharp"><feFuncR type="gamma" amplitude="1.02" exponent="1.5" offset="0"/><feFuncG type="gamma" amplitude="1.02" exponent="1.5" offset="0"/><feFuncB type="gamma" amplitude="1.02" exponent="1.5" offset="0"/><feFuncA type="identity"/></feComponentTransfer></filter></defs></svg>
+  <header class="zcu-evidence-heading">
+    <div><p class="zcu-evidence-label">原始界面</p><h3 id="zcu-evidence-title">完成输出后的记录与数据入口</h3></div>
+  </header>
+  <figure class="zcu-original-figure">
+    <div class="zcu-image-frame">
+      <img class="zcu-original-image" src="./assets/completed-output-original.png" width="1282" height="1944" loading="lazy" decoding="async" alt="原始完成输出界面：检测缺失信息、搜索与澄清业务报表、提取组织和时间、搜索与澄清组织信息、调取报表数据；下方保留表格和查看原始表格入口。">
+    </div>
+    <figcaption class="zcu-evidence-caption">原始设计稿 · 展示过程记录与数据入口</figcaption>
+  </figure>
+</section>
+<!-- END ORIGINAL UI EVIDENCE -->
+</section>
+<!-- BEGIN COMPONENT -->
+<section class="zmd" id="zcs-markdown-system" data-zmd aria-labelledby="zmd-title">
+  <header class="zmd-heading"><p class="zmd-eyebrow">03 · Markdown 输出规范</p><h2 id="zmd-title">为不同业务场景，<br>建立统一的回答规范</h2><p class="zmd-intro">从一句结论到完整经营分析，统一内容层级、数据表达与引用方式。</p></header>
+  <div class="zmd-benefits">
+    <article><span>01</span><div><h3>把内容与样式分开</h3><p>同一份内容遵循同一套排版，减少逐页调整。</p></div></article>
+    <article><span>02</span><div><h3>让输出规则可复用</h3><p>把标题、口径和来源约定写进模板，适配不同任务。</p></div></article>
+    <article><span>03</span><div><h3>让交付有共同依据</h3><p>以可读文本保留结构，便于内容复核与持续维护。</p></div></article>
+  </div>
+  <div class="zmd-lab-caption"><span>8 套业务回答 · 12 类组件规则</span><span>交互方案 · 示例数据</span></div>
+  <article class="zmd-lab" aria-label="Markdown 回答规范与场景演示">
+    <header class="zmd-lab-header"><span class="zmd-brand">招财 <strong>Smart</strong><span class="zmd-brand-rule">回答规范</span></span><div class="zmd-main-tabs" role="tablist" aria-label="展示内容"><button type="button" role="tab" id="zmd-scenes-tab" aria-controls="zmd-workspace" aria-selected="true" data-zmd-mode="scenes">场景示例</button><button type="button" role="tab" id="zmd-rules-tab" aria-controls="zmd-workspace" aria-selected="false" tabindex="-1" data-zmd-mode="rules">组件规则</button></div></header>
+    <div class="zmd-workspace" id="zmd-workspace" role="tabpanel" aria-labelledby="zmd-scenes-tab">
+      <nav class="zmd-nav" aria-label="选择业务场景或组件规则"><p data-zmd-nav-title>按业务任务选择</p><div data-zmd-nav></div><div class="zmd-nav-foot"><span>统一基准</span><p>正文 14 / 24<br>间距 4 / 8px</p></div></nav>
+      <div class="zmd-main" data-zmd-reading-scroll tabindex="0" role="region" aria-label="回答规范内容，可滚动阅读">
+        <header class="zmd-example-heading"><p class="zmd-small-label" data-zmd-example-label></p><h3 data-zmd-question></h3><p class="zmd-example-description" data-zmd-description></p><div class="zmd-rule-tags" data-zmd-rule-tags></div><dl class="zmd-rule-spec" data-zmd-rule-spec hidden aria-label="本组件的固定规格"></dl></header>
+        <div class="zmd-read-panel" id="zmd-read-panel" role="region" aria-label="回答内容">
+          <div class="zmd-read-options"><label><input type="checkbox" data-zmd-annotations>显示规范标注</label><span data-zmd-reading-meta></span></div>
+          <nav class="zmd-outline" aria-label="回答章节" data-zmd-outline hidden></nav>
+          <div class="zmd-reading-scroll"><div class="zmd-markdown" data-zmd-render></div></div>
+        </div>
+        
+      </div>
+    </div>
+  </article>
+  <section class="zmd-contract" aria-labelledby="zmd-contract-title"><div><p class="zmd-small-label">规范的落地边界</p><h3 id="zmd-contract-title">文字有结构，<br>界面有统一的呈现规则</h3></div><div class="zmd-contract-rows"><article><h4>内容约定</h4><p>模型按任务选择结论、依据与建议，明确统计范围、单位和数据缺口。</p></article><article><h4>呈现约定</h4><p>渲染器统一字号、间距、表格和引用；图表由约定的数据结构呈现。</p></article><article><h4>交付约定</h4><p>规范、完整示例与数据一起交付，后续可以逐项检查和版本维护。</p></article></div></section>
+  
+  <dialog class="zmd-dialog" data-zmd-dialog aria-labelledby="zmd-source-title"><header><div><p class="zmd-small-label">引用依据 · 示例</p><h3 id="zmd-source-title" data-zmd-source-title></h3></div><button type="button" class="zmd-dialog-close" data-zmd-close aria-label="关闭引用详情">×</button></header><div class="zmd-source-body" data-zmd-source-body></div><footer><button type="button" class="zmd-btn" data-zmd-close>返回回答</button></footer></dialog>
+  
+  <noscript><p>请在浏览器中启用 JavaScript，以切换示例、查看组件规则和引用依据。</p></noscript>
+</section>
+<!-- END COMPONENT -->
+</main></body></html>

@@ -30,3 +30,13 @@ python3 -m http.server 4173
 ```text
 http://127.0.0.1:4173
 ```
+
+## 作品集助手
+
+首页和案例页右侧会露出一只躲在屏幕边缘的粉色小猪。滚动时它会用一句话介绍当前章节，点击后露出全身并展开站内悬浮对话窗，不会新开页面。助手只检索 `app/chat-knowledge.ts` 中整理过的公开内容；超出范围会统一回复“我只能回答关于李家豪及其设计作品的问题。”，也不会启用联网搜索。
+
+需要模型接口时，在本地或服务端复制 `.env.example` 为 `.env.local` 并填写 `OPENAI_API_KEY`（可选填写 `OPENAI_MODEL`），`/api/chat` 会在服务端调用模型，密钥不会进入浏览器。没有密钥或使用 GitHub Pages 静态托管时，界面会自动使用同一份本地白名单知识库回答，仍保持边界限制。
+
+如果静态站点需要连接独立的 API 服务，可在加载主脚本前设置 `window.__PORTFOLIO_CHAT_API__` 为 `POST` 接口地址（并由该服务自行处理跨域）；接口应返回 `{ reply, mode, references }`。
+
+当前小猪素材为临时助手形象：`assets/visual/pink-piglet-spritesheet.webp`。以后替换成 Q 版人物时，保留透明精灵表或调整 `PortfolioPetSprite` 的素材地址即可，不需要改聊天和滚动逻辑。

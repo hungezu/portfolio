@@ -1,0 +1,68 @@
+/* 招财 Smart / 基础规范 v1.1：三节共用。 */
+:where(.zcs-case,.zcs-business,.zcf,.zmd){
+ --zcs-type-12:12px;--zcs-type-14:14px;--zcs-type-16:16px;--zcs-type-18:18px;--zcs-type-20:20px;--zcs-type-24:24px;--zcs-type-28:28px;--zcs-type-32:32px;--zcs-type-section:32px;
+ --zcs-radius-4:4px;--zcs-radius-8:8px;--zcs-radius-12:12px;--zcs-radius-16:16px;
+ --zcs-space-4:4px;
+ --zcs-space-8:8px;
+ --zcs-space-12:12px;
+ --zcs-space-16:16px;
+ --zcs-space-20:20px;
+ --zcs-space-24:24px;
+ --zcs-space-28:28px;
+ --zcs-space-32:32px;
+ --zcs-space-40:40px;
+ --zcs-space-48:48px;
+ --zcs-space-56:56px;
+ --zcs-space-64:64px;
+ --zcs-space-72:72px;
+ --zcs-space-80:80px;
+ --zcs-space-96:96px;
+
+}
+.zcs-case{margin:0 auto;width:100%;max-width:1200px;box-sizing:border-box;color:#202024;background:#f7f6f2;font-family:var(--zcs-font,"Poppins","PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif)}
+.zcs-case>.zcs-business,.zcs-case>.zcf,.zcs-case>.zmd{padding:64px 40px;max-width:1200px}
+.zcs-case>.zcf,.zcs-case>.zmd{position:relative}
+.zcs-case>.zcf::before,.zcs-case>.zmd::before{content:"";position:absolute;top:0;left:40px;right:40px;height:1px;background:#ded9e4}
+.zcs-business .zcs-framework-header{text-align:left}
+.zcs-business .zcs-title{font-weight:600;line-height:1.5}
+.zcs-business .zcs-eyebrow{font-size:14px;line-height:1.42857143;margin-bottom:24px}
+.zcs-business .zcs-native-flow>header>.zcs-title{font-size:24px;line-height:1.5}
+.zcf .zcf-eyebrow,.zmd .zmd-eyebrow{margin-bottom:24px;line-height:1.42857143}
+.zcf .zcf-title,.zmd .zmd-heading h2{font-size:var(--zcs-type-section);line-height:1.5}
+.zcf .zcf-intro,.zmd .zmd-intro{line-height:1.75}
+.zmd .zmd-markdown{font-size:16px;line-height:1.75}
+.zmd .zmd-markdown [data-md-depth="1"]{font-size:24px;line-height:1.5;margin-bottom:24px}
+.zmd .zmd-markdown [data-md-depth="2"]{font-size:20px;line-height:1.6;margin:32px 0 12px}
+.zmd .zmd-markdown [data-md-depth="3"]{font-size:16px;line-height:1.75;margin:24px 0 8px}
+.zmd .zmd-markdown p{margin-bottom:16px}
+.zmd .zmd-markdown :where(th,td){padding:12px 16px;line-height:1.5}
+.zmd .zmd-markdown th{font-size:14px;line-height:1.42857143}
+.zmd .zmd-markdown :where(pre,blockquote,.zmd-chart){padding:20px 24px;margin:24px 0;border-radius:8px}
+.zmd .zmd-markdown pre code{line-height:1.71428571}
+.zmd textarea{font-size:14px;line-height:1.71428571}
+.zmd .zmd-markdown blockquote{border-radius:0 8px 8px 0}
+.zmd .zmd-lab,.zcf .zcf-app{border-radius:12px}
+.zmd .zmd-btn,.zcf .zcf-button,.zcf .zcf-select{border-radius:8px;min-height:40px;line-height:1.42857143}
+.zmd .zmd-dialog,.zcf .zcf-dialog{border-radius:12px;padding:32px}
+.zmd .zmd-dialog-close,.zcf .zcf-dialog-close{width:40px;height:40px;min-height:40px;font-size:24px;line-height:1}
+.zmd .zmd-nav button,.zmd .zmd-rule-tags button{line-height:1.42857143}
+.zmd .zmd-rule-spec{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;margin:24px 0 0;padding:20px 0 0;border-top:1px solid #e8e4ec}
+.zmd .zmd-rule-spec dt{color:#74707c;font-size:12px;line-height:1.66666667;margin-bottom:8px}
+.zmd .zmd-rule-spec dd{color:#514e58;font-size:14px;line-height:1.71428571;margin:0;overflow-wrap:anywhere}
+.zmd .zmd-rule-tags button{font-size:14px;color:#6c4b9b}
+.zmd .zmd-source-link{font-size:inherit;line-height:inherit;color:#6946b8;text-underline-offset:4px}
+.zmd .zmd-cite{font-size:12px;line-height:1.66666667;min-height:24px;border-radius:4px}
+.zmd .zmd-annotated>[data-rule]{margin-top:40px!important}
+.zmd .zmd-markdown li ul,.zmd .zmd-markdown li ol{margin-block:8px}
+.zmd .zmd-markdown :where(ul,ol){margin:16px 0 24px}
+.zmd .zmd-markdown li{margin:8px 0}
+.zmd .zmd-source-table{line-height:1.5}
+.zmd .zmd-source-table :where(th,td){padding:12px 16px}
+@media(max-width:760px){
+ :where(.zcs-case,.zcs-business,.zcf,.zmd){--zcs-type-section:28px}
+ .zcs-case>.zcs-business,.zcs-case>.zcf,.zcs-case>.zmd{padding:48px 20px}
+ .zcs-case>.zcf::before,.zcs-case>.zmd::before{left:20px;right:20px}
+ .zmd .zmd-rule-spec{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 24px}
+ .zmd .zmd-dialog,.zcf .zcf-dialog{padding:24px}
+}
+@media(max-width:520px){.zmd .zmd-markdown :where(pre,blockquote,.zmd-chart){padding:16px}}
