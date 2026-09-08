@@ -19,16 +19,15 @@
           <img class="zch-composer-image" src="./assets/homepage-original.png" width="1445" height="800" decoding="async" alt="同一张原始首页的输入区局部：输入您的问题或需求、深度思考、联网搜索和发送图标。">
         </div>
       </div>
-      <figcaption>输入区细节</figcaption>
     </figure>
   </div>
 </section>
 <!-- END ZCH HOMEPAGE SHOWCASE -->
 <section class="zct" id="zcs-trust-mechanism" aria-labelledby="zcs-trust-title">
-<header class="zct-heading"><p class="zct-eyebrow">02 · 设计方法</p><h2 id="zcs-trust-title">可信机制的建立</h2><p>查询前对齐业务口径，执行中呈现进展，结束后保留核对依据。</p></header>
+<header class="zct-heading"><h2 id="zcs-trust-title">可信机制的建立</h2><p>查询前对齐业务口径，执行中呈现进展，结束后保留核对依据。</p></header>
 <div class="zcs-business" id="zcs-business-scenario"><figure class="zct-framework" aria-labelledby="zct-framework-title">
  <div class="zct-framework-scroll" role="region" tabindex="0" aria-label="问题与设计决策图片，可横向滚动">
-  <img class="zct-framework-picture" src="./zhaocai-smart-framework-restored.png" width="1120" height="560" decoding="async" alt="招财 Smart 设计框架：四类问题对应四项设计决策，汇聚为更易用、更可信、更高效。" aria-describedby="zct-framework-description">
+  <img class="zct-framework-picture" src="./zhaocai-smart-framework-restored.png?v=20260907-2" width="1120" height="560" decoding="async" alt="招财 Smart 设计框架：四类问题对应四项设计决策，汇聚为更易用、更可信、更高效。" aria-describedby="zct-framework-description">
  </div>
  <figcaption class="zct-sr-only" id="zct-framework-description"><span id="zct-framework-title">问题背景、设计决策与价值目标</span><dl><dt>问题不清楚</dt><dd>查询前对齐意图。将模糊提问转为可确认条件，避免等待后反复重问。先确认时间、范围与口径再查询；让用户看见并修正理解偏差。</dd><dt>判断难</dt><dd>建立可信机制 · 依据核对。从 AI 生成到可审校、可追踪。来源、审校、数据联动、流程留痕。AI 需要能解释来源、能定位问题；AI 提建议，系统给依据，用户做判断</dd><dt>专业门槛高</dt><dd>降低专业门槛。把专业指标与查询规则，转成用户能描述和确认的任务。AI 连接业务语言与专业查询规则，让用户用熟悉的表达完成问数。</dd><dt>流程闭环难</dt><dd>重构任务工作流。将查询、核对、保存与复用组织成连续的工作过程，让 AI 从单次回答延伸到结果复用。</dd></dl><p>价值目标：更易用、更可信、更高效；AI 与人协同完成业务分析。</p></figcaption>
  <p class="zct-framework-hint">窄屏可左右滑动查看完整图片</p>
@@ -128,15 +127,23 @@
   <div class="zcf-demo-tools" aria-label="交互方案演示控制">
     <span class="zcf-demo-label">交互方案 · 示例数据</span>
     <div class="zcf-demo-actions">
-      <label class="zcf-sr-only" for="zcf-demo-scenario">演示场景</label>
-      <select class="zcf-select" id="zcf-demo-scenario" data-zcf-scenario><option value="slow">等待超过 10 秒</option><option value="timeout">查询超时与重试</option><option value="empty">未查到匹配数据</option><option value="success">顺利完成查询</option></select>
+      <details class="zcf-scenario-picker" data-zcf-scenario-picker>
+        <summary aria-label="选择演示场景"><span data-zcf-scenario-label>等待超过 10 秒</span><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></summary>
+        <div class="zcf-scenario-menu" role="listbox" aria-label="演示场景">
+          <button type="button" role="option" aria-selected="true" data-zcf-scenario-option="slow">等待超过 10 秒</button>
+          <button type="button" role="option" aria-selected="false" data-zcf-scenario-option="timeout">查询超时与重试</button>
+          <button type="button" role="option" aria-selected="false" data-zcf-scenario-option="empty">未查到匹配数据</button>
+          <button type="button" role="option" aria-selected="false" data-zcf-scenario-option="success">顺利完成查询</button>
+        </div>
+        <input type="hidden" id="zcf-demo-scenario" data-zcf-scenario="slow">
+      </details>
       <button class="zcf-button zcf-button--primary" type="button" data-zcf-start><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 10 7-10 7Z"/></svg>演示一次查询</button>
     </div>
   </div>
-  <article class="zcf-app" data-zcf-app data-records="open" aria-label="招财 Smart 问数任务界面">
+  <article class="zcf-app" data-zcf-app data-records="closed" aria-label="招财 Smart 问数任务界面">
     <header class="zcf-app-header">
       <div class="zcf-brand"><span class="zcf-brand-mark"><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4Z"/></svg></span>招财 Smart</div>
-      <div class="zcf-header-tools"><span class="zcf-task-label" data-zcf-task-id>任务 ZC-0248</span><button class="zcf-button zcf-record-toggle" type="button" data-zcf-toggle-records aria-expanded="true" aria-controls="zcf-audit"><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2Z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>查询记录</button></div>
+      <div class="zcf-header-tools"><span class="zcf-task-label" data-zcf-task-id>任务 ZC‑0248</span><button class="zcf-button zcf-record-toggle" type="button" data-zcf-toggle-records aria-expanded="false" aria-controls="zcf-audit"><svg class="zcf-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2Z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>查询记录</button></div>
     </header>
     <div class="zcf-workspace">
       <div class="zcf-main" tabindex="0" role="region" aria-label="当前问数任务">
@@ -170,7 +177,7 @@
           <button class="zcf-button zcf-button--text" type="button" data-zcf-view-table>查看原始表格 <span aria-hidden="true">↗</span></button>
         </section>
       </div>
-      <aside class="zcf-audit" tabindex="0" id="zcf-audit" aria-label="本次查询记录" data-zcf-audit>
+      <aside class="zcf-audit" tabindex="0" id="zcf-audit" aria-label="本次查询记录" data-zcf-audit hidden>
         <div class="zcf-audit-heading"><h3>本次查询记录</h3><p data-zcf-audit-meta>同一任务 · 2 次执行</p></div>
         <div class="zcf-tabs" role="tablist" aria-label="记录类型"><button class="zcf-tab" type="button" role="tab" id="zcf-history-tab" aria-controls="zcf-history-panel" aria-selected="true" data-zcf-tab="history">过程记录</button><button class="zcf-tab" type="button" role="tab" id="zcf-snapshot-tab" aria-controls="zcf-snapshot-panel" aria-selected="false" tabindex="-1" data-zcf-tab="snapshot">查询快照</button></div>
         <div id="zcf-history-panel" role="tabpanel" aria-labelledby="zcf-history-tab" data-zcf-panel="history"><ol class="zcf-log" data-zcf-log aria-label="按时间排列的操作记录"></ol><p class="zcf-audit-footnote">条件变更与每次执行分别记录，回看时可定位当时的口径。</p></div>
@@ -242,11 +249,10 @@
     <article><span>02</span><div><h3>让输出规则可复用</h3><p>把标题、口径和来源约定写进模板，适配不同任务。</p></div></article>
     <article><span>03</span><div><h3>让交付有共同依据</h3><p>以可读文本保留结构，便于内容复核与持续维护。</p></div></article>
   </div>
-  <div class="zmd-lab-caption"><span>8 套业务回答 · 12 类组件规则</span><span>交互方案 · 示例数据</span></div>
   <article class="zmd-lab" aria-label="Markdown 回答规范与场景演示">
     <header class="zmd-lab-header"><span class="zmd-brand">招财 <strong>Smart</strong><span class="zmd-brand-rule">回答规范</span></span><div class="zmd-main-tabs" role="tablist" aria-label="展示内容"><button type="button" role="tab" id="zmd-scenes-tab" aria-controls="zmd-workspace" aria-selected="true" data-zmd-mode="scenes">场景示例</button><button type="button" role="tab" id="zmd-rules-tab" aria-controls="zmd-workspace" aria-selected="false" tabindex="-1" data-zmd-mode="rules">组件规则</button></div></header>
     <div class="zmd-workspace" id="zmd-workspace" role="tabpanel" aria-labelledby="zmd-scenes-tab">
-      <nav class="zmd-nav" aria-label="选择业务场景或组件规则"><p data-zmd-nav-title>按业务任务选择</p><div data-zmd-nav></div><div class="zmd-nav-foot"><span>统一基准</span><p>正文 14 / 24<br>间距 4 / 8px</p></div></nav>
+      <nav class="zmd-nav" aria-label="选择业务场景或组件规则"><p data-zmd-nav-title>按业务任务选择</p><div data-zmd-nav></div><div class="zmd-nav-meta"><span>8 套业务回答</span><span>12 类组件规则</span><small>交互方案 · 示例数据</small></div></nav>
       <div class="zmd-main" data-zmd-reading-scroll tabindex="0" role="region" aria-label="回答规范内容，可滚动阅读">
         <header class="zmd-example-heading"><p class="zmd-small-label" data-zmd-example-label></p><h3 data-zmd-question></h3><p class="zmd-example-description" data-zmd-description></p><div class="zmd-rule-tags" data-zmd-rule-tags></div><dl class="zmd-rule-spec" data-zmd-rule-spec hidden aria-label="本组件的固定规格"></dl></header>
         <div class="zmd-read-panel" id="zmd-read-panel" role="region" aria-label="回答内容">
@@ -258,7 +264,7 @@
       </div>
     </div>
   </article>
-  <section class="zmd-contract" aria-labelledby="zmd-contract-title"><div><p class="zmd-small-label">规范的落地边界</p><h3 id="zmd-contract-title">文字有结构，<br>界面有统一的呈现规则</h3></div><div class="zmd-contract-rows"><article><h4>内容约定</h4><p>模型按任务选择结论、依据与建议，明确统计范围、单位和数据缺口。</p></article><article><h4>呈现约定</h4><p>渲染器统一字号、间距、表格和引用；图表由约定的数据结构呈现。</p></article><article><h4>交付约定</h4><p>规范、完整示例与数据一起交付，后续可以逐项检查和版本维护。</p></article></div></section>
+  <section class="zmd-contract" aria-labelledby="zmd-contract-title"><div><h3 id="zmd-contract-title">文字有结构，<br>界面有统一的呈现规则</h3></div><div class="zmd-contract-rows"><article><h4>内容约定</h4><p>模型按任务选择结论、依据与建议，明确统计范围、单位和数据缺口。</p></article><article><h4>呈现约定</h4><p>渲染器统一字号、间距、表格和引用；图表由约定的数据结构呈现。</p></article><article><h4>交付约定</h4><p>规范、完整示例与数据一起交付，后续可以逐项检查和版本维护。</p></article></div></section>
   
   <dialog class="zmd-dialog" data-zmd-dialog aria-labelledby="zmd-source-title"><header><div><p class="zmd-small-label">引用依据 · 示例</p><h3 id="zmd-source-title" data-zmd-source-title></h3></div><button type="button" class="zmd-dialog-close" data-zmd-close aria-label="关闭引用详情">×</button></header><div class="zmd-source-body" data-zmd-source-body></div><footer><button type="button" class="zmd-btn" data-zmd-close>返回回答</button></footer></dialog>
   

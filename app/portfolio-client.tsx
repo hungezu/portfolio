@@ -466,16 +466,76 @@ function chatModeLabel(mode: PortfolioChatMode) {
   return "想聊哪个项目？";
 }
 
+function renderPortfolioChatInline(text: string, keyPrefix: string) {
+  return text
+    .split(/(\*\*[^*\n]+\*\*|`[^`\n]+`)/g)
+    .filter(Boolean)
+    .map((part, index) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={`${keyPrefix}-strong-${index}`}>{part.slice(2, -2)}</strong>;
+      }
+      if (part.startsWith("`") && part.endsWith("`")) {
+        return <code key={`${keyPrefix}-code-${index}`}>{part.slice(1, -1)}</code>;
+      }
+      return part;
+    });
+}
+
+function PortfolioChatMessageContent({ content }: { content: string }) {
+  const blocks = content.trim().split(/\n{2,}/).filter(Boolean);
+
+  return (
+    <div className="portfolio-chat-rich-text">
+      {blocks.map((block, blockIndex) => {
+        const lines = block.split("\n").map(line => line.trim()).filter(Boolean);
+        const titleMatch = block.match(/^\*\*([^*\n]+)\*\*$/);
+        if (titleMatch) {
+          return <p className="portfolio-chat-rich-title" key={`title-${blockIndex}`}><strong>{titleMatch[1]}</strong></p>;
+        }
+        if (lines.length && lines.every(line => /^[-*]\s+/.test(line))) {
+          return (
+            <ul key={`list-${blockIndex}`}>
+              {lines.map((line, lineIndex) => (
+                <li key={`list-${blockIndex}-${lineIndex}`}>
+                  {renderPortfolioChatInline(line.replace(/^[-*]\s+/, ""), `list-${blockIndex}-${lineIndex}`)}
+                </li>
+              ))}
+            </ul>
+          );
+        }
+        if (lines.length && lines.every(line => /^\d+[.)]\s+/.test(line))) {
+          return (
+            <ol key={`ordered-${blockIndex}`}>
+              {lines.map((line, lineIndex) => (
+                <li key={`ordered-${blockIndex}-${lineIndex}`}>
+                  {renderPortfolioChatInline(line.replace(/^\d+[.)]\s+/, ""), `ordered-${blockIndex}-${lineIndex}`)}
+                </li>
+              ))}
+            </ol>
+          );
+        }
+        return (
+          <p key={`paragraph-${blockIndex}`}>
+            {lines.map((line, lineIndex) => (
+              <span key={`line-${blockIndex}-${lineIndex}`}>
+                {renderPortfolioChatInline(line, `paragraph-${blockIndex}-${lineIndex}`)}
+                {lineIndex < lines.length - 1 ? <br /> : null}
+              </span>
+            ))}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 type PortfolioPetState =
   | "idle"
   | "waving"
   | "thinking"
   | "success"
   | "curious"
-  | "pointing"
-  | "jumping"
-  | "dragged"
-  | "landing";
+  | "pointing";
 
 type PortfolioCharacterFrame = {
   rect: [number, number, number, number];
@@ -505,17 +565,12 @@ const portfolioPetStateMap: Record<PortfolioPetState, string> = {
   success: "success",
   curious: "curious",
   pointing: "point",
-  jumping: "jump",
-  dragged: "dragged",
-  landing: "landing",
 };
 
 type PortfolioPetDrag = {
   x: number;
   y: number;
 };
-
-const PORTFOLIO_PET_DETACH_DISTANCE = 16;
 
 type PortfolioChatContext = {
   id: string;
@@ -524,37 +579,72 @@ type PortfolioChatContext = {
 };
 
 const HOME_CHAT_CONTEXTS: PortfolioChatContext[] = [
-  { id: "home", elementId: "top", text: "这里是首页开场，先看我关注的方向和工作方式。" },
-  { id: "ability", elementId: "ability", text: "这里是核心能力，讲我怎么把复杂体验拆清楚。" },
-  { id: "work", elementId: "work", text: "这里是精选作品，点进项目可以继续看背景和取舍。" },
-  { id: "experience", elementId: "experience", text: "这里是工作经历，能看到我在不同项目里的工作范围。" },
-  { id: "contact", elementId: "contact", text: "这里是联系方式，如果想聊项目可以从这里找到我。" },
+  { id: "home", elementId: "top", text: "我是 Leo。你可以直接问我擅长的方向、代表项目，或某个方案为什么这样设计。" },
+  { id: "ability", elementId: "ability", text: "点任一能力，会同步突出能证明它的项目；也可以问我具体用在哪个案例里。" },
+  { id: "work", elementId: "work", text: "想快速判断匹配度？可以问我哪个项目最能代表 AI 体验、复杂系统或设计系统能力。" },
+  { id: "experience", elementId: "experience", text: "展开任一段经历能看到项目范围与职责；也可以直接告诉我公司或项目名。" },
+  { id: "contact", elementId: "contact", text: "还没决定要不要联系？可以先问我协作方式、交付范围或项目细节。" },
 ];
 
 const PROJECT_CHAT_CONTEXTS: Record<string, PortfolioChatContext[]> = {
   gkx: [
-    { id: "nsp-overview", elementId: "nsp-overview", text: "这是国科信案例，先看项目范围。" },
-    { id: "nsp-structure", elementId: "nsp-structure", text: "这里讲多系统怎么拆成可执行的结构。" },
-    { id: "nsp-prototype", elementId: "nsp-prototype", text: "这段是可运行原型，我用它验证流程和状态。" },
-    { id: "nsp-products", elementId: "nsp-products", text: "这里看系统实景，具体页面都在这一段。" },
-    { id: "nsp-rules", elementId: "nsp-rules", text: "这里沉淀设计规范，方便多人一起交付。" },
-    { id: "nsp-result", elementId: "nsp-result", text: "最后收束一下：AI 做辅助，设计判断由我负责。" },
+    { id: "gkx-overview", elementId: "gkx-overview", text: "这个项目覆盖多个业务系统，阅读时可以重点看我如何统一规则，而不只是页面数量。" },
+    { id: "gkx-scope", elementId: "gkx-scope", text: "这一段关注哪些规则应该跨系统统一，以及哪些业务差异必须保留。" },
+    { id: "gkx-decisions", elementId: "gkx-decisions", text: "这里把选择依据摆出来，方便区分审美偏好和能够验证的设计判断。" },
+    { id: "gkx-system", elementId: "gkx-system", text: "规范分层是为了复用通用组件，同时避免给特殊业务套错模板。" },
+    { id: "gkx-workflow", elementId: "gkx-workflow", text: "AI 负责整理初稿，我保留边界判断、校准和应用检查，不把生成结果直接当结论。" },
+    { id: "gkx-validation", elementId: "gkx-validation", text: "原型在这里承担检查工具：用真实状态验证规则能否落到操作流程。" },
+    { id: "gkx-collaboration", elementId: "gkx-collaboration", text: "共享设计 MD 的价值，是让业务、设计和实现围绕同一份规则讨论。" },
+    { id: "gkx-outcomes", elementId: "gkx-outcomes", text: "没有可靠数据的部分不补写，这里只呈现可追溯的设计资产与验证结果。" },
   ],
   "zhaocai-smart": [
-    { id: "overview", elementId: "overview", text: "这里是招财 Smart 项目概览，先看它解决的任务。" },
-    { id: "strategy", elementId: "strategy", text: "这是招财 Smart，先看问数链路如何串起三个体验断点。" },
-    { id: "core", elementId: "core", text: "这里进入核心交互，几个关键状态会连续展开。" },
-    { id: "clarification", elementId: "clarification", text: "这里讲怎么把模糊问题说清楚。" },
-    { id: "process", elementId: "process", text: "这里讲处理中怎样让人知道发生了什么。" },
-    { id: "board", elementId: "board", text: "这里讲结果怎样变成可持续追踪的看板。" },
-    { id: "markdown", elementId: "markdown", text: "这里是输出规范，讲不同结果怎样保持一致、易读。" },
-    { id: "gallery", elementId: "gallery", text: "这里是补充交付，能看到更多页面和规范材料。" },
+    { id: "zcs-homepage", elementId: "zcs-homepage", text: "可以先记住一条主线：提问之后，系统还要完成澄清、执行、解释和沉淀。" },
+    { id: "zcs-trust-mechanism", elementId: "zcs-trust-mechanism", text: "可信感不是一句提示文案，而是来源、过程和结果都能被用户理解与核对。" },
+    { id: "zcs-process-feedback", elementId: "zcs-process-feedback", text: "过程反馈要持续说明系统正在做什么，避免用户把等待误认为失败。" },
+    { id: "zcs-original-output", elementId: "zcs-original-output", text: "保留原始输出作为对照，能更清楚地看到信息组织问题，而不只比较视觉差异。" },
+    { id: "zcs-markdown-system", elementId: "zcs-markdown-system", text: "统一输出结构，是为了让表格、图表、引用和代码在不同答案里保持可读。" },
+  ],
+  "tax-cloud": [
+    { id: "tax-cloud-overview", elementId: "project-overview", text: "这个项目跨 Web 与 App，建议沿着角色任务与申报链路看，而不是逐张浏览页面。" },
+    { id: "tax-cloud-entry", elementId: "case-gallery-0", text: "后面的内容会按业务理解、流程重构、设计规范和跨端落地逐步展开。" },
+    { id: "tax-cloud-path", elementId: "case-gallery-2", text: "这张路径图解释不同角色怎样进入申报任务，后面的页面都围绕这条主线展开。" },
+    { id: "tax-cloud-form", elementId: "case-gallery-4", text: "表单部分可以重点看信息密度、筛选和错误预防，而不只是视觉样式。" },
+    { id: "tax-cloud-redesign", elementId: "case-gallery-8", text: "新旧首页的核心差别在任务优先级与信息分组，可以和前面的旧版问题对照看。" },
+    { id: "tax-cloud-mobile", elementId: "case-gallery-14", text: "移动端没有简单缩小桌面版，而是优先保留审批、查询等高频任务。" },
+  ],
+  "energy-tax": [
+    { id: "energy-overview", elementId: "project-overview", text: "这是从 0 到 1 独立负责的项目，可以先看职责范围，再对照后面的页面落地。" },
+    { id: "energy-entry", elementId: "case-gallery-0", text: "接下来会从背景与规范进入首页、申报和管理场景，可以连续看设计怎样逐步落地。" },
+    { id: "energy-system", elementId: "case-gallery-2", text: "先统一栅格、组件和缺省规则，后面的首页与工作台才能保持一致结构。" },
+    { id: "energy-home", elementId: "case-gallery-3", text: "首页重点是把数据展示与任务入口分层，避免所有信息同时争夺注意力。" },
+    { id: "energy-workbench", elementId: "case-gallery-4", text: "申报工作台更值得看任务执行顺序和状态反馈，而不只是表格排版。" },
+    { id: "energy-review", elementId: "case-gallery-6", text: "最后补充了缺省状态与复盘，用来覆盖正常流程之外容易被遗漏的情况。" },
+  ],
+  "data-visualisation": [
+    { id: "visual-overview", elementId: "project-overview", text: "这是一组跨行业案例，建议先找共同框架，再比较各行业的信息优先级。" },
+    { id: "visual-entry", elementId: "case-gallery-0", text: "接下来可以用同一套观察方法：先看信息层级，再看图表组合，最后看规范复用。" },
+    { id: "visual-multi", elementId: "case-gallery-1", text: "地图、指标、趋势和排行可以复用，但每个行业的主阅读顺序并不相同。" },
+    { id: "visual-transport", elementId: "case-gallery-2", text: "运输场景可以重点看空间信息与业务指标怎样同时保持可读。" },
+    { id: "visual-estate", elementId: "case-gallery-3", text: "地产场景更适合观察高密度数据的分区方式与横向对比关系。" },
+    { id: "visual-rules", elementId: "case-gallery-4", text: "最后沉淀的是可复用布局规范，而不只是某一张大屏的视觉样式。" },
   ],
 };
+
+const GKX_SUBPAGE_CHAT_CONTEXTS: PortfolioChatContext[] = [
+  { id: "nsp-overview", elementId: "nsp-overview", text: "这里展示的是项目交付证据，可以结合页面职责理解每个系统为何这样组织。" },
+  { id: "nsp-structure", elementId: "nsp-structure", text: "这里的关键是把跨系统需求压成可执行结构，后续原型与规范都从这套关系展开。" },
+  { id: "nsp-prototype", elementId: "nsp-prototype", text: "可运行原型主要用来提前暴露流程和状态问题，并不等同于最终视觉稿。" },
+  { id: "nsp-products", elementId: "nsp-products", text: "看系统实景时，可以对照导航、数据状态和组件在不同业务里的统一程度。" },
+  { id: "nsp-rules", elementId: "nsp-rules", text: "这套规范同时约束设计协作与后续生成，不只是颜色、字号的样式表。" },
+  { id: "nsp-result", elementId: "nsp-result", text: "这里刻意区分 AI 辅助和设计判断：生成由工具加速，范围与质量仍由我负责。" },
+];
 
 function getPortfolioChatContexts() {
   const projectRoot = document.querySelector<HTMLElement>("main[data-project]");
   const projectSlug = projectRoot?.dataset.project;
+  if (projectSlug === "gkx" && /\/(?:systems|design-system)\/?$/.test(window.location.pathname)) {
+    return GKX_SUBPAGE_CHAT_CONTEXTS;
+  }
   if (projectSlug && PROJECT_CHAT_CONTEXTS[projectSlug]) return PROJECT_CHAT_CONTEXTS[projectSlug];
   if (projectRoot) {
     return [{ id: "case", elementId: "", text: "这是项目案例，往下看会有页面和设计过程。" }];
@@ -597,13 +687,13 @@ function getNearestPortfolioChatContext(contexts: PortfolioChatContext[]) {
 
 function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peeking: boolean }) {
   const reduce = useReducedMotion();
-  const requestedAssetState = peeking && state === "idle" ? "peek-right" : portfolioPetStateMap[state];
+  const requestedAssetState = peeking ? "peek-right" : portfolioPetStateMap[state];
   const [assetState, setAssetState] = useState(requestedAssetState);
   const config = portfolioCharacterMap.states[assetState];
   const [frameIndex, setFrameIndex] = useState(0);
 
   useEffect(() => {
-    const sources = ["actions", "curious", "idle", "jump", "peek", "wave"];
+    const sources = ["actions", "curious", "idle", "peek", "wave"];
     const preloaders = sources.map(sourceId => {
       const image = new Image();
       image.src = publicAsset(`/assets/visual/sidebar-character/${portfolioCharacterMap.sources[sourceId].file}`);
@@ -709,6 +799,7 @@ function PortfolioChat() {
   const inputRef = useRef<HTMLInputElement>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
   const contextIdRef = useRef(HOME_CHAT_CONTEXTS[0].id);
+  const shownContextIdsRef = useRef(new Set<string>());
   const contextTimerRef = useRef<number | null>(null);
   const scrollTimerRef = useRef<number | null>(null);
   const petTimerRef = useRef<number | null>(null);
@@ -785,12 +876,12 @@ function PortfolioChat() {
       suppressPetClickRef.current = true;
       window.setTimeout(() => {
         suppressPetClickRef.current = false;
-      }, 120);
+      }, 380);
+      setPetDrag({ x: 0, y: 0 });
     }
     drag.active = false;
     drag.pointerId = -1;
     setPetDragging(false);
-    if (drag.moved) pulsePet("landing", 420);
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);
     }
@@ -816,8 +907,15 @@ function PortfolioChat() {
       contextIdRef.current = next.id;
       setContext(next);
       if (show) {
-        revealContext();
-        pulsePet("pointing", 1500);
+        if (shownContextIdsRef.current.has(next.id)) {
+          setContextVisible(false);
+          if (contextTimerRef.current !== null) window.clearTimeout(contextTimerRef.current);
+          contextTimerRef.current = null;
+        } else {
+          shownContextIdsRef.current.add(next.id);
+          revealContext();
+          pulsePet("pointing", 1500);
+        }
       }
       return true;
     };
@@ -1033,7 +1131,7 @@ function PortfolioChat() {
     setDraft("");
     setSending(false);
     setMode("unknown");
-    pulsePet("jumping", 800);
+    setPetState("idle");
     window.requestAnimationFrame(() => inputRef.current?.focus());
   };
 
@@ -1061,13 +1159,7 @@ function PortfolioChat() {
     toggleChat();
   };
 
-  const visiblePetState: PortfolioPetState = petDragging
-    ? "dragged"
-    : sending
-      ? "thinking"
-      : petState;
-  const petDetached = petDrag.x <= -PORTFOLIO_PET_DETACH_DISTANCE;
-  const isProjectContext = !HOME_CHAT_CONTEXTS.some(item => item.id === context.id);
+  const visiblePetState: PortfolioPetState = sending ? "thinking" : petState;
   const petPositionStyle = {
     "--pet-drag-right": `${-petDrag.x}px`,
     "--pet-drag-bottom": `${-petDrag.y}px`,
@@ -1079,10 +1171,9 @@ function PortfolioChat() {
       style={petPositionStyle}
       data-chat-mode={mode}
       data-pet-state={visiblePetState}
-      data-pet-detached={petDetached ? "true" : "false"}
     >
       <AnimatePresence initial={false}>
-        {!open && contextVisible && !isProjectContext ? (
+        {!open && contextVisible ? (
           <motion.div
             className="portfolio-pet-context"
             key={context.id}
@@ -1113,7 +1204,7 @@ function PortfolioChat() {
         whileTap={reduce ? undefined : { scale: 0.96 }}
       >
         <span className="portfolio-pet-window" aria-hidden="true">
-          <PortfolioPetSprite state={visiblePetState} peeking={!open && !petDetached} />
+          <PortfolioPetSprite state={visiblePetState} peeking={!open} />
         </span>
       </motion.button>
 
@@ -1185,7 +1276,11 @@ function PortfolioChat() {
                       <span className="portfolio-chat-avatar" aria-hidden="true">Leo</span>
                     ) : null}
                     <div className="portfolio-chat-bubble-wrap">
-                      <div className="portfolio-chat-bubble">{message.content}</div>
+                      <div className="portfolio-chat-bubble">
+                        {message.role === "assistant"
+                          ? <PortfolioChatMessageContent content={message.content} />
+                          : message.content}
+                      </div>
                       {message.references?.length ? (
                         <div className="portfolio-chat-references">
                           <span>相关内容</span>
@@ -1877,14 +1972,34 @@ function WorkSection({
 
 function ExperienceSection() {
   const [open, setOpen] = useState(0);
+  const reduce = useReducedMotion();
 
   return (
     <section className="section experience-section" id="experience">
       <div className="section-shell">
-        <SectionIntro
-          title="工作经历"
-          description="从财税 B 端与数据可视化，到 AI 产品和政企平台，持续负责复杂业务梳理、交互设计、视觉系统与研发交付。"
-        />
+        <div className="experience-heading">
+          <SectionIntro
+            title="工作经历"
+            description="从财税 B 端与数据可视化，到 AI 产品和政企平台，持续负责复杂业务梳理、交互设计、视觉系统与研发交付。"
+          />
+          <motion.dl
+            className="experience-stats"
+            aria-label="职业经验概览"
+            initial={reduce ? false : { opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.7 }}
+            transition={{ duration: 0.52, delay: 0.08, ease }}
+          >
+            <div>
+              <dt>项目经历</dt>
+              <dd>15<sup>+</sup></dd>
+            </div>
+            <div>
+              <dt>工作年限</dt>
+              <dd>7<sup>+</sup></dd>
+            </div>
+          </motion.dl>
+        </div>
         <div className="experience-list">
           {experiences.map((experience, index) => {
             const expanded = open === index;
@@ -1951,7 +2066,6 @@ function ContactSection() {
         <div className="contact-copy">
           <h2>
             <span className="contact-name">我是李家豪</span>
-            <span className="contact-invite">期待与你讨论</span>
           </h2>
           <p>如果你正在寻找利用 AI 能够把复杂业务与设计交付连接起来的设计师，欢迎联系我。</p>
         </div>
@@ -2092,10 +2206,13 @@ function ProjectImageGallery({
   project: Project;
   reduce: boolean | null;
 }) {
+  const isEnergyProject = project.slug === "energy-tax";
+
   return (
-    <section className="case-gallery" aria-label={`${project.title}项目图片`}>
+    <section className={`case-gallery${isEnergyProject ? " case-gallery-energy" : ""}`} aria-label={`${project.title}项目图片`}>
       {project.gallery.map((image, index) => (
         <motion.figure
+          id={`case-gallery-${index}`}
           key={image}
           initial={reduce ? false : { opacity: 0, y: 24, clipPath: "inset(0 0 6% 0)" }}
           whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
@@ -2137,7 +2254,7 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
         className={`case-page${isZhaocaiCase ? " case-page-zhaocai" : ""}${isNationalPlatformCase ? isNationalPlatformSubpage ? " case-page-national-platform" : " case-page-gkx" : ""}`}
         data-project={project.slug}
       >
-        {!isCustomCase ? <header className="case-hero">
+        {!isCustomCase ? <header className="case-hero" id="project-overview">
           <motion.div
             className="case-heading"
             initial={reduce ? false : { opacity: 0, y: 24 }}
@@ -2159,14 +2276,6 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
         ) : (
           <ProjectImageGallery project={project} reduce={reduce} />
         )}
-        {!isCustomCase ? (
-          <footer className="case-footer">
-            <a href="/portfolio/#work" onClick={handleProjectBack}>
-              <ArrowLeft size={16} strokeWidth={1.8} />
-              返回项目列表
-            </a>
-          </footer>
-        ) : null}
       </main>
       <BackToTop />
       <PortfolioChat />

@@ -112,3 +112,36 @@
 @media(max-width:800px){.zct-heading,.zct .zcs-native-flow>header,.zct .zcf-section-heading{grid-template-columns:1fr;gap:12px}.zct-heading>p:last-child{max-width:560px}.zct .zcs-native-flow>header>.zcs-intro{max-width:560px}.zct .zcf-intro{max-width:560px}}
 @media(max-width:760px){.zct{padding:48px 20px}.zct-heading{margin-bottom:32px}.zct-heading h2{font-size:28px;line-height:1.5}.zct .zcs-native-flow,.zct>.zcf{margin-top:48px}.zct .zcs-native-flow>header>.zcs-title,.zct .zcf-title{font-size:24px}.zcs-case>.zmd{padding:48px 20px}}
 .zct .zcs-note,.zct .zcs-example-label,.zct .zcs-example-copy{font-size:14px;line-height:1.71428571}.zct .zcs-example-title{font-size:18px;line-height:1.55555556}
+
+/* Portfolio integration: keep the framework and decision comparison fully visible. */
+.zct .zct-framework-scroll{overflow:hidden;overscroll-behavior:auto;scrollbar-width:none}
+.zct .zct-framework-picture{width:100%;min-width:0;max-width:100%;height:auto}
+.zct .zct-framework-hint{display:none!important}
+.zct .zcs-rules{margin-top:32px}
+.zct .zcs-examples{gap:0;margin-top:20px;overflow:hidden;border:1px solid #dedbe3;border-radius:12px;background:#fff}
+.zct .zcs-example,.zct .zcs-example--ambiguous{padding:18px 20px;border:0;border-radius:0;background:#fff}
+.zct .zcs-example + .zcs-example{border-left:1px solid #dedbe3}
+.zct .zcs-example--ambiguous{background:#fbf9ff}
+.zct .zcs-example-label{font-size:12px;line-height:1.5}
+.zct .zcs-example-title{margin-top:8px;font-size:16px;line-height:1.55}
+.zct .zcs-example-copy{margin-top:8px;font-size:14px;line-height:1.6}
+.zct .zcs-example :is(.zcs-example-title,.zcs-example-copy) br{display:none}
+.zct .zcs-boundary{margin-top:12px;padding:0;border:0;border-radius:0;background:transparent;font-size:14px;line-height:1.6}
+.zmd .zmd-nav-foot{display:none!important}
+.zct-heading{grid-template-columns:minmax(0,1fr) max-content;gap:0 40px}
+.zct-heading>p:last-child{white-space:nowrap}
+.zct .zcs-native-flow>header{grid-template-columns:minmax(0,1fr) max-content;gap:0 40px}
+.zct .zcs-native-flow>header>.zcs-intro{white-space:nowrap}
+.zct .zcf-section-heading{grid-template-columns:minmax(0,1fr) max-content;gap:0 40px}
+.zct .zcf-intro{white-space:nowrap}
+.zmd .zmd-heading{grid-template-columns:minmax(0,1fr) max-content;gap:0 40px}
+.zmd .zmd-intro{white-space:nowrap}
+
+@media(max-width:620px){
+ .zct .zcs-examples{grid-template-columns:1fr}
+ .zct .zcs-example + .zcs-example{border-left:0;border-top:1px solid #dedbe3}
+}
+@media(max-width:900px){
+ .zct-heading,.zct .zcs-native-flow>header,.zct .zcf-section-heading,.zmd .zmd-heading{grid-template-columns:1fr;gap:12px}
+ .zct-heading>p:last-child,.zct .zcs-native-flow>header>.zcs-intro,.zct .zcf-intro,.zmd .zmd-intro{white-space:normal}
+}

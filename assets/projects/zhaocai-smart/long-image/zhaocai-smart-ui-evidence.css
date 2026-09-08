@@ -1,8 +1,9 @@
 /* Additive only: original UI evidence. Approved chapters remain unchanged. */
 .zcu-evidence{margin-top:64px!important;padding-top:48px;border-top:1px solid #dedee3;scroll-margin-top:32px;color:#20242e;font:400 16px/1.75 var(--zcs-font,"Poppins","PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif)}
 .zcu-evidence *{box-sizing:border-box}
-.zcu-evidence .zcu-evidence-heading{margin-bottom:32px}
-.zcu-evidence .zcu-evidence-label{margin:0 0 12px;font-size:12px;line-height:20px;color:#687180}
+.zcu-evidence .zcu-evidence-heading{margin-bottom:24px}
+.zcu-evidence .zcu-evidence-heading>div{display:flex;align-items:baseline;gap:16px}
+.zcu-evidence .zcu-evidence-label{margin:0;font-size:12px;line-height:20px;color:#687180;white-space:nowrap}
 .zcu-evidence .zcu-evidence-heading h3{margin:0;color:#20242e;font-size:24px;font-weight:600;line-height:36px;letter-spacing:-.02em}
 .zcu-evidence .zcu-filter-definitions{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
 .zcu-evidence .zcu-original-figure{width:100%;max-width:1120px;margin:0 auto}
@@ -13,5 +14,7 @@
 @media(max-width:760px){
  .zcu-evidence{margin-top:48px!important;padding-top:32px}
  .zcu-evidence .zcu-evidence-heading{margin-bottom:24px}
+ .zcu-evidence .zcu-evidence-heading>div{display:block}
+ .zcu-evidence .zcu-evidence-label{margin-bottom:8px}
  .zcu-evidence .zcu-evidence-heading h3{font-size:20px;line-height:32px}
 }

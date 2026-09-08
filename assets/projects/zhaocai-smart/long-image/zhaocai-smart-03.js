@@ -219,11 +219,27 @@
     const dialogs = createZcfDialogController(root, document);
     const openDialog = dialogs.open;
     const closeDialog = dialogs.close;
-    function showTab(name, focus = false) {
+    const scenarioPicker = find('[data-zcf-scenario-picker]');
+    const scenarioInput = find('[data-zcf-scenario]');
+    const scenarioLabel = find('[data-zcf-scenario-label]');
+    function selectScenario(value, focus = false) {
+      const option = find('[data-zcf-scenario-option="' + value + '"]');
+      if (!option) return;
+      scenarioInput.dataset.zcfScenario = value;
+      scenarioLabel.textContent = option.textContent;
+      root.querySelectorAll('[data-zcf-scenario-option]').forEach(item => {
+        item.setAttribute('aria-selected', String(item === option));
+      });
+      scenarioPicker.removeAttribute('open');
+      if (focus) scenarioPicker.querySelector('summary')?.focus({ preventScroll: true });
+    }
+    function showTab(name, focus = false, reveal = true) {
       activeTab = name;
-      find('[data-zcf-audit]').hidden = false;
-      find('[data-zcf-app]').dataset.records = 'open';
-      find('[data-zcf-toggle-records]').setAttribute('aria-expanded', 'true');
+      if (reveal) {
+        find('[data-zcf-audit]').hidden = false;
+        find('[data-zcf-app]').dataset.records = 'open';
+        find('[data-zcf-toggle-records]').setAttribute('aria-expanded', 'true');
+      }
       root.querySelectorAll('[data-zcf-tab]').forEach(tab => {
         const selected = tab.dataset.zcfTab === name;
         tab.setAttribute('aria-selected', String(selected)); tab.tabIndex = selected ? 0 : -1;
@@ -332,7 +348,8 @@
     root.addEventListener('click', event => {
       const button = event.target.closest('button');
       if (!button || !root.contains(button)) return;
-      if (button.hasAttribute('data-zcf-start')) { selectedAttempt = null; showTab('history'); runtime.start(find('[data-zcf-scenario]').value); }
+      if (button.dataset.zcfScenarioOption) selectScenario(button.dataset.zcfScenarioOption, true);
+      if (button.hasAttribute('data-zcf-start')) { selectedAttempt = null; scenarioPicker.removeAttribute('open'); showTab('history', false, false); runtime.start(scenarioInput.dataset.zcfScenario || 'slow'); }
       if (button.hasAttribute('data-zcf-stop')) { runtime.stop(); find('[data-zcf-retry]')?.focus(); }
       if (button.hasAttribute('data-zcf-retry')) { selectedAttempt = null; runtime.retry(); find('[data-zcf-stop]')?.focus(); }
       if (button.hasAttribute('data-zcf-show-history')) showTab('history', true);
@@ -360,12 +377,25 @@
       find('[data-zcf-stop]')?.focus();
     });
     root.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && scenarioPicker.open) {
+        event.preventDefault();
+        scenarioPicker.removeAttribute('open');
+        scenarioPicker.querySelector('summary')?.focus({ preventScroll: true });
+        return;
+      }
       if (!event.target.matches('[data-zcf-tab]')) return;
       if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) {
         event.preventDefault();
         showTab(event.key === 'Home' ? 'history' : event.key === 'End' ? 'snapshot' : activeTab === 'history' ? 'snapshot' : 'history', true);
       }
     });
-    window.addEventListener('pagehide', () => runtime.dispose(), { once: true });
+    const closeScenarioPicker = event => {
+      if (!scenarioPicker.contains(event.target)) scenarioPicker.removeAttribute('open');
+    };
+    root.ownerDocument.addEventListener('click', closeScenarioPicker);
+    window.addEventListener('pagehide', () => {
+      root.ownerDocument.removeEventListener('click', closeScenarioPicker);
+      runtime.dispose();
+    }, { once: true });
   });
 })();

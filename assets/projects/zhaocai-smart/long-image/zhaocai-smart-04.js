@@ -183,12 +183,26 @@
     const state = createState(DATA), rendered = $('[data-zmd-render]');
     const scroll = $('[data-zmd-reading-scroll]'), dialog = $('[data-zmd-dialog]');
     const dialogs = createDialogController(dialog, document);
+    function compactComparisonTables(container) {
+      container.querySelectorAll('table').forEach(table => {
+        const headers = [...table.querySelectorAll('thead th')];
+        const columnIndex = headers.findIndex(header => header.textContent.trim() === '上年净利润（亿元）');
+        if (columnIndex < 0) return;
+        table.querySelectorAll('tr').forEach(row => row.children[columnIndex]?.remove());
+        table.classList.add('zmd-table--compact');
+        const wrapper = table.closest('.zmd-table-wrap');
+        wrapper?.classList.add('zmd-table-wrap--compact');
+        wrapper?.removeAttribute('tabindex');
+        wrapper?.setAttribute('aria-label', '业务对比表');
+      });
+    }
     function renderReading() {
       const outline = $('[data-zmd-outline]');
       outline.replaceChildren();
       try {
         const result = compileMarkdown(state.text());
         rendered.innerHTML = result.html;
+        compactComparisonTables(rendered);
         $('[data-zmd-reading-meta]').textContent = result.validation.headingCount + ' 个标题 · ' + result.validation.tableCount + ' 张数据表';
         const headings = result.headings.filter(item => item.depth === 2);
         outline.hidden = headings.length < 4;

@@ -19,6 +19,10 @@
   color: var(--nsp-ink);
 }
 
+.national-platform-page .nsp-result {
+  padding-bottom: 48px;
+}
+
 .national-platform-page *,
 .national-platform-page *::before,
 .national-platform-page *::after { box-sizing: border-box; }

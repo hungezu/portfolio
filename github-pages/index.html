@@ -18,10 +18,226 @@
     />
     <title>李家豪｜AI 体验产品设计师</title>
     <script>
+      (() => {
+        try {
+          const seen = sessionStorage.getItem("leo-portfolio-loader-seen") === "1";
+          document.documentElement.classList.add(
+            seen ? "portfolio-loader-seen" : "portfolio-loading",
+          );
+        } catch {
+          document.documentElement.classList.add("portfolio-loading");
+        }
+      })();
+    </script>
+    <style>
+      html.portfolio-loading { overflow: hidden; }
+      html.portfolio-loader-seen .portfolio-boot { display: none; }
+      .portfolio-boot {
+        position: fixed;
+        z-index: 100000;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: #fff;
+        color: #111;
+        font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+        opacity: 1;
+        transition: opacity 560ms cubic-bezier(.16, 1, .3, 1);
+      }
+      .portfolio-boot.is-complete {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .portfolio-boot__content {
+        display: grid;
+        width: min(160px, 100%);
+        min-height: 70px;
+        place-items: center;
+        justify-items: center;
+      }
+      .portfolio-boot__progress {
+        display: grid;
+        grid-area: 1 / 1;
+        justify-items: center;
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        transition:
+          opacity 340ms cubic-bezier(.16, 1, .3, 1),
+          transform 420ms cubic-bezier(.16, 1, .3, 1);
+      }
+      .portfolio-boot__progress[hidden] { display: none; }
+      .portfolio-boot__progress.is-leaving {
+        opacity: 0;
+        transform: translateY(-6px) scale(.98);
+      }
+      .portfolio-boot__value {
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        font-size: clamp(38px, 5vw, 46px);
+        font-variant-numeric: tabular-nums;
+        font-weight: 400;
+        letter-spacing: -.035em;
+        line-height: .9;
+      }
+      .portfolio-boot__value small {
+        margin: .04em 0 0 .1em;
+        font-size: .28em;
+        font-weight: 500;
+        letter-spacing: 0;
+      }
+      .portfolio-boot__pulse {
+        display: flex;
+        gap: 7px;
+        margin-top: 16px;
+      }
+      .portfolio-boot__pulse i {
+        display: block;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: #111;
+        animation: portfolio-boot-pulse 1.2s ease-in-out infinite;
+      }
+      .portfolio-boot__pulse i:nth-child(2) { animation-delay: .14s; }
+      .portfolio-boot__pulse i:nth-child(3) { animation-delay: .28s; }
+      .portfolio-boot__welcome {
+        grid-area: 1 / 1;
+        color: #111;
+        font-size: clamp(20px, 3vw, 26px);
+        font-weight: 500;
+        letter-spacing: .16em;
+        line-height: 1;
+        opacity: 0;
+        transform: translateY(7px);
+        transition:
+          opacity 420ms cubic-bezier(.16, 1, .3, 1),
+          transform 500ms cubic-bezier(.16, 1, .3, 1);
+      }
+      .portfolio-boot__welcome.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      @keyframes portfolio-boot-pulse {
+        0%, 60%, 100% { opacity: .22; transform: scale(.72); }
+        30% { opacity: 1; transform: scale(1); }
+      }
+      #root {
+        opacity: 1;
+        transition:
+          opacity 620ms cubic-bezier(.16, 1, .3, 1),
+          transform 760ms cubic-bezier(.16, 1, .3, 1);
+      }
+      html.portfolio-loading #root {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      @media (max-width: 560px) {
+        .portfolio-boot { padding: 20px; }
+        .portfolio-boot__pulse { margin-top: 14px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .portfolio-boot.is-complete { transition-duration: 80ms; }
+        .portfolio-boot__progress { transition: none; }
+        .portfolio-boot__pulse i { animation: none; opacity: 1; }
+        .portfolio-boot__welcome { transition: none; }
+        #root { transition: none; transform: none; }
+      }
+    </style>
+    <script>
       window.__PORTFOLIO_BASE__ = "/portfolio";
     </script>
   </head>
   <body>
+    <div class="portfolio-boot" id="portfolio-boot" role="status" aria-live="polite" aria-label="作品集加载中">
+      <div class="portfolio-boot__content">
+        <div class="portfolio-boot__progress" id="portfolio-boot-progress">
+          <div class="portfolio-boot__value" aria-hidden="true"><span id="portfolio-boot-value">00</span><small>%</small></div>
+          <div class="portfolio-boot__pulse" aria-hidden="true"><i></i><i></i><i></i></div>
+        </div>
+        <div class="portfolio-boot__welcome" id="portfolio-boot-welcome" hidden>WELCOME</div>
+      </div>
+    </div>
+    <script>
+      (() => {
+        const loader = document.getElementById("portfolio-boot");
+        if (!loader || document.documentElement.classList.contains("portfolio-loader-seen")) {
+          loader?.remove();
+          return;
+        }
+
+        const valueNode = document.getElementById("portfolio-boot-value");
+        const progressNode = document.getElementById("portfolio-boot-progress");
+        const welcomeNode = document.getElementById("portfolio-boot-welcome");
+        const startedAt = performance.now();
+        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        let loaded = false;
+        let value = 0;
+        let finished = false;
+        let rootObserver;
+
+        const markLoaded = () => { loaded = true; };
+        window.setTimeout(markLoaded, 8000);
+
+        const watchApp = () => {
+          const root = document.getElementById("root");
+          if (!root) {
+            requestAnimationFrame(watchApp);
+            return;
+          }
+          const confirmPaint = () => requestAnimationFrame(() => requestAnimationFrame(markLoaded));
+          if (root.childElementCount > 0) {
+            confirmPaint();
+            return;
+          }
+          rootObserver = new MutationObserver(() => {
+            if (root.childElementCount === 0) return;
+            rootObserver.disconnect();
+            confirmPaint();
+          });
+          rootObserver.observe(root, { childList: true });
+        };
+        requestAnimationFrame(watchApp);
+
+        const finish = () => {
+          if (finished) return;
+          finished = true;
+          rootObserver?.disconnect();
+          try { sessionStorage.setItem("leo-portfolio-loader-seen", "1"); } catch {}
+          progressNode.classList.add("is-leaving");
+          welcomeNode.hidden = false;
+          requestAnimationFrame(() => welcomeNode.classList.add("is-visible"));
+          window.setTimeout(() => { progressNode.hidden = true; }, reducedMotion ? 0 : 430);
+          window.setTimeout(() => {
+            document.documentElement.classList.remove("portfolio-loading");
+            loader.classList.add("is-complete");
+            window.setTimeout(() => {
+              document.documentElement.classList.add("portfolio-loader-seen");
+              loader.remove();
+            }, reducedMotion ? 90 : 580);
+          }, reducedMotion ? 120 : 820);
+        };
+
+        const render = (now) => {
+          const elapsed = now - startedAt;
+          const waitingTarget = Math.min(99, Math.floor(99 * (1 - Math.exp(-elapsed / 2100))));
+          const target = loaded && elapsed >= (reducedMotion ? 120 : 2200)
+            ? 100
+            : waitingTarget;
+          const step = target === 100
+            ? Math.max(1, Math.ceil((target - value) * .14))
+            : Math.max(1, Math.ceil((target - value) * .08));
+          value = Math.min(target, value + step);
+          valueNode.textContent = String(value).padStart(2, "0");
+
+          if (value >= 100) finish();
+          else requestAnimationFrame(render);
+        };
+
+        requestAnimationFrame(render);
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/main.tsx"></script>
     <script defer src="/pet-drag-fallback.js"></script>

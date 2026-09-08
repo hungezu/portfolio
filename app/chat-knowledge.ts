@@ -31,7 +31,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
     id: "capability-overview",
     title: "能力概览",
     content:
-      "我主要做 AI 体验设计、AI 工作流设计、复杂系统处理、视觉与设计系统、数据可视化，以及跨端交付与协作。能力页里有每项能力对应的项目证据。",
+      "我的主要能力包括：\n\n- **AI 体验与工作流**：意图澄清、过程反馈、原型验证与规范整理\n- **复杂系统与设计系统**：业务结构、组件状态与多页面一致性\n- **数据表达与跨端交付**：可视化、Web / App 体验与研发协作\n\n能力页里有每项能力对应的项目证据。",
     keywords: ["能力概览", "能力有哪些", "有哪些能力", "擅长什么", "优势", "技能", "专业能力", "会什么", "能做什么", "能解决什么", "能力方向"],
     references: [{ label: "查看核心能力", href: "/portfolio/#ability", kind: "section" }],
   },
@@ -141,7 +141,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
     id: "project-overview",
     title: "项目概览",
     content:
-      "我公开展示的项目有深圳国际科技信息中心、招财 Smart、税纪云全税种申报平台、国家能源集团报税平台和可视化大屏项目合集，覆盖 AI 体验、复杂企业系统、财税 SaaS、数据可视化与跨端交付。你可以从精选作品进入案例，再按章节看背景、过程和设计规范。",
+      "我公开展示的项目分为三类：\n\n- **AI 与平台体验**：深圳国际科技信息中心、招财 Smart\n- **财税 SaaS 与企业系统**：税纪云全税种申报平台、国家能源集团报税平台\n- **数据可视化**：可视化大屏项目合集\n\n这些案例覆盖复杂企业系统、跨端交付与设计规范。你可以从精选作品进入案例，再按章节看背景、过程和设计判断。",
     keywords: ["项目概览", "项目背景", "项目职责", "项目经验", "有哪些项目", "做过哪些项目", "做过什么项目", "你做过什么", "项目有哪些", "作品有哪些", "案例有哪些", "案例列表", "作品清单", "公开项目", "项目选择", "哪个项目", "项目难点", "项目详情", "推荐", "推荐项目", "推荐相关内容", "相关内容", "相关项目", "相关案例"],
     references: [
       { label: "精选作品", href: "/portfolio/#work", kind: "section" },
@@ -413,7 +413,7 @@ export function buildLocalChatReply(query: string, contextQuery = query) {
 
   const selected = entries.slice(0, 2);
   return {
-    reply: selected.map(entry => entry.content).join("\n\n"),
+    reply: selected.map(entry => `**${entry.title}**\n\n${entry.content}`).join("\n\n"),
     entries,
   };
 }

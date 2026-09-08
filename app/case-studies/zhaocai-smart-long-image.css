@@ -10,6 +10,10 @@
   margin-inline: auto;
 }
 
+.zcli-page .zcs-case > .zmd {
+  padding-bottom: 48px;
+}
+
 .zcli-content :is(
   #zcs-homepage,
   #zcs-trust-mechanism,

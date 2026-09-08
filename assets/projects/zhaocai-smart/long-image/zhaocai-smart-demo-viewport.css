@@ -46,3 +46,43 @@
  .zcf .zcf-main,.zcf .zcf-audit,.zmd .zmd-nav,.zmd .zmd-main,
  .zqa-additions .zqa-sidebar,.zqa-additions .zqa-conversation,.zqa-additions .zqa-report-doc{height:auto;max-height:none;overflow:visible}
 }
+
+/* The process demo uses one primary scroll area; records open as an overlay. */
+.zcf .zcf-app{
+ height:min(600px,calc(100dvh - 140px));
+ max-height:600px;
+}
+.zcf .zcf-workspace{
+ position:relative;
+ display:grid;
+ grid-template-columns:minmax(0,1fr);
+ overflow:hidden;
+}
+.zcf .zcf-main{
+ overflow-y:auto;
+ overflow-x:hidden;
+ scrollbar-width:none;
+ scrollbar-gutter:auto;
+}
+.zcf .zcf-main::-webkit-scrollbar{display:none}
+.zcf .zcf-audit{
+ position:absolute;
+ z-index:4;
+ top:0;
+ right:0;
+ bottom:0;
+ width:min(360px,100%);
+ overflow-y:auto;
+ background:#fcfbfd;
+ box-shadow:-18px 0 42px rgb(31 20 49 / .1);
+ scrollbar-width:thin;
+ scrollbar-gutter:stable;
+}
+.zcf .zcf-app[data-records="closed"] .zcf-audit{display:none!important}
+.zcf .zcf-audit .zcf-log{max-height:none;overflow:visible}
+
+@media(max-width:760px){
+ .zcf .zcf-app{height:min(580px,calc(100dvh - 112px));max-height:580px}
+ .zcf .zcf-workspace{display:grid;overflow:hidden}
+ .zcf .zcf-main{overflow-y:auto}
+}
