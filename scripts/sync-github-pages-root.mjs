@@ -31,7 +31,14 @@ for (const name of await readdir(outputAssetsDirectory)) {
   }
 }
 
-for (const name of ["index.html", "404.html", ".nojekyll", "og.png"]) {
+for (const name of [
+  "index.html",
+  "404.html",
+  ".nojekyll",
+  "og.png",
+  "favicon-32.png",
+  "apple-touch-icon.png",
+]) {
   await copyFile(
     resolve(outputDirectory, name),
     resolve(repositoryRoot, name),

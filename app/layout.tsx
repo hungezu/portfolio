@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   title: "李家豪｜AI 体验产品设计师",
   description:
     "李家豪（Leo.li）AI 体验产品设计作品集，聚焦 AI 问答、金融智能产品、复杂系统与 AI 辅助设计工作流。",
+  icons: {
+    icon: [
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
   openGraph: {
     title: "李家豪｜AI 体验产品设计师",
     description:

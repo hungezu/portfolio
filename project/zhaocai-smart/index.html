@@ -3,6 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/portfolio/favicon-32.png?v=20260908b" />
+    <link rel="shortcut icon" href="/portfolio/favicon-32.png?v=20260908b" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/portfolio/apple-touch-icon.png?v=20260908b" />
+    <link rel="preload" as="image" href="/portfolio/assets/visual/hero-poster-mobile.jpg" media="(max-width: 767px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/portfolio/assets/visual/hero-poster-desktop.jpg" media="(min-width: 768px)" fetchpriority="high" />
+    <meta name="theme-color" content="#ffffff" />
     <meta
       name="description"
       content="李家豪（Leo.li）AI 体验产品设计作品集，聚焦 AI 问答、金融智能产品、复杂系统与 AI 辅助设计工作流。"
@@ -148,8 +154,8 @@
     <script>
       window.__PORTFOLIO_BASE__ = "/portfolio";
     </script>
-    <script type="module" crossorigin src="/portfolio/assets/index-6CxU5oPz.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-57lvB9Xe.css">
+    <script type="module" crossorigin src="/portfolio/assets/index-DU2DK6oD.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-Cd2vUHnT.css">
   </head>
   <body>
     <div class="portfolio-boot" id="portfolio-boot" role="status" aria-live="polite" aria-label="作品集加载中">
@@ -174,13 +180,29 @@
         const welcomeNode = document.getElementById("portfolio-boot-welcome");
         const startedAt = performance.now();
         const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-        let loaded = false;
+        let criticalContentReady = false;
         let value = 0;
         let finished = false;
         let rootObserver;
 
-        const markLoaded = () => { loaded = true; };
+        const markLoaded = () => { criticalContentReady = true; };
         window.setTimeout(markLoaded, 8000);
+
+        const waitForCriticalContent = (root) => {
+          const poster = root.querySelector(".hero-poster img");
+          const posterReady = !poster
+            ? Promise.resolve()
+            : poster.complete && poster.naturalWidth > 0
+              ? (typeof poster.decode === "function" ? poster.decode().catch(() => {}) : Promise.resolve())
+              : new Promise((resolve) => {
+                  poster.addEventListener("load", resolve, { once: true });
+                  poster.addEventListener("error", resolve, { once: true });
+                });
+          const fontsReady = document.fonts?.ready?.catch(() => {}) ?? Promise.resolve();
+          Promise.all([posterReady, fontsReady]).then(() => {
+            requestAnimationFrame(() => requestAnimationFrame(markLoaded));
+          });
+        };
 
         const watchApp = () => {
           const root = document.getElementById("root");
@@ -188,15 +210,14 @@
             requestAnimationFrame(watchApp);
             return;
           }
-          const confirmPaint = () => requestAnimationFrame(() => requestAnimationFrame(markLoaded));
           if (root.childElementCount > 0) {
-            confirmPaint();
+            waitForCriticalContent(root);
             return;
           }
           rootObserver = new MutationObserver(() => {
             if (root.childElementCount === 0) return;
             rootObserver.disconnect();
-            confirmPaint();
+            waitForCriticalContent(root);
           });
           rootObserver.observe(root, { childList: true });
         };
@@ -224,7 +245,7 @@
         const render = (now) => {
           const elapsed = now - startedAt;
           const waitingTarget = Math.min(99, Math.floor(99 * (1 - Math.exp(-elapsed / 2100))));
-          const target = loaded && elapsed >= (reducedMotion ? 120 : 2200)
+          const target = criticalContentReady && elapsed >= (reducedMotion ? 120 : 2200)
             ? 100
             : waitingTarget;
           const step = target === 100

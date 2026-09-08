@@ -1447,6 +1447,8 @@ function Hero() {
           <img
             src={publicAsset("/assets/visual/hero-poster-desktop.jpg")}
             alt=""
+            fetchPriority="high"
+            decoding="async"
           />
         </picture>
         <video
@@ -1458,7 +1460,7 @@ function Hero() {
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           onCanPlay={(event) => {
             if (document.visibilityState !== "visible" || !heroVisibleRef.current) {
               event.currentTarget.pause();

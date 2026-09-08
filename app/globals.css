@@ -3964,26 +3964,34 @@ a.contact-item:focus-visible {
   }
 
   .hero-media {
-    inset: 10%;
+    inset: 0;
   }
 
   .hero-poster img,
   .hero-media video {
     object-fit: cover;
+    object-position: center center;
     filter: grayscale(1) contrast(0.98) brightness(1.04);
   }
 
   .hero-video-wash {
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 28%),
-      linear-gradient(0deg, rgba(255, 255, 255, 0.42), transparent 70%);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 26%),
+      linear-gradient(0deg, rgba(255, 255, 255, 0.28), transparent 64%);
   }
 
   .hero-footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 30px;
-    padding: 180px 16px 52px;
+    padding: clamp(150px, 23vh, 190px) 16px max(40px, env(safe-area-inset-bottom));
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(255, 255, 255, 0.74) 44%,
+      rgba(255, 255, 255, 0.18) 78%,
+      transparent 100%
+    );
   }
 
   .hero h1 {
