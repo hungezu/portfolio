@@ -44,7 +44,7 @@ import {
 import portfolioPetAssets from "../assets/visual/sidebar-character/assets.json";
 import { ZhaocaiSmartCase } from "./case-studies/ZhaocaiSmartCase";
 import { GkxCase } from "./case-studies/GkxCase";
-import { GkxDesignSystemInteractive, NationalSciencePlatformCase, ProjectSubnav, type NationalPlatformView } from "./case-studies/NationalSciencePlatformCase";
+import { NationalSciencePlatformCase, type NationalPlatformView } from "./case-studies/NationalSciencePlatformCase";
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const heroVideoAsset = "/assets/visual/hero-motion.mp4";
@@ -1497,11 +1497,11 @@ function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.8, duration: 0.8, ease }}
           >
-            <span className="hero-name">李家豪</span>
+            <span className="hero-name">我是李家豪</span>
             <span className="hero-statement">
-              AI 体验产品设计师，
+              <span className="hero-role-en">AI</span> 体验产品设计师，
               <br />
-              让复杂智能变得清晰、可控。
+              让复杂业务更清晰，让智能体验更可控。
             </span>
           </motion.h1>
           <motion.div
@@ -1588,7 +1588,7 @@ function AbilitySection({
       <div className="section-shell">
         <SectionIntro
           title="核心能力"
-          description="我以 AI 体验设计与交互策略为核心，把复杂业务转化为可理解、可验证、可落地的产品体验，并用 AI 工作流贯穿原型验证、界面探索、设计系统与数据表达。"
+          description="以 AI 体验与交互策略为核心，整合复杂系统、设计系统与数据表达能力，形成面向复杂产品的系统化设计能力。"
         />
         <div
           className={`ability-layout${paused ? " is-paused" : ""}`}
@@ -1949,7 +1949,7 @@ function WorkSection({
       <div className="section-shell">
         <SectionIntro
           title="精选作品"
-          description="旗舰案例展示如何用 Codex 支撑大型多系统平台的设计与协作，其余案例覆盖金融 AI、复杂 B 端系统与数据体验。"
+          description="构建 AI 增强的设计工作流，贯穿需求拆解、原型验证与规范沉淀，支持复杂项目持续验证与交付。"
         />
         {highlightedAbility ? (
           <div className="project-highlight-status" aria-live="polite">
@@ -1982,7 +1982,7 @@ function ExperienceSection() {
         <div className="experience-heading">
           <SectionIntro
             title="工作经历"
-            description="从财税 B 端与数据可视化，到 AI 产品和政企平台，持续负责复杂业务梳理、交互设计、视觉系统与研发交付。"
+            description="7 年持续参与财税、数据可视化、AI 产品与政企平台设计，覆盖业务梳理、交互策略、视觉系统和研发协作。"
           />
           <motion.dl
             className="experience-stats"
@@ -2069,7 +2069,7 @@ function ContactSection() {
           <h2>
             <span className="contact-name">我是李家豪</span>
           </h2>
-          <p>如果你正在寻找利用 AI 能够把复杂业务与设计交付连接起来的设计师，欢迎联系我。</p>
+          <p>如果你在寻找一位能理解复杂业务、并把 AI 能力转化为清晰产品体验的设计师，欢迎联系我。</p>
         </div>
 
         <aside className="contact-panel" aria-label="联系方式">
@@ -2274,7 +2274,7 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
         {isZhaocaiCase ? (
           <ZhaocaiSmartCase />
         ) : isNationalPlatformCase ? (
-          isNationalPlatformSubpage ? <NationalSciencePlatformCase view={projectView} /> : <GkxCase project={project} subNavigation={<ProjectSubnav active="story" />} mdInteractiveContent={<GkxDesignSystemInteractive />} />
+          isNationalPlatformSubpage ? <NationalSciencePlatformCase view={projectView} /> : <GkxCase project={project} />
         ) : (
           <ProjectImageGallery project={project} reduce={reduce} />
         )}

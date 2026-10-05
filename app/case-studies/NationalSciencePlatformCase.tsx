@@ -326,8 +326,8 @@ export function NationalSciencePlatformCase({ view = "story" }: { view?: Nationa
 
       <section className="nsp-section nsp-structure" id="nsp-structure" data-nsp-section>
         <div className="nsp-shell nsp-section-stack nsp-structure-layout">
-          <header className="nsp-story-heading"><h2>从分散材料里，<br />先界定产品范围</h2><p>面对六类服务方向、评审意见和不断追加的反馈，我先用 Codex 形成结构化初稿，再判断哪些是事实、哪些需要确认，以及哪些只是设计假设。</p></header>
-          <div className="nsp-story-body"><div className="nsp-structure-stage">
+          <header className="nsp-story-heading"><p className="nsp-kicker">01 / 项目背景</p><h2>一个由多层能力共同支撑的<br />科技信息服务平台</h2><p>国科信连接科技信息展示、战略咨询、专题服务与 AI 教育等业务，并由社区运营、用户权限、智能体、知识图谱和模型能力共同支撑。智谱主要负责智能服务集群与智慧认知大脑相关模块。</p></header>
+          <div className="nsp-story-body"><figure className="nsp-architecture-figure"><img src={publicAsset("/assets/projects/gkx/product-business-architecture.png")} alt="国科信产品业务架构图" loading="lazy" decoding="async" /><figcaption><strong>产品业务架构</strong><span>从用户触达到应用、业务、支撑与底层能力的整体关系。图中内容为项目材料的脱敏整理。</span></figcaption></figure><div className="nsp-structure-stage">
               <div className="nsp-responsibility-notes"><article><strong>产品工作：确定系统、角色、任务和页面边界</strong><p>避免直接从标书标题推导页面，先确认用户要完成什么。</p></article><article className="is-codex"><strong>Codex：从长文档中提取模块与待确认项</strong><p>把材料转成可核对的结构，减少遗漏与重复理解。</p></article><article><strong>设计判断：重新组织优先级和系统关系</strong><p>删除不成立的默认内容，将争议问题带回评审。</p></article></div>
               <div className="nsp-requirement-board"><header><strong>需求结构化结果</strong><span>脱敏示意</span></header><div className="nsp-direction-grid"><span>科技资源</span><span>新型智库</span><span>决策支持</span><span>专题服务</span><span>信息交流</span><span>科学数据</span></div><dl><div><dt>已确认</dt><dd>系统范围、页面目标、核心任务</dd></div><div><dt>待确认</dt><dd>角色权限、字段内容、业务边界</dd></div></dl><footer>阶段产出：页面范围、需求清单与评审问题</footer></div>
             </div>

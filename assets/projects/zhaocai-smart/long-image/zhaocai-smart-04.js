@@ -224,7 +224,7 @@
       $$('[data-zmd-mode]').forEach(button => { const selected = button.dataset.zmdMode === mode; button.setAttribute('aria-selected', String(selected)); button.tabIndex = selected ? 0 : -1; });
       $('#zmd-workspace').setAttribute('aria-labelledby', mode === 'scenes' ? 'zmd-scenes-tab' : 'zmd-rules-tab');
       $('[data-zmd-nav-title]').textContent = mode === 'scenes' ? '按业务任务选择' : '按内容组件选择';
-      $('[data-zmd-nav]').innerHTML = DATA[mode].map((entry, i) => '<button type="button" data-zmd-item="' + escape(entry.id) + '" aria-current="' + (entry.id === item.id) + '"><span>' + String(i + 1).padStart(2, '0') + '</span>' + escape(entry.label) + '</button>').join('');
+      $('[data-zmd-nav]').innerHTML = DATA[mode].map(entry => '<button type="button" data-zmd-item="' + escape(entry.id) + '" aria-current="' + (entry.id === item.id) + '">' + escape(entry.label) + '</button>').join('');
       $('[data-zmd-example-label]').textContent = (mode === 'scenes' ? '场景 / ' : item.code + ' / ') + item.label;
       $('[data-zmd-question]').textContent = item.question;
       $('[data-zmd-description]').textContent = item.description;

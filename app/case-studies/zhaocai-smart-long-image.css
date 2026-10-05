@@ -16,10 +16,13 @@
 
 .zcli-content :is(
   #zcs-homepage,
+  #zcs-project-overview,
+  #zcs-experience-journey,
   #zcs-trust-mechanism,
   #zcs-process-feedback,
   #zcs-original-output,
-  #zcs-markdown-system
+  #zcs-markdown-system,
+  #zcs-delivery
 ) {
   scroll-margin-top: 96px;
 }
@@ -60,10 +63,13 @@
 
   .zcli-content :is(
     #zcs-homepage,
+    #zcs-project-overview,
+    #zcs-experience-journey,
     #zcs-trust-mechanism,
     #zcs-process-feedback,
     #zcs-original-output,
-    #zcs-markdown-system
+    #zcs-markdown-system,
+    #zcs-delivery
   ) {
     scroll-margin-top: 132px;
   }

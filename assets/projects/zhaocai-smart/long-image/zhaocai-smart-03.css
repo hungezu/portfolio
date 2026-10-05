@@ -24,7 +24,6 @@
 .zcf button { cursor:pointer; }
 .zcf button:disabled { cursor:default; opacity:.55; }
 .zcf :where(button, select, summary):focus-visible { outline:2px solid var(--zcf-purple); outline-offset:4px; }
-.zcf .zcf-eyebrow { grid-column:1 / -1; color:var(--zcf-muted); font-size:var(--zcs-type-14,14px); margin-bottom:var(--zcs-space-24,24px); line-height:1.42857143;}
 .zcf .zcf-title { font:inherit; font-size:var(--zcs-type-section,32px); font-weight:600; line-height:1.5; letter-spacing:-.025em; }
 .zcf .zcf-intro { max-width:310px; color:var(--zcf-body); line-height:1.75; padding-bottom:var(--zcs-space-4,4px); }
 .zcf .zcf-demo-tools { display:flex; justify-content:space-between; align-items:center; gap:var(--zcs-space-16,16px); flex-wrap:wrap; margin:var(--zcs-space-40,40px) 0 var(--zcs-space-20,20px); }
