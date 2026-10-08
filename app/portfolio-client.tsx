@@ -101,7 +101,7 @@ const abilityNetworkNodes: AbilityNetworkNode[] = [
     details: [
       { label: "业务规则与角色关系", x: 77, y: 12, z: -5, side: "right" },
       { label: "权限与数据边界", x: 89, y: 25, z: -38, side: "left" },
-      { label: "复杂流程拆解", x: 78, y: 34, z: 18, side: "right" },
+      { label: "复杂流程拆解", x: 78, y: 34, z: 18, side: "left" },
       { label: "系统模块规划", x: 60, y: 8, z: 8, side: "below" },
     ],
   },
@@ -151,8 +151,8 @@ const abilityNetworkNodes: AbilityNetworkNode[] = [
     z: 48,
     side: "right",
     details: [
-      { label: "信息层级与版式", x: 54, y: 77, z: 8, side: "left" },
-      { label: "组件与状态规范", x: 76, y: 69, z: 52, side: "right" },
+      { label: "信息层级与版式", x: 54, y: 77, z: 8, side: "above" },
+      { label: "组件与状态规范", x: 76, y: 69, z: 52, side: "left" },
       { label: "多页面一致性", x: 84, y: 88, z: 18, side: "left" },
       { label: "品牌与业务适配", x: 56, y: 93, z: 32, side: "above" },
     ],

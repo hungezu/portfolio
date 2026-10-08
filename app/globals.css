@@ -5491,8 +5491,8 @@ a.contact-item:focus-visible {
 }
 
 .portfolio-home .ability-network-node.is-main .ability-network-label {
-  position: relative;
-  z-index: 1;
+  position: absolute;
+  z-index: 3;
   padding: 0;
   background: transparent;
   color: #111;
@@ -5500,6 +5500,7 @@ a.contact-item:focus-visible {
   font-weight: 650;
   letter-spacing: -.015em;
   line-height: 1.3;
+  text-shadow: 0 1px 0 var(--page), 0 -1px 0 var(--page), 1px 0 0 var(--page), -1px 0 0 var(--page);
 }
 
 .portfolio-home .ability-network-node.is-detail .ability-network-dot {
@@ -5509,8 +5510,8 @@ a.contact-item:focus-visible {
 }
 
 .portfolio-home .ability-network-node.is-detail .ability-network-label {
-  position: relative;
-  z-index: 1;
+  position: absolute;
+  z-index: 3;
   padding: 0;
   background: transparent;
   color: rgba(17, 17, 17, .58);
@@ -5519,6 +5520,7 @@ a.contact-item:focus-visible {
   letter-spacing: .01em;
   line-height: 1.3;
   opacity: 0;
+  text-shadow: 0 1px 0 var(--page), 0 -1px 0 var(--page), 1px 0 0 var(--page), -1px 0 0 var(--page);
   transition: color 180ms var(--ease-out-expo), opacity 180ms var(--ease-out-expo);
 }
 
