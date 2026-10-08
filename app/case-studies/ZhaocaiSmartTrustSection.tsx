@@ -36,6 +36,14 @@ export function ZhaocaiSmartTrustSection({ flowOnly = false }: { flowOnly?: bool
           <p className="zcs-intro">用户确认业务含义，AI 整理条件，数据服务执行查询。</p>
         </header>
 
+        <ol className="zcs-mobile-flow" aria-label="业务提问到分析结果的协作流程">
+          <li><span>业务用户</span><strong>提出分析问题</strong><p>用自然语言说明时间、范围与指标。</p></li>
+          <li><span>AI 助手</span><strong>识别查询条件</strong><p>整理已知条件，只标记会影响结果的歧义。</p></li>
+          <li><span>用户确认</span><strong>确认业务口径</strong><p>条件明确时直接执行；歧义指标由用户确认。</p></li>
+          <li><span>数据服务</span><strong>查询业务数据</strong><p>按确认后的时间、组织和指标执行查询。</p></li>
+          <li><span>AI + 用户</span><strong>解释、核对与保存</strong><p>AI 整理结果与来源，用户核对后决定是否复用。</p></li>
+        </ol>
+
         <figure className="zcs-figure" aria-label="用户、AI 助手与数据服务的查询协作流程">
           <div
             className="zcs-scroll"

@@ -6009,3 +6009,53 @@ a.contact-item:focus-visible {
   }
 
 }
+
+/* Zhaocai Smart case-study reading controls. */
+body:has(.case-page-zhaocai),
+.case-page-zhaocai {
+  overflow-x: clip;
+}
+
+.case-page-zhaocai ~ .portfolio-chat {
+  display: none;
+}
+
+@media (max-width: 1120px) {
+  .case-page-zhaocai .zhaocai-locator {
+    top: 74px;
+    min-height: 60px;
+    padding: 8px 16px;
+    overflow-x: auto;
+    scroll-padding-inline: 16px;
+    scroll-snap-type: x proximity;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+  }
+
+  .case-page-zhaocai .zhaocai-locator a {
+    min-height: 44px;
+    scroll-snap-align: center;
+  }
+
+}
+
+@media (max-width: 800px) {
+  .case-page-zhaocai ~ .back-to-top {
+    display: none;
+  }
+
+  body:has(.case-page-zhaocai) .site-nav .brand-link,
+  body:has(.case-page-zhaocai) .site-nav .nav-pill {
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .case-page-zhaocai .zhaocai-locator {
+    top: 76px;
+    padding-inline: 12px;
+    scroll-padding-inline: 12px;
+  }
+}
