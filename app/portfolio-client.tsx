@@ -8,6 +8,14 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
+import {
+  forceLink,
+  forceManyBody,
+  forceSimulation,
+  forceX,
+  forceY,
+  type SimulationNodeDatum,
+} from "d3-force";
 import ArrowLeft from "lucide-react/dist/esm/icons/arrow-left.mjs";
 import ArrowUp from "lucide-react/dist/esm/icons/arrow-up.mjs";
 import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
@@ -45,15 +53,287 @@ import portfolioPetAssets from "../assets/visual/sidebar-character/assets.json";
 import { ZhaocaiSmartCase } from "./case-studies/ZhaocaiSmartCase";
 import { GkxCase } from "./case-studies/GkxCase";
 import { NationalSciencePlatformCase, type NationalPlatformView } from "./case-studies/NationalSciencePlatformCase";
+import { ProjectLocator, type ProjectLocatorSection } from "./project-locator";
 
 const ease = [0.16, 1, 0.3, 1] as const;
+const abilityAutoCycleMs = 4800;
 const heroVideoAsset = "/assets/visual/hero-motion.mp4";
 const heroMobileVideoAsset = "/assets/visual/hero-motion-mobile.mp4";
 const abilityLabelById = new Map(abilities.map(ability => [ability.id, ability.axisLabel]));
-const radarValues = abilities.map(() => .9);
-const radarRadius = 166;
-const radarButtonOrbitX = 54;
-const radarButtonOrbitY = 50;
+
+type AbilityNetworkSide = "left" | "right" | "above" | "below";
+
+type AbilityNetworkNode = {
+  id: AbilityId;
+  x: number;
+  y: number;
+  z: number;
+  side: AbilityNetworkSide;
+  details: Array<{
+    label: string;
+    x: number;
+    y: number;
+    z: number;
+    side: AbilityNetworkSide;
+  }>;
+};
+
+const abilityNetworkNodes: AbilityNetworkNode[] = [
+  {
+    id: "ai-workflow",
+    x: 31,
+    y: 20,
+    z: -40,
+    side: "left",
+    details: [
+      { label: "AI 原型快速验证", x: 13, y: 36, z: -62, side: "right" },
+      { label: "界面方案辅助设计", x: 20, y: 9, z: -34, side: "above" },
+      { label: "设计规范 Markdown 化", x: 42, y: 9, z: -12, side: "below" },
+      { label: "设计资产持续维护", x: 45, y: 29, z: -28, side: "left" },
+    ],
+  },
+  {
+    id: "complex-systems",
+    x: 63,
+    y: 20,
+    z: 28,
+    side: "right",
+    details: [
+      { label: "业务规则与角色关系", x: 77, y: 12, z: -5, side: "right" },
+      { label: "权限与数据边界", x: 89, y: 25, z: -38, side: "left" },
+      { label: "复杂流程拆解", x: 78, y: 34, z: 18, side: "right" },
+      { label: "系统模块规划", x: 60, y: 8, z: 8, side: "below" },
+    ],
+  },
+  {
+    id: "ai-experience",
+    x: 76,
+    y: 47,
+    z: 68,
+    side: "right",
+    details: [
+      { label: "意图澄清", x: 82, y: 36, z: 20, side: "right" },
+      { label: "处理过程反馈", x: 80, y: 56, z: 48, side: "right" },
+      { label: "结果解释", x: 81, y: 70, z: 24, side: "right" },
+      { label: "引用与异常提示", x: 67, y: 61, z: 4, side: "right" },
+    ],
+  },
+  {
+    id: "interaction-design",
+    x: 20,
+    y: 47,
+    z: 30,
+    side: "left",
+    details: [
+      { label: "任务流程与信息架构", x: 7, y: 35, z: -12, side: "right" },
+      { label: "状态与反馈", x: 7, y: 56, z: 18, side: "right" },
+      { label: "复杂交互", x: 6, y: 68, z: 50, side: "right" },
+      { label: "高保真原型验证", x: 22, y: 62, z: -18, side: "right" },
+    ],
+  },
+  {
+    id: "data-visualization",
+    x: 35,
+    y: 77,
+    z: -48,
+    side: "left",
+    details: [
+      { label: "指标层级", x: 16, y: 80, z: -30, side: "left" },
+      { label: "地图与趋势", x: 27, y: 88, z: -56, side: "below" },
+      { label: "多维对比", x: 46, y: 88, z: -8, side: "below" },
+      { label: "大屏场景适配", x: 51, y: 78, z: -22, side: "left" },
+    ],
+  },
+  {
+    id: "design-system",
+    x: 65,
+    y: 78,
+    z: 48,
+    side: "right",
+    details: [
+      { label: "信息层级与版式", x: 54, y: 77, z: 8, side: "left" },
+      { label: "组件与状态规范", x: 76, y: 69, z: 52, side: "right" },
+      { label: "多页面一致性", x: 84, y: 88, z: 18, side: "left" },
+      { label: "品牌与业务适配", x: 56, y: 93, z: 32, side: "above" },
+    ],
+  },
+];
+
+const abilityNetworkMeshLinks: Array<[string, string]> = [
+  ["ai-workflow", "complex-systems"],
+  ["complex-systems", "ai-experience"],
+  ["ai-experience", "design-system"],
+  ["design-system", "data-visualization"],
+  ["data-visualization", "interaction-design"],
+  ["interaction-design", "ai-workflow"],
+  ["ai-workflow", "ai-experience"],
+  ["ai-workflow", "design-system"],
+  ["interaction-design", "complex-systems"],
+  ["interaction-design", "design-system"],
+  ["data-visualization", "complex-systems"],
+  ["data-visualization", "ai-experience"],
+  [abilityDetailNodeId("ai-workflow", "AI 原型快速验证"), abilityDetailNodeId("interaction-design", "任务流程与信息架构")],
+  [abilityDetailNodeId("ai-workflow", "设计资产持续维护"), abilityDetailNodeId("design-system", "组件与状态规范")],
+  [abilityDetailNodeId("complex-systems", "业务规则与角色关系"), abilityDetailNodeId("ai-experience", "意图澄清")],
+  [abilityDetailNodeId("complex-systems", "权限与数据边界"), abilityDetailNodeId("design-system", "多页面一致性")],
+  [abilityDetailNodeId("ai-experience", "处理过程反馈"), abilityDetailNodeId("interaction-design", "状态与反馈")],
+  [abilityDetailNodeId("interaction-design", "任务流程与信息架构"), abilityDetailNodeId("data-visualization", "指标层级")],
+  [abilityDetailNodeId("interaction-design", "复杂交互"), abilityDetailNodeId("data-visualization", "多维对比")],
+  [abilityDetailNodeId("data-visualization", "指标层级"), abilityDetailNodeId("design-system", "信息层级与版式")],
+  [abilityDetailNodeId("data-visualization", "地图与趋势"), abilityDetailNodeId("design-system", "品牌与业务适配")],
+  [abilityDetailNodeId("ai-workflow", "AI 原型快速验证"), abilityDetailNodeId("complex-systems", "复杂流程拆解")],
+];
+
+const abilityNetworkAnchorById = new Map<string, AbilityNetworkPosition>(
+  abilityNetworkNodes.flatMap(node => [
+    [node.id, { x: node.x, y: node.y }],
+    ...node.details.map(detail => [
+      abilityDetailNodeId(node.id, detail.label),
+      { x: detail.x, y: detail.y },
+    ] as [string, AbilityNetworkPosition]),
+  ] as Array<[string, AbilityNetworkPosition]>),
+);
+const abilityNetworkDepthById = new Map<string, number>(
+  abilityNetworkNodes.flatMap(node => [
+    [node.id, node.z],
+    ...node.details.map(detail => [
+      abilityDetailNodeId(node.id, detail.label),
+      detail.z,
+    ] as [string, number]),
+  ] as Array<[string, number]>),
+);
+
+const abilityNetworkMotionIndexById = new Map<string, number>(
+  abilityNetworkNodes
+    .flatMap(node => [
+      node.id,
+      ...node.details.map(detail => abilityDetailNodeId(node.id, detail.label)),
+    ])
+    .map((id, index) => [id, index]),
+);
+
+const abilityDetailIndexesByNodeId = new Map<string, readonly number[]>([
+  [abilityDetailNodeId("ai-experience", "意图澄清"), [0]],
+  [abilityDetailNodeId("ai-experience", "处理过程反馈"), [1]],
+  [abilityDetailNodeId("ai-experience", "结果解释"), [2]],
+  [abilityDetailNodeId("ai-experience", "引用与异常提示"), [3]],
+  [abilityDetailNodeId("ai-workflow", "AI 原型快速验证"), [0]],
+  [abilityDetailNodeId("ai-workflow", "界面方案辅助设计"), [1]],
+  [abilityDetailNodeId("ai-workflow", "设计规范 Markdown 化"), [2]],
+  [abilityDetailNodeId("ai-workflow", "设计资产持续维护"), [3]],
+  [abilityDetailNodeId("complex-systems", "业务规则与角色关系"), [0]],
+  [abilityDetailNodeId("complex-systems", "权限与数据边界"), [1]],
+  [abilityDetailNodeId("complex-systems", "复杂流程拆解"), [2]],
+  [abilityDetailNodeId("complex-systems", "系统模块规划"), [3]],
+  [abilityDetailNodeId("interaction-design", "任务流程与信息架构"), [0]],
+  [abilityDetailNodeId("interaction-design", "状态与反馈"), [1]],
+  [abilityDetailNodeId("interaction-design", "复杂交互"), [2]],
+  [abilityDetailNodeId("interaction-design", "高保真原型验证"), [3]],
+  [abilityDetailNodeId("data-visualization", "指标层级"), [0]],
+  [abilityDetailNodeId("data-visualization", "地图与趋势"), [1]],
+  [abilityDetailNodeId("data-visualization", "多维对比"), [2]],
+  [abilityDetailNodeId("data-visualization", "大屏场景适配"), [3]],
+  [abilityDetailNodeId("design-system", "信息层级与版式"), [0]],
+  [abilityDetailNodeId("design-system", "组件与状态规范"), [1]],
+  [abilityDetailNodeId("design-system", "多页面一致性"), [2]],
+  [abilityDetailNodeId("design-system", "品牌与业务适配"), [3]],
+]);
+
+type AbilitySimulationNode = SimulationNodeDatum & {
+  id: string;
+  anchorX: number;
+  anchorY: number;
+};
+
+type AbilityNetworkPosition = { x: number; y: number };
+
+function projectAbilityPoint(point: AbilityNetworkPosition, depth: number) {
+  const perspective = 1 + depth / 520;
+  return {
+    x: 50 + (point.x - 50) * perspective,
+    y: 50 + (point.y - 50) * perspective,
+  };
+}
+
+function abilityDetailNodeId(abilityId: AbilityId, label: string) {
+  return `${abilityId}:${label}`;
+}
+
+function addAbilityNetworkDrift(
+  id: string,
+  point: AbilityNetworkPosition,
+  phase: number,
+  amplitudeScale = 1,
+) {
+  const index = abilityNetworkMotionIndexById.get(id) ?? 0;
+  const isDetail = id.includes(":");
+  const xAmplitude = (isDetail ? .48 : .68) * amplitudeScale;
+  const yAmplitude = (isDetail ? .36 : .48) * amplitudeScale;
+  return {
+    x: point.x + Math.sin(phase * (.72 + index % 3 * .055) + index * 1.17) * xAmplitude,
+    y: point.y + Math.cos(phase * (.64 + index % 4 * .035) + index * 1.63) * yAmplitude,
+  };
+}
+
+function addAbilityNetworkDepthDrift(id: string, depth: number, phase: number, amplitudeScale = 1) {
+  const index = abilityNetworkMotionIndexById.get(id) ?? 0;
+  const amplitude = (id.includes(":") ? 3.2 : 4.8) * amplitudeScale;
+  return depth + Math.sin(phase * (.62 + index % 5 * .03) + index * 1.39) * amplitude;
+}
+
+function abilityNetworkLineOpacity(fromDepth: number, toDepth: number) {
+  const normalizedDepth = Math.max(-1, Math.min(1, (fromDepth + toDepth) / 140));
+  return .3 + normalizedDepth * .14;
+}
+
+function getAbilityNetworkNeighbors(id: string) {
+  const neighbors = new Set<string>();
+  abilityNetworkNodes.forEach(node => {
+    const detailIds = node.details.map(detail => abilityDetailNodeId(node.id, detail.label));
+    if (node.id === id) detailIds.forEach(detailId => neighbors.add(detailId));
+    if (detailIds.includes(id)) neighbors.add(node.id);
+  });
+  abilityNetworkMeshLinks.forEach(([fromId, toId]) => {
+    if (fromId === id) neighbors.add(toId);
+    if (toId === id) neighbors.add(fromId);
+  });
+  return neighbors;
+}
+
+function createAbilityNetworkPositions() {
+  return Object.fromEntries(
+    abilityNetworkNodes.flatMap(node => [
+      [node.id, { x: node.x, y: node.y }],
+      ...node.details.map(detail => [
+        abilityDetailNodeId(node.id, detail.label),
+        { x: detail.x, y: detail.y },
+      ]),
+    ]),
+  ) as Record<string, AbilityNetworkPosition>;
+}
+
+const homeProjectContent: Record<string, { titleLines: string[]; summary: string }> = {
+  gkx: {
+    titleLines: ["深圳国际", "科技信息中心"],
+    summary: "为门户内多个业务系统建立统一的页面与组件规范，并用 AI 协作维护设计 MD、验证原型与支持评审优化。",
+  },
+  "zhaocai-smart": {
+    titleLines: ["招财 Smart"],
+    summary: "为企业经营分析场景设计从提问、澄清到执行、解释与看板沉淀的智能问数链路，并统一多类型结果的呈现规范。",
+  },
+  "tax-cloud": {
+    titleLines: ["税纪云", "全税种申报平台"],
+    summary: "主导税纪云 2.0 Web 与 App 体验改版，重构申报、审批、风险预警和法规查询等高频财税任务。",
+  },
+  "energy-tax": {
+    titleLines: ["国家能源集团", "报税平台"],
+    summary: "独立负责报税平台从 0 到 1 的 UI 设计，覆盖首页、纳税申报和综合管理工作台，并建立页面与组件规范。",
+  },
+  "data-visualisation": {
+    titleLines: ["可视化大屏", "项目合集"],
+    summary: "汇集汽车、轨道交通、新能源、电子及地产等行业大屏，以地图、指标、趋势和排行组织高密度业务信息。",
+  },
+};
 
 function openProjectFromPortfolio(
   event: ReactMouseEvent<HTMLAnchorElement>,
@@ -134,16 +414,6 @@ function returnToProjectLocation(
     return;
   }
   window.location.assign("/portfolio/?returnSection=work");
-}
-
-function getRadarPoints(values: number[], radius = radarRadius) {
-  const center = 240;
-  return values
-    .map((value, index) => {
-      const angle = (-90 + index * (360 / values.length)) * (Math.PI / 180);
-      return `${center + Math.cos(angle) * radius * value},${center + Math.sin(angle) * radius * value}`;
-    })
-    .join(" ");
 }
 
 function BrandMark() {
@@ -283,8 +553,8 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
   const links = [
     ["首页", "/portfolio/#top"],
     ["核心能力", "/portfolio/#ability"],
-    ["项目", "/portfolio/#work"],
-    ["经历", "/portfolio/#experience"],
+    ["精选作品", "/portfolio/#work"],
+    ["工作经历", "/portfolio/#experience"],
     ["联系", "/portfolio/#contact"],
   ];
 
@@ -843,7 +1113,12 @@ function PortfolioChat() {
       bottom: rect.bottom,
     };
     drag.moved = false;
-    event.currentTarget.setPointerCapture(event.pointerId);
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      drag.active = false;
+      drag.pointerId = -1;
+    }
   };
 
   const handlePetPointerMove = (event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -1510,9 +1785,9 @@ function Hero() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 1, duration: 0.8, ease }}
           >
-            <a className="hero-contact-button" href="#contact">
-              <span>联系我</span>
-              <span className="hero-contact-icon" aria-hidden="true">
+            <a className="hero-contact-button" href="#work">
+              <span>查看精选作品</span>
+              <span className="hero-action-icon" aria-hidden="true">
                 <ArrowUpRight size={16} strokeWidth={2} />
               </span>
             </a>
@@ -1560,9 +1835,58 @@ function AbilitySection({
   onShowProjects: (abilityId: AbilityId) => void;
 }) {
   const [active, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [networkPositions, setNetworkPositions] = useState<Record<string, AbilityNetworkPosition>>(
+    createAbilityNetworkPositions,
+  );
+  const [networkSettleVersion, setNetworkSettleVersion] = useState(0);
+  const [networkMotionPhase, setNetworkMotionPhase] = useState(0);
+  const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
+  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
+  const [selectedDetailNodeId, setSelectedDetailNodeId] = useState<string | null>(null);
+  const [abilityInView, setAbilityInView] = useState(false);
+  const [pageVisible, setPageVisible] = useState(true);
+  const [autoCyclePaused, setAutoCyclePaused] = useState(false);
+  const [autoCycleVersion, setAutoCycleVersion] = useState(0);
   const reduce = useReducedMotion();
+  const abilitySectionRef = useRef<HTMLElement>(null);
+  const networkViewportRef = useRef<HTMLDivElement>(null);
+  const networkRef = useRef<HTMLDivElement>(null);
+  const networkPositionsRef = useRef(networkPositions);
+  const networkSimulationRef = useRef<{ stop: () => void } | null>(null);
+  const suppressNetworkClickRef = useRef(false);
+  const networkDragRef = useRef<{
+    id: string | null;
+    pointerId: number;
+    startX: number;
+    startY: number;
+    startPositions: Record<string, AbilityNetworkPosition>;
+    moved: boolean;
+  }>({ id: null, pointerId: -1, startX: 0, startY: 0, startPositions: {}, moved: false });
+  networkPositionsRef.current = networkPositions;
   const current = abilities[active];
+  const activeAbilityId = current.id;
+  const networkMotionScale = (id: string) => {
+    if (draggingNodeId === id) return 0;
+    if (hoveredNodeId === id) return .16;
+    if (selectedDetailNodeId === id) return .12;
+    if (id === activeAbilityId || id.startsWith(`${activeAbilityId}:`)) return .3;
+    return 1;
+  };
+  const animatedNetworkPosition = (
+    id: string,
+    fallback: AbilityNetworkPosition,
+  ) => {
+    const base = networkPositions[id] ?? fallback;
+    return reduce
+      ? base
+      : addAbilityNetworkDrift(id, base, networkMotionPhase, networkMotionScale(id));
+  };
+  const animatedNetworkDepth = (id: string, fallback: number) => reduce
+    ? fallback
+    : addAbilityNetworkDepthDrift(id, fallback, networkMotionPhase, networkMotionScale(id));
+  const selectedDetailIndexes = selectedDetailNodeId
+    ? abilityDetailIndexesByNodeId.get(selectedDetailNodeId) ?? []
+    : [];
   const projectCount = new Set(current.evidence.map(item => item.projectSlug)).size;
   const groupedEvidence = current.evidence.reduce<Array<{
     projectSlug: string;
@@ -1576,111 +1900,490 @@ function AbilitySection({
   }, []);
 
   useEffect(() => {
-    if (reduce || paused) return;
-    const timer = window.setInterval(() => {
-      setActive(index => (index + 1) % abilities.length);
-    }, 4800);
-    return () => window.clearInterval(timer);
-  }, [paused, reduce]);
+    const viewport = networkViewportRef.current;
+    if (!viewport) return;
+    let frame = 0;
+    const syncViewport = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        viewport.scrollLeft = window.innerWidth <= 767
+          ? Math.max(0, (viewport.scrollWidth - viewport.clientWidth) / 2)
+          : 0;
+      });
+    };
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", syncViewport);
+    };
+  }, []);
+
+  useEffect(() => {
+    const section = abilitySectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      setAbilityInView(entry.isIntersecting);
+    }, { threshold: .35 });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const syncVisibility = () => setPageVisible(document.visibilityState === "visible");
+    syncVisibility();
+    document.addEventListener("visibilitychange", syncVisibility);
+    return () => document.removeEventListener("visibilitychange", syncVisibility);
+  }, []);
+
+  useEffect(() => {
+    if (reduce || !abilityInView || !pageVisible || autoCyclePaused || selectedDetailNodeId) return;
+    const timer = window.setTimeout(() => {
+      const activeNodeIndex = abilityNetworkNodes.findIndex(node => node.id === abilities[active]?.id);
+      const nextNode = abilityNetworkNodes[(Math.max(0, activeNodeIndex) + 1) % abilityNetworkNodes.length];
+      const nextAbilityIndex = abilities.findIndex(ability => ability.id === nextNode.id);
+      if (nextAbilityIndex >= 0) {
+        setActive(nextAbilityIndex);
+        setSelectedDetailNodeId(null);
+      }
+    }, abilityAutoCycleMs);
+    return () => window.clearTimeout(timer);
+  }, [active, abilityInView, autoCyclePaused, autoCycleVersion, pageVisible, reduce, selectedDetailNodeId]);
+
+  useEffect(() => {
+    const network = networkRef.current;
+    if (!network || reduce) {
+      setNetworkMotionPhase(0);
+      return;
+    }
+
+    let frame = 0;
+    let visible = false;
+    let phase = 0;
+    let lastTime = 0;
+    let lastPaint = 0;
+
+    const stop = () => {
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+      lastTime = 0;
+    };
+    const tick = (time: number) => {
+      frame = 0;
+      if (!visible || document.visibilityState !== "visible") return;
+      if (!lastTime) lastTime = time;
+      phase += Math.min(50, time - lastTime) / 1000;
+      lastTime = time;
+      if (time - lastPaint >= 34) {
+        setNetworkMotionPhase(phase);
+        lastPaint = time;
+      }
+      frame = window.requestAnimationFrame(tick);
+    };
+    const start = () => {
+      if (!frame && visible && document.visibilityState === "visible") {
+        frame = window.requestAnimationFrame(tick);
+      }
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) start();
+      else stop();
+    }, { rootMargin: "120px 0px" });
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") start();
+      else stop();
+    };
+
+    observer.observe(network);
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => {
+      stop();
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibility);
+    };
+  }, [reduce]);
+
+  useEffect(() => {
+    if (reduce) {
+      setNetworkPositions(createAbilityNetworkPositions());
+      return;
+    }
+
+    const nodes: AbilitySimulationNode[] = abilityNetworkNodes.flatMap((node, nodeIndex) => {
+      const currentNode = networkPositionsRef.current[node.id] ?? node;
+      return [{
+        id: node.id,
+        anchorX: node.x,
+        anchorY: node.y,
+        x: currentNode.x,
+        y: currentNode.y,
+        vx: Math.sin((nodeIndex + 1) * (active + 2)) * .55,
+        vy: Math.cos((nodeIndex + 2) * (active + 1)) * .48,
+      }, ...node.details.map((detail, detailIndex) => {
+        const id = abilityDetailNodeId(node.id, detail.label);
+        const currentDetail = networkPositionsRef.current[id] ?? detail;
+        return {
+          id,
+          anchorX: detail.x,
+          anchorY: detail.y,
+          x: currentDetail.x,
+          y: currentDetail.y,
+          vx: Math.sin((nodeIndex + detailIndex + 2) * (active + 1)) * .36,
+          vy: Math.cos((nodeIndex + detailIndex + 3) * (active + 2)) * .34,
+        };
+      })];
+    });
+    const links = abilityNetworkNodes.flatMap(node =>
+      node.details.map(detail => ({
+        source: node.id,
+        target: abilityDetailNodeId(node.id, detail.label),
+      })),
+    ).concat(abilityNetworkMeshLinks.map(([source, target]) => ({ source, target })));
+
+    let frame = 0;
+    const simulation = forceSimulation(nodes)
+      .alpha(.32)
+      .alphaDecay(.06)
+      .velocityDecay(.56)
+      .force("link", forceLink<AbilitySimulationNode, { source: string | AbilitySimulationNode; target: string | AbilitySimulationNode }>(links)
+        .id(node => node.id)
+        .strength(.02))
+      .force("charge", forceManyBody<AbilitySimulationNode>().strength(-.28))
+      .force("x", forceX<AbilitySimulationNode>(node => node.anchorX).strength(.36))
+      .force("y", forceY<AbilitySimulationNode>(node => node.anchorY).strength(.36))
+      .on("tick", () => {
+        window.cancelAnimationFrame(frame);
+        frame = window.requestAnimationFrame(() => {
+          const next: Record<string, AbilityNetworkPosition> = {};
+          nodes.forEach(node => {
+            if (node.id === "network-center") return;
+            const x = node.x ?? node.anchorX;
+            const y = node.y ?? node.anchorY;
+            next[node.id] = {
+              x: node.anchorX + Math.max(-.45, Math.min(.45, x - node.anchorX)),
+              y: node.anchorY + Math.max(-.45, Math.min(.45, y - node.anchorY)),
+            };
+          });
+          networkPositionsRef.current = next;
+          setNetworkPositions(next);
+        });
+      });
+    networkSimulationRef.current = simulation;
+    const driftTimer = window.setInterval(() => {
+      nodes.forEach((node, index) => {
+        if (node.id === "network-center") return;
+        const phase = Date.now() / 2200 + index * 1.7;
+        node.vx = (node.vx ?? 0) + Math.sin(phase) * .08;
+        node.vy = (node.vy ?? 0) + Math.cos(phase * .86) * .07;
+      });
+      simulation.alpha(.055).restart();
+    }, 2200);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearInterval(driftTimer);
+      simulation.stop();
+      if (networkSimulationRef.current === simulation) networkSimulationRef.current = null;
+    };
+  }, [active, networkSettleVersion, reduce]);
+
+  const handleNetworkPointerDown = (
+    event: ReactPointerEvent<HTMLButtonElement>,
+    id: string,
+  ) => {
+    if (event.button !== 0) return;
+    networkSimulationRef.current?.stop();
+    networkDragRef.current = {
+      id,
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      startPositions: { ...networkPositionsRef.current },
+      moved: false,
+    };
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      // Pointer capture is unavailable for some synthetic pointer events.
+    }
+  };
+
+  const handleNetworkPointerMove = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = networkDragRef.current;
+    const network = networkRef.current;
+    if (!drag.id || drag.pointerId !== event.pointerId || !network) return;
+    const dx = event.clientX - drag.startX;
+    const dy = event.clientY - drag.startY;
+    if (!drag.moved && Math.hypot(dx, dy) < 4) return;
+    drag.moved = true;
+    setDraggingNodeId(drag.id);
+    event.preventDefault();
+
+    const rect = network.getBoundingClientRect();
+    const deltaX = dx / Math.max(1, rect.width) * 100;
+    const deltaY = dy / Math.max(1, rect.height) * 100;
+    const neighbors = getAbilityNetworkNeighbors(drag.id);
+    const next = { ...drag.startPositions };
+    const applyOffset = (nodeId: string, strength: number, limit: number) => {
+      const anchor = abilityNetworkAnchorById.get(nodeId);
+      const start = drag.startPositions[nodeId] ?? anchor;
+      if (!anchor || !start) return;
+      next[nodeId] = {
+        x: Math.max(anchor.x - limit, Math.min(anchor.x + limit, start.x + deltaX * strength)),
+        y: Math.max(anchor.y - limit, Math.min(anchor.y + limit, start.y + deltaY * strength)),
+      };
+    };
+    applyOffset(drag.id, 1, 3);
+    neighbors.forEach(nodeId => applyOffset(nodeId, .12, .7));
+    networkPositionsRef.current = next;
+    setNetworkPositions(next);
+  };
+
+  const finishNetworkDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
+    const drag = networkDragRef.current;
+    if (!drag.id || drag.pointerId !== event.pointerId) return;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    setDraggingNodeId(null);
+    if (drag.moved) {
+      suppressNetworkClickRef.current = true;
+      window.setTimeout(() => {
+        suppressNetworkClickRef.current = false;
+      }, 240);
+      setNetworkSettleVersion(version => version + 1);
+    }
+    networkDragRef.current.id = null;
+    networkDragRef.current.pointerId = -1;
+  };
+
+  const selectNetworkAbility = (index: number, detailId: string | null = null) => {
+    if (suppressNetworkClickRef.current) {
+      suppressNetworkClickRef.current = false;
+      return;
+    }
+    setActive(index);
+    setSelectedDetailNodeId(detailId);
+    setAutoCycleVersion(version => version + 1);
+  };
 
   return (
-    <section className="section ability-section" id="ability">
+    <section className="section ability-section" id="ability" ref={abilitySectionRef}>
       <div className="section-shell">
         <SectionIntro
           title="核心能力"
           description="以 AI 体验与交互策略为核心，整合复杂系统、设计系统与数据表达能力，形成面向复杂产品的系统化设计能力。"
         />
         <div
-          className={`ability-layout${paused ? " is-paused" : ""}`}
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onFocusCapture={() => setPaused(true)}
+          className={`ability-layout${autoCyclePaused ? " is-paused" : ""}`}
+          data-auto-cycle={reduce ? "reduced" : abilityInView && pageVisible && !autoCyclePaused ? "running" : "paused"}
+          onFocusCapture={() => setAutoCyclePaused(true)}
           onBlurCapture={event => {
-            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false);
+            if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) {
+              setAutoCyclePaused(false);
+            }
           }}
         >
           <div className="ability-visual">
-            <div className="ability-radar" role="group" aria-label={`核心能力雷达图，当前为${current.name}`}>
-              <svg viewBox="36 36 408 408" aria-hidden="true">
-                {[.25, .5, .75, 1].map(level => (
-                  <polygon key={level} className="radar-grid" points={getRadarPoints(Array(abilities.length).fill(level))} />
-                ))}
-                {abilities.map((ability, index) => {
-                  const angle = (-90 + index * (360 / abilities.length)) * (Math.PI / 180);
-                  const x = 240 + Math.cos(angle) * radarRadius;
-                  const y = 240 + Math.sin(angle) * radarRadius;
-                  return <line key={ability.id} className="radar-axis" x1="240" y1="240" x2={x} y2={y} />;
-                })}
-                <motion.polygon
-                  className="radar-shape"
-                  points={getRadarPoints(radarValues)}
-                  initial={false}
-                  animate={{ points: getRadarPoints(radarValues) }}
-                  transition={{ duration: reduce ? 0 : .62, ease }}
-                />
-                {radarValues.map((value, index) => {
-                  const angle = (-90 + index * (360 / radarValues.length)) * (Math.PI / 180);
-                  const x = 240 + Math.cos(angle) * radarRadius * value;
-                  const y = 240 + Math.sin(angle) * radarRadius * value;
-                  return (
-                    <motion.circle
-                      key={abilities[index].id}
-                      className={`radar-point${active === index ? " is-active" : ""}`}
-                      initial={false}
-                      animate={{ cx: x, cy: y }}
-                      transition={{ duration: reduce ? 0 : .62, ease }}
-                      r={active === index ? 7 : 4}
-                    />
-                  );
-                })}
-              </svg>
+            <div className="ability-network-viewport" ref={networkViewportRef}>
+              <div
+                className="ability-network"
+                ref={networkRef}
+                data-motion-phase={networkMotionPhase.toFixed(2)}
+                role="group"
+                aria-label={`能力体系三维关系图，当前为${current.name}`}
+              >
+                <svg viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true">
+                  {abilityNetworkNodes.map(node => {
+                    const nodeDepth = animatedNetworkDepth(node.id, node.z);
+                    const nodePosition = projectAbilityPoint(animatedNetworkPosition(node.id, node), nodeDepth);
+                    return (
+                      <g
+                        key={node.id}
+                        className={active === abilities.findIndex(item => item.id === node.id) ? "is-active" : undefined}
+                        style={{ opacity: .72 + Math.max(-.14, Math.min(.2, nodeDepth / 300)) }}
+                      >
+                        {node.details.map(detail => {
+                          const detailId = abilityDetailNodeId(node.id, detail.label);
+                          const detailDepth = animatedNetworkDepth(detailId, detail.z);
+                          const detailPosition = projectAbilityPoint(
+                            animatedNetworkPosition(detailId, detail),
+                            detailDepth,
+                          );
+                          return (
+                            <line
+                              key={detail.label}
+                              className={`ability-network-line is-branch${selectedDetailNodeId === detailId ? " is-selected" : ""}`}
+                              pathLength="1"
+                              x1={nodePosition.x * 10}
+                              y1={nodePosition.y * 5.6}
+                              x2={detailPosition.x * 10}
+                              y2={detailPosition.y * 5.6}
+                              style={{ opacity: abilityNetworkLineOpacity(nodeDepth, detailDepth) }}
+                            />
+                          );
+                        })}
+                      </g>
+                    );
+                  })}
+                  {abilityNetworkMeshLinks.map(([fromId, toId]) => {
+                    const from = abilityNetworkAnchorById.get(fromId);
+                    const to = abilityNetworkAnchorById.get(toId);
+                    if (!from || !to) return null;
+                    const fromDepth = animatedNetworkDepth(fromId, abilityNetworkDepthById.get(fromId) ?? 0);
+                    const toDepth = animatedNetworkDepth(toId, abilityNetworkDepthById.get(toId) ?? 0);
+                    const fromPosition = projectAbilityPoint(animatedNetworkPosition(fromId, from), fromDepth);
+                    const toPosition = projectAbilityPoint(animatedNetworkPosition(toId, to), toDepth);
+                    return (
+                      <line
+                        key={`${fromId}-${toId}`}
+                        className="ability-network-line is-mesh"
+                        pathLength="1"
+                        x1={fromPosition.x * 10}
+                        y1={fromPosition.y * 5.6}
+                        x2={toPosition.x * 10}
+                        y2={toPosition.y * 5.6}
+                        style={{ opacity: abilityNetworkLineOpacity(fromDepth, toDepth) }}
+                      />
+                    );
+                  })}
+                </svg>
 
-              <div className="ability-switcher" role="tablist" aria-label="核心能力切换">
-                {abilities.map((ability, index) => {
-                  const angle = (-90 + index * (360 / abilities.length)) * (Math.PI / 180);
-                  const x = 50 + Math.cos(angle) * radarButtonOrbitX;
-                  const y = 50 + Math.sin(angle) * radarButtonOrbitY;
-                  return (
-                    <button
-                      key={ability.id}
-                      id={`ability-tab-${index}`}
-                      type="button"
-                      role="tab"
-                      aria-selected={active === index}
-                      aria-controls="ability-panel"
-                      tabIndex={active === index ? 0 : -1}
-                      className={`radar-axis-button${active === index ? " is-active" : ""}`}
-                      style={{ left: `${x}%`, top: `${y}%` }}
-                      onClick={() => {
-                        setActive(index);
-                        setPaused(true);
-                      }}
-                      onKeyDown={(event) => {
-                        const directions: Record<string, number> = {
-                          ArrowRight: 1,
-                          ArrowDown: 1,
-                          ArrowLeft: -1,
-                          ArrowUp: -1,
-                        };
-                        const direction = directions[event.key];
-                        if (!direction && event.key !== "Home" && event.key !== "End") return;
-                        event.preventDefault();
-                        const next = event.key === "Home"
-                          ? 0
-                          : event.key === "End"
-                            ? abilities.length - 1
-                            : (index + direction + abilities.length) % abilities.length;
-                        setActive(next);
-                        setPaused(true);
-                        window.requestAnimationFrame(() => {
-                          document.getElementById(`ability-tab-${next}`)?.focus();
-                        });
-                      }}
-                    >
-                      {ability.axisLabel}
-                    </button>
-                  );
-                })}
+                <div
+                  className="ability-network-center"
+                  style={{ "--node-z": "28px" } as CSSProperties}
+                  aria-hidden="true"
+                >
+                  <span className="ability-network-core-mark">
+                    <svg viewBox="0 0 64 64" aria-hidden="true">
+                      <g className="ability-network-core-orbits">
+                        <ellipse cx="32" cy="32" rx="27" ry="10" />
+                        <ellipse cx="32" cy="32" rx="27" ry="10" transform="rotate(60 32 32)" />
+                        <ellipse cx="32" cy="32" rx="27" ry="10" transform="rotate(120 32 32)" />
+                      </g>
+                      <g className="ability-network-core-satellites">
+                        <circle cx="59" cy="32" r="2.6" />
+                        <circle cx="45.5" cy="8.6" r="2.6" />
+                        <circle cx="18.5" cy="8.6" r="2.6" />
+                        <circle cx="5" cy="32" r="2.6" />
+                        <circle cx="18.5" cy="55.4" r="2.6" />
+                        <circle cx="45.5" cy="55.4" r="2.6" />
+                      </g>
+                      <circle className="ability-network-core-disc" cx="32" cy="32" r="8" />
+                      <circle className="ability-network-core-cutout" cx="32" cy="32" r="2.5" />
+                    </svg>
+                  </span>
+                  <strong>能力体系</strong>
+                </div>
+
+                <div className="ability-network-tabs" role="tablist" aria-label="核心能力切换">
+                  {abilityNetworkNodes.map(node => {
+                    const index = abilities.findIndex(ability => ability.id === node.id);
+                    const ability = abilities[index];
+                    const nodeDepth = animatedNetworkDepth(node.id, node.z);
+                    const nodePosition = projectAbilityPoint(animatedNetworkPosition(node.id, node), nodeDepth);
+                    const depthScale = 1 + nodeDepth / 260;
+                    return (
+                      <button
+                        key={node.id}
+                        id={`ability-tab-${index}`}
+                        type="button"
+                        role="tab"
+                        aria-selected={active === index}
+                        aria-controls="ability-panel"
+                        tabIndex={active === index ? 0 : -1}
+                        className={`ability-network-node is-main is-${node.side}${active === index ? " is-active" : ""}${draggingNodeId === node.id ? " is-dragging" : ""}`}
+                        style={{
+                          left: `${nodePosition.x}%`,
+                          top: `${nodePosition.y}%`,
+                          opacity: .72 + Math.max(-.14, Math.min(.2, nodeDepth / 300)),
+                          "--node-z": `${nodeDepth}px`,
+                          "--node-scale": depthScale.toFixed(3),
+                          "--node-hover-scale": (depthScale * 1.14).toFixed(3),
+                          "--node-active-scale": (depthScale * 1.34).toFixed(3),
+                        } as CSSProperties}
+                        onClick={() => selectNetworkAbility(index)}
+                        onPointerEnter={() => setHoveredNodeId(node.id)}
+                        onPointerLeave={() => setHoveredNodeId(current => current === node.id ? null : current)}
+                        onPointerDown={event => handleNetworkPointerDown(event, node.id)}
+                        onPointerMove={handleNetworkPointerMove}
+                        onPointerUp={finishNetworkDrag}
+                        onPointerCancel={finishNetworkDrag}
+                        onKeyDown={(event) => {
+                          const directions: Record<string, number> = {
+                            ArrowRight: 1,
+                            ArrowDown: 1,
+                            ArrowLeft: -1,
+                            ArrowUp: -1,
+                          };
+                          const direction = directions[event.key];
+                          if (!direction && event.key !== "Home" && event.key !== "End") return;
+                          event.preventDefault();
+                          const next = event.key === "Home"
+                            ? 0
+                            : event.key === "End"
+                              ? abilities.length - 1
+                              : (index + direction + abilities.length) % abilities.length;
+                          setActive(next);
+                          setSelectedDetailNodeId(null);
+                          setAutoCycleVersion(version => version + 1);
+                          window.requestAnimationFrame(() => {
+                            document.getElementById(`ability-tab-${next}`)?.focus();
+                          });
+                        }}
+                      >
+                        <span className="ability-network-node-content">
+                          <span className="ability-network-dot" aria-hidden="true" />
+                          <span className="ability-network-label">{ability.axisLabel}</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="ability-network-detail-nodes">
+                  {abilityNetworkNodes.flatMap(node => {
+                    const index = abilities.findIndex(ability => ability.id === node.id);
+                    const ability = abilities[index];
+                    return node.details.map(detail => {
+                      const detailId = abilityDetailNodeId(node.id, detail.label);
+                      const detailDepth = animatedNetworkDepth(detailId, detail.z);
+                      const detailPosition = projectAbilityPoint(animatedNetworkPosition(detailId, detail), detailDepth);
+                      const depthScale = 1 + detailDepth / 300;
+                      return (
+                        <button
+                          key={`${node.id}-${detail.label}`}
+                          type="button"
+                          aria-pressed={selectedDetailNodeId === detailId}
+                          aria-label={`查看${ability.name}：${detail.label}`}
+                          className={`ability-network-node is-detail is-${detail.side}${active === index ? " is-parent-active" : ""}${selectedDetailNodeId === detailId ? " is-active" : ""}${draggingNodeId === detailId ? " is-dragging" : ""}`}
+                          style={{
+                            left: `${detailPosition.x}%`,
+                            top: `${detailPosition.y}%`,
+                            opacity: .72 + Math.max(-.14, Math.min(.2, detailDepth / 300)),
+                            "--node-z": `${detailDepth}px`,
+                            "--node-scale": depthScale.toFixed(3),
+                            "--node-hover-scale": (depthScale * 1.22).toFixed(3),
+                            "--node-active-scale": (depthScale * 1.42).toFixed(3),
+                          } as CSSProperties}
+                          onClick={() => selectNetworkAbility(index, detailId)}
+                          onPointerEnter={() => setHoveredNodeId(detailId)}
+                          onPointerLeave={() => setHoveredNodeId(current => current === detailId ? null : current)}
+                          onPointerDown={event => handleNetworkPointerDown(event, detailId)}
+                          onPointerMove={handleNetworkPointerMove}
+                          onPointerUp={finishNetworkDrag}
+                          onPointerCancel={finishNetworkDrag}
+                        >
+                          <span className="ability-network-node-content">
+                            <span className="ability-network-dot" aria-hidden="true" />
+                            <span className="ability-network-label">{detail.label}</span>
+                          </span>
+                        </button>
+                      );
+                    });
+                  })}
+                </div>
               </div>
             </div>
           </div>
@@ -1689,7 +2392,7 @@ function AbilitySection({
             id="ability-panel"
             role="tabpanel"
             aria-labelledby={`ability-tab-${active}`}
-            aria-live="polite"
+            aria-live={autoCyclePaused ? "polite" : "off"}
           >
             <AnimatePresence mode="wait">
               <motion.div
@@ -1697,13 +2400,18 @@ function AbilitySection({
                 initial={reduce ? false : { opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={reduce ? undefined : { opacity: 0, y: -8 }}
-                transition={{ duration: 0.42, ease }}
+                transition={{ duration: 0.24, ease }}
               >
                 <h3>{current.name}</h3>
                 <p>{current.description}</p>
                 <ul>
-                  {current.details.map((detail) => (
-                    <li key={detail}>{detail}</li>
+                  {current.details.map((detail, detailIndex) => (
+                    <li
+                      className={selectedDetailIndexes.includes(detailIndex) ? "is-active" : undefined}
+                      key={detail}
+                    >
+                      {detail}
+                    </li>
                   ))}
                 </ul>
                 <section className="ability-proof ability-proof-compact" aria-label={`${current.name}对应项目`}>
@@ -1748,23 +2456,37 @@ function ImageWithFallback({
   decoding = "async",
   ...props
 }: ImgHTMLAttributes<HTMLImageElement>) {
-  const [failed, setFailed] = useState(false);
-  if (failed) {
-    return <div className={`image-fallback ${className}`}>项目图片暂时无法加载</div>;
-  }
   const webpSource = typeof props.src === "string" && /\/assets\/projects\/.*\.(?:png|jpe?g)(?:\?.*)?$/i.test(props.src)
     ? props.src.replace(/\.(?:png|jpe?g)(\?.*)?$/i, ".webp$1")
     : null;
+  const [imageStage, setImageStage] = useState<"webp" | "original" | "failed">(
+    webpSource ? "webp" : "original",
+  );
+
+  useEffect(() => {
+    setImageStage(webpSource ? "webp" : "original");
+  }, [props.src, webpSource]);
+
+  if (imageStage === "failed") {
+    return <div className={`image-fallback ${className}`}>项目图片暂时无法加载</div>;
+  }
 
   return (
     <picture className="optimized-picture">
-      {webpSource ? <source srcSet={webpSource} type="image/webp" /> : null}
+      {webpSource && imageStage === "webp" ? <source srcSet={webpSource} type="image/webp" /> : null}
       <img
+        key={imageStage}
         alt={alt}
         className={className}
         decoding={decoding}
         {...props}
-        onError={() => setFailed(true)}
+        onError={() => {
+          if (webpSource && imageStage === "webp") {
+            setImageStage("original");
+            return;
+          }
+          setImageStage("failed");
+        }}
       />
     </picture>
   );
@@ -1796,6 +2518,10 @@ function ProjectCard({
   const highlightedAbilityLabel = highlightedAbilityId
     ? abilityLabelById.get(highlightedAbilityId)
     : null;
+  const homeContent = homeProjectContent[project.slug] ?? {
+    titleLines: [project.title],
+    summary: project.summary,
+  };
 
   useEffect(() => {
     if (reduce) {
@@ -1869,17 +2595,17 @@ function ProjectCard({
   const scale = useTransform(
     smoothProgress,
     [0, 0.28, 1],
-    [1, 0.992, reduce ? 1 : 0.97],
+    [1, 0.995, reduce ? 1 : 0.985],
   );
   const opacity = useTransform(
     smoothProgress,
     [0, 0.2, 1],
-    [1, 0.97, reduce ? 1 : 0.68],
+    [1, 0.985, reduce ? 1 : 0.78],
   );
   const y = useTransform(
     smoothProgress,
     [0, 0.24, 1],
-    [0, -2, reduce ? 0 : -8],
+    [0, -1, reduce ? 0 : -4],
   );
 
   return (
@@ -1888,7 +2614,12 @@ function ProjectCard({
       className={`project-card${abilityMatch ? " is-ability-match" : ""}`}
       data-project={project.slug}
       data-ability-match={abilityMatch ? "true" : undefined}
-      style={{ scale, opacity, y, zIndex: index + 1 }}
+      style={{
+        scale,
+        opacity,
+        y,
+        zIndex: index + 1,
+      }}
     >
       <a
         className="project-card-link"
@@ -1903,18 +2634,33 @@ function ProjectCard({
           </span>
         ) : null}
         <div className="project-copy">
-          <p className="project-type">{project.type}</p>
-          <h3 id={titleId}>{project.title}</h3>
-          <p className="project-summary" id={summaryId}>{project.summary}</p>
-          <div className="project-ability-tags" aria-label="项目对应能力">
-            {project.abilityIds.slice(0, 3).map(abilityId => (
-              <span key={abilityId}>{abilityLabelById.get(abilityId)}</span>
-            ))}
+          <div className="project-info-group">
+            <p className="project-type">{project.type}</p>
+            <h3 id={titleId}>
+              {homeContent.titleLines.map((line, lineIndex) => (
+                <span key={line}>
+                  {line}
+                  {lineIndex < homeContent.titleLines.length - 1 ? <br /> : null}
+                </span>
+              ))}
+            </h3>
+            <p className="project-summary" id={summaryId}>{homeContent.summary}</p>
           </div>
-          <span className="project-link" aria-hidden="true">
-            查看项目
-            <ArrowUpRight size={15} strokeWidth={1.8} />
-          </span>
+          <div className="project-meta">
+            <p className="project-role">
+              <span>职责</span>
+              <strong>{project.role}</strong>
+            </p>
+            <div className="project-ability-tags" aria-label="项目对应能力">
+              {project.abilityIds.slice(0, 3).map(abilityId => (
+                <span key={abilityId}>{abilityLabelById.get(abilityId)}</span>
+              ))}
+            </div>
+            <span className="project-link" aria-hidden="true">
+              查看项目
+              <ArrowUpRight size={15} strokeWidth={1.8} />
+            </span>
+          </div>
         </div>
         <div className="project-visual">
           <ImageWithFallback
@@ -2062,13 +2808,37 @@ function ExperienceSection() {
 }
 
 function ContactSection() {
+  const [copied, setCopied] = useState<"wechat" | "email" | null>(null);
+  const feedbackTimer = useRef<number | null>(null);
+
+  useEffect(() => () => {
+    if (feedbackTimer.current !== null) window.clearTimeout(feedbackTimer.current);
+  }, []);
+
+  const copyContact = async (type: "wechat" | "email", value: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+    setCopied(type);
+    if (feedbackTimer.current !== null) window.clearTimeout(feedbackTimer.current);
+    feedbackTimer.current = window.setTimeout(() => setCopied(null), 1800);
+  };
+
   return (
     <section className="section contact-section" id="contact">
       <div className="section-shell contact-shell">
         <div className="contact-copy">
-          <h2>
-            <span className="contact-name">我是李家豪</span>
-          </h2>
+          <h2>聊聊新的合作机会</h2>
           <p>如果你在寻找一位能理解复杂业务、并把 AI 能力转化为清晰产品体验的设计师，欢迎联系我。</p>
         </div>
 
@@ -2081,11 +2851,27 @@ function ContactSection() {
             <div className="contact-item">
               <span className="contact-label">微信号</span>
               <span className="contact-value">Hungezu</span>
+              <button
+                className="contact-copy-button"
+                type="button"
+                onClick={() => void copyContact("wechat", "Hungezu")}
+                aria-label="复制微信号 Hungezu"
+              >
+                <span aria-live="polite">{copied === "wechat" ? "已复制" : "复制"}</span>
+              </button>
             </div>
-            <a className="contact-item" href="mailto:2146953949@qq.com">
+            <div className="contact-item">
               <span className="contact-label">邮箱</span>
-              <span className="contact-value">2146953949@qq.com</span>
-            </a>
+              <a className="contact-value contact-value-link" href="mailto:2146953949@qq.com">2146953949@qq.com</a>
+              <button
+                className="contact-copy-button"
+                type="button"
+                onClick={() => void copyContact("email", "2146953949@qq.com")}
+                aria-label="复制邮箱 2146953949@qq.com"
+              >
+                <span aria-live="polite">{copied === "email" ? "已复制" : "复制"}</span>
+              </button>
+            </div>
           </div>
 
           <figure className="contact-qr">
@@ -2114,13 +2900,9 @@ function HomePage() {
 
   const showRelatedProjects = (abilityId: AbilityId) => {
     setHighlightedAbilityId(abilityId);
-    const firstProject = projects.find(project => project.abilityIds.includes(abilityId));
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        const target = firstProject
-          ? document.querySelector<HTMLElement>(`[data-project="${firstProject.slug}"]`)
-          : document.getElementById("work");
-        target?.scrollIntoView({
+        document.getElementById("work")?.scrollIntoView({
           behavior: reduce ? "auto" : "smooth",
           block: "start",
         });
@@ -2209,27 +2991,37 @@ function ProjectImageGallery({
   reduce: boolean | null;
 }) {
   const isEnergyProject = project.slug === "energy-tax";
+  const locatorSections: ProjectLocatorSection[] = [
+    ["project-overview", "项目介绍"],
+    ...project.gallery.map((_, index) => [
+      `case-gallery-${index}`,
+      project.galleryLabels?.[index] ?? `项目图片 ${index + 1}`,
+    ] as const),
+  ];
 
   return (
-    <section className={`case-gallery${isEnergyProject ? " case-gallery-energy" : ""}`} aria-label={`${project.title}项目图片`}>
-      {project.gallery.map((image, index) => (
-        <motion.figure
-          id={`case-gallery-${index}`}
-          key={image}
-          initial={reduce ? false : { opacity: 0, y: 24, clipPath: "inset(0 0 6% 0)" }}
-          whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
-          viewport={{ once: true, amount: 0.12 }}
-          transition={{ duration: 0.58, ease }}
-        >
-          <ImageWithFallback
-            src={image}
-            alt={project.galleryAlt?.[index] ?? `${project.title}项目展示 ${index + 1}`}
-            loading={index === 0 ? "eager" : "lazy"}
-            fetchPriority={index === 0 ? "high" : "auto"}
-          />
-        </motion.figure>
-      ))}
-    </section>
+    <>
+      <ProjectLocator sections={locatorSections} ariaLabel={`${project.shortTitle}项目章节定位`} />
+      <section className={`case-gallery${isEnergyProject ? " case-gallery-energy" : ""}`} aria-label={`${project.title}项目图片`}>
+        {project.gallery.map((image, index) => (
+          <motion.figure
+            id={`case-gallery-${index}`}
+            key={image}
+            initial={reduce ? false : { opacity: 0, y: 24, clipPath: "inset(0 0 6% 0)" }}
+            whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
+            viewport={{ once: true, amount: 0.12 }}
+            transition={{ duration: 0.58, ease }}
+          >
+            <ImageWithFallback
+              src={image}
+              alt={project.galleryAlt?.[index] ?? `${project.title}项目展示 ${index + 1}`}
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "auto"}
+            />
+          </motion.figure>
+        ))}
+      </section>
+    </>
   );
 }
 

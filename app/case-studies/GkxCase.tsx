@@ -1,12 +1,19 @@
 "use client";
 
 import { type Project } from "../portfolio-data";
+import { ProjectLocator } from "../project-locator";
 import "./gkx-case.css";
 
 export type GkxCaseProps = { project: Project };
 
+const sections = [
+  ["gkx-overview", "项目概览"],
+  ["gkx-background", "项目背景"],
+] as const;
+
 export function GkxCase({ project }: GkxCaseProps) {
   return <article className="gkx-case">
+    <ProjectLocator sections={sections} ariaLabel="深圳国际科技信息中心项目章节定位" />
     <header id="gkx-overview" className="gkx-hero">
       <h1>{project.title}</h1>
       <p className="gkx-hero__subtitle">科技信息服务、战略咨询与 AI 教育</p>

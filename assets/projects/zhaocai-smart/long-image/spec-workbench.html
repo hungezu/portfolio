@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>招财 Smart · 回答规范</title>
+  <link rel="stylesheet" href="./zhaocai-smart-04.css">
+  <link rel="stylesheet" href="./zhaocai-smart-tokens.css">
+  <link rel="stylesheet" href="./zhaocai-smart-case.css">
+  <link rel="stylesheet" href="./zhaocai-smart-demo-viewport.css">
+  <style>
+    html,body{margin:0;min-height:100%;background:#fff;color:#20242e;font-family:"Avenir Next","PingFang SC","Microsoft YaHei",sans-serif}
+    .zmd{width:100%;padding:0!important;background:#fff}
+    .zmd-lab{height:100dvh!important;max-height:100dvh!important;margin:0!important;border-radius:12px!important;box-shadow:none!important}
+    .zmd .zmd-lab-header{padding:10px 16px}
+    .zmd .zmd-workspace{grid-template-columns:156px minmax(0,1fr)}
+    .zmd .zmd-nav{padding:16px 10px}
+    .zmd .zmd-nav>p{margin-bottom:8px;padding-inline:8px}
+    .zmd .zmd-nav button{padding:8px 10px}
+    .zmd .zmd-example-heading{padding:16px 20px 12px}
+    .zmd .zmd-small-label{margin-bottom:6px}
+    .zmd .zmd-example-heading h3{font-size:18px;line-height:1.45}
+    .zmd .zmd-example-description{margin-top:6px;font-size:13px;line-height:1.5}
+    .zmd .zmd-rule-tags{margin-top:10px}
+    .zmd .zmd-read-options,.zmd .zmd-outline{padding:10px 20px 0}
+    .zmd .zmd-reading-scroll{padding:16px 20px 24px}
+    .zmd .zmd-markdown{font-size:13px;line-height:1.6}
+  </style>
+</head>
+<body>
+  <section class="zmd" data-zmd aria-label="招财 Smart 完整回答规范">
+    <article class="zmd-lab" aria-label="Markdown 回答规范与场景演示">
+      <header class="zmd-lab-header">
+        <span class="zmd-brand">招财 <strong>Smart</strong><span class="zmd-brand-rule">回答规范</span></span>
+        <div class="zmd-main-tabs" role="tablist" aria-label="展示内容">
+          <button type="button" role="tab" id="zmd-scenes-tab" aria-controls="zmd-workspace" aria-selected="true" data-zmd-mode="scenes">场景示例</button>
+          <button type="button" role="tab" id="zmd-rules-tab" aria-controls="zmd-workspace" aria-selected="false" tabindex="-1" data-zmd-mode="rules">组件规则</button>
+        </div>
+      </header>
+      <div class="zmd-workspace" id="zmd-workspace" role="tabpanel" aria-labelledby="zmd-scenes-tab">
+        <nav class="zmd-nav" aria-label="选择业务场景或组件规则"><p data-zmd-nav-title>按业务任务选择</p><div data-zmd-nav></div></nav>
+        <div class="zmd-main" data-zmd-reading-scroll tabindex="0" role="region" aria-label="回答规范内容，可滚动阅读">
+          <header class="zmd-example-heading">
+            <p class="zmd-small-label" data-zmd-example-label></p>
+            <h3 data-zmd-question></h3>
+            <p class="zmd-example-description" data-zmd-description></p>
+            <div class="zmd-rule-tags" data-zmd-rule-tags></div>
+            <dl class="zmd-rule-spec" data-zmd-rule-spec hidden aria-label="本组件的固定规格"></dl>
+          </header>
+          <div class="zmd-read-panel" id="zmd-read-panel" role="region" aria-label="回答内容">
+            <div class="zmd-read-options"><label><input type="checkbox" data-zmd-annotations>显示规范标注</label><span data-zmd-reading-meta></span></div>
+            <nav class="zmd-outline" aria-label="回答章节" data-zmd-outline hidden></nav>
+            <div class="zmd-reading-scroll"><div class="zmd-markdown" data-zmd-render></div></div>
+          </div>
+        </div>
+      </div>
+    </article>
+    <dialog class="zmd-dialog" data-zmd-dialog aria-labelledby="zmd-source-title">
+      <header><div><p class="zmd-small-label">引用依据 · 示例</p><h3 id="zmd-source-title" data-zmd-source-title></h3></div><button type="button" class="zmd-dialog-close" data-zmd-close aria-label="关闭引用详情">×</button></header>
+      <div class="zmd-source-body" data-zmd-source-body></div>
+      <footer><button type="button" class="zmd-btn" data-zmd-close>返回回答</button></footer>
+    </dialog>
+  </section>
+  <script src="./vendor/marked.umd.js"></script>
+  <script src="./zhaocai-smart-04-data.js"></script>
+  <script src="./zhaocai-smart-04.js"></script>
+</body>
+</html>

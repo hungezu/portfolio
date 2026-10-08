@@ -38,6 +38,7 @@ export type Project = {
   abilityIds: AbilityId[];
   gallery: string[];
   galleryAlt?: string[];
+  galleryLabels?: string[];
 };
 
 export type Experience = {
@@ -329,6 +330,27 @@ const projectData: Project[] = [
       "税纪云移动端法规库",
       "税纪云移动端多页面展示",
     ],
+    galleryLabels: [
+      "项目概览",
+      "精益画布",
+      "核心路径",
+      "基础信息",
+      "表单筛选",
+      "全局样式",
+      "组件规范",
+      "改版前首页",
+      "改版后首页",
+      "卡片场景",
+      "卡片配置",
+      "规则权限",
+      "档案预警",
+      "体验走查",
+      "移动端概览",
+      "移动端首页",
+      "报表审批",
+      "法规查询",
+      "移动端总览",
+    ],
   },
   {
     slug: "energy-tax",
@@ -359,6 +381,15 @@ const projectData: Project[] = [
       "国家能源集团报税平台综合管理工作台与信息重组",
       "国家能源集团报税平台缺省状态规范与项目复盘",
     ],
+    galleryLabels: [
+      "项目封面",
+      "项目背景",
+      "设计规范",
+      "平台首页",
+      "申报工作台",
+      "管理工作台",
+      "缺省与复盘",
+    ],
   },
   {
     slug: "data-visualisation",
@@ -384,6 +415,13 @@ const projectData: Project[] = [
       "运输行业税务数智大屏",
       "地产行业税务数智大屏",
       "可视化大屏设计流程与布局规范",
+    ],
+    galleryLabels: [
+      "项目概览",
+      "多行业总览",
+      "运输大屏",
+      "地产大屏",
+      "设计规范",
     ],
   },
 ];

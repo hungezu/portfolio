@@ -6,10 +6,10 @@ import "./zhaocai-smart-02.css";
 
 const customPosition = (values: Record<string, string>) => values as CSSProperties;
 
-export function ZhaocaiSmartTrustSection() {
+export function ZhaocaiSmartTrustSection({ flowOnly = false }: { flowOnly?: boolean } = {}) {
   return (
-    <section className="zcs-business" id="strategy" data-zcv3-section aria-labelledby="zcs-business-title">
-      <header className="zcs-framework-header">
+    <section className="zcs-business" id={flowOnly ? undefined : "strategy"} data-zcv3-section aria-labelledby={flowOnly ? "zcs-flow-title" : "zcs-business-title"}>
+      {!flowOnly ? <><header className="zcs-framework-header">
         <p className="zcs-eyebrow">招财 Smart · 可信机制的建立</p>
         <h2 className="zcs-title" id="zcs-business-title">从模糊提问到可信结果，建立可确认、可核对的人机协作机制</h2>
       </header>
@@ -28,7 +28,7 @@ export function ZhaocaiSmartTrustSection() {
           </div>
         </div>
         <p className="zcs-framework-hint">左右滑动查看完整框架</p>
-      </figure>
+      </figure></> : null}
 
       <section className="zcs-native-flow" aria-labelledby="zcs-flow-title">
         <header>
@@ -37,7 +37,13 @@ export function ZhaocaiSmartTrustSection() {
         </header>
 
         <figure className="zcs-figure" aria-label="用户、AI 助手与数据服务的查询协作流程">
-          <div className="zcs-scroll" tabIndex={0} role="region" aria-label="查询流程图，可横向滚动" aria-describedby="zcs-flow-description">
+          <div
+            className="zcs-scroll"
+            tabIndex={flowOnly ? undefined : 0}
+            role={flowOnly ? undefined : "region"}
+            aria-label={flowOnly ? "查询协作流程全图" : "查询流程图，可横向滚动"}
+            aria-describedby="zcs-flow-description"
+          >
             <div className="zcs-chart">
               <ol className="zcs-stages" aria-label="查询阶段">
                 <li className="zcs-stage">提出问题</li>
@@ -92,7 +98,7 @@ export function ZhaocaiSmartTrustSection() {
               <span className="zcs-caption" style={customPosition({ "--x": "91.5%", "--y": "77.5%" })}>返回数据</span>
             </div>
           </div>
-          <p className="zcs-scroll-hint">左右滑动查看完整流程</p>
+          {!flowOnly ? <p className="zcs-scroll-hint">左右滑动查看完整流程</p> : null}
           <figcaption className="zcs-note"><span>仅在关键条件存在歧义时，请用户确认。</span></figcaption>
           <p className="zcs-sr-only" id="zcs-flow-description">用户提出问题后，AI 识别查询条件。条件完整时直接发起查询；存在歧义时请用户确认利润口径，再继续查询。数据服务返回数据后，AI 生成分析结果，用户查看并保存。</p>
         </figure>

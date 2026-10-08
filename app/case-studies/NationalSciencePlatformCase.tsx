@@ -1,7 +1,8 @@
 "use client";
 
-import { type CSSProperties, type MouseEvent as ReactMouseEvent, useEffect, useState } from "react";
+import { type CSSProperties, type MouseEvent as ReactMouseEvent, useState } from "react";
 import { publicAsset } from "../portfolio-data";
+import { ProjectLocator } from "../project-locator";
 import "./national-science-platform.css";
 
 const sections = [
@@ -11,6 +12,18 @@ const sections = [
   ["nsp-products", "系统落地"],
   ["nsp-rules", "规范协作"],
   ["nsp-result", "角色变化"],
+] as const;
+
+const systemsSections = [
+  ["nsp-systems-overview", "页面说明"],
+  ["nsp-system-screens", "系统实景"],
+  ["nsp-supporting-screens", "补充页面"],
+] as const;
+
+const designSystemSections = [
+  ["nsp-design-overview", "页面说明"],
+  ["nsp-design-method", "规范方法"],
+  ["nsp-design-preview", "交互预览"],
 ] as const;
 
 const screens = [
@@ -256,8 +269,9 @@ function ExperienceLanguageMap() {
 function SystemsDetailPage({ activeScreen, setActiveScreen }: { activeScreen: number; setActiveScreen: (index: number) => void }) {
   return (
     <div className="national-platform-page nsp-subpage">
-      <header className="nsp-subpage-hero"><div className="nsp-shell"><ProjectSubnav active="systems" /><h1>八个代码运行页面，<br />展示不同产品任务</h1><p>这里集中保存主故事中的页面证据。所有业务数据均为示例内容，页面用于展示信息架构、交互模式和视觉一致性。</p></div></header>
-      <section className="nsp-section"><div className="nsp-shell"><SystemScreenShowcase activeScreen={activeScreen} setActiveScreen={setActiveScreen} /><div className="nsp-evidence-wall"><header><h2>补充页面</h2><p>进一步展示技术分析、报告浏览和人才信息等不同信息密度。</p></header><div>{supportingScreens.map(screen => <figure key={screen.title}><img src={publicAsset(screen.src)} alt={`${screen.title}代码运行页面`} loading="lazy" decoding="async" /><figcaption><strong>{screen.title}</strong><p>{screen.description}</p></figcaption></figure>)}</div></div></div></section>
+      <ProjectLocator sections={systemsSections} ariaLabel="系统实景页章节定位" />
+      <header className="nsp-subpage-hero" id="nsp-systems-overview"><div className="nsp-shell"><ProjectSubnav active="systems" /><h1>八个代码运行页面，<br />展示不同产品任务</h1><p>这里集中保存主故事中的页面证据。所有业务数据均为示例内容，页面用于展示信息架构、交互模式和视觉一致性。</p></div></header>
+      <section className="nsp-section" id="nsp-system-screens"><div className="nsp-shell"><SystemScreenShowcase activeScreen={activeScreen} setActiveScreen={setActiveScreen} /><div className="nsp-evidence-wall" id="nsp-supporting-screens"><header><h2>补充页面</h2><p>进一步展示技术分析、报告浏览和人才信息等不同信息密度。</p></header><div>{supportingScreens.map(screen => <figure key={screen.title}><img src={publicAsset(screen.src)} alt={`${screen.title}代码运行页面`} loading="lazy" decoding="async" /><figcaption><strong>{screen.title}</strong><p>{screen.description}</p></figcaption></figure>)}</div></div></div></section>
     </div>
   );
 }
@@ -270,27 +284,17 @@ export function GkxDesignSystemInteractive() {
 function DesignSystemDetailPage() {
   return (
     <div className="national-platform-page nsp-subpage">
-      <header className="nsp-subpage-hero"><div className="nsp-shell"><ProjectSubnav active="design-system" /><h1>让多支团队，<br />做出同一个平台</h1><p>深圳国际科技信息中心包含多个子系统，参与方和交付节奏并不一致。我的工作不只是一套界面，而是让总集成方、合作方和研发沿用同一套设计判断。</p></div></header>
-      <section className="nsp-section nsp-spec-story-section"><div className="nsp-shell"><div className="nsp-spec-narrative"><h2>我把反复出现在评审里的问题，写进一套可执行规范</h2><div className="nsp-spec-narrative-copy"><p>前期，我与总集成方对齐整体风格和页面布局；随着更多系统并行推进，再把页面类型、组件状态、响应式和交付检查整理为 Markdown，提供给合作方和研发使用。</p><p>Codex 负责把规则持续转成可浏览、可操作的网页工作台。我保留对业务内容、交互边界和最终质量的判断，并在评审中继续修正规范。</p><dl><div><dt>我的工作</dt><dd>设计方向、UX/UI、规范维护与还原度审核</dd></div><div><dt>AI 参与</dt><dd>规则整理、页面生成、状态补全与版本维护</dd></div></dl></div></div></div></section>
-      <section className="nsp-section nsp-spec-visual-section"><div className="nsp-shell"><header className="nsp-story-heading nsp-spec-heading"><h2>这不是规范截图，<br />而是它的实际工作方式</h2><p>左侧目录展示规范覆盖的页面与组件，选择后可以看到对应内容的开头。受保密协议约束，具体规则、交互说明和实现细节不对外公开。</p></header><GkxDesignSystemInteractive /></div></section>
+      <ProjectLocator sections={designSystemSections} ariaLabel="设计规范页章节定位" />
+      <header className="nsp-subpage-hero" id="nsp-design-overview"><div className="nsp-shell"><ProjectSubnav active="design-system" /><h1>让多支团队，<br />做出同一个平台</h1><p>深圳国际科技信息中心包含多个子系统，参与方和交付节奏并不一致。我的工作不只是一套界面，而是让总集成方、合作方和研发沿用同一套设计判断。</p></div></header>
+      <section className="nsp-section nsp-spec-story-section" id="nsp-design-method"><div className="nsp-shell"><div className="nsp-spec-narrative"><h2>我把反复出现在评审里的问题，写进一套可执行规范</h2><div className="nsp-spec-narrative-copy"><p>前期，我与总集成方对齐整体风格和页面布局；随着更多系统并行推进，再把页面类型、组件状态、响应式和交付检查整理为 Markdown，提供给合作方和研发使用。</p><p>Codex 负责把规则持续转成可浏览、可操作的网页工作台。我保留对业务内容、交互边界和最终质量的判断，并在评审中继续修正规范。</p><dl><div><dt>我的工作</dt><dd>设计方向、UX/UI、规范维护与还原度审核</dd></div><div><dt>AI 参与</dt><dd>规则整理、页面生成、状态补全与版本维护</dd></div></dl></div></div></div></section>
+      <section className="nsp-section nsp-spec-visual-section" id="nsp-design-preview"><div className="nsp-shell"><header className="nsp-story-heading nsp-spec-heading"><h2>这不是规范截图，<br />而是它的实际工作方式</h2><p>左侧目录展示规范覆盖的页面与组件，选择后可以看到对应内容的开头。受保密协议约束，具体规则、交互说明和实现细节不对外公开。</p></header><GkxDesignSystemInteractive /></div></section>
     </div>
   );
 }
 
 export function NationalSciencePlatformCase({ view = "story" }: { view?: NationalPlatformView }) {
-  const [activeSection, setActiveSection] = useState("nsp-overview");
   const [activeScreen, setActiveScreen] = useState(0);
   const [activePrototype, setActivePrototype] = useState(0);
-
-  useEffect(() => {
-    const targets = sections.map(([id]) => document.getElementById(id)).filter((node): node is HTMLElement => Boolean(node));
-    const observer = new IntersectionObserver(entries => {
-      const current = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (current?.target.id) setActiveSection(current.target.id);
-    }, { rootMargin: "-18% 0px -58%", threshold: [0.08, 0.24, 0.5] });
-    targets.forEach(target => observer.observe(target));
-    return () => observer.disconnect();
-  }, []);
 
   if (view === "systems") return <SystemsDetailPage activeScreen={activeScreen} setActiveScreen={setActiveScreen} />;
   if (view === "design-system") return <DesignSystemDetailPage />;
@@ -299,11 +303,7 @@ export function NationalSciencePlatformCase({ view = "story" }: { view?: Nationa
 
   return (
     <div className="national-platform-page" aria-label="深圳国际科技信息中心项目案例">
-      <nav className="zhaocai-locator" aria-label="案例章节定位">
-        {sections.map(([id, label], index) => (
-          <a className={activeSection === id ? "active" : ""} href={`#${id}`} key={id}><b>{String(index + 1).padStart(2, "0")}</b><em>{label}</em></a>
-        ))}
-      </nav>
+      <ProjectLocator sections={sections} ariaLabel="深圳国际科技信息中心项目章节定位" />
 
       <section className="nsp-hero" id="nsp-overview" data-nsp-section>
         <div className="nsp-shell">
