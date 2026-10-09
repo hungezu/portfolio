@@ -214,14 +214,18 @@
 
 .zc4-hero>.zc4-hero-copy{max-width:none}
 .zc4-hero-copy h1{margin-top:8px}
-.zc4-hero-copy .zc4-lead{max-width:28ch;margin-top:20px!important;color:var(--ink);font-size:clamp(21px,2.25vw,30px);font-weight:550;letter-spacing:-.025em;line-height:1.35}
-.zc4-hero-role{max-width:58ch;margin-top:22px!important;color:var(--body);font-size:15px;line-height:1.75}
-.zc4-hero-copy blockquote{margin:24px 0 0;padding:15px 18px;border-left:3px solid var(--ps);background:#f0ecfb;color:#302657;font-size:15px;font-weight:600;line-height:1.65}
+.zc4-hero-copy .zc4-lead{max-width:17.5em;margin-top:20px!important;color:var(--ink);font-size:clamp(22px,2vw,28px);font-weight:550;letter-spacing:-.025em;line-height:1.4}
+.zc4-product-summary{max-width:66ch;margin-top:18px!important;color:var(--body);font-size:16px;line-height:1.75}
 .zc4-hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
 .zc4-hero-actions .zc4-primary,.zc4-hero-actions .zc4-section-button{min-height:44px;margin:0}
 .zc4-hero-visual{min-width:0}
 .zc4-hero-visual .zc4-original-hero{margin:0}
 .zc4-hero-visual>p{display:flex;align-items:flex-start;gap:8px;margin-top:12px!important;color:var(--muted);font-size:12px;line-height:1.55}
+.zc4-hero-context{display:grid;grid-column:1/-1;grid-template-columns:1fr 1fr;width:100%;border-block:1px solid var(--line)}
+.zc4-hero-context section{padding:28px 32px 30px 0}
+.zc4-hero-context section+section{padding-inline:32px 0;border-left:1px solid var(--line)}
+.zc4-hero-context h2{color:var(--p);font-size:14px;font-weight:650;letter-spacing:.01em;line-height:1.4}
+.zc4-hero-context p{max-width:66ch;margin-top:10px!important;color:var(--body);font-size:15px;line-height:1.75}
 .zc4-hero>.zc4-project-meta{display:grid;grid-column:1/-1;width:100%;margin:0}
 .zc4-hero>.zc4-project-meta div{display:block;min-height:118px;padding:18px 20px}
 .zc4-hero>.zc4-project-meta dd{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
@@ -385,8 +389,11 @@
   .zc4{width:100%;max-width:100%}
   .zc4 :where(p,li,dd,h1,h2,h3,h4){overflow-wrap:anywhere}
   .zc4-hero{grid-template-columns:1fr;gap:30px;padding:104px 20px 42px}
-  .zc4-hero>.zc4-project-meta,.zc4-hero>.zc4-demo-disclosure{grid-column:1}
+  .zc4-hero>.zc4-project-meta,.zc4-hero>.zc4-demo-disclosure,.zc4-hero-context{grid-column:1}
   .zc4-hero-copy .zc4-lead{font-size:22px}
+  .zc4-hero-context{grid-template-columns:1fr}
+  .zc4-hero-context section{padding:22px 0}
+  .zc4-hero-context section+section{padding-inline:0;border-top:1px solid var(--line);border-left:0}
   .zc4-hero-actions{display:grid;grid-template-columns:1fr 1fr}
   .zc4-hero-actions a{white-space:normal;text-align:center}
   .zc4-hero>.zc4-project-meta{grid-template-columns:repeat(2,minmax(0,1fr))}

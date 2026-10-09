@@ -489,9 +489,9 @@ export function ZhaocaiSmartCompleteCase() {
     const previousOgTitle = ogTitle?.content;
     const previousOgDescription = ogDescription?.content;
     document.title = "招财 Smart｜AI 财务智能问数项目｜李家豪";
-    if (description) description.content = "招财 Smart AI 财务智能问数项目案例：口径确认、人机控制权、失败恢复、结果追溯与设计交付边界。";
+    if (description) description.content = "招财 Smart 是面向企业财务、经营分析人员与业务负责人的 AI 智能问数产品，支持用自然语言查询并核对经营数据。";
     if (ogTitle) ogTitle.content = "招财 Smart｜AI 财务智能问数项目";
-    if (ogDescription) ogDescription.content = "从自然语言提问到可确认、可执行、可追溯的经营分析任务。";
+    if (ogDescription) ogDescription.content = "面向企业财务与经营分析场景的 AI 智能问数产品，让查询条件可确认、结果依据可追溯。";
     return () => {
       document.title = previousTitle;
       if (description && previousDescription) description.content = previousDescription;
@@ -510,12 +510,21 @@ export function ZhaocaiSmartCompleteCase() {
         <div className="zc4-hero-copy">
           <p className="zc4-eyebrow">AI 产品设计案例 · 财务智能问数 Web</p>
           <h1>招财 Smart</h1>
-          <p className="zc4-lead">将自然语言提问转成可确认、可执行、可追溯的经营分析任务。</p>
-          <p className="zc4-hero-role">我负责智能问数核心体验的 UX/UI 设计，重点交付口径确认、过程反馈、结果依据、看板复用与回答规范；本案例只呈现我的设计范围，不把算法、数据与研发实现归为个人成果。</p>
-          <blockquote>AI 整理查询条件并发起执行，用户确认影响结果的业务含义。</blockquote>
+          <p className="zc4-lead">招财 Smart 是一款面向企业财务、经营分析人员与业务负责人的 AI 智能问数产品。</p>
+          <p className="zc4-product-summary">用户可以用自然语言提出经营问题；系统识别时间、组织范围和指标口径，必要时请用户确认，再返回带条件、来源和依据的分析结果，并可保存为看板继续复用。</p>
           <div className="zc4-hero-actions"><a className="zc4-primary" href="#zcs-clarification">查看关键决策</a><a className="zc4-section-button" href="#zcs-core-interaction">体验演示任务</a></div>
         </div>
         <div className="zc4-hero-visual"><HeroPreview/><p>项目脱敏界面 · 核心工作台</p></div>
+        <div className="zc4-hero-context" aria-label="项目背景与设计范围">
+          <section>
+            <h2>为什么需要解决</h2>
+            <p>企业经营分析中的“利润”等业务说法，可能对应多个财务指标。若时间、组织范围或指标口径尚未确认就直接查询，结果即使看似明确，也可能无法可靠核对与追溯。</p>
+          </section>
+          <section>
+            <h2>我的设计范围</h2>
+            <p>我负责智能问数核心体验的 UX/UI 设计，重点交付口径确认、过程反馈、结果依据、看板复用与回答规范；本案例只呈现我的设计范围，不把算法、数据与研发实现归为个人成果。</p>
+          </section>
+        </div>
         <dl className="zc4-project-meta">
           <div><dt>周期</dt><dd>2025.07—2025.11</dd></div>
           <div><dt>角色</dt><dd>UX/UI 设计</dd></div>
