@@ -313,17 +313,14 @@ type DemoProps = {
   metric: Metric;
   setMetric: (metric: Metric) => void;
   year: string;
-  setYear: (year: string) => void;
   scope: string;
-  setScope: (scope: string) => void;
   phase: number;
   executionId: number;
   beginExecution: (retry?: boolean) => void;
   runFromEntry: () => void;
 };
 
-function ProductDemo({ stage, setStage, query, setQuery, metric, setMetric, year, setYear, scope, setScope, phase, executionId, beginExecution, runFromEntry }: DemoProps) {
-  const [editing, setEditing] = useState(false);
+function ProductDemo({ stage, setStage, query, setQuery, metric, setMetric, year, scope, phase, executionId, beginExecution, runFromEntry }: DemoProps) {
   const [metricNote, setMetricNote] = useState<Metric>("");
   const [view, setView] = useState<"chart"|"table">("chart");
   const [evidence, setEvidence] = useState(false);
@@ -372,7 +369,7 @@ function ProductDemo({ stage, setStage, query, setQuery, metric, setMetric, year
               <p className="footnote">选择后将按该指标查询，不会更改其他条件。</p>
               <div className="actions"><button className="zc4-primary" type="button" disabled={!metric} onClick={confirmMetric}>{metric ? `按${metric}查询` : "选择口径后继续"}</button></div>
             </div>
-            <aside className="conditions"><h4>已识别条件</h4><dl><div><dt>统计时间</dt><dd>{year} 年</dd></div><div><dt>组织范围</dt><dd>{scope}</dd></div><div><dt>指标口径</dt><dd><i className={metric ? "ready" : ""}/>{metric ? `${metric} · 待确认` : "待确认"}</dd></div></dl><button type="button" aria-expanded={editing} onClick={()=>setEditing(!editing)}><Pencil size={15}/>修改已识别条件</button>{editing?<div className="editor"><label>统计年份<select name="demo-year" autoComplete="off" value={year} onChange={e=>{setYear(e.target.value);setMetric("")}}><option>2024</option><option>2023</option></select></label><label>组织范围<select name="demo-scope" autoComplete="off" value={scope} onChange={e=>{setScope(e.target.value);setMetric("")}}><option>全集团</option><option>集团本部</option></select></label><button type="button" onClick={()=>setEditing(false)}>完成修改</button></div>:null}<div className="source"><Database size={15}/><span>查询数据<strong>集团经营指标表（示例）</strong></span></div></aside>
+            <aside className="conditions"><h4>已识别条件</h4><dl><div><dt>统计时间</dt><dd>{year} 年</dd></div><div><dt>组织范围</dt><dd>{scope}</dd></div><div><dt>指标口径</dt><dd><i className={metric ? "ready" : ""}/>{metric ? `${metric} · 待确认` : "待确认"}</dd></div></dl><div className="source"><Database size={15}/><span>查询数据<strong>集团经营指标表（示例）</strong></span></div></aside>
           </section>
         ) : null}
         {stage==="running" ? <section className="zc4-running" aria-live="polite"><header><div><span>正在查询数据</span><h3>2024 年集团净利润分析</h3><p>已保留本次查询条件。</p></div><LoaderCircle className="spin" size={28}/></header><div className="zc4-condition-chips"><span>{year} 年</span><span>{scope}</span><span>净利润 · 用户已确认</span></div><ol>{["理解问题","查询数据","生成结果"].map((label,index)=><li className={index<phase?"done":index===phase?"current":""} key={label}><span>{index<phase?<Check size={16}/>:index===phase?<LoaderCircle className="spin" size={16}/>:index+1}</span><div><strong>{label}</strong><p>{index===0?"整理时间、组织与指标条件":index===1?"正在查询集团经营指标表":"组织图表、解释与查询快照"}</p></div></li>)}</ol><footer><p>查询仍在进行，你可以继续等待或停止本次查询。</p><button type="button" onClick={()=>setStage("stopped")}><Square size={14}/>停止查询</button></footer></section>:null}
@@ -492,7 +489,7 @@ export function ZhaocaiSmartCompleteCase() {
     };
   }, []);
 
-  const demoProps: DemoProps = { stage, setStage, query, setQuery, metric, setMetric, year, setYear, scope, setScope, phase, executionId, beginExecution, runFromEntry };
+  const demoProps: DemoProps = { stage, setStage, query, setQuery, metric, setMetric, year, scope, phase, executionId, beginExecution, runFromEntry };
   return (
     <article className="zc4" id="zcs-case-top" aria-label="招财 Smart 完整项目案例">
       <a className="zc4-skip-link" href="#zcs-project-overview">跳到项目正文</a>
