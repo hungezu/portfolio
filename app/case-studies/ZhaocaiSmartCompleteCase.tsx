@@ -2,6 +2,7 @@
 
 import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
 import BarChart3 from "lucide-react/dist/esm/icons/bar-chart-3.mjs";
+import BriefcaseBusiness from "lucide-react/dist/esm/icons/briefcase-business.mjs";
 import Check from "lucide-react/dist/esm/icons/check.mjs";
 import ChevronDown from "lucide-react/dist/esm/icons/chevron-down.mjs";
 import CircleHelp from "lucide-react/dist/esm/icons/circle-help.mjs";
@@ -19,6 +20,7 @@ import Save from "lucide-react/dist/esm/icons/save.mjs";
 import Sparkles from "lucide-react/dist/esm/icons/sparkles.mjs";
 import Square from "lucide-react/dist/esm/icons/square.mjs";
 import Table2 from "lucide-react/dist/esm/icons/table-2.mjs";
+import UserRound from "lucide-react/dist/esm/icons/user-round.mjs";
 import X from "lucide-react/dist/esm/icons/x.mjs";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { publicAsset } from "../portfolio-data";
@@ -39,6 +41,33 @@ const profitData = [
 const totalProfit = profitData.reduce((sum, item) => sum + item.value, 0);
 const maxProfit = Math.max(...profitData.map(item => item.value));
 const defaultQuery = "查看 2024 年全集团利润变化";
+
+const problemRoles = [
+  {
+    number: "01",
+    title: "财务人员",
+    icon: UserRound,
+    task: "核对指标、期间与范围",
+    support: "口径准确，来源可追溯",
+    focus: "先确认口径",
+  },
+  {
+    number: "02",
+    title: "经营分析人员",
+    icon: BarChart3,
+    task: "查看趋势、整理结果",
+    support: "结果可比较，内容可复用",
+    focus: "保留查询上下文",
+  },
+  {
+    number: "03",
+    title: "业务负责人",
+    icon: BriefcaseBusiness,
+    task: "理解结论、支持判断",
+    support: "重点清晰，按需查看依据",
+    focus: "结论与依据分层",
+  },
+] as const;
 
 const locatorSections = [
   ["zcs-project-overview", "项目摘要"],
@@ -515,10 +544,52 @@ export function ZhaocaiSmartCompleteCase() {
 
       <div className="zc4-content">
         <section className="zc4-section" id="zcs-business-needs">
-          <h2 className="zc4-sr-only">问题证据</h2>
-          <figure className="zc4-evidence-poster">
-            <img src={publicAsset("/assets/projects/zhaocai-smart/zhaocai-smart-problem-evidence.jpg")} width="1448" height="1086" loading="lazy" decoding="async" alt="问题证据：财务人员、经营分析人员与业务负责人的任务拆分，以及口径歧义、过程反馈、结果核对和复用问题。" />
-          </figure>
+          <article className="zc4-problem-evidence" aria-labelledby="zc4-problem-evidence-title">
+            <header className="zc4-problem-evidence-header">
+              <div>
+                <span className="zc4-problem-evidence-kicker">02 / 问题证据</span>
+                <h2 id="zc4-problem-evidence-title">不是让 AI 直接给答案，<br />而是先把业务含义对齐</h2>
+              </div>
+              <p>公开材料中的三类角色分别承担查数、核数和用数任务。共同风险不是不会提问，而是同一句业务语言可能对应不同财务口径。</p>
+            </header>
+
+            <section className="zc4-problem-roles" aria-labelledby="zc4-problem-roles-title">
+              <h3 id="zc4-problem-roles-title">页面中的角色与任务拆分</h3>
+              <div className="zc4-problem-role-grid">
+                {problemRoles.map(role => {
+                  const Icon = role.icon;
+                  return (
+                    <article className="zc4-problem-role" key={role.number}>
+                      <div className="zc4-problem-role-heading">
+                        <div><span>{role.number}</span><h4>{role.title}</h4></div>
+                        <Icon aria-hidden="true" strokeWidth={1.8} />
+                      </div>
+                      <dl>
+                        <div><dt>主要任务</dt><dd>{role.task}</dd></div>
+                        <div><dt>需要的信息与支持</dt><dd>{role.support}</dd></div>
+                      </dl>
+                      <div className="zc4-problem-role-focus"><span>设计重点</span><strong>{role.focus}</strong></div>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+
+            <div className="zc4-problem-diagnosis">
+              <article><strong>症状</strong><p>“利润”可能对应不同指标；等待时不知道系统进行到哪一步；结果难以还原条件与来源。</p></article>
+              <article><strong>原因</strong><p>自然语言问题没有稳定映射到时间、组织和指标口径，执行过程与结果依据也没有被组织进同一次任务。</p></article>
+            </div>
+
+            <div className="zc4-problem-question">
+              <strong>真问题</strong>
+              <p>如何不要求用户重复填写全部条件，却让<span>关键歧义可确认</span>、过程可理解、结果可核对并可复用？</p>
+            </div>
+
+            <aside className="zc4-problem-source">
+              <strong>问题来源：</strong>
+              <p>从财务人员、经营分析人员与业务负责人三类任务出发，围绕口径歧义、等待反馈、结果核对与复用梳理核心问题。</p>
+            </aside>
+          </article>
           <span className="zc4-anchor" id="zcs-design-goals"/>
           <div className="zc4-substory"><h3>目标与成功口径</h3><div className="zc4-goal-grid"><article><span>业务目标</span><p>把一次性“问到一个数字”转成可确认、可核对、可复用的经营分析任务，减少口径误解带来的往返。</p></article>{[["对齐业务含义","只确认有歧义的条件，保留已识别信息。"],["建立过程反馈","说明正在处理什么，并提供停止和恢复入口。"],["支持结果复用","将结果、条件与依据组织为可持续使用的内容。"]].map(item=><article key={item[0]}><span>{item[0]}</span><p>{item[1]}</p></article>)}</div></div>
         </section>
@@ -541,7 +612,7 @@ export function ZhaocaiSmartCompleteCase() {
         <section className="zc4-section" id="zcs-clarification">
           <span className="zc4-anchor" id="strategy"/>
           <Heading number="05 / 关键决策" title="让确认成本只发生在结果会改变的地方。" intro="方案 B 作为主路径；方案 A 与方案 C 分别承担补充表达和确定性降级。"/>
-          <div className="zc4-option-compare is-three"><article><span>方案 A · 开放追问</span><h3>让用户重新描述</h3><div className="zc4-static-input">请输入补充说明。</div><p>适合系统无法形成可靠候选时继续收集信息。</p><strong>代价：候选已经明确时，增加一次表达成本。</strong></article><article className="adopted"><span>方案 B · 候选确认（采用）</span><h3>只确认歧义口径</h3><div className="zc4-choice-preview"><span>2024 年</span><span>集团</span><label><i/>净利润</label><label><i/>利润总额</label><button type="button" onClick={()=>setDemo("clarify")}>确认并查询</button></div><p>保留已识别的时间和范围，让用户决定业务含义。</p><strong>代价：候选集错误或不完整时可能误导，必须保留“都不是”。</strong></article><article><span>方案 C · 固定筛选器 / 指标树</span><h3>用确定性 GUI 完成</h3><div className="zc4-filter-preview"><span>时间</span><span>组织</span><span>指标</span></div><p>适合高频、标准且范围明确的任务，也作为模型不可用时的降级入口。</p><strong>结论：不作为复杂问数的主入口，但必须保留。</strong></article></div>
+          <div className="zc4-option-compare is-three"><article><span>方案 A · 开放追问</span><h3>让用户重新描述</h3><div className="zc4-static-input">请输入补充说明。</div><p>适合系统无法形成可靠候选时继续收集信息。</p><strong>代价：候选已经明确时，增加一次表达成本。</strong></article><article className="adopted"><span>方案 B · 候选确认（采用）</span><h3>只确认歧义口径</h3><div className="zc4-choice-preview"><div className="zc4-choice-options"><span>2024 年</span><span>集团</span><label><i/>净利润</label><label><i/>利润总额</label></div><button type="button" onClick={()=>setDemo("clarify")}>确认并查询</button></div><p>保留已识别的时间和范围，让用户决定业务含义。</p><strong>代价：候选集错误或不完整时可能误导，必须保留“都不是”。</strong></article><article><span>方案 C · 固定筛选器 / 指标树</span><h3>用确定性 GUI 完成</h3><div className="zc4-filter-preview"><span>时间</span><span>组织</span><span>指标</span></div><p>适合高频、标准且范围明确的任务，也作为模型不可用时的降级入口。</p><strong>结论：不作为复杂问数的主入口，但必须保留。</strong></article></div>
           <div className="zc4-decision-evidence"><h3>取舍结论</h3><p>方案 B 成为主路径，因为它保留已识别条件，只把会改变结果的歧义交还给用户；方案 A 负责候选不足时继续收集信息，方案 C 承接标准任务和故障降级。</p></div>
           <div className="zc4-substory"><h3>过程反馈节奏 <span className="zc4-inline-note">交互规格</span></h3><div className="zc4-waits">{[["0—3 秒","及时响应","立即显示当前阶段，已返回的内容先呈现。"],["3—10 秒","保留进行状态","突出当前执行步骤，用骨架屏预留数据位置。"],["10 秒以上","说明等待情况","允许停止，保留已确认条件。"]].map(item=><article key={item[0]}><span>{item[0]}</span><h3>{item[1]}</h3><p>{item[2]}</p></article>)}</div></div>
         </section>
