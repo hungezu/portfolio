@@ -87,14 +87,6 @@ function ProfitChart({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function HeroPreview() {
-  return (
-    <div className="zc4-original-hero" aria-label="招财 Smart 原始首页">
-      <figure><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png")} target="_blank" rel="noreferrer"><img src={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png")} width="1445" height="800" fetchPriority="high" alt="招财 Smart 原始首页" /></a></figure>
-    </div>
-  );
-}
-
 const specScenes = [
   ["经营分析", "请分析 2024 年全集团经营表现，并列出需要进一步核对的事项。", "2024 年全集团净利润合计 6.08 亿元，四个季度逐季上升。"],
   ["明细查询", "列出 2024 年各季度净利润及全年合计。", "季度明细与全年合计使用同一份返回数据，单位统一为亿元。"],
@@ -507,41 +499,29 @@ export function ZhaocaiSmartCompleteCase() {
       <ProjectLocator sections={locatorSections} legacyAnchors={legacyAnchors} ariaLabel="招财 Smart 项目章节定位" />
 
       <header className="zc4-hero" id="zcs-project-overview" tabIndex={-1}>
-        <div className="zc4-hero-copy">
-          <p className="zc4-eyebrow">AI 产品设计案例 · 财务智能问数 Web</p>
-          <h1>招财 Smart</h1>
-          <p className="zc4-lead">招财 Smart 是一款面向企业财务、经营分析人员与业务负责人的 AI 智能问数产品。</p>
-          <p className="zc4-product-summary">用户可以用自然语言提出经营问题；系统识别时间、组织范围和指标口径，必要时请用户确认，再返回带条件、来源和依据的分析结果，并可保存为看板继续复用。</p>
-          <div className="zc4-hero-actions"><a className="zc4-primary" href="#zcs-clarification">查看关键决策</a><a className="zc4-section-button" href="#zcs-core-interaction">体验演示任务</a></div>
-        </div>
-        <div className="zc4-hero-visual"><HeroPreview/><p>项目脱敏界面 · 核心工作台</p></div>
+        <h1 className="zc4-sr-only">招财 Smart</h1>
+        <figure className="zc4-hero-poster">
+          <img src={publicAsset("/assets/projects/zhaocai-smart/zhaocai-smart-hero.png")} width="1672" height="941" fetchPriority="high" decoding="async" alt="招财 Smart AI 财务智能问数项目头图，展示产品首页与利润口径确认交互。" />
+        </figure>
         <div className="zc4-hero-context" aria-label="项目背景与设计范围">
-          <section>
-            <h2>为什么需要解决</h2>
-            <p>企业经营分析中的“利润”等业务说法，可能对应多个财务指标。若时间、组织范围或指标口径尚未确认就直接查询，结果即使看似明确，也可能无法可靠核对与追溯。</p>
-          </section>
-          <section>
+          <section className="zc4-scope-summary">
             <h2>我的设计范围</h2>
-            <p>我负责智能问数核心体验的 UX/UI 设计，重点交付口径确认、过程反馈、结果依据、看板复用与回答规范；本案例只呈现我的设计范围，不把算法、数据与研发实现归为个人成果。</p>
+            <p>重点交付智能问数核心体验中的口径确认、过程反馈、结果依据、看板复用与回答规范；本案例只呈现我的设计范围，不把算法、数据与研发实现归为个人成果。</p>
+          </section>
+          <section className="zc4-problem-premise">
+            <h2>为什么需要解决</h2>
+            <p>核心问题集中在三类：业务表达与财务口径存在歧义，查询过程缺少清晰反馈，结果依据难以核对并持续复用。</p>
           </section>
         </div>
-        <dl className="zc4-project-meta">
-          <div><dt>周期</dt><dd>2025.07—2025.11</dd></div>
-          <div><dt>角色</dt><dd>UX/UI 设计</dd></div>
-          <div><dt>状态</dt><dd>已上线（页面记录）</dd></div>
-          <div><dt>公开范围</dt><dd>设计产出与交互方案</dd></div>
-        </dl>
         <div className="zc4-demo-disclosure"><p>注：案例中的经营数字为脱敏示例，用于呈现交互与信息结构；前端演示未连接真实 AI、数据库或持久化日志。</p></div>
       </header>
 
       <div className="zc4-content">
         <section className="zc4-section" id="zcs-business-needs">
-          <Heading number="02 / 问题证据" title="不是让 AI 直接给答案，而是先把业务含义对齐。" intro="公开材料中的三类角色分别承担查数、核数和用数任务。共同风险不是不会提问，而是同一句业务语言可能对应不同财务口径。"/>
-          <div className="zc4-proof-callout"><p><strong>问题来源：</strong>从财务人员、经营分析人员与业务负责人三类任务出发，围绕口径歧义、等待反馈、结果核对与复用梳理核心问题。</p></div>
-          <div className="zc4-matrix-wrap" role="region" aria-label="角色与任务表，可横向滚动" tabIndex={0}>
-            <table className="zc4-matrix"><caption>页面中的角色与任务拆分</caption><thead><tr><th scope="col">角色</th><th scope="col">主要任务</th><th scope="col">需要的信息与支持</th><th scope="col">设计重点</th></tr></thead><tbody>{[["财务人员","核对指标、期间与范围","口径准确，来源可追溯","先确认口径"],["经营分析人员","查看趋势、整理结果","结果可比较，内容可复用","保留查询上下文"],["业务负责人","理解结论、支持判断","重点清晰，按需查看依据","结论与依据分层"]].map(row=><tr key={row[0]}><th scope="row">{row[0]}</th><td>{row[1]}</td><td>{row[2]}</td><td>{row[3]}</td></tr>)}</tbody></table>
-          </div>
-          <div className="zc4-problem-chain">{[["症状","“利润”可能对应不同指标；等待时不知道系统进行到哪一步；结果难以还原条件与来源。"],["原因","自然语言问题没有稳定映射到时间、组织和指标口径，执行过程与结果依据也没有被组织进同一次任务。"],["真问题","如何不要求用户重复填写全部条件，却让关键歧义可确认、过程可理解、结果可核对并可复用？"]].map(item=><article key={item[0]}><span>{item[0]}</span><p>{item[1]}</p></article>)}</div>
+          <h2 className="zc4-sr-only">问题证据</h2>
+          <figure className="zc4-evidence-poster">
+            <img src={publicAsset("/assets/projects/zhaocai-smart/zhaocai-smart-problem-evidence.jpg")} width="1448" height="1086" loading="lazy" decoding="async" alt="问题证据：财务人员、经营分析人员与业务负责人的任务拆分，以及口径歧义、过程反馈、结果核对和复用问题。" />
+          </figure>
           <span className="zc4-anchor" id="zcs-design-goals"/>
           <div className="zc4-substory"><h3>目标与成功口径</h3><div className="zc4-goal-grid"><article><span>业务目标</span><p>把一次性“问到一个数字”转成可确认、可核对、可复用的经营分析任务，减少口径误解带来的往返。</p></article>{[["对齐业务含义","只确认有歧义的条件，保留已识别信息。"],["建立过程反馈","说明正在处理什么，并提供停止和恢复入口。"],["支持结果复用","将结果、条件与依据组织为可持续使用的内容。"]].map(item=><article key={item[0]}><span>{item[0]}</span><p>{item[1]}</p></article>)}</div></div>
         </section>
