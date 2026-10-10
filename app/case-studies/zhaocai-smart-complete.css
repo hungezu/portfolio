@@ -316,7 +316,7 @@
 .zc4-animated-flow .zcs-scroll{overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:thin}
 .zc4-animated-flow .zcs-chart{width:100%;min-width:960px}
 .zc4-flow-five{grid-template-columns:repeat(5,minmax(0,1fr));gap:0;padding-top:38px;border:0}
-.zc4-flow-five::before{top:14px;right:10%;left:10%}
+.zc4-flow-five::before{top:74px;right:10%;left:10%}
 .zc4-flow-five li{padding:20px 18px;border-left:0!important;text-align:center}
 .zc4-flow-five span{margin-inline:auto}
 .zc4-state-line{margin-top:26px!important;padding:16px 18px;border-left:3px solid var(--ps);background:#f0ecfb;font-size:14px}
