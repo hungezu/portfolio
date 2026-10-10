@@ -319,7 +319,6 @@
 .zc4-flow-five::before{top:74px;right:10%;left:10%}
 .zc4-flow-five li{padding:20px 18px;border-left:0!important;text-align:center}
 .zc4-flow-five span{margin-inline:auto}
-.zc4-state-line{margin-top:26px!important;padding:16px 18px;border-left:3px solid var(--ps);background:#f0ecfb;font-size:14px}
 
 .zc4-option-compare.is-three{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .zc4-option-compare.is-three>article{display:flex;min-height:440px;flex-direction:column;align-items:flex-start;padding:22px}

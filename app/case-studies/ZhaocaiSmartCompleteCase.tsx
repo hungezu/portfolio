@@ -535,7 +535,6 @@ export function ZhaocaiSmartCompleteCase() {
         <section className="zc4-section" id="zcs-experience-journey">
           <Heading number="04 / 任务模型" title="一条任务链，同时覆盖主路径与恢复路径。" intro="用户从自然语言提问开始；系统只在关键条件有歧义时确认，完成后同时保留结果、条件、来源与执行版本。"/>
           <ol className="zc4-flow zc4-flow-five">{[["提问","自然语言描述需求"],["对齐","识别条件，只确认歧义项"],["执行","数据服务查询，界面展示阶段"],["核对","查看结论、条件、来源与原始表"],["复用","保存结果和查询上下文"]].map((item,index)=><li key={item[0]}><span>{String(index+1).padStart(2,"0")}</span><strong>{item[0]}</strong><p>{item[1]}</p></li>)}</ol>
-          <p className="zc4-state-line"><strong>状态机：</strong>条件完整 → running → result → board；条件有歧义 → clarify；超时、无匹配或用户停止 → 保留条件 → 重试或修改。</p>
           <div className="zc4-demo" id="zcs-core-interaction" ref={demoRef}><span className="zc4-anchor" id="clarification"/><header><div><span>交互演示 · 示例数据</span><strong>完整任务</strong></div><div role="group" aria-label="切换演示场景">{([['clarify','口径确认'],['running','等待超过 10 秒'],['result','顺利完成查询'],['exception','异常恢复']] as [DemoScene,string][]).map(([id,label])=><button type="button" className={scene===id?"active":""} aria-pressed={scene===id} onClick={()=>setDemo(id)} key={id}>{label}</button>)}</div></header>{scene==="exception"?<div className="zc4-exception-tabs"><button type="button" onClick={()=>setStage("timeout")}>查询超时与重试</button><button type="button" onClick={()=>setStage("empty")}>未查到匹配数据</button><button type="button" onClick={()=>setStage("stopped")}>停止并保留条件</button></div>:null}<ProductDemo {...demoProps}/></div>
         </section>
 
