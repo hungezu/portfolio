@@ -610,7 +610,6 @@ export function ZhaocaiSmartCompleteCase() {
             <p>核心问题集中在三类：业务表达与财务口径存在歧义，查询过程缺少清晰反馈，结果依据难以核对并持续复用。</p>
           </section>
         </div>
-        <div className="zc4-demo-disclosure"><p>本页为前端交互演示，经营数字为脱敏示例。</p></div>
       </header>
 
       <div className="zc4-content">
