@@ -56,10 +56,10 @@ confirm:{zh:'二次确认',en:'Confirm',desc:'删除、注销、撤销等不可�
 tooltip:{zh:'文字提示',en:'Tooltip',desc:'用于完整文本、禁用原因和轻量说明。必须逃逸表格滚动容器。',meta:['12px / 20px','近黑背景','4px 圆角'],demo:'<div class="tooltip-demo"><div class="tooltip-bubble">已置顶的报告不能删除，请先取消置顶</div><span style="color:var(--disabled);cursor:not-allowed">删除</span></div>',spec:[['背景','rgba(0,0,0,.85)','白色文字'],['文字','12px / 20px','内容简洁明确'],['圆角','4px','克制高层阴影'],['触发','Hover + Focus','支持键盘访问']],rules:['只有实际截断文本显示完整内容 Tooltip。','禁用操作使用 Tooltip 解释原因。','Tooltip 浮层需要逃逸表格和弹窗裁切。'],avoid:['用虚线下划线表示存在 Tooltip。','状态、操作链接等无必要元素套字符阈值。','只支持 Hover，不支持键盘 Focus。']}
 };
 
-const params=new URLSearchParams(location.search);const id=params.get('id')||'button';const doc=docs[id]||docs.button;
+const params=new URLSearchParams(location.search);const id=params.get('id')||'button';const doc=docs[id]||docs.button;const embeddedQuery=params.has('embed')?'&embed=1':'';
 document.title=`${doc.zh} ${doc.en} · 国科信设计规范`;
 const nav=document.getElementById('componentNav');
-const renderNavLinks=group=>group.items.map(([key,zh,en])=>`<a class="${key===id?'active':''}" href="./index.html?id=${key}">${zh}<small>${en}</small></a>`).join('');
+const renderNavLinks=group=>group.items.map(([key,zh,en])=>`<a class="${key===id?'active':''}" href="./index.html?id=${key}${embeddedQuery}">${zh}<small>${en}</small></a>`).join('');
 const renderNavGroup=group=>{const title=(group.title||'').replace('页面·','');const titleMarkup=title?`<div class="component-group-title">${title}</div>`:'';return `<section class="component-group component-static-group">${titleMarkup}${renderNavLinks(group)}</section>`};
 nav.innerHTML=groups.map(renderNavGroup).join('');
 requestAnimationFrame(()=>{const activeItem=nav.querySelector('a.active');if(!activeItem)return;nav.scrollTop=Math.max(0,activeItem.offsetTop-nav.clientHeight/2+activeItem.clientHeight/2)});
