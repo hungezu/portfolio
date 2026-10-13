@@ -6020,6 +6020,43 @@ body:has(.case-page-zhaocai),
   display: none;
 }
 
+@media (max-width: 1519px) and (min-width: 1121px) {
+  .case-page-zhaocai .zhaocai-locator {
+    position: sticky;
+    top: 74px;
+    right: auto;
+    z-index: calc(var(--nav) - 1);
+    display: flex;
+    width: 100%;
+    max-width: 100vw;
+    max-height: none;
+    flex-direction: row;
+    gap: 4px;
+    margin: 0;
+    padding: 8px 24px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-block: 1px solid var(--line);
+    background: var(--page);
+    transform: none;
+    scrollbar-width: thin;
+  }
+
+  .case-page-zhaocai .zhaocai-locator a {
+    width: auto;
+    min-width: max-content;
+    min-height: 44px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .case-page-zhaocai .zhaocai-locator a::after { display: none; }
+  .case-page-zhaocai .zhaocai-locator a:hover,
+  .case-page-zhaocai .zhaocai-locator a:focus-visible { transform: none; }
+  .case-page-zhaocai .zhaocai-locator a.active { background: var(--surface-soft); }
+}
+
 @media (max-width: 1120px) {
   .case-page-zhaocai .zhaocai-locator {
     top: 74px;
