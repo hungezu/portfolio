@@ -1235,3 +1235,35 @@
   .nsp-language-filters button { transition: none; }
 }
 .nsp-kicker{font-size:12px;letter-spacing:.12em;color:#6b7280;margin:0 0 18px}.nsp-architecture-figure{margin:0 0 48px;border:1px solid #e5e7eb;background:#fafafa;padding:12px}.nsp-architecture-figure img{display:block;width:100%;height:auto}.nsp-architecture-figure figcaption{display:flex;gap:16px;align-items:baseline;padding:14px 6px 4px;color:#6b7280;font-size:13px}.nsp-architecture-figure figcaption strong{color:#111;font-size:15px}
+
+/* 国科信独立子页沿用作品集公共中性框架，项目色保留在产品图与规范工作台。 */
+.case-page-national-platform { background: #f7f7f7; }
+.national-platform-page.nsp-subpage {
+  --nsp-brand: #242424;
+  --nsp-brand-hover: #454545;
+  --nsp-brand-active: #161616;
+  --nsp-brand-light: #ededed;
+  --nsp-brand-rgb: 36, 36, 36;
+  --nsp-page: #f7f7f7;
+  --nsp-ink: #242424;
+  --nsp-muted: #5b5b5b;
+  --nsp-faint: #696969;
+  --nsp-line: #dedede;
+  background: var(--nsp-page);
+}
+.nsp-subpage .nsp-subnav { box-shadow: none; background: #ededed; border-radius: 10px; }
+.nsp-subpage .nsp-subnav a { border-radius: 7px; }
+.nsp-subpage .nsp-subnav a:hover { background: #e2e2e2; }
+.nsp-subpage .nsp-subnav a.active { box-shadow: none; background: #242424; }
+.nsp-subpage :is(button, a, [tabindex="0"]):focus-visible { outline: 2px solid #303030; outline-offset: 4px; }
+.nsp-subpage .nsp-spec-narrative-copy dl { background: #ededed; }
+.nsp-subpage .nsp-design-embed { border: 1px solid #dedede; border-radius: 12px; box-shadow: none; }
+.nsp-subpage .nsp-screen-stage { box-shadow: none; }
+.nsp-subpage .nsp-screen-showcase { background: #ededed; box-shadow: none; }
+.nsp-subpage .nsp-screen-stage img { background: #f2f2f2; }
+.nsp-subpage .nsp-screen-stage figcaption p { font-size: 16px; }
+.nsp-subpage .nsp-evidence-wall figure { border-color: #dedede; }
+.nsp-subpage ::selection { color: #fff; background: #303030; }
+@media(max-width: 560px) {
+  .nsp-subpage .nsp-story-heading > p { font-size: 16px; }
+}

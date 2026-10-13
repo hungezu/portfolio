@@ -823,9 +823,32 @@ type PortfolioCharacterState = {
   mirror: boolean;
 };
 
-const portfolioCharacterMap = portfolioPetAssets as {
+function isPortfolioCharacterRect(rect: number[]): rect is [number, number, number, number] {
+  return rect.length === 4 && rect.every(value => Number.isFinite(value));
+}
+
+const portfolioCharacterStates = Object.entries(portfolioPetAssets.states).reduce<Record<string, PortfolioCharacterState>>(
+  (states, [name, state]) => {
+    states[name] = {
+      ...state,
+      frames: state.frames.map(frame => {
+        if (!isPortfolioCharacterRect(frame.rect)) {
+          throw new Error(`Invalid portfolio character frame rectangle: ${name}`);
+        }
+        return { ...frame, rect: frame.rect };
+      }),
+    };
+    return states;
+  },
+  {},
+);
+
+const portfolioCharacterMap: {
   sources: Record<string, { file: string; width: number; height: number }>;
   states: Record<string, PortfolioCharacterState>;
+} = {
+  sources: portfolioPetAssets.sources,
+  states: portfolioCharacterStates,
 };
 
 const portfolioPetStateMap: Record<PortfolioPetState, string> = {
@@ -1350,6 +1373,7 @@ function PortfolioChat() {
       if (!response.ok || typeof payload?.reply !== "string" || !payload.reply.trim()) {
         throw new Error("chat endpoint unavailable");
       }
+      const reply = payload.reply.trim();
       await waitForChatReply(startedAt, minimumReplyDelay);
       if (conversationId !== conversationIdRef.current) return;
 
@@ -1359,13 +1383,13 @@ function PortfolioChat() {
           ? "guardrail"
           : "local";
       setMode(responseMode);
-      pulsePet(payload.reply!.trim() === OUT_OF_SCOPE_REPLY ? "curious" : "success");
+      pulsePet(reply === OUT_OF_SCOPE_REPLY ? "curious" : "success");
       setMessages(current => [
         ...current,
         {
           id: createChatMessageId(),
           role: "assistant",
-          content: payload.reply!.trim(),
+          content: reply,
           references: parseChatReferences(payload.references),
         },
       ]);
@@ -1468,7 +1492,7 @@ function PortfolioChat() {
         type="button"
         data-pet-drag-react="true"
         aria-label={open ? "关闭作品集助手" : "打开作品集助手"}
-        aria-controls="portfolio-chat-panel"
+          aria-controls={open ? "portfolio-chat-panel" : undefined}
         aria-expanded={open}
         title={open ? "关闭作品集助手" : "打开作品集助手"}
         onClick={handlePetClick}
@@ -2035,7 +2059,7 @@ function AbilitySection({
       })];
     });
     const links = abilityNetworkNodes.flatMap(node =>
-      node.details.map(detail => ({
+      node.details.map<{ source: string; target: string }>(detail => ({
         source: node.id,
         target: abilityDetailNodeId(node.id, detail.label),
       })),

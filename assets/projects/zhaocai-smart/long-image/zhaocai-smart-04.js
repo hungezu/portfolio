@@ -164,7 +164,22 @@
       else if (pressed && outside(event)) close();
     });
     dialog.addEventListener('cancel', event => { event.preventDefault(); close(); });
-    dialog.addEventListener('keydown', event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(); } });
+    dialog.addEventListener('keydown', event => {
+      if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(); return; }
+      if (event.key !== 'Tab' || !dialog.open) return;
+      const focusable = [...dialog.querySelectorAll('button, a[href], area[href], input, select, textarea, [tabindex], [contenteditable="true"]')].filter(node => {
+        if (node.tabIndex < 0 || node.matches(':disabled') || node.closest('[hidden], [inert], [aria-hidden="true"]') || !node.getClientRects().length) return false;
+        const style = ownerDocument.defaultView?.getComputedStyle(node);
+        return !style || (style.visibility !== 'hidden' && style.visibility !== 'collapse' && style.opacity !== '0');
+      });
+      if (!focusable.length) { event.preventDefault(); dialog.focus({ preventScroll: true }); return; }
+      const active = ownerDocument.activeElement;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (!focusable.includes(active) || (event.shiftKey ? active === first : active === last)) {
+        event.preventDefault();
+        (event.shiftKey ? last : first).focus({ preventScroll: true });
+      }
+    });
     dialog.addEventListener('close', () => {
       backdropPress = false;
       if ((ownerDocument.activeElement === ownerDocument.body || dialog.contains(ownerDocument.activeElement)) && opener?.isConnected) opener.focus({ preventScroll: true });

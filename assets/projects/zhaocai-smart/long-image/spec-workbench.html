@@ -20,11 +20,16 @@
     .zmd .zmd-example-heading{padding:16px 20px 12px}
     .zmd .zmd-small-label{margin-bottom:6px}
     .zmd .zmd-example-heading h3{font-size:18px;line-height:1.45}
-    .zmd .zmd-example-description{margin-top:6px;font-size:13px;line-height:1.5}
+    .zmd .zmd-example-description{margin-top:6px;font-size:14px;line-height:1.65}
     .zmd .zmd-rule-tags{margin-top:10px}
     .zmd .zmd-read-options,.zmd .zmd-outline{padding:10px 20px 0}
     .zmd .zmd-reading-scroll{padding:16px 20px 24px}
-    .zmd .zmd-markdown{font-size:13px;line-height:1.6}
+    .zmd .zmd-markdown{font-size:14px;line-height:1.7}
+    .zmd .zmd-markdown :where(p,li,td,th,blockquote){font-size:14px}
+    .zmd :where(.zmd-nav button,.zmd-main-tabs button,.zmd-read-options,.zmd-outline button,.zmd-small-label){font-size:14px}
+    .zmd .zmd-nav button{min-height:40px}
+    .zmd :where(button,a,input):focus-visible{outline:2px solid #6750c8;outline-offset:3px}
+    @media(max-width:640px){.zmd .zmd-workspace{grid-template-columns:1fr}.zmd .zmd-nav{max-height:180px;overflow:auto}.zmd .zmd-nav>div{display:flex;gap:4px;overflow:auto}.zmd .zmd-nav button{min-width:max-content}.zmd .zmd-example-heading{padding:16px}.zmd .zmd-reading-scroll{padding:16px}}
   </style>
 </head>
 <body>

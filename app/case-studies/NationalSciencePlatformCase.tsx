@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, type MouseEvent as ReactMouseEvent, useState } from "react";
+import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, useRef, useState } from "react";
 import { publicAsset } from "../portfolio-data";
 import { ProjectLocator } from "../project-locator";
 import "./national-science-platform.css";
@@ -212,10 +212,20 @@ export function ProjectSubnav({ active }: { active: NationalPlatformView }) {
 
 function SystemScreenShowcase({ activeScreen, setActiveScreen }: { activeScreen: number; setActiveScreen: (index: number) => void }) {
   const currentScreen = screens[activeScreen];
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
+    const next = event.key === "ArrowRight" || event.key === "ArrowDown" ? (index + 1) % screens.length
+      : event.key === "ArrowLeft" || event.key === "ArrowUp" ? (index - 1 + screens.length) % screens.length
+        : event.key === "Home" ? 0 : event.key === "End" ? screens.length - 1 : null;
+    if (next === null) return;
+    event.preventDefault();
+    setActiveScreen(next);
+    tabRefs.current[next]?.focus();
+  };
   return (
     <div className="nsp-screen-showcase">
-      <div className="nsp-screen-tabs" role="tablist" aria-label="系统运行页面切换">{screens.map((screen, index) => <button type="button" role="tab" aria-selected={activeScreen === index} className={activeScreen === index ? "active" : ""} onClick={() => setActiveScreen(index)} key={screen.label}>{screen.label}</button>)}</div>
-      <figure className="nsp-screen-stage" key={currentScreen.label}><img src={publicAsset(currentScreen.src)} alt={`${currentScreen.label}代码运行页面`} loading="lazy" decoding="async" /><figcaption><div><strong>{currentScreen.title}</strong></div><p>{currentScreen.description}</p></figcaption></figure>
+      <div className="nsp-screen-tabs" role="tablist" aria-label="系统界面切换">{screens.map((screen, index) => <button ref={node => { tabRefs.current[index] = node; }} id={`nsp-screen-tab-${index}`} type="button" role="tab" aria-selected={activeScreen === index} aria-controls="nsp-screen-panel" tabIndex={activeScreen === index ? 0 : -1} className={activeScreen === index ? "active" : ""} onClick={() => setActiveScreen(index)} onKeyDown={event => handleKeyDown(event, index)} key={screen.label}>{screen.label}</button>)}</div>
+      <div id="nsp-screen-panel" role="tabpanel" aria-labelledby={`nsp-screen-tab-${activeScreen}`} tabIndex={0}><figure className="nsp-screen-stage"><img src={publicAsset(currentScreen.src)} alt={`${currentScreen.label}界面，展示该业务的信息结构与操作入口`} loading="lazy" decoding="async" /><figcaption><div><strong>{currentScreen.title}</strong></div><p>{currentScreen.description}</p></figcaption></figure></div>
     </div>
   );
 }
@@ -270,7 +280,7 @@ function SystemsDetailPage({ activeScreen, setActiveScreen }: { activeScreen: nu
   return (
     <div className="national-platform-page nsp-subpage">
       <ProjectLocator sections={systemsSections} ariaLabel="系统实景页章节定位" />
-      <header className="nsp-subpage-hero" id="nsp-systems-overview"><div className="nsp-shell"><ProjectSubnav active="systems" /><h1>八个代码运行页面，<br />展示不同产品任务</h1><p>这里集中保存主故事中的页面证据。所有业务数据均为示例内容，页面用于展示信息架构、交互模式和视觉一致性。</p></div></header>
+      <header className="nsp-subpage-hero" id="nsp-systems-overview"><div className="nsp-shell"><ProjectSubnav active="systems" /><h1>跨系统的界面，<br />呈现不同业务任务</h1><p>围绕信息浏览、内容维护与流程建模，展示不同任务的信息架构与交互模式。业务内容和数据已脱敏或重构，仅用于呈现设计方法。</p></div></header>
       <section className="nsp-section" id="nsp-system-screens"><div className="nsp-shell"><SystemScreenShowcase activeScreen={activeScreen} setActiveScreen={setActiveScreen} /><div className="nsp-evidence-wall" id="nsp-supporting-screens"><header><h2>补充页面</h2><p>进一步展示技术分析、报告浏览和人才信息等不同信息密度。</p></header><div>{supportingScreens.map(screen => <figure key={screen.title}><img src={publicAsset(screen.src)} alt={`${screen.title}代码运行页面`} loading="lazy" decoding="async" /><figcaption><strong>{screen.title}</strong><p>{screen.description}</p></figcaption></figure>)}</div></div></div></section>
     </div>
   );
@@ -287,7 +297,7 @@ function DesignSystemDetailPage() {
       <ProjectLocator sections={designSystemSections} ariaLabel="设计规范页章节定位" />
       <header className="nsp-subpage-hero" id="nsp-design-overview"><div className="nsp-shell"><ProjectSubnav active="design-system" /><h1>让多支团队，<br />做出同一个平台</h1><p>深圳国际科技信息中心包含多个子系统，参与方和交付节奏并不一致。我的工作不只是一套界面，而是让总集成方、合作方和研发沿用同一套设计判断。</p></div></header>
       <section className="nsp-section nsp-spec-story-section" id="nsp-design-method"><div className="nsp-shell"><div className="nsp-spec-narrative"><h2>我把反复出现在评审里的问题，写进一套可执行规范</h2><div className="nsp-spec-narrative-copy"><p>前期，我与总集成方对齐整体风格和页面布局；随着更多系统并行推进，再把页面类型、组件状态、响应式和交付检查整理为 Markdown，提供给合作方和研发使用。</p><p>Codex 负责把规则持续转成可浏览、可操作的网页工作台。我保留对业务内容、交互边界和最终质量的判断，并在评审中继续修正规范。</p><dl><div><dt>我的工作</dt><dd>设计方向、UX/UI、规范维护与还原度审核</dd></div><div><dt>AI 参与</dt><dd>规则整理、页面生成、状态补全与版本维护</dd></div></dl></div></div></div></section>
-      <section className="nsp-section nsp-spec-visual-section" id="nsp-design-preview"><div className="nsp-shell"><header className="nsp-story-heading nsp-spec-heading"><h2>这不是规范截图，<br />而是它的实际工作方式</h2><p>左侧目录展示规范覆盖的页面与组件，选择后可以看到对应内容的开头。受保密协议约束，具体规则、交互说明和实现细节不对外公开。</p></header><GkxDesignSystemInteractive /></div></section>
+      <section className="nsp-section nsp-spec-visual-section" id="nsp-design-preview"><div className="nsp-shell"><header className="nsp-story-heading nsp-spec-heading"><h2>让规范在页面与组件中，<br />被查阅、应用和核对</h2><p>左侧目录展示规范覆盖的页面与组件，选择后可以看到对应内容的开头。受保密协议约束，具体规则、交互说明和实现细节不对外公开。</p></header><GkxDesignSystemInteractive /></div></section>
     </div>
   );
 }
