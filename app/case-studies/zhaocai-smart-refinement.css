@@ -1,0 +1,43 @@
+/* Refinements stay within the case chapters; the approved overview is protected. */
+.zc4-content>.zc4-section{--zc4-story-gap:64px;--zc4-unit-gap:32px}
+.zc4-section .zc4-problem-evidence-header h2{color:var(--ink)}
+.zc4-section .zc4-problem-role dd{color:var(--body)}
+.zc4-section .zc4-design-goals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin-top:40px;padding-top:28px;border-top:1px solid var(--line)}
+.zc4-section .zc4-design-goals>div{min-width:0}
+.zc4-section .zc4-design-goals dt{color:var(--ink);font-size:22px;font-weight:550;line-height:1.5}
+.zc4-section .zc4-design-goals dd{max-width:32ch;margin:10px 0 0;color:var(--body);font-size:16px;line-height:1.8}
+.zc4-section .zc4-decision-stories{gap:var(--zc4-story-gap)}
+.zc4-section .zc4-story-note h3{max-width:18em}
+.zc4-section .zc4-story-note dd{max-width:38ch}
+.zc4-section .zc4-board-confirm>section{max-height:calc(100dvh - 48px);overflow:auto}
+.zc4-section .zc4-card-toolbar button{min-width:44px;min-height:44px}
+.zc4-section .zc4-demo>header button{min-height:44px}
+.zc4-section .zc4-design-evidence-figure figcaption a{min-height:44px}
+.zc4-section .zc4-delivery-artifacts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+.zc4-section .zc4-delivery-artifacts>article{display:flex;min-width:0;flex-direction:column;align-items:flex-start}
+.zc4-section .zc4-artifact-image{width:100%;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#fff}
+.zc4-section .zc4-artifact-image>a{display:block}
+.zc4-section .zc4-artifact-image img{display:block;width:100%;height:auto}
+.zc4-section .zc4-delivery-artifacts h3{margin-top:20px;font-size:22px;font-weight:550;line-height:1.5}
+.zc4-section .zc4-delivery-artifacts p{flex:1;margin-top:10px;color:var(--body);font-size:16px;line-height:1.8}
+.zc4-section .zc4-delivery-artifacts .zc4-delivery-link{margin-top:18px}
+.zc4-section .zc4-review-next{margin-top:48px;padding:32px;border-radius:12px;background:#f5f5f5}
+.zc4-section .zc4-review-next>h3{font-size:24px;font-weight:550;line-height:1.5}
+.zc4-section .zc4-review-next>p{max-width:65ch;margin-top:12px;color:var(--body);font-size:16px;line-height:1.8}
+.zc4-section .zc4-review-checks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin-top:28px}
+.zc4-section .zc4-review-checks>div{min-width:0}
+.zc4-section .zc4-review-checks dt{font-size:18px;font-weight:550;line-height:1.5}
+.zc4-section .zc4-review-checks dd{margin:8px 0 0;color:var(--body);font-size:16px;line-height:1.8}
+.zc4-section.zc4-delivery>blockquote{max-width:none;margin:48px 0 0;padding:0;border:0;color:var(--ink);font-size:26px;font-weight:550;line-height:1.6;text-align:left}
+@media(max-width:1120px){
+  .zc4-section .zc4-delivery-artifacts{gap:24px}
+  .zc4-section .zc4-review-checks{gap:24px}
+}
+@media(max-width:800px){
+  .zc4-section .zc4-design-goals,.zc4-section .zc4-delivery-artifacts,.zc4-section .zc4-review-checks{grid-template-columns:1fr;gap:28px}
+  .zc4-section .zc4-decision-stories{gap:48px}
+  .zc4-section .zc4-review-next{padding:24px}
+  .zc4-section .zc4-board-confirm>section{max-height:calc(100dvh - 32px)}
+  .zc4-section .zc4-card-toolbar{flex-wrap:wrap;gap:8px}
+  .zc4-section.zc4-delivery>blockquote{font-size:24px}
+}
