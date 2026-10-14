@@ -124,7 +124,7 @@ export const abilities: Ability[] = [
         projectTitle: "深圳国际科技信息中心",
         section: "多系统需求结构",
         description: "从分散材料中界定系统、角色、任务与页面边界。",
-        anchor: "nsp-structure",
+        anchor: "gkx-systems",
       },
       {
         projectSlug: "tax-cloud",
@@ -153,7 +153,7 @@ export const abilities: Ability[] = [
         projectTitle: "深圳国际科技信息中心",
         section: "Markdown 设计规范",
         description: "将评审共识转化为多团队可执行、可维护的设计规则。",
-        anchor: "nsp-rules",
+        anchor: "gkx-design-system",
       },
       {
         projectSlug: "tax-cloud",

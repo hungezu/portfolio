@@ -11,6 +11,7 @@ const artifactRoot = prepared ? resolve(root, "gh-pages-dist") : root;
 const sourceFiles = [
   "app/case-studies/ZhaocaiSmartCompleteCase.tsx",
   "app/case-studies/GkxCase.tsx",
+  "app/case-studies/GkxSupplementalMaterials.tsx",
   "app/case-studies/NationalSciencePlatformCase.tsx",
 ];
 const findings = [];

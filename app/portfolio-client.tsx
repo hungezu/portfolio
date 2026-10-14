@@ -52,7 +52,7 @@ import {
 import portfolioPetAssets from "../assets/visual/sidebar-character/assets.json";
 import { ZhaocaiSmartCase } from "./case-studies/ZhaocaiSmartCase";
 import { GkxCase } from "./case-studies/GkxCase";
-import { NationalSciencePlatformCase, type NationalPlatformView } from "./case-studies/NationalSciencePlatformCase";
+import type { NationalPlatformView } from "./case-studies/NationalSciencePlatformCase";
 import { ProjectLocator, type ProjectLocatorSection } from "./project-locator";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -923,21 +923,9 @@ const PROJECT_CHAT_CONTEXTS: Record<string, PortfolioChatContext[]> = {
   ],
 };
 
-const GKX_SUBPAGE_CHAT_CONTEXTS: PortfolioChatContext[] = [
-  { id: "nsp-overview", elementId: "nsp-overview", text: "这里展示的是项目交付证据，可以结合页面职责理解每个系统为何这样组织。" },
-  { id: "nsp-structure", elementId: "nsp-structure", text: "这里的关键是把跨系统需求压成可执行结构，后续原型与规范都从这套关系展开。" },
-  { id: "nsp-prototype", elementId: "nsp-prototype", text: "可运行原型主要用来提前暴露流程和状态问题，并不等同于最终视觉稿。" },
-  { id: "nsp-products", elementId: "nsp-products", text: "看系统实景时，可以对照导航、数据状态和组件在不同业务里的统一程度。" },
-  { id: "nsp-rules", elementId: "nsp-rules", text: "这套规范同时约束设计协作与后续生成，不只是颜色、字号的样式表。" },
-  { id: "nsp-result", elementId: "nsp-result", text: "这里刻意区分 AI 辅助和设计判断：生成由工具加速，范围与质量仍由我负责。" },
-];
-
 function getPortfolioChatContexts() {
   const projectRoot = document.querySelector<HTMLElement>("main[data-project]");
   const projectSlug = projectRoot?.dataset.project;
-  if (projectSlug === "gkx" && /\/(?:systems|design-system)\/?$/.test(window.location.pathname)) {
-    return GKX_SUBPAGE_CHAT_CONTEXTS;
-  }
   if (projectSlug && PROJECT_CHAT_CONTEXTS[projectSlug]) return PROJECT_CHAT_CONTEXTS[projectSlug];
   if (projectRoot) {
     return [{ id: "case", elementId: "", text: "这是项目案例，往下看会有页面和设计过程。" }];
@@ -3054,7 +3042,6 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
   const reduce = useReducedMotion();
   const isZhaocaiCase = project.slug === "zhaocai-smart";
   const isNationalPlatformCase = project.slug === "gkx";
-  const isNationalPlatformSubpage = isNationalPlatformCase && projectView !== undefined && projectView !== "story";
   const isCustomCase = isZhaocaiCase || isNationalPlatformCase;
   const handleProjectBack = (event: ReactMouseEvent<HTMLAnchorElement>) => {
     returnToProjectLocation(event, project.slug);
@@ -3069,7 +3056,7 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
       />
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
       <main
-        className={`case-page${isZhaocaiCase ? " case-page-zhaocai" : ""}${isNationalPlatformCase ? isNationalPlatformSubpage ? " case-page-national-platform" : " case-page-gkx" : ""}`}
+        className={`case-page${isZhaocaiCase ? " case-page-zhaocai" : ""}${isNationalPlatformCase ? " case-page-gkx" : ""}`}
         data-project={project.slug}
       >
         {!isCustomCase ? <header className="case-hero" id="project-overview">
@@ -3090,7 +3077,7 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
         {isZhaocaiCase ? (
           <ZhaocaiSmartCase />
         ) : isNationalPlatformCase ? (
-          isNationalPlatformSubpage ? <NationalSciencePlatformCase view={projectView} /> : <GkxCase project={project} />
+          <GkxCase project={project} legacyView={projectView} />
         ) : (
           <ProjectImageGallery project={project} reduce={reduce} />
         )}

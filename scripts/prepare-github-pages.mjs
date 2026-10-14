@@ -10,7 +10,7 @@ const projectSlugs = [
   "data-visualisation",
 ];
 
-const baseHtml = await readFile(resolve(outputDirectory, "index.html"), "utf8");
+const baseHtml = (await readFile(resolve(outputDirectory, "index.html"), "utf8")).replace(/\r\n/g, "\n");
 
 function withCaseMetadata(html, slug, view) {
   const metadata = slug === "zhaocai-smart" ? {
@@ -19,14 +19,14 @@ function withCaseMetadata(html, slug, view) {
     image: "assets/projects/zhaocai-smart/long-image/assets/homepage-original.png",
     imageAlt: "招财 Smart 财务智能问数产品界面",
   } : {
-    title: `国科信｜${view === "systems" ? "系统实景" : view === "design-system" ? "设计规范" : "门户与多系统体验设计"}｜李家豪`,
+    title: "国科信｜门户与多系统体验设计｜李家豪",
     description: "国科信项目案例：统一门户与多系统设计，梳理业务任务、可信机制、操作反馈、AI 原型和设计交付核对。",
     image: "assets/projects/gkx/case-study/ui/portal-workspace.png",
     imageAlt: "国科信智慧门户工作区产品界面",
   };
   const { title, description, imageAlt } = metadata;
   const image = `https://hungezu.github.io/portfolio/${metadata.image}`;
-  const url = `https://hungezu.github.io/portfolio/project/${slug}/${view ? `${view}/` : ""}`;
+  const url = `https://hungezu.github.io/portfolio/project/${slug}/`;
   return html
     .replace(/\s*<link\s+rel="preload"\s+as="image"[^>]*hero-poster-(?:mobile|desktop)\.jpg[^>]*>/g, "")
     .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)

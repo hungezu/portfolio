@@ -75,7 +75,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
     keywords: ["AI工作流", "AI 工作流", "设计流程", "工作方式", "工作流", "Codex", "Gemini", "原型", "规范", "协作", "合作", "开发", "研发", "沟通", "评审", "工具", "产出", "交付", "探索", "复盘", "需求梳理", "需求分析", "研究", "洞察", "设计判断"],
     references: [
       { label: "国科信 · 可运行原型", href: "/portfolio/project/gkx/#nsp-prototype", kind: "project" },
-      { label: "国科信 · Markdown 规范", href: "/portfolio/project/gkx/#nsp-rules", kind: "project" },
+      { label: "国科信 · Markdown 规范", href: "/portfolio/project/gkx/#gkx-design-system", kind: "project" },
       { label: "招财 Smart · 设计策略", href: "/portfolio/project/zhaocai-smart/#strategy", kind: "project" },
     ],
   },
@@ -86,7 +86,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
       "复杂系统设计会先梳理业务规则、角色权限、数据关系与审批链路，再把高复杂度需求拆成可理解、可执行的产品结构和页面任务。",
     keywords: ["复杂系统", "大系统", "业务复杂", "业务规则", "角色", "权限", "数据关系", "审批", "流程", "系统结构", "架构", "模块", "难点", "挑战", "痛点", "拆解", "B端", "B 端"],
     references: [
-      { label: "国科信 · 多系统需求结构", href: "/portfolio/project/gkx/#nsp-structure", kind: "project" },
+      { label: "国科信 · 多系统需求结构", href: "/portfolio/project/gkx/#gkx-systems", kind: "project" },
       { label: "税纪云项目", href: "/portfolio/project/tax-cloud/", kind: "project" },
       { label: "国能报税平台", href: "/portfolio/project/energy-tax/", kind: "project" },
     ],
@@ -98,7 +98,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
       "设计系统以信息层级、栅格、组件和状态规则建立稳定的 B 端视觉语言，支撑多页面、多角色和持续迭代，并通过规范、评审与走查推进协作。",
     keywords: ["设计系统", "设计规范", "设计语言", "组件", "栅格", "状态", "视觉语言", "页面一致", "一致性", "多页面", "协同", "交付", "规范", "规则", "风格", "审美", "交互设计", "UX/UI", "走查", "评审", "品牌适配"],
     references: [
-      { label: "国科信 · 设计规范", href: "/portfolio/project/gkx/#nsp-rules", kind: "project" },
+      { label: "国科信 · 设计规范", href: "/portfolio/project/gkx/#gkx-design-system", kind: "project" },
       { label: "税纪云项目", href: "/portfolio/project/tax-cloud/", kind: "project" },
     ],
   },
@@ -154,13 +154,13 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
     id: "project-gkx",
     title: "深圳国际科技信息中心",
     content:
-      "深圳国际科技信息中心是平台级体验设计项目，面对多系统并行与多方协作，使用 Codex 辅助需求梳理、原型验证、界面设计与 Markdown 规范维护，并通过统一设计体系控制平台体验与交付质量。公开章节包括多系统需求结构、可运行原型验证、系统实景和设计规范。",
+      "深圳国际科技信息中心是平台级体验设计项目，面对多系统并行与多方协作，使用 Codex 辅助需求梳理、原型验证、界面设计与 Markdown 规范维护，并通过统一设计体系控制平台体验与交付质量。公开章节包括多系统需求结构、可运行原型验证、跨系统界面和设计规范。",
     keywords: ["国科信", "深圳国际科技信息中心", "平台", "多系统", "多方协作", "系统实景", "项目背景", "职责", "负责", "负责什么", "难点", "挑战", "设计决策", "案例细节", "nsp"],
     references: [
       { label: "打开国科信案例", href: "/portfolio/project/gkx/", kind: "project" },
-      { label: "需求结构", href: "/portfolio/project/gkx/#nsp-structure", kind: "project" },
+      { label: "需求结构", href: "/portfolio/project/gkx/#gkx-systems", kind: "project" },
       { label: "可运行原型", href: "/portfolio/project/gkx/#nsp-prototype", kind: "project" },
-      { label: "设计规范", href: "/portfolio/project/gkx/#nsp-rules", kind: "project" },
+      { label: "设计规范", href: "/portfolio/project/gkx/#gkx-design-system", kind: "project" },
     ],
   },
   {
@@ -209,7 +209,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
     references: [
       { label: "查看核心能力", href: "/portfolio/#ability", kind: "section" },
       { label: "招财 Smart · 设计策略", href: "/portfolio/project/zhaocai-smart/#strategy", kind: "project" },
-      { label: "国科信 · 需求结构", href: "/portfolio/project/gkx/#nsp-structure", kind: "project" },
+      { label: "国科信 · 需求结构", href: "/portfolio/project/gkx/#gkx-systems", kind: "project" },
     ],
   },
   {

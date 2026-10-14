@@ -1,0 +1,24 @@
+.gkx-supplemental-materials{padding-top:32px;color:var(--gkx-ink,#202020)}
+.gkx-supplemental-materials__intro{max-width:72ch;margin-bottom:32px}
+.gkx-supplemental-materials__intro h3{font-size:24px;font-weight:550;line-height:1.5}
+.gkx-supplemental-materials .gkx-supplemental-materials__intro p{margin-top:12px;color:var(--gkx-muted,#5b5b5b);font-size:16px;line-height:1.8}
+.gkx-supplemental-materials__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 32px;align-items:start}
+.gkx-supplemental-material{min-width:0}
+.gkx-supplemental-material h4{font-size:18px;font-weight:550;line-height:1.6}
+.gkx-supplemental-materials .gkx-supplemental-material>p{min-height:58px;margin-top:8px;color:var(--gkx-muted,#5b5b5b);font-size:16px;line-height:1.8}
+.gkx-case .gkx-supplemental-material__image{display:block;width:100%;margin-top:16px;padding:0;overflow:hidden;border:1px solid var(--gkx-line,#dedede);border-radius:10px;background:transparent;color:var(--gkx-ink,#202020);cursor:zoom-in;text-align:left}
+.gkx-supplemental-material__image img{display:block;width:100%;height:auto}
+.gkx-supplemental-material__image>span{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-height:44px;padding:10px 14px;border-top:1px solid var(--gkx-line,#dedede);font-size:14px;line-height:1.5}
+.gkx-supplemental-material__image>span svg{flex:none}
+.gkx-case .gkx-supplemental-material__image:hover{border-color:#a8a8a8}
+.gkx-case .gkx-supplemental-material__image:hover>span{background:#ededed}
+.gkx-supplemental-materials__disclosure{margin-top:32px;scroll-margin-top:112px;border-block:1px solid var(--gkx-line,#dedede)}
+.gkx-supplemental-materials__disclosure>summary{min-height:44px;padding:16px 0;color:var(--gkx-ink,#202020);font-size:14px;font-weight:500;line-height:1.7;cursor:pointer}
+.gkx-supplemental-materials__disclosure>summary:hover{color:#000}
+.gkx-supplemental-materials__disclosure>summary:focus-visible{outline:2px solid #303030;outline-offset:4px}
+.gkx-supplemental-materials__disclosure>.gkx-supplemental-materials__grid{margin-top:16px;padding-bottom:32px}
+@media(max-width:700px){
+  .gkx-supplemental-materials{padding-top:24px}
+  .gkx-supplemental-materials__grid{grid-template-columns:minmax(0,1fr);gap:32px}
+  .gkx-supplemental-materials .gkx-supplemental-material>p{min-height:0}
+}

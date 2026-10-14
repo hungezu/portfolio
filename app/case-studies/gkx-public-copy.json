@@ -19,16 +19,20 @@
       "label": "业务任务"
     },
     {
-      "id": "nsp-structure",
-      "label": "统一边界"
+      "id": "gkx-systems",
+      "label": "跨系统界面"
     },
     {
       "id": "nsp-rules",
-      "label": "可信与反馈"
+      "label": "交互规则"
     },
     {
       "id": "nsp-prototype",
       "label": "AI 原型"
+    },
+    {
+      "id": "gkx-design-system",
+      "label": "设计规范"
     },
     {
       "id": "gkx-supplier",
@@ -72,9 +76,9 @@
       ]
     },
     {
-      "id": "nsp-structure",
+      "id": "gkx-systems",
       "title": "明确共同规则，也保留任务差异",
-      "lead": "统一体验需要先确定边界。我将重复出现的基础操作纳入公共规范，再按具体任务组织页面内容。",
+      "lead": "在论文管理之外，阅读、模型发现、情报浏览与流程建模各有不同任务。我统一高频操作与状态反馈，同时按任务组织页面空间和信息结构。",
       "principles": [
         {
           "title": "共同操作",
