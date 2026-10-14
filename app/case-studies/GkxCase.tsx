@@ -259,7 +259,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
 
     <header id="gkx-overview" className="gkx-hero">
       <div className="gkx-hero__copy">
-        <h1>{copy.hero.title}</h1>
+        <h1><span className="gkx-hero__brand">{copy.hero.title.slice(0, 3)}</span>{copy.hero.title.slice(3)}</h1>
         <p className="gkx-hero__subtitle">{copy.hero.subtitle}</p>
         <p className="gkx-project-period">项目时间：{project.period}</p>
         <dl id="gkx-scope" className="gkx-hero__meta">
