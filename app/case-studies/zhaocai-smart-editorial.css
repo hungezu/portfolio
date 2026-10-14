@@ -1,5 +1,8 @@
-.zc4{--ink:#181818;--body:#444;--muted:#626262;--line:#e2e2e2;--page:#fff;--pl:#f4f1fc;--p:#6750c8;--ps:#6750c8;width:min(1200px,calc(100% - 48px));margin-inline:auto;background:#fff;color:var(--ink);font-size:16px;line-height:1.8}
+.zc4{--ink:#181818;--body:#444;--muted:#626262;--line:#e2e2e2;--page:#fff;--pl:#f4f1fc;--p:#6750c8;--ps:#6750c8;width:min(1200px,calc(100% - 48px));margin-inline:auto;background:transparent;color:var(--ink);font-size:16px;line-height:1.8}
 .zc4 ::selection{background:#e8e1f8;color:#241a40}
+.zc4 .zc4-chapter-label{margin:0 0 12px!important;color:var(--muted);font-size:14px;line-height:1.5;font-weight:500;letter-spacing:.02em}
+.zc4-heading>.zc4-chapter-label+h2{margin-top:0}
+.zc4-delivery-link{display:inline-flex;align-items:center;gap:8px;min-height:44px;margin-top:14px;color:var(--ink);font-size:14px;text-decoration:underline;text-underline-offset:5px}
 .zc4 :where(input,textarea){caret-color:var(--p)}
 .zc4 :where(a){text-underline-offset:5px}
 .zc4 :where(h1,h2,h3,h4){color:var(--ink);text-wrap:balance;letter-spacing:-.025em}
@@ -108,7 +111,7 @@
 .zc4-story-note dd{margin-top:3px;color:var(--body);font-size:16px;line-height:1.75}
 .zc4-story-note>button{display:inline-flex;min-height:44px;align-items:center;gap:10px;align-self:flex-start;margin-top:22px;padding:0;background:transparent;color:var(--ink);text-decoration:underline;text-underline-offset:5px}
 .zc4-story-note>button:hover{color:var(--p)}
-.zc4-decision-evidence-ui{min-width:0}
+.zc4-decision-evidence-ui{min-width:0;container-type:inline-size;container-name:zc-evidence}
 .zc4-evidence-window{overflow:hidden;border:1px solid #e5e2ec;border-radius:12px;background:#fff}
 .zc4-evidence-window>header{display:flex;justify-content:space-between;gap:16px;padding:14px 18px;border-bottom:1px solid #eee;font-size:14px}
 .zc4-evidence-window>header>div{display:flex;flex-wrap:wrap;align-items:center;gap:8px;min-width:0}
@@ -284,7 +287,7 @@
 .zc4-proof-callout p,.zc4-proof-callout strong{font-size:14px}
 .zc4-outcome-grid.is-three{gap:28px;grid-template-columns:repeat(3,minmax(0,1fr))}
 .zc4-outcome-grid.is-three article{min-height:0;padding:0;border:0;border-radius:0;background:transparent}
-.zc4-outcome-grid.is-three h3{margin-top:22px;font-size:22px}
+.zc4-outcome-grid.is-three h3{margin-top:0;font-size:22px}
 .zc4-outcome-grid.is-three p{margin-bottom:0;font-size:16px}
 .zc4-delivery-artifact{height:176px;padding:22px;border-radius:10px;background:#f5f4f7;font-size:14px}
 .zc4-delivery-artifact.is-task{display:grid;gap:22px;align-content:center}
@@ -331,4 +334,32 @@
 .zc4-merged-status{font-size:14px}
 @media(max-width:1120px){.zc4{width:calc(100% - 48px)}.zc4-opening{gap:32px;grid-template-columns:1fr 1.2fr}.zc4-opening-copy h2{font-size:24px}.zc4-hero .zc4-opening-meta{grid-template-columns:1fr 1fr}.zc4-decision-story,.zc4-decision-story.is-reversed{grid-template-columns:1.65fr 1fr;gap:28px}.zc4-evidence-clarify,.zc4-evidence-result{grid-template-columns:minmax(0,1fr) 175px}.zc4-evidence-window>header{flex-wrap:wrap}.zc4-history-evidence{grid-template-columns:1fr 260px}.zc4-ownership-flow{grid-template-columns:repeat(4,minmax(0,1fr))}.zc4-ownership-flow li>svg{display:none}.zc4-goal-grid{grid-template-columns:1fr 1fr}.zc4-delivery-artifact{padding:18px}.zc4-delivery-artifact.is-task>div{gap:4px}.zc4-delivery-artifact.is-task span{padding:6px}.zc4-task-analysis{padding:24px}.zc4-board-cards{grid-template-columns:1fr 1.3fr}.zc4-product :where(p,span,dd){overflow-wrap:anywhere}}
 @media(max-width:800px){.zc4{width:calc(100% - 32px)}.zc4 [id]{scroll-margin-top:144px}.zc4-hero{padding:96px 0 48px}.zc4-opening{grid-template-columns:1fr;gap:32px}.zc4-opening-copy>p{max-width:40ch}.zc4-opening-copy h1{font-size:44px}.zc4-opening-copy h2{font-size:26px}.zc4-opening-ui{width:100%}.zc4-opening-ui figcaption{text-align:left}.zc4-hero .zc4-opening-meta{margin-top:32px!important;gap:24px 16px}.zc4-opening-meta dd{font-size:14px}.zc4-section{padding:64px 0}.zc4-heading h2,.zc4-problem-evidence-header h2{font-size:30px}.zc4-problem-evidence-header{grid-template-columns:1fr;gap:18px}.zc4-problem-role{padding:24px 0!important}.zc4-task-input{display:grid;gap:8px}.zc4-task-input p{font-size:20px}.zc4-task-conditions{grid-template-columns:1fr;gap:12px}.zc4-flow-five{grid-template-columns:1fr}.zc4-flow-five::before{display:none}.zc4-flow-five li{padding:16px 0;text-align:left}.zc4-flow-five span{margin:0}.zc4-decision-stories{gap:44px}.zc4-decision-story,.zc4-decision-story.is-reversed{grid-template-columns:1fr;gap:24px}.zc4-decision-story.is-reversed .zc4-decision-evidence-ui,.zc4-decision-story.is-reversed .zc4-story-note{grid-column:auto;grid-row:auto}.zc4-story-note h3{font-size:24px}.zc4-evidence-content{padding:14px}.zc4-evidence-clarify,.zc4-evidence-result{grid-template-columns:1fr}.zc4-evidence-clarify aside,.zc4-evidence-result aside{display:none}.zc4-evidence-detail,.zc4-decision-evidence-ui.is-running .zc4-evidence-detail{width:100%;margin-top:18px}.zc4-detail-panel{padding:20px}.zc4-decision-evidence-ui .zc4-execution-stages{grid-template-columns:1fr}.zc4-decision-evidence-ui .zc4-execution-stages li+li{border-left:0;border-top:1px solid var(--line)}.zc4-evidence-progress{padding:14px}.zc4-evidence-progress ol{gap:10px}.zc4-option-compare.is-three{grid-template-columns:1fr}.zc4-option-compare.is-three>article:last-child{grid-column:auto}.zc4-board-feature{display:grid;gap:16px}.zc4-board-cards{grid-template-columns:1fr;padding:14px;gap:14px}.zc4-board-cards>article:has(>.zc4-table-wrap),.zc4-board-cards>article.is-merged{grid-column:auto}.zc4-board-metric{min-height:210px}.zc4-answer-example{grid-template-columns:1fr;padding:20px 16px;gap:12px}.zc4-answer-example>article{padding:16px}.zc4-answer-example aside{gap:0}.zc4-history-evidence{grid-template-columns:1fr;gap:24px}.zc4-history-viewport{height:230px}.zc4-history-viewport img{transform:translateY(-58%)}.zc4-recovery-main,.zc4-recovery-secondary{grid-template-columns:1fr;gap:24px}.zc4-exception-context{padding:24px 20px 0}.zc4-exception-state>.zc4-exception{width:calc(100% - 40px)}.zc4-recovery-window .zc4-exception{grid-template-columns:1fr;padding:20px}.zc4-recovery-window.is-compact .zc4-exception{grid-template-columns:32px minmax(0,1fr)}.zc4-recovery-window .zc4-exception div>div{flex-direction:column}.zc4-recovery-window .zc4-exception button{width:100%}.zc4-ownership-flow{grid-template-columns:1fr 1fr;gap:10px}.zc4-ownership-flow li{padding:14px 10px}.zc4-outcome-grid.is-three{grid-template-columns:1fr;gap:36px}.zc4-delivery-artifact{height:176px}.zc4-goal-grid{grid-template-columns:1fr;gap:24px}.zc4-result-boundary{grid-template-columns:1fr;gap:8px}.zc4-reflection{padding:24px}.zc4-delivery>blockquote{font-size:24px}.zc4-spec-frame{height:700px;min-height:700px}.zc4-disclosure-body{padding:20px 0}.zc4-clarify .main{padding:24px 18px}.zc4-clarify .main>h3{font-size:24px}.zc4-running{padding:28px 20px}.zc4-running>header h3{font-size:24px}.zc4-result>header h3{font-size:24px}.zc4-dialog-backdrop{padding:16px}.zc4-dialog{padding:20px;max-height:calc(100dvh - 32px)}}
+/* Use the available interface width for nested layouts. */
+.zc4-product-main{container-type:inline-size;container-name:zc-product}
+.zc4-exception div>div{flex-wrap:wrap}
+.zc4-exception div>div button{max-width:100%;white-space:normal;text-align:center}
+
+@media(max-width:1519px){.zc4 [id]{scroll-margin-top:164px}}
+
+@media(max-width:1120px){
+  .zc4-decision-story,.zc4-decision-story.is-reversed{grid-template-columns:minmax(0,1fr)}
+  .zc4-decision-story.is-reversed .zc4-decision-evidence-ui,
+  .zc4-decision-story.is-reversed .zc4-story-note{grid-column:auto;grid-row:auto}
+  .zc4-decision-story .zc4-story-note{order:-1}
+}
+
+@container zc-evidence (max-width:600px){
+  .zc4-evidence-clarify,.zc4-evidence-result{grid-template-columns:minmax(0,1fr)}
+  .zc4-evidence-clarify aside,.zc4-evidence-result aside{display:block}
+  .zc4-decision-evidence-ui .zc4-execution-stages{grid-template-columns:minmax(0,1fr)}
+  .zc4-decision-evidence-ui .zc4-execution-stages li+li{border-left:0;border-top:1px solid var(--line)}
+  .zc4-evidence-detail,.zc4-decision-evidence-ui.is-running .zc4-evidence-detail{width:100%}
+}
+
+@container zc-product (max-width:880px){
+  .zc4-result-layout.with-evidence{grid-template-columns:minmax(0,1fr)}
+  .zc4-result-layout.with-evidence>.zc4-evidence{margin:0 8px 8px}
+  .zc4-result>header{flex-wrap:wrap}
+}
+
 @media(prefers-reduced-motion:reduce){.zc4 *,.zc4 *::before,.zc4 *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
