@@ -10,9 +10,9 @@ import "./gkx-case.css";
 export type GkxCaseProps = { project: Project; legacyView?: "story" | "systems" | "design-system" };
 
 type OverviewSection = {
-  id: string; title: string; lead: string;
-  body: string[]; systems: string[];
-  responsibilities: Array<{ title: string; text: string }>;
+  id: string; title: string;
+  summary: Array<{ key: string; title: string; text?: string }>;
+  scope: { portal: string; systems: Array<{ name: string }> };
 };
 
 type StrategySection = {
@@ -83,7 +83,7 @@ type ImageAsset = { src: string; alt: string; caption: string; width: number; he
 const assets = {
   portal: { src: `${assetRoot}/ui/portal-workspace.png`, alt: "智慧门户我的空间界面，包含资料目录与文档列表", caption: copy.captions["ui-portal"], width: 1400, height: 778 },
   reading: { src: `${assetRoot}/ui/portal-reading.png`, alt: "智慧门户智能阅读工作区，左侧目录、中间原文、右侧辅助信息", caption: copy.captions["ui-reading"], width: 1400, height: 778 },
-  maas: { src: `${assetRoot}/ui/maas-model-gallery.png`, alt: "MaaS 模型广场界面，展示模型筛选与模型卡片", caption: copy.captions["ui-maas"], width: 1400, height: 778 },
+  maas: { src: `${assetRoot}/ui/maas-model-gallery.png`, alt: "超大规模智算引擎内的 MaaS 模型广场界面，展示模型筛选与模型卡片", caption: copy.captions["ui-maas"], width: 1400, height: 778 },
   paperList: { src: `${assetRoot}/ui/paper-list.png`, alt: "情报管理论文管理界面，包含统一搜索、筛选与行操作", caption: copy.captions["ui-paper-list"], width: 1440, height: 800 },
   paperBefore: { src: `${assetRoot}/ui/paper-list-before.png`, alt: "情报管理论文管理调整前界面，编号与名称查询入口分开", caption: copy.captions["ui-paper-before"], width: 1440, height: 800 },
   paperDetail: { src: `${assetRoot}/ui/paper-detail-modal.png`, alt: "情报管理论文详情弹窗，背景保留当前列表上下文", caption: copy.captions["ui-paper-detail"], width: 1440, height: 800 },
@@ -274,14 +274,17 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
       <p className="gkx-disclosure">页面中的业务内容与数据已脱敏或重构，仅用于展示设计方法和交互方式。</p>
     </header>
 
-    <section className="gkx-chapter gkx-overview" aria-labelledby="gkx-overview-title">
-      <SectionHeading section={overviewCopy} titleId="gkx-overview-title" />
-      <div className="gkx-overview__body">
-        <div>{overviewCopy.body.map(paragraph => <p key={paragraph}>{paragraph}</p>)}</div>
-        <div className="gkx-responsibilities">{overviewCopy.responsibilities.map(item => <article key={item.title}><h3>{item.title}</h3><p>{item.text}</p></article>)}</div>
+    <section id="gkx-project-context" className="gkx-chapter gkx-overview" aria-labelledby="gkx-overview-title">
+      <header className="gkx-section-heading"><h2 id="gkx-overview-title">{overviewCopy.title}</h2></header>
+      <div className="gkx-context-layout">
+        <section className="gkx-scope-structure" aria-label="智慧门户系统内的四大主要业务系统">
+          <header className="gkx-scope-header"><h3 className="gkx-scope-portal">{overviewCopy.scope.portal}</h3><p className="gkx-scope-scale"><strong>1</strong> 个门户 · <strong>四大</strong>主要业务系统 · <strong>多个</strong>其他业务系统</p></header>
+          <ul className="gkx-scope-business">{overviewCopy.scope.systems.map(system => <li key={system.name}>{system.name}</li>)}</ul>
+        </section>
+        <dl className="gkx-context-roles">{overviewCopy.summary.filter(item => item.key !== "scope").map(item => <div key={item.key}>
+          <dt>{item.title}</dt><dd>{item.text?.split("，").map((phrase, index, phrases) => <span key={index}>{phrase}{index < phrases.length - 1 ? "，" : ""}</span>)}</dd>
+        </div>)}</dl>
       </div>
-      <div className="gkx-system-list" aria-label="项目系统范围"><strong>一个门户，五个业务系统</strong><ul>{overviewCopy.systems.map(system => <li key={system}>{system}</li>)}</ul></div>
-      <TrustMechanism />
     </section>
 
     <section id="gkx-business" className="gkx-chapter gkx-business" aria-labelledby="gkx-business-title">
@@ -299,10 +302,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
 
     <section id="nsp-rules" className="gkx-chapter gkx-rules" aria-labelledby="gkx-rules-title">
       <SectionHeading section={rulesCopy} titleId="gkx-rules-title" />
-      <article id="gkx-system" className="gkx-rule-intro">
-        <h3>规则需要解释行为，也需要对应交付依据</h3>
-        <dl><div><dt>页面中</dt><dd>对象、操作和反馈相互对应，用户知道当前状态与下一步。</dd></div><div><dt>交付中</dt><dd>需求条目、原型状态、修改对象和规范条款形成可继续核对的依据。</dd></div></dl>
-      </article>
+      <div id="gkx-system"><TrustMechanism /></div>
 
       <article id="gkx-rule-search" className="gkx-rule-module gkx-rule-search">
         <header><h3>{searchModule.title}</h3><p>{searchModule.problem}</p><p>{searchModule.decision}</p></header>

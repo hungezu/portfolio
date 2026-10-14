@@ -1,12 +1,12 @@
-.gkx-supplemental-materials{padding-top:32px;color:var(--gkx-ink,#202020)}
+.gkx-supplemental-materials{padding-top:var(--gkx-block-gap,48px);color:var(--gkx-ink,#202020)}
 .gkx-supplemental-materials__intro{max-width:72ch;margin-bottom:32px}
-.gkx-supplemental-materials__intro h3{font-size:24px;font-weight:550;line-height:1.5}
-.gkx-supplemental-materials .gkx-supplemental-materials__intro p{margin-top:12px;color:var(--gkx-muted,#5b5b5b);font-size:16px;line-height:1.8}
+.gkx-supplemental-materials__intro h3{font-size:var(--gkx-subheading-size,26px);font-weight:550;line-height:1.5;letter-spacing:-.02em}
+.gkx-supplemental-materials .gkx-supplemental-materials__intro p{margin-top:16px;color:var(--gkx-muted,#5b5b5b);font-size:16px;line-height:1.8}
 .gkx-supplemental-materials__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 32px;align-items:start}
 .gkx-supplemental-material{min-width:0}
 .gkx-supplemental-material h4{font-size:18px;font-weight:550;line-height:1.6}
 .gkx-supplemental-materials .gkx-supplemental-material>p{min-height:58px;margin-top:8px;color:var(--gkx-muted,#5b5b5b);font-size:16px;line-height:1.8}
-.gkx-case .gkx-supplemental-material__image{display:block;width:100%;margin-top:16px;padding:0;overflow:hidden;border:1px solid var(--gkx-line,#dedede);border-radius:10px;background:transparent;color:var(--gkx-ink,#202020);cursor:zoom-in;text-align:left}
+.gkx-case .gkx-supplemental-material__image{display:block;width:100%;margin-top:16px;padding:0;overflow:hidden;border:1px solid var(--gkx-line,#dedede);border-radius:var(--gkx-figure-radius,12px);background:transparent;color:var(--gkx-ink,#202020);cursor:zoom-in;text-align:left}
 .gkx-supplemental-material__image img{display:block;width:100%;height:auto}
 .gkx-supplemental-material__image>span{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-height:44px;padding:10px 14px;border-top:1px solid var(--gkx-line,#dedede);font-size:14px;line-height:1.5}
 .gkx-supplemental-material__image>span svg{flex:none}
