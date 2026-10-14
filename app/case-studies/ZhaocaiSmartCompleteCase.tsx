@@ -10,12 +10,11 @@ import ChevronDown from "lucide-react/dist/esm/icons/chevron-down.mjs";
 import CircleHelp from "lucide-react/dist/esm/icons/circle-help.mjs";
 import Clock3 from "lucide-react/dist/esm/icons/clock-3.mjs";
 import Database from "lucide-react/dist/esm/icons/database.mjs";
-import ExternalLink from "lucide-react/dist/esm/icons/external-link.mjs";
 import FileText from "lucide-react/dist/esm/icons/file-text.mjs";
 import LayoutDashboard from "lucide-react/dist/esm/icons/layout-dashboard.mjs";
 import LoaderCircle from "lucide-react/dist/esm/icons/loader-circle.mjs";
 import Pencil from "lucide-react/dist/esm/icons/pencil.mjs";
-import Play from "lucide-react/dist/esm/icons/play.mjs";
+import Search from "lucide-react/dist/esm/icons/search.mjs";
 import Plus from "lucide-react/dist/esm/icons/plus.mjs";
 import RotateCcw from "lucide-react/dist/esm/icons/rotate-ccw.mjs";
 import Save from "lucide-react/dist/esm/icons/save.mjs";
@@ -110,7 +109,7 @@ function ProfitChart({ compact = false }: { compact?: boolean }) {
       <figcaption><strong>季度净利润</strong><span>单位：亿元</span></figcaption>
       <div className="zc4-bars" aria-hidden="true">
         {profitData.map(item => (
-          <div key={item.quarter}><span>{item.value.toFixed(2)}</span><i style={{ height: `${(item.value / maxProfit) * 100}%` }} /><em>{item.quarter}</em></div>
+          <div className="zc4-chart-column" key={item.quarter}><div className="zc4-chart-plot"><div className="zc4-chart-bar" style={{ height: `${(item.value / maxProfit) * 100}%` }}><span className="zc4-chart-value">{item.value.toFixed(2)}</span></div></div><em>{item.quarter}</em></div>
         ))}
       </div>
       <table className="zc4-sr-only"><caption>演示数据：2024 年季度净利润，单位亿元</caption><thead><tr><th>季度</th><th>净利润</th></tr></thead><tbody>{profitData.map(item => <tr key={item.quarter}><td>{item.quarter}</td><td>{item.value.toFixed(2)}</td></tr>)}</tbody></table>
@@ -337,7 +336,6 @@ function RecoveryPreview({ onOpen }: { onOpen: (stage: RecoveryStage, edit?: boo
 }
 
 function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, setMetric, year, setYear, scope, setScope, phase, executionId, executionMode, setExecutionMode, beginExecution, runFromEntry }: DemoProps) {
-  const [metricNote, setMetricNote] = useState<Metric>("");
   const [supplementOpen, setSupplementOpen] = useState(false);
   const [supplement, setSupplement] = useState("");
   const [supplementReview, setSupplementReview] = useState(false);
@@ -352,12 +350,12 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
   const [viewedVersion, setViewedVersion] = useState(0);
   const pendingVersion = useRef<number | null>(null);
   const [savedSnapshot, setSavedSnapshot] = useState<{ name: string; year: string; scope: string; metric: string; executionId: number } | null>(null);
+  const previousTaskStage = useRef<DemoStage>("clarify");
   const evidenceButton = useRef<HTMLButtonElement>(null);
   const supplementInput = useRef<HTMLTextAreaElement>(null);
   const saveDialogRef = useDialogFocus<HTMLElement>(saveOpen, () => setSaveOpen(false));
   const tableDialogRef = useDialogFocus<HTMLElement>(tableOpen, () => setTableOpen(false));
   useEffect(() => {
-    setMetricNote("");
     setSupplementOpen(false);
     setSupplement("");
     setSupplementReview(false);
@@ -411,13 +409,23 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
     setStage("result");
     setEvidence(true);
   };
+  const openBoard = () => { if (stage !== "board") previousTaskStage.current = stage; setStage("board"); };
   const closeEvidence = () => { setEvidence(false); requestAnimationFrame(() => evidenceButton.current?.focus()); };
 
   return (
     <div className="zc4-product">
+      <aside className="zc4-product-nav" aria-label="招财 Smart 工作区">
+        <strong className="zc4-product-brand"><span className="zc4-assistant-avatar"><Sparkles aria-hidden="true" size={18}/></span>招财 Smart</strong>
+        <nav aria-label="工作区视图">
+          <button type="button" className={stage !== "board" ? "active" : ""} aria-pressed={stage !== "board"} onClick={() => { if (stage === "board") setStage(previousTaskStage.current === "running" ? "stopped" : previousTaskStage.current); }}><Search aria-hidden="true" size={17}/>智能问数</button>
+          <button type="button" className="new" onClick={() => { setEvidence(false); setShowProcess(false); setSupplementOpen(false); setSupplement(""); setSupplementReview(false); setConditionEdit(false); setView("chart"); setQuery(""); setMetric(""); setYear(""); setScope(""); setStage("entry"); }}><Plus aria-hidden="true" size={17}/>新建查询</button>
+          <button type="button" className={stage === "board" ? "active" : ""} aria-pressed={stage === "board"} onClick={openBoard}><LayoutDashboard aria-hidden="true" size={17}/>我的看板</button>
+        </nav>
+        <div className="zc4-product-nav-context"><span>当前统计范围</span><strong>{year ? `${year} 年` : "时间待确认"}</strong><p>{scope || "组织待确认"}</p><span>经营数据 · 脱敏演示</span></div>
+      </aside>
       <div className="zc4-product-main">
-        <header className="zc4-topbar"><div><span>智能问数</span><i>/</i><strong>集团年度利润分析</strong></div></header>
-        {stage==="entry" ? <section className="zc4-entry"><div className="brand"><Sparkles size={20}/>招财 Smart</div><h3>想了解哪些经营数据？</h3><p>请尽量包含时间、组织范围和分析指标。</p><label>输入问题<textarea aria-label="输入问题" name="finance-question" autoComplete="off" value={query} onChange={event=>setQuery(event.target.value)} placeholder="例如：查看 2024 年全集团利润变化…"/></label><button className="zc4-primary" type="button" onClick={runFromEntry}><Play size={16}/>发起查询</button></section>:null}
+        <header className="zc4-topbar"><div><span>智能问数</span><i>/</i><strong>{stage === "board" ? "我的看板" : "集团年度利润分析"}</strong></div><span className={`zc4-topbar-status is-${stage}`}>{stage === "running" ? "查询中" : stage === "result" ? "已完成" : stage === "clarify" ? "待确认" : stage === "stopped" ? "已停止" : stage === "timeout" ? "待重试" : stage === "empty" ? "无匹配数据" : stage === "board" ? "结果复用" : "新建任务"}</span></header>
+        {stage==="entry" ? <section className="zc4-entry"><div className="brand"><Sparkles size={20}/>招财 Smart</div><h3>想了解哪些经营数据？</h3><p>请尽量包含时间、组织范围和分析指标。</p><label>输入问题<textarea aria-label="输入问题" name="finance-question" autoComplete="off" value={query} onChange={event=>setQuery(event.target.value)} placeholder="例如：查看 2024 年全集团利润变化…"/></label><button className="zc4-primary" type="button" disabled={!query.trim()} onClick={runFromEntry}><Search aria-hidden="true" size={16}/>发起查询</button></section>:null}
         {stage === "clarify" ? (
           <section className="zc4-clarify">
             <div className="main">
@@ -429,12 +437,9 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
                 <legend className="zc4-sr-only">选择利润口径</legend>
                 {(["营业利润", "利润总额", "净利润"] as Metric[]).map((option, index) => {
                   const inputId = `zc4-metric-${index}`;
-                  const noteId = `zc4-metric-note-${index}`;
                   return (
                     <div className={`zc4-metric-option${metric === option ? " active" : ""}`} key={option}>
-                      <label htmlFor={inputId}><input id={inputId} type="radio" name="metric" value={option} checked={metric === option} aria-describedby={metricNote === option ? noteId : undefined} onChange={() => setMetric(option)}/><span>{option}</span></label>
-                      <button type="button" aria-expanded={metricNote === option} aria-controls={metricNote === option ? noteId : undefined} onClick={() => setMetricNote(metricNote === option ? "" : option)}>口径说明<ArrowUpRight size={13}/></button>
-                      {metricNote === option ? <small id={noteId}>演示说明：具体定义以企业指标字典为准。</small> : null}
+                      <label htmlFor={inputId}><input id={inputId} type="radio" name="metric" value={option} checked={metric === option} onChange={() => setMetric(option)}/><span>{option}</span>{metric === option ? <Check aria-hidden="true" size={16}/> : null}</label>
                     </div>
                   );
                 })}
@@ -451,7 +456,7 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
             <aside className="conditions"><h4>已识别条件</h4><ConditionFields year={year} scope={scope} metric={metric} supplement={supplement}/><button type="button" aria-expanded={conditionEdit} onClick={() => setConditionEdit(!conditionEdit)}><Pencil size={15}/>{conditionEdit ? "收起条件编辑" : "修改已识别条件"}</button>{conditionEdit ? <div className="editor"><label>统计时间<select aria-label="统计时间" value={year} onChange={event => setYear(event.target.value)}><option value="">选择统计时间</option>{["2023", "2024", "2025"].map(value => <option key={value} value={value}>{value} 年</option>)}</select></label><label>组织范围<select aria-label="组织范围" value={scope} onChange={event => setScope(event.target.value)}><option value="">选择组织范围</option>{["全集团", "华南分公司", "华东分公司", "华北分公司"].map(value => <option key={value}>{value}</option>)}</select></label><button type="button" onClick={() => { setConditionEdit(false); setQuery(`查看 ${year ? `${year} 年` : "待确认时间"} ${scope || "待确认组织"}利润变化`); }}>应用条件</button></div> : null}<div className="source"><Database size={15}/><span>查询数据<strong>集团经营指标表（示例）</strong></span></div></aside>
           </section>
         ) : null}
-        {stage==="running" ? <section className="zc4-running" aria-live="polite"><header><div><span>{executionMode === "slow-demo" ? "模拟已等待超过 10 秒" : "正在查询数据"}</span><h3>{year} 年{scope}净利润分析</h3><p>已保留本次查询条件。</p></div><LoaderCircle className="spin" size={28}/></header><div className="zc4-condition-chips"><span>{year} 年</span><span>{scope}</span><span>净利润 · 用户已确认</span></div><ExecutionStages phase={phase} animated/><footer><p>{executionMode === "slow-demo" ? "点击继续查看结果，或停止本次查询。" : "查询仍在进行，你可以继续等待或停止本次查询。"}</p><div>{executionMode === "slow-demo" ? <button className="zc4-primary" type="button" onClick={()=>{setExecutionMode("normal");setStage("result")}}>继续查看结果</button> : null}<button type="button" onClick={()=>setStage("stopped")}><Square size={14}/>停止查询</button></div></footer></section>:null}
+        {stage==="running" ? <section className="zc4-running" aria-live="polite"><div className="zc4-task-question"><span>你的问题</span><p>{query}</p></div><header><div className="zc4-running-identity"><span className="zc4-assistant-avatar"><Sparkles aria-hidden="true" size={18}/></span><div><span className="zc4-running-status">{executionMode === "slow-demo" ? "慢查询演示 · 模拟等待" : "正在查询数据"}</span><h3>{year} 年{scope}净利润分析</h3><p>已确认统计条件，正在处理第 {phase + 1} / 3 个阶段。</p></div></div></header><div className="zc4-condition-chips"><span>{year} 年</span><span>{scope}</span><span>净利润 · 用户已确认</span></div><ExecutionStages phase={phase} animated/><footer><p>{executionMode === "slow-demo" ? "点击继续查看结果，或停止本次查询。" : "查询仍在进行，你可以继续等待或停止本次查询。"}</p><div>{executionMode === "slow-demo" ? <button className="zc4-primary" type="button" onClick={()=>{setExecutionMode("normal");setStage("result")}}>继续查看结果</button> : null}<button type="button" onClick={()=>setStage("stopped")}><Square size={14}/>停止查询</button></div></footer></section>:null}
         {stage === "result" ? (
           <div className={`zc4-result-layout${evidence ? " with-evidence" : ""}`}>
             <section className="zc4-result">
@@ -467,13 +472,13 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
                 <div>{view === "chart" ? <ProfitChart/> : <DataTable/>}</div>
                 <footer><span><FileText size={15}/>集团经营指标表（示例）</span><button ref={evidenceButton} type="button" onClick={()=>setEvidence(true)}>查看口径与数据依据<ArrowUpRight size={14}/></button></footer>
               </article>
-              {savedSnapshot?<div className="zc4-saved-note"><Check size={16}/>已保存到“集团经营分析”<button type="button" onClick={()=>setStage("board")}>查看看板</button></div>:null}
+              {savedSnapshot?<div className="zc4-saved-note"><Check size={16}/>已保存到“集团经营分析”<button type="button" onClick={openBoard}>查看看板</button></div>:null}
             </section>
-            {evidence?<aside className="zc4-evidence" aria-label="本次查询依据"><header><h3>本次查询依据</h3><button type="button" aria-label="关闭查询依据" onClick={closeEvidence}><X size={18}/></button></header><label>执行版本<select aria-label="执行版本" value={displayedVersion} onChange={event => setViewedVersion(Number(event.target.value))}>{versions.length ? versions.map(version => <option key={version.id} value={version.id}>第 {version.id} 次执行 · 已完成</option>) : <option value={displayedVersion}>第 {displayedVersion} 次执行 · 已完成</option>}</select></label><QuerySourceFields/><button type="button" onClick={()=>setTableOpen(true)}><Table2 size={15}/>查看本次原始表格<ExternalLink size={13}/></button><p>完成版本保留查询快照；修改条件后重新执行。本例的可查询范围为 2024 年全集团净利润。</p></aside>:null}
+            {evidence?<aside className="zc4-evidence" aria-label="本次查询依据"><header><h3>本次查询依据</h3><button type="button" aria-label="关闭查询依据" onClick={closeEvidence}><X size={18}/></button></header><label>执行版本<select aria-label="执行版本" value={displayedVersion} onChange={event => setViewedVersion(Number(event.target.value))}>{versions.length ? versions.map(version => <option key={version.id} value={version.id}>第 {version.id} 次执行 · 已完成</option>) : <option value={displayedVersion}>第 {displayedVersion} 次执行 · 已完成</option>}</select></label><QuerySourceFields/><button type="button" onClick={()=>setTableOpen(true)}><Table2 aria-hidden="true" size={16}/>查看本次原始表格</button><p>完成版本保留查询快照；修改条件后重新执行。本例的可查询范围为 2024 年全集团净利润。</p></aside>:null}
           </div>
         ) : null}
         {(["timeout", "empty", "stopped"] as DemoStage[]).includes(stage) ? <ExceptionState stage={stage as RecoveryStage} query={query} year={year} scope={scope} metric={metric} phase={phase} supplement={supplement} onPrimary={stage === "empty" ? useSupportedExample : () => beginExecution(true)} onEdit={() => setStage("entry")}/> : null}
-        {stage==="board"?<section className="zc4-board"><header><div><LayoutDashboard size={20}/><h3>我的看板</h3></div><button type="button" onClick={()=>setStage("result")}>返回原任务</button></header>{savedSnapshot?<><div className="success"><Check size={16}/>已保存到「集团经营分析」</div><article><div><h4>{savedSnapshot.name}</h4><p>{savedSnapshot.year} 年 / {savedSnapshot.scope} / {savedSnapshot.metric}</p><span><Database size={14}/>集团经营指标表（示例）</span></div><button type="button" onClick={openSavedAnalysis}>打开分析<ArrowUpRight size={14}/></button></article></>:<div className="empty"><LayoutDashboard size={28}/><h4>还没有保存的分析</h4><p>在结果页保存后，结果与查询上下文会一起保留。</p></div>}</section>:null}
+        {stage==="board"?<section className="zc4-board"><header><div><LayoutDashboard size={20}/><h3>我的看板</h3></div><button type="button" onClick={()=>setStage(previousTaskStage.current === "running" ? "stopped" : previousTaskStage.current)}>返回原任务</button></header>{savedSnapshot?<><div className="success"><Check size={16}/>已保存到「集团经营分析」</div><article><div><h4>{savedSnapshot.name}</h4><p>{savedSnapshot.year} 年 / {savedSnapshot.scope} / {savedSnapshot.metric}</p><span><Database size={14}/>集团经营指标表（示例）</span></div><button type="button" onClick={openSavedAnalysis}>打开分析<ArrowUpRight size={14}/></button></article></>:<div className="empty"><LayoutDashboard size={28}/><h4>还没有保存的分析</h4><p>在结果页保存后，结果与查询上下文会一起保留。</p></div>}</section>:null}
       </div>
       {saveOpen?<div className="zc4-dialog-backdrop"><section ref={saveDialogRef} className="zc4-dialog" role="dialog" aria-modal="true" aria-labelledby="save-title" aria-describedby="save-description"><header><h3 id="save-title">保存到看板</h3><button type="button" aria-label="关闭保存对话框" onClick={()=>setSaveOpen(false)}><X size={18}/></button></header><label>结果名称<input name="result-name" autoComplete="off" value={saveName} onChange={e=>setSaveName(e.target.value)}/></label><label>选择看板<select aria-label="选择看板" name="target-board" autoComplete="off"><option>集团经营分析（示例）</option></select></label><p id="save-description">同时保存本次结果、查询条件与数据来源。</p><footer><button type="button" onClick={()=>setSaveOpen(false)}>取消</button><button className="zc4-primary" type="button" disabled={!saveName.trim()} onClick={()=>{setSavedSnapshot({ name: saveName.trim(), year, scope, metric: "净利润", executionId: displayedVersion });setSaveOpen(false)}}>保存</button></footer></section></div>:null}
       {tableOpen?<div className="zc4-dialog-backdrop"><section ref={tableDialogRef} className="zc4-dialog table" role="dialog" aria-modal="true" aria-labelledby="table-title"><header><div><span>第 {displayedVersion} 次执行 · 示例数据</span><h3 id="table-title">集团经营指标表</h3></div><button type="button" aria-label="关闭原始表格" onClick={()=>setTableOpen(false)}><X size={18}/></button></header><DataTable/><p>图表、合计与查询快照使用同一份返回数据。</p></section></div>:null}
@@ -504,13 +509,13 @@ function DecisionEvidence({ kind }: { kind: "clarify" | "running" | "result" }) 
           <div className="zc4-evidence-clarify"><section>
             <div className="zc4-evidence-brand"><Sparkles size={19}/>招财 Smart</div>
             <h4>你想查看哪一种利润？</h4><p>“利润”可能对应多个指标，请选择本次统计口径。</p>
-            <ul>{["营业利润", "利润总额", "净利润"].map(label => <li key={label}><i/><span>{label}</span><em>口径说明</em></li>)}</ul>
+            <ul>{["营业利润", "利润总额", "净利润"].map(label => <li key={label}><i/><span>{label}</span></li>)}</ul>
             <p className="zc4-evidence-supplement">都不是，补充说明</p>
             <p>原问题、时间和组织会持续保留，只补充本次指标口径。</p>
             <span className="zc4-evidence-action">选择口径后继续</span>
           </section><aside><h4>已识别条件</h4><ConditionFields year="2024" scope="全集团"/><p className="zc4-evidence-source"><Database size={15}/>集团经营指标表（示例）</p></aside></div>
         </> : kind === "running" ? <section className="zc4-evidence-progress">
-          <span>模拟已等待超过 10 秒</span><h4>2024 年全集团净利润分析</h4><p>已保留本次查询条件。</p>
+          <div className="zc4-evidence-brand"><span className="zc4-assistant-avatar"><Sparkles aria-hidden="true" size={16}/></span>招财 Smart</div><span>查询中 · 查询数据</span><h4>2024 年全集团净利润分析</h4><p>已确认统计条件，正在处理第 2 / 3 个阶段。</p>
           <div className="zc4-condition-chips"><span>2024 年</span><span>全集团</span><span>净利润 · 用户已确认</span></div>
           <ExecutionStages phase={1}/>
           <footer><p>点击继续查看结果，或停止本次查询。</p><div><span className="zc4-evidence-action">继续查看结果</span><span><Square size={14}/>停止查询</span></div></footer>
