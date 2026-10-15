@@ -22,7 +22,7 @@
 .gkx-hero{padding-top:16px}
 .gkx-hero__copy{max-width:1100px}
 .gkx-hero h1{max-width:19em;font-size:clamp(40px,4.7vw,60px);font-weight:550;line-height:1.24;letter-spacing:-.03em;view-transition-name:var(--project-title-transition)}
-.gkx-hero__accent{color:#165dff}
+.gkx-hero__accent{color:#165dff;white-space:nowrap}
 @media(min-width:1121px){
   .gkx-case .gkx-hero__copy,.gkx-case .gkx-hero h1,.gkx-case .gkx-hero__subtitle{max-width:none}
   .gkx-case .gkx-hero h1,.gkx-case .gkx-hero__subtitle{white-space:nowrap}
