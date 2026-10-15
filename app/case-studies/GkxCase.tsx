@@ -14,8 +14,8 @@ export type GkxCaseProps = { project: Project; legacyView?: "story" | "systems" 
 
 type OverviewSection = {
   id: string; title: string; lead: string;
-  challenges: Array<{ title: string; text: string }>;
-  summary: Array<{ key: string; title: string; text?: string }>;
+  projectScale: { amount: string; unit: string; label: string; sourceLabel: string; sourceUrl: string };
+  goals: Array<{ label: string; title: string; text: string }>;
   scope: { portal: string; systems: Array<{ name: string }> };
 };
 
@@ -86,6 +86,7 @@ const assetRoot = "/assets/projects/gkx/case-study";
 type ImageAsset = { src: string; alt: string; caption: string; width: number; height: number };
 
 const assets = {
+  projectScope: { src: `${assetRoot}/ui/project-scope-map.webp`, alt: "智慧门户系统作为统一业务入口，连接新型高端智库、科技情报挖掘平台、情报管理系统、超大规模智算引擎及其他业务系统；四大主要业务系统与其他业务系统均由门户连接", caption: "项目范围 · 门户与主要业务系统的关系", width: 1817, height: 866 },
   aiWorkflow: { src: `${assetRoot}/ui/ai-human-workflow-codex.png`, alt: "AI 生成与探索、人工判断与决策通过持续验证形成双环协作，连接业务上下文、结构化设计输入、设计约束与资产沉淀", caption: "AI 与人工协作工作流", width: 1862, height: 845 },
   portal: { src: `${assetRoot}/ui/portal-workspace.png`, alt: "智慧门户我的空间界面，包含资料目录与文档列表", caption: copy.captions["ui-portal"], width: 1400, height: 778 },
   reading: { src: `${assetRoot}/ui/portal-reading.png`, alt: "智慧门户智能阅读工作区，左侧目录、中间原文、右侧辅助信息", caption: copy.captions["ui-reading"], width: 1400, height: 778 },
@@ -106,14 +107,15 @@ const figureById: Record<string, ImageAsset> = {
   "ui-think-tank": assets.thinkTank,
 };
 
-function ProjectFigure({ asset, onOpen, className = "", priority = false }: {
+function ProjectFigure({ asset, onOpen, className = "", priority = false, description }: {
   asset: ImageAsset;
   onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void;
   className?: string;
   priority?: boolean;
+  description?: string;
 }) {
   return <figure className={`gkx-project-figure ${className}`.trim()}>
-    <button type="button" className="gkx-image-button" aria-label={`放大查看：${asset.caption}`} onClick={event => onOpen(asset, event.currentTarget)}>
+    <button type="button" className="gkx-image-button" aria-label={`放大查看：${asset.caption}`} aria-description={description} onClick={event => onOpen(asset, event.currentTarget)}>
       <img src={publicAsset(asset.src)} alt={asset.alt} width={asset.width} height={asset.height} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />
       <span aria-hidden="true">放大查看</span>
     </button>
@@ -352,16 +354,23 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
     </header>
 
     <section id="gkx-project-context" className="gkx-chapter gkx-overview" aria-labelledby="gkx-overview-title">
-      <SectionHeading section={overviewCopy} titleId="gkx-overview-title" number="01" label="范围与挑战" />
-      <div className="gkx-context-layout">
-        <section className="gkx-scope-structure" aria-label="智慧门户系统内的四大主要业务系统">
-          <header className="gkx-scope-header"><h3 className="gkx-scope-portal">{overviewCopy.scope.portal}</h3><p className="gkx-scope-scale"><strong>1</strong> 个门户 · <strong>四大</strong>主要业务系统 · <strong>多个</strong>其他业务系统</p></header>
-          <ul className="gkx-scope-business">{overviewCopy.scope.systems.map(system => <li key={system.name}>{system.name}</li>)}</ul>
-        </section>
-        <dl className="gkx-context-roles">{overviewCopy.challenges?.map(item => <div key={item.title}>
-          <dt>{item.title}</dt><dd>{item.text}</dd>
-        </div>)}</dl>
+      <div className="gkx-context-intro">
+        <SectionHeading section={overviewCopy} titleId="gkx-overview-title" number="01" label="范围与目标" />
+        <aside className="gkx-project-scale" aria-label="整体项目建设规模">
+          <p className="gkx-project-scale__label">{overviewCopy.projectScale.label}</p>
+          <p className="gkx-project-scale__value"><strong>{overviewCopy.projectScale.amount}</strong><span>{overviewCopy.projectScale.unit}</span></p>
+          <a href={overviewCopy.projectScale.sourceUrl} target="_blank" rel="noopener noreferrer" aria-label={`${overviewCopy.projectScale.sourceLabel}，查看整体项目合同，新窗口打开`}>{overviewCopy.projectScale.sourceLabel}<IconArrowRight aria-hidden="true" /></a>
+        </aside>
       </div>
+      <ProjectFigure asset={assets.projectScope} onOpen={openImage} className="gkx-scope-figure" description={assets.projectScope.alt} />
+      <div className="gkx-scope-mobile" aria-label="图示文字说明">
+        <p>{overviewCopy.scope.portal}连接的四大主要业务系统</p>
+        <ul>{overviewCopy.scope.systems.map(system => <li key={system.name}>{system.name}</li>)}</ul>
+        <p>同时连接其他业务系统。</p>
+      </div>
+      <div className="gkx-context-goals" aria-label="两项设计目标">{overviewCopy.goals.map(goal => <article key={goal.title}>
+        <p className="gkx-context-goal-label">{goal.label}</p><h3>{goal.title}</h3><p>{goal.text}</p>
+      </article>)}</div>
     </section>
 
     <section id="gkx-systems" className="gkx-chapter gkx-strategy" aria-labelledby="gkx-strategy-title">
