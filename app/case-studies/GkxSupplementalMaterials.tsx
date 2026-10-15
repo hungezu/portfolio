@@ -126,7 +126,11 @@ function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen
   );
 }
 
-export function GkxSupplementalMaterials({ onOpen }: { onOpen: OpenMaterial }) {
+export function GkxSupplementalMaterials({ onOpen, compact = false }: { onOpen: OpenMaterial; compact?: boolean }) {
+  if (compact) return <details id="gkx-materials" className="gkx-supplemental-materials gkx-supplemental-materials__disclosure is-compact">
+    <summary>更多业务图稿：流程建模、专题服务与内容管理</summary>
+    <MaterialGrid items={materials.filter(material => material.title !== "高端智库首页")} onOpen={onOpen} />
+  </details>;
   return (
     <section className="gkx-supplemental-materials" aria-labelledby="gkx-supplemental-title">
       <header className="gkx-supplemental-materials__intro">

@@ -14,6 +14,7 @@
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start"
   },
   "dependencies": {
+    "@arco-design/web-react": "^2.66.18",
     "@types/d3-force": "^3.0.10",
     "d3-force": "^3.0.0",
     "lucide-react": "^1.26.0",

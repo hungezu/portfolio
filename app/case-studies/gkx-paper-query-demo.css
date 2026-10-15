@@ -1,0 +1,54 @@
+@import "@arco-design/web-react/dist/css/arco.css" layer(gkx-arco);
+
+.gkx-paper-demo {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  color: var(--color-text-1, #1d2129);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: left;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --primary-6: 22, 93, 255;
+  --border-radius-small: 4px;
+}
+.gkx-paper-demo .gkx-paper-demo__panel { border-color: #e5e8ee; border-radius: 12px; background: #fff; }
+.gkx-paper-demo .gkx-paper-demo__panel > .arco-card-body { padding: 24px; }
+.gkx-paper-demo .gkx-paper-demo__controlbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 24px; padding-bottom: 18px; margin-bottom: 20px; border-bottom: 1px solid #f0f1f3; color: #62646b; font-size: 12px; }
+.gkx-paper-demo .gkx-paper-demo__sample { margin-right: auto; }
+.gkx-paper-demo .gkx-paper-demo__reuse { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.gkx-paper-demo .gkx-paper-demo__workspace { min-width: 0; }
+.gkx-paper-demo .gkx-paper-demo__workarea { min-width: 0; }
+.gkx-paper-demo .gkx-paper-demo__form { display: flex; align-items: center; flex-wrap: wrap; gap: 16px 24px; margin-bottom: 16px; }
+.gkx-paper-demo .gkx-paper-demo__field { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.gkx-paper-demo .gkx-paper-demo__field > label { flex: 0 0 auto; white-space: nowrap; }
+.gkx-paper-demo__form .arco-input,
+.gkx-paper-demo__form .arco-select-view { height: 32px; border: 1px solid #dcdfe6; border-radius: 4px; background: #fff; }
+.gkx-paper-demo__form .arco-input:hover,
+.gkx-paper-demo__form .arco-select:hover .arco-select-view { border-color: #c0c4cc; background: #fff; }
+.gkx-paper-demo__form .arco-input:focus,
+.gkx-paper-demo__form .arco-select-focused .arco-select-view { border-color: #165dff; background: #fff; }
+.gkx-paper-demo .gkx-paper-demo__toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; }
+.gkx-paper-demo .gkx-paper-demo__toolbar > span { color: var(--color-text-3); font-size: 12px; }
+.gkx-paper-demo .gkx-paper-demo__table-space { min-width: 0; }
+.gkx-paper-demo__table-hint { display: none; }
+.gkx-paper-demo .gkx-paper-demo__pagination { display: flex; justify-content: flex-end; margin-top: 16px; }
+.gkx-paper-demo .gkx-paper-demo__feedback { min-height: 20px; margin: 12px 0 0; color: #62646b; font-size: 12px; line-height: 1.6; }
+.gkx-paper-demo .gkx-paper-demo__dialog-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+.gkx-paper-demo .gkx-paper-demo__import-preview { margin-top: 20px; }
+@media (max-width: 680px) {
+  .gkx-paper-demo .gkx-paper-demo__panel > .arco-card-body { padding: 16px; }
+  .gkx-paper-demo .gkx-paper-demo__form { gap: 12px; }
+  .gkx-paper-demo .gkx-paper-demo__field { --gkx-query-width: 100%; display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 8px; width: 100%; }
+  .gkx-paper-demo__field > .arco-input,
+  .gkx-paper-demo__field > .arco-select { max-width: 100%; min-width: 0; }
+  .gkx-paper-demo__form .arco-input { height: 40px; font-size: 16px; }
+  .gkx-paper-demo__form .arco-select-view { height: 40px; line-height: 38px; }
+  .gkx-paper-demo__form .arco-btn { height: 40px; min-width: 72px; }
+  .gkx-paper-demo__table-hint { display: block; margin: 0 0 8px !important; color: #62646b; font-size: 12px; }
+  .gkx-paper-demo__table-space .arco-table-content-inner { overscroll-behavior-x: contain; }
+  .gkx-paper-demo__pagination .arco-pagination { display: grid; grid-template-columns: 1fr auto; gap: 12px 8px; width: 100%; height: auto; }
+  .gkx-paper-demo__pagination .arco-pagination-total-text { align-self: center; margin: 0; white-space: nowrap; }
+  .gkx-paper-demo__pagination .arco-pagination-list { justify-self: end; }
+  .gkx-paper-demo__pagination .arco-pagination-option { grid-column: 1 / -1; justify-self: end; margin: 0; }
+}

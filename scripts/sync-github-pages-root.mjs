@@ -16,17 +16,19 @@ const isBuiltAsset = (name) => /^index-.*\.(?:css|js)$/.test(name);
 
 await mkdir(rootAssetsDirectory, { recursive: true });
 
-for (const name of await readdir(rootAssetsDirectory)) {
-  if (isBuiltAsset(name)) {
-    await rm(resolve(rootAssetsDirectory, name));
+for (const entry of await readdir(rootAssetsDirectory, { withFileTypes: true })) {
+  if (entry.isFile() && isBuiltAsset(entry.name)) {
+    await rm(resolve(rootAssetsDirectory, entry.name));
   }
 }
 
-for (const name of await readdir(outputAssetsDirectory)) {
-  if (isBuiltAsset(name)) {
+// CSS imports can emit images and fonts beside the entry bundles. Preserve
+// source asset directories and sync every top-level output file.
+for (const entry of await readdir(outputAssetsDirectory, { withFileTypes: true })) {
+  if (entry.isFile()) {
     await copyFile(
-      resolve(outputAssetsDirectory, name),
-      resolve(rootAssetsDirectory, name),
+      resolve(outputAssetsDirectory, entry.name),
+      resolve(rootAssetsDirectory, entry.name),
     );
   }
 }

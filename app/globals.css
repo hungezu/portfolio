@@ -315,8 +315,8 @@ body.menu-is-open {
   overflow: hidden;
 }
 
-button,
-a {
+button:where(:not([class*="arco-"])),
+a:where(:not([class*="arco-"])) {
   color: inherit;
   font: inherit;
 }
@@ -325,7 +325,7 @@ a {
   text-decoration: none;
 }
 
-button {
+button:where(:not([class*="arco-"])) {
   border: 0;
 }
 
@@ -334,8 +334,8 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-button:focus-visible,
-a:focus-visible {
+button:where(:not([class*="arco-"])):focus-visible,
+a:where(:not([class*="arco-"])):focus-visible {
   outline: 2px solid #111;
   outline-offset: 3px;
 }
