@@ -86,6 +86,9 @@ const assetRoot = "/assets/projects/gkx/case-study";
 type ImageAsset = { src: string; alt: string; caption: string; width: number; height: number };
 
 const assets = {
+  designSystemArchitecture: { src: `${assetRoot}/reference/wang-p22-design-system-architecture.jpg`, alt: "设计体系全局架构图，展示从基础语言、组件资产、业务范式到协作交付的层级，以及规则到应用的映射关系", caption: "规范体系 · 从基础规则到协作交付", width: 4000, height: 2160 },
+  designSystemPageTypes: { src: `${assetRoot}/reference/wang-p30-page-types.jpg`, alt: "页面信息架构与页面类型图，展示标题栏、内容区、底部栏的组成，以及列表、详情、表单、仪表盘、模态和状态提示页", caption: "页面类型 · 从信息结构到页面骨架", width: 4000, height: 2160 },
+  outcomeWorkflow: { src: `${assetRoot}/reference/wang-p50-validation-loop.jpg`, alt: "传统设计协作与 AI 驱动设计验证路径的对照，展示业务理解、结构化输入、方案探索、原型验证、设计收敛、研发交付与持续迭代", caption: "方法复盘 · 从经验沉淀到可复用工作流", width: 4000, height: 2160 },
   projectScope: { src: `${assetRoot}/ui/project-scope-map.webp`, alt: "智慧门户系统作为统一业务入口，连接新型高端智库、科技情报挖掘平台、情报管理系统、超大规模智算引擎及其他业务系统；四大主要业务系统与其他业务系统均由门户连接", caption: "项目范围 · 门户与主要业务系统的关系", width: 1817, height: 866 },
   aiWorkflow: { src: `${assetRoot}/ui/ai-human-workflow-codex.png`, alt: "AI 生成与探索、人工判断与决策通过持续验证形成双环协作，连接业务上下文、结构化设计输入、设计约束与资产沉淀", caption: "AI 与人工协作工作流", width: 1862, height: 845 },
   portal: { src: `${assetRoot}/ui/portal-workspace.png`, alt: "智慧门户我的空间界面，包含资料目录与文档列表", caption: copy.captions["ui-portal"], width: 1400, height: 778 },
@@ -420,6 +423,10 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
 
     <section id="gkx-design-system" className="gkx-chapter gkx-design-system" aria-labelledby="gkx-design-system-title" tabIndex={-1}>
       <SectionHeading section={{ title: "让共用规则进入页面，也进入交付", lead: "将页面类型、组件和状态说明整理为设计规范，供合作方与研发查阅；审核时再对应到具体需求、页面和操作。" }} titleId="gkx-design-system-title" number="05" label="规范与交付" />
+      <div className="gkx-delivery-visuals">
+        <ProjectFigure asset={assets.designSystemArchitecture} onOpen={openImage} />
+        <ProjectFigure asset={assets.designSystemPageTypes} onOpen={openImage} />
+      </div>
       <article id="gkx-collaboration" className="gkx-workbench-block"><header><h3>{rulesCopy.workbench.title}</h3><div>{rulesCopy.workbench.text}</div><small>{rulesCopy.workbench.interactionHint}</small></header><div className="gkx-md-interactive"><iframe src={publicAsset("/assets/projects/gkx/design-preview/index.html?id=page-index&embed=1")} title="深圳国际科技信息中心可交互设计规范" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms"/></div></article>
       <article id="gkx-supplier" className="gkx-delivery-review" aria-labelledby="gkx-supplier-title">
         <header><h3 id="gkx-supplier-title">{supplierCopy.title}</h3><p>{supplierCopy.lead}</p></header>
@@ -431,6 +438,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
     <section id="gkx-outcomes" className="gkx-chapter gkx-outcomes" aria-labelledby="gkx-outcomes-title">
       <SectionHeading section={outcomesCopy} titleId="gkx-outcomes-title" number="06" label="成果复盘" />
       <div className="gkx-outcome-ledger">{outcomesCopy.outcomes.map((outcome, index) => <article key={outcome.title}><h3>{outcome.title}</h3><div><p>{outcome.text}</p><a className="gkx-section-reference" href={["#gkx-systems", "#gkx-collaboration", "#nsp-prototype"][index]}>{["查看界面成果", "查看规范预览", "查看门户实践"][index]}</a></div></article>)}</div>
+      <ProjectFigure asset={assets.outcomeWorkflow} onOpen={openImage} className="gkx-outcome-workflow" />
       <div className="gkx-reflection"><h3>项目复盘</h3><ol>{outcomesCopy.reflections.map(item => <li key={item.number}><strong>{item.title}</strong><p>{item.text}</p></li>)}</ol></div>
     </section>
 

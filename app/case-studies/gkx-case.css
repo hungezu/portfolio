@@ -200,6 +200,7 @@
 .gkx-traceability li strong{display:block;font-size:18px;font-weight:550}
 .gkx-traceability li span{display:block;margin-top:8px;font-size:14px;color:var(--gkx-muted)}
 .gkx-traceability>p{max-width:72ch;margin-top:20px;color:var(--gkx-muted)}
+.gkx-delivery-visuals{display:grid;gap:32px;margin-bottom:var(--gkx-block-gap)}
 .gkx-audit-table{overflow-x:auto;scrollbar-color:#a8a8a8 #ededed}
 .gkx-audit-table table{width:100%;border-collapse:collapse;text-align:left;font-size:16px}
 .gkx-audit-table caption{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
@@ -216,6 +217,7 @@
 .gkx-outcome-ledger article{display:grid;grid-template-columns:280px minmax(0,1fr);gap:48px;padding:24px 0;border-bottom:1px solid var(--gkx-line)}
 .gkx-outcome-ledger h3{font-size:22px;font-weight:550}
 .gkx-outcome-ledger p{max-width:68ch;color:var(--gkx-muted);font-size:16px}
+.gkx-outcomes .gkx-outcome-workflow{margin-top:var(--gkx-block-gap)}
 .gkx-reflection{display:grid;grid-template-columns:240px minmax(0,1fr);gap:48px;margin-top:var(--gkx-block-gap);padding:var(--gkx-panel-padding);border-radius:var(--gkx-panel-radius);background:#ededed}
 .gkx-reflection h3{font-size:var(--gkx-subheading-size);font-weight:550;line-height:1.5;letter-spacing:-.02em}
 .gkx-reflection ol{display:grid;gap:24px;padding:0;list-style:none}
