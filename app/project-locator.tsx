@@ -8,6 +8,7 @@ type ProjectLocatorProps = {
   sections: readonly ProjectLocatorSection[];
   ariaLabel?: string;
   legacyAnchors?: Readonly<Record<string, string>>;
+  onNavigate?: () => void;
 };
 
 const emptyLegacyAnchors: Readonly<Record<string, string>> = {};
@@ -16,6 +17,7 @@ export function ProjectLocator({
   sections,
   ariaLabel = "项目章节定位",
   legacyAnchors = emptyLegacyAnchors,
+  onNavigate,
 }: ProjectLocatorProps) {
   const [activeSection, setActiveSection] = useState(sections[0]?.[0] ?? "");
   const navRef = useRef<HTMLElement>(null);
@@ -67,29 +69,38 @@ export function ProjectLocator({
     const activeLink = nav?.querySelector<HTMLElement>(`a[href="#${activeSection}"]`);
     if (!nav || !activeLink) return;
 
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (window.matchMedia("(max-width: 1120px)").matches) {
-      nav.scrollTo({
-        left: Math.max(0, activeLink.offsetLeft - (nav.clientWidth - activeLink.offsetWidth) / 2),
-        behavior: reduceMotion ? "auto" : "smooth",
-      });
-      return;
-    }
+    const revealActiveLink = () => {
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const horizontal = window.getComputedStyle(nav).flexDirection === "row";
+      if (horizontal) {
+        nav.scrollTo({
+          left: Math.max(0, activeLink.offsetLeft - (nav.clientWidth - activeLink.offsetWidth) / 2),
+          behavior: reduceMotion ? "auto" : "smooth",
+        });
+        return;
+      }
 
-    const linkTop = activeLink.offsetTop;
-    const linkBottom = linkTop + activeLink.offsetHeight;
-    if (linkTop < nav.scrollTop) {
-      nav.scrollTo({ top: linkTop, behavior: reduceMotion ? "auto" : "smooth" });
-    } else if (linkBottom > nav.scrollTop + nav.clientHeight) {
-      nav.scrollTo({
-        top: linkBottom - nav.clientHeight + 2,
-        behavior: reduceMotion ? "auto" : "smooth",
-      });
-    }
+      const linkTop = activeLink.offsetTop;
+      const linkBottom = linkTop + activeLink.offsetHeight;
+      if (linkTop < nav.scrollTop) {
+        nav.scrollTo({ top: linkTop, behavior: reduceMotion ? "auto" : "smooth" });
+      } else if (linkBottom > nav.scrollTop + nav.clientHeight) {
+        nav.scrollTo({
+          top: linkBottom - nav.clientHeight + 2,
+          behavior: reduceMotion ? "auto" : "smooth",
+        });
+      }
+    };
+
+    revealActiveLink();
+    window.addEventListener("resize", revealActiveLink);
+    return () => window.removeEventListener("resize", revealActiveLink);
   }, [activeSection]);
 
   const navigateTo = (event: ReactMouseEvent<HTMLAnchorElement>, id: string) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
+    onNavigate?.();
     window.history.replaceState(window.history.state, "", `#${id}`);
     document.getElementById(id)?.scrollIntoView({
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",

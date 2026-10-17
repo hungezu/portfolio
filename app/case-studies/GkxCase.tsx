@@ -9,6 +9,8 @@ import { ProjectLocator } from "../project-locator";
 import { GkxPaperQueryDemo } from "./GkxPaperQueryDemo";
 import { GkxSupplementalMaterials } from "./GkxSupplementalMaterials";
 import { GkxStandardsApplications } from "./GkxStandardsApplications";
+import { GkxSegmentedControl } from "./GkxSegmentedControl";
+import { useGkxReferenceNavigation } from "./use-gkx-reference-navigation";
 import publicCopy from "./gkx-public-copy.json";
 import "./gkx-case.css";
 
@@ -28,11 +30,19 @@ type StrategySection = {
   closing: string;
 };
 
+type DecisionOption = { name: string; usage?: string; selected: boolean; condition: string; cost: string };
+type DecisionComparisonCopy = {
+  options?: DecisionOption[];
+  scenarios?: Array<{ key: string; label: string; reason: string; options: DecisionOption[] }>;
+  pendingCheck: string;
+};
+
 type RulesSection = {
   id: string; title: string; lead: string;
   modules: Array<{
     key: string; title: string; problem: string; decision: string; reason: string;
     details: string[]; beforeLabel?: string; afterLabel?: string;
+    comparison?: DecisionComparisonCopy;
     tabs?: Array<{ label: string; figureId: string }>;
   }>;
   workbench: { title: string; text: string };
@@ -41,6 +51,11 @@ type RulesSection = {
 type PrototypeSection = {
   id: string; title: string; lead: string;
   examples: Array<{ title: string; text: string; figureId: string }>;
+  collaborationEvidence: {
+    title: string; lead: string; requirement: string;
+    comparisons: Array<{ title: string; before: string; after: string }>;
+    check: string; status: string;
+  };
 };
 
 type SupplierSection = {
@@ -55,7 +70,6 @@ type SupplierSection = {
 
 type OutcomesSection = {
   id: string; title: string; lead: string;
-  outcomes: Array<{ title: string; text: string }>;
   reflections: Array<{ number: string; title: string; text: string }>;
 };
 
@@ -95,9 +109,11 @@ type ImageAsset = { src: string; alt: string; caption: string; width: number; he
 const assets = {
   designSystemArchitecture: { src: `${assetRoot}/ui/design-system-gkx-mapping.webp`, alt: "国科信规范组织示意图，从基础样式、组件与交互规则到页面任务与交付核对，对应新型高端智库、科技情报挖掘平台、情报管理系统和超大规模智算引擎", caption: "规范体系 · 从共用规则到国科信业务页面", width: 1862, height: 845 },
   designSystemPageTypes: { src: `${assetRoot}/ui/design-system-page-types.webp`, alt: "页面信息架构与页面类型图，展示标题栏、内容区、底部栏的组成，以及列表、详情、表单、仪表盘、模态和状态提示页", caption: "页面类型 · 从信息结构到页面骨架", width: 1796, height: 876 },
-  outcomeWorkflow: { src: `${assetRoot}/reference/wang-p50-validation-loop.jpg`, alt: "传统设计协作与 AI 驱动设计验证路径的对照，展示业务理解、结构化输入、方案探索、原型验证、设计收敛、研发交付与持续迭代", caption: "方法复盘 · 从经验沉淀到可复用工作流", width: 4000, height: 2160 },
+  outcomeWorkflow: { src: `${assetRoot}/ui/design-workflow-gkx.webp`, alt: "项目方法复盘示意，归纳查询复现与模块评审中的业务约束、MD、方案对照、原型核对、规范对齐、意见记录与后续复核", caption: "方法复盘示意 · 汇总查询复现与模块评审中的核对方法", width: 1840, height: 855 },
   projectScope: { src: `${assetRoot}/ui/project-scope-map.webp`, alt: "智慧门户系统作为统一业务入口，连接新型高端智库、科技情报挖掘平台、情报管理系统、超大规模智算引擎及其他业务系统；四大主要业务系统与其他业务系统均由门户连接", caption: "项目范围 · 门户与主要业务系统的关系", width: 1817, height: 866 },
   aiWorkflow: { src: `${assetRoot}/ui/ai-human-workflow-codex.png`, alt: "AI 生成与探索、人工判断与决策通过持续验证形成双环协作，连接业务上下文、结构化设计输入、设计约束与资产沉淀", caption: "AI 与人工协作工作流", width: 1862, height: 845 },
+  aiCasesOriginal: { src: `${assetRoot}/evidence/ai-cases-product-panel-20261017.webp`, alt: "产品 AI 原型的主体面板，保留行业筛选、搜索、视图切换和完整报告卡片，外围菜单与导航已裁去", caption: "产品提供的 AI 原型 · 主体面板", width: 1658, height: 949 },
+  aiCasesDesigner: { src: `${assetRoot}/evidence/ai-cases-designer-panel-20261017.webp`, alt: "本人优化版本的玻璃面板，保留统一查询工具区、报告卡片与分页，外围菜单、顶栏及导航标识已裁去", caption: "本人优化版本 · 主体面板", width: 1662, height: 946 },
   reviewRecordsEvidence: { src: `${assetRoot}/evidence/ui-review-records-redacted.png`, alt: "真实 UI 评审台账截图，展示评审日期、模块、评审人及原表状态字段，厂商与相关敏感信息已模糊", caption: "真实评审台账 · 敏感信息已模糊", width: 1651, height: 871 },
   teamReviewEvidence: { src: `${assetRoot}/evidence/team-review-finding-redacted.png`, alt: "真实团队审核意见截图，记录关系模块 UI 风格与规范不一致的评审意见，厂商与相关敏感信息已模糊", caption: "团队审核意见 · 敏感信息已模糊", width: 1651, height: 871 },
   portal: { src: `${assetRoot}/ui/portal-workspace.png`, alt: "智慧门户我的空间界面，包含资料目录与文档列表", caption: copy.captions["ui-portal"], width: 1400, height: 778 },
@@ -147,6 +163,33 @@ function ProjectFigure({ asset, onOpen, className = "", priority = false, descri
     </button>
     <figcaption><strong>{asset.caption}</strong></figcaption>
   </figure>;
+}
+
+function AiCollaborationEvidence({ onOpen }: { onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void }) {
+  const [version, setVersion] = useState<"original" | "designer">("designer");
+  const evidence = prototypeCopy.collaborationEvidence;
+  const versions = {
+    original: { asset: assets.aiCasesOriginal, label: "产品 AI 原型" },
+    designer: { asset: assets.aiCasesDesigner, label: "人工优化" },
+  };
+  const selected = versions[version];
+
+  return <article id="gkx-ai-collaboration-evidence" className="gkx-ai-case gkx-ai-collaboration-evidence" aria-labelledby="gkx-ai-evidence-title">
+    <header><h3 id="gkx-ai-evidence-title">{evidence.title}</h3><p>{evidence.lead}</p></header>
+    <p className="gkx-ai-evidence-requirement"><strong>本轮要求</strong><span>{evidence.requirement}</span></p>
+    <div className="gkx-ai-evidence-layout">
+      <div className="gkx-ai-evidence-toolbar">
+        <GkxSegmentedControl<keyof typeof versions> label="切换真实协作证据版本" value={version} onChange={setVersion} options={[{ value: "original", label: versions.original.label }, { value: "designer", label: versions.designer.label }]} />
+        <span className="gkx-ai-evidence-zoom-hint">点击图片放大查看细节</span>
+      </div>
+      <ProjectFigure asset={selected.asset} onOpen={onOpen} className="gkx-ai-version-figure" />
+      <h4 id="gkx-ai-adjustments-title" className="gkx-ai-evidence-heading">从具体问题到人工调整</h4>
+      <section className="gkx-ai-evidence-comparisons" aria-labelledby="gkx-ai-adjustments-title">
+        <dl>{evidence.comparisons.map(item => <div key={item.title}><dt>{item.title}</dt><dd className="is-before"><span>AI 原型</span><p>{item.before}</p></dd><dd className="is-after"><span>人工调整</span><p>{item.after}</p></dd></div>)}</dl>
+      </section>
+    </div>
+    <section className="gkx-ai-evidence-check" aria-labelledby="gkx-ai-current-check-title"><h4 id="gkx-ai-current-check-title">当前核对结果</h4><p>{evidence.check}</p><p className="gkx-ai-evidence-status">{evidence.status}</p><p className="gkx-ai-evidence-source">仅保留主体面板，外围菜单与导航已裁去。</p></section>
+  </article>;
 }
 
 function ImageViewer({ asset, originalSize, setOriginalSize, onClose, dialogRef, closeButtonRef }: {
@@ -223,16 +266,46 @@ function TaskComparison({ onOpen }: { onOpen: (asset: ImageAsset, trigger: HTMLB
     title: "高端智库", task: "从情报概览进入专题内容", figureId: "ui-think-tank",
     priorities: ["首页提供整体概览与内容入口", "按技术、报告、人才等内容组织后续浏览"],
   }];
-  return <div className="gkx-task-studies">{comparisons.map(item => <article className="gkx-task-study" key={item.figureId}>
+  return <div className="gkx-task-studies">{comparisons.map(item => <article id={item.figureId === "ui-reading" ? "gkx-reading-workspace" : undefined} className="gkx-task-study" key={item.figureId}>
     <div className="gkx-task-study__copy"><p className="gkx-evidence-label">{figureById[item.figureId].caption}</p><h3>{item.task}</h3><ul>{item.priorities.map(point => <li key={point}>{point}</li>)}</ul></div>
     <ProjectFigure asset={figureById[item.figureId]} onOpen={onOpen} />
   </article>)}</div>;
 }
 
-function PaperWorkflowExample({ onOpen }: { onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void }) {
-  const cancelScrollRef = useRef<(() => void) | null>(null);
+function DecisionComparison({ comparison, reason, titleId }: {
+  comparison?: DecisionComparisonCopy;
+  reason: string;
+  titleId: string;
+}) {
+  const [scenarioKey, setScenarioKey] = useState(comparison?.scenarios?.[0]?.key ?? "");
+  const scenario = comparison?.scenarios?.find(item => item.key === scenarioKey) ?? comparison?.scenarios?.[0];
+  const options = [...(scenario?.options ?? comparison?.options ?? [])].sort((a, b) => Number(b.selected) - Number(a.selected));
+  if (!comparison || !options.length) return null;
+  return <section className="gkx-decision-comparison" aria-labelledby={titleId}>
+    <h4 id={titleId}>方案比较</h4>
+    {comparison.scenarios && scenario && <div className="gkx-decision-scenarios"><GkxSegmentedControl label="切换方案比较的任务场景" value={scenario.key} onChange={setScenarioKey} options={comparison.scenarios.map(item => ({ value: item.key, label: item.label }))} /></div>}
+    <div className="gkx-decision-table">
+      <table aria-labelledby={titleId}>
+        <colgroup><col className="gkx-decision-table__option" /><col /><col /></colgroup>
+        <thead><tr><th scope="col">方案</th><th scope="col">适用条件</th><th scope="col">代价与边界</th></tr></thead>
+        <tbody>{options.map(option => <tr key={option.name} className={option.selected ? "is-selected" : "is-alternative"}>
+          <th scope="row"><span className="gkx-decision-status">{option.selected ? scenario ? "本场景采用" : "本案采用" : scenario ? "该场景备选" : "备选方案"}</span><strong>{option.name}</strong>{option.usage && <span className="gkx-decision-usage">{option.usage}</span>}</th>
+          <td>{option.condition}</td><td>{option.cost}</td>
+        </tr>)}</tbody>
+      </table>
+    </div>
+    <div className="gkx-decision-notes">
+      <p><strong>选择依据</strong>{scenario?.reason ?? reason}</p>
+      <p><strong>后续核对</strong>{comparison.pendingCheck}</p>
+    </div>
+  </section>;
+}
+
+function PaperWorkflowExample({ onOpen, onReferenceClick }: {
+  onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void;
+  onReferenceClick: (event: ReactMouseEvent<HTMLAnchorElement>) => void;
+}) {
   const [compactSteps, setCompactSteps] = useState(false);
-  useEffect(() => () => cancelScrollRef.current?.(), []);
   useEffect(() => {
     const media = window.matchMedia("(max-width: 820px)");
     const sync = () => setCompactSteps(media.matches);
@@ -240,51 +313,6 @@ function PaperWorkflowExample({ onOpen }: { onOpen: (asset: ImageAsset, trigger:
     media.addEventListener("change", sync);
     return () => media.removeEventListener("change", sync);
   }, []);
-
-  function scrollToDesignSystem(event: ReactMouseEvent<HTMLAnchorElement>) {
-    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    const target = document.getElementById("gkx-design-system");
-    if (!target) return;
-    event.preventDefault();
-    if (window.location.hash !== event.currentTarget.hash) {
-      window.history.pushState(window.history.state, "", event.currentTarget.hash);
-    }
-    cancelScrollRef.current?.();
-    const start = window.scrollY;
-    const offset = Number.parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
-    const end = Math.max(0, Math.min(start + target.getBoundingClientRect().top - offset, document.documentElement.scrollHeight - window.innerHeight));
-    const distance = end - start;
-    target.focus({ preventScroll: true });
-    const duration = Math.min(1000, Math.max(500, Math.abs(distance) * 0.2));
-    const startedAt = performance.now();
-    let frame = 0;
-    const cancel = () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("wheel", cancel);
-      window.removeEventListener("touchstart", cancel);
-      window.removeEventListener("pointerdown", cancel);
-      window.removeEventListener("popstate", cancel);
-      window.removeEventListener("keydown", cancelOnKey);
-      cancelScrollRef.current = null;
-    };
-    const cancelOnKey = (keyEvent: KeyboardEvent) => {
-      if (["Escape", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " ", "Tab"].includes(keyEvent.key)) cancel();
-    };
-    const animate = (now: number) => {
-      const progress = Math.min((now - startedAt) / duration, 1);
-      const eased = 1 - (1 - progress) ** 3;
-      window.scrollTo({ top: start + distance * eased, behavior: "instant" });
-      if (progress < 1) frame = window.requestAnimationFrame(animate);
-      else cancel();
-    };
-    cancelScrollRef.current = cancel;
-    window.addEventListener("wheel", cancel, { passive: true });
-    window.addEventListener("touchstart", cancel, { passive: true });
-    window.addEventListener("pointerdown", cancel, { passive: true });
-    window.addEventListener("popstate", cancel);
-    window.addEventListener("keydown", cancelOnKey);
-    frame = window.requestAnimationFrame(animate);
-  }
 
   return <article id="gkx-workflow" className="gkx-ai-case" aria-labelledby="gkx-ai-case-title">
     <header><h3 id="gkx-ai-case-title">以论文管理为例，把设计判断写成可复用规范</h3><p>从情报管理系统中“找到并核对一条论文记录”的任务出发，将查询要求写进 MD，再用可操作原型核对规则。下方为依据现有图稿完成的本次复现。</p></header>
@@ -307,7 +335,7 @@ function PaperWorkflowExample({ onOpen }: { onOpen: (asset: ImageAsset, trigger:
     <section className="gkx-ai-practice-block gkx-ai-reuse" aria-labelledby="gkx-ai-reuse-title">
       <header className="gkx-ai-block-heading"><h4 id="gkx-ai-reuse-title">将校正结果沉淀为<span className="gkx-ai-reuse-accent">复用规则</span></h4><p>将查询规则与业务数据分开。切换上方的专利记录，沿用同一套查询与恢复逻辑，验证规则能否用于另一种对象。</p></header>
       <dl className="gkx-ai-rule-ledger"><div><dt>查询规则 MD</dt><dd>明确搜索字段、条件组合、结果反馈与恢复方式，供生成和核对共同使用。</dd></div><div><dt>共用查询逻辑</dt><dd>论文与专利记录调用同一套匹配逻辑，查询行为的调整集中维护。</dd></div><div><dt>业务对象配置</dt><dd>分开组织对象名称、标题、关键词与机构数据，更换业务对象时保留查询体验。</dd></div></dl>
-      <p className="gkx-ai-reuse-reference"><span>本次沉淀：查询规则 MD、可操作复现与两类对象的复用验证。</span><a className="gkx-section-reference" href="#gkx-design-system" onClick={scrollToDesignSystem}><span>对照管理列表的规范与交付</span><IconArrowDown aria-hidden="true" /></a></p>
+      <p className="gkx-ai-reuse-reference"><span>本次沉淀：查询规则 MD、可操作复现与两类对象的复用验证。</span><a id="gkx-ai-rules-reference" className="gkx-section-reference" href="#gkx-standards-applications" onClick={onReferenceClick}><span>对照管理列表的规范与交付</span><IconArrowDown aria-hidden="true" /></a></p>
     </section>
   </article>;
 }
@@ -342,6 +370,7 @@ function DeliveryReview({ onOpen }: { onOpen: (asset: ImageAsset, trigger: HTMLB
 
 export function GkxCase({ project, legacyView }: GkxCaseProps) {
   const [businessStep, setBusinessStep] = useState(0);
+  const { openReference, returnToSource, clearReference, returnAvailable } = useGkxReferenceNavigation("gkx-ai-rules-reference", "gkx-standards-applications");
   const [viewer, setViewer] = useState<ImageAsset | null>(null);
   const [originalSize, setOriginalSize] = useState(false);
   const viewerTrigger = useRef<HTMLButtonElement | null>(null);
@@ -391,7 +420,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
   const [heroTitleBeforeWorkflow, heroTitleAfterWorkflow] = copy.hero.title.split("AI 工作流");
 
   return <article className="gkx-case" aria-label="国科信门户与多系统体验设计项目">
-    <ProjectLocator sections={sections} legacyAnchors={legacyAnchors} ariaLabel="国科信项目章节定位" />
+    <ProjectLocator sections={sections} legacyAnchors={legacyAnchors} ariaLabel="国科信项目章节定位" onNavigate={clearReference} />
 
     <header id="gkx-overview" className="gkx-hero">
       <div className="gkx-hero__copy">
@@ -433,9 +462,10 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
     </section>
 
     <section id="nsp-prototype" className="gkx-chapter gkx-prototype" aria-labelledby="gkx-prototype-title">
-      <SectionHeading section={prototypeCopy} titleId="gkx-prototype-title" number="03" label="AI 实践" leadSegments={prototypeCopy.lead.split("—")} />
+      <SectionHeading section={prototypeCopy} titleId="gkx-prototype-title" number="03" label="AI 实践" />
       <ProjectFigure asset={assets.aiWorkflow} onOpen={openImage} className="gkx-ai-workflow-figure" />
-      <PaperWorkflowExample onOpen={openImage} />
+      <AiCollaborationEvidence onOpen={openImage} />
+      <PaperWorkflowExample onOpen={openImage} onReferenceClick={openReference} />
     </section>
 
     <section id="nsp-rules" className="gkx-chapter gkx-rules" aria-labelledby="gkx-rules-title">
@@ -443,12 +473,12 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
       <div id="gkx-business"><BusinessTaskFlow onOpen={openImage} active={businessStep} onSelect={setBusinessStep} /></div>
 
       <article id="gkx-rule-search" className="gkx-rule-module gkx-rule-search">
-        <header><h3>{searchModule.title}</h3><p>{searchModule.problem}</p><p>{searchModule.decision}</p></header>
+        <header><h3>{searchModule.title}</h3><p>{searchModule.decision}</p></header>
         <div className="gkx-query-comparison">
-          <FigureDetail asset={assets.paperBefore} viewBox="224 123 875 52" label={searchModule.beforeLabel ?? assets.paperBefore.caption} onOpen={openImage} />
-          <FigureDetail asset={assets.paperList} viewBox="224 123 875 52" label={searchModule.afterLabel ?? assets.paperList.caption} onOpen={openImage} />
+          <FigureDetail asset={assets.paperList} viewBox="224 123 875 52" label={searchModule.afterLabel ?? assets.paperList.caption} onOpen={openImage} className="is-adopted" />
+          <FigureDetail asset={assets.paperBefore} viewBox="224 123 875 52" label={searchModule.beforeLabel ?? assets.paperBefore.caption} onOpen={openImage} className="is-prior" />
         </div>
-        <div className="gkx-decision-strip"><strong>设计取舍</strong><p>{searchModule.reason} 进一步的条件限定仍交给筛选，避免把所有业务字段堆进一个输入框。</p></div>
+        <DecisionComparison comparison={searchModule.comparison} reason={searchModule.reason} titleId="gkx-search-comparison-title" />
       </article>
 
       <article className="gkx-rule-module gkx-rule-operations">
@@ -456,10 +486,10 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
         <FigureDetail asset={assets.paperList} viewBox="224 228 1176 82" label="列表局部 · 行操作位于记录右侧，保持详情、编辑、删除顺序" onOpen={openImage} className="is-operations" />
       </article>
 
-      <article className="gkx-rule-module gkx-rule-containers">
+      <article id="gkx-rule-containers" className="gkx-rule-module gkx-rule-containers">
         <header><h3>{containersModule.title}</h3><p>{containersModule.decision}</p></header>
-        <dl className="gkx-container-decisions"><div><dt>快速核对</dt><dd>详情弹窗，关闭后继续当前列表任务。</dd></div><div><dt>单条修改</dt><dd>编辑弹窗，明确当前对象、字段与提交范围。</dd></div><div><dt>持续阅读</dt><dd>独立工作区，为原文和辅助信息提供稳定空间。</dd></div></dl>
-        <div className="gkx-section-references"><a href="#gkx-business" onClick={() => setBusinessStep(1)}>查看详情弹窗</a><a href="#gkx-business" onClick={() => setBusinessStep(2)}>查看编辑弹窗</a><a href="#gkx-systems">查看阅读工作区</a></div>
+        <DecisionComparison comparison={containersModule.comparison} reason={containersModule.reason} titleId="gkx-containers-comparison-title" />
+        <div className="gkx-section-references"><a href="#gkx-business-flow-detail" onClick={() => setBusinessStep(1)}>查看详情弹窗<IconArrowRight aria-hidden="true" /></a><a href="#gkx-business-flow-detail" onClick={() => setBusinessStep(2)}>查看编辑弹窗<IconArrowRight aria-hidden="true" /></a><a href="#gkx-reading-workspace">查看阅读工作区<IconArrowRight aria-hidden="true" /></a></div>
       </article>
 
       <article className="gkx-rule-module gkx-rule-recovery-summary">
@@ -483,7 +513,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
             <ProjectFigure asset={assets.designSystemPageTypes} onOpen={openImage} />
           </article>
         </div>
-        <GkxStandardsApplications assets={assets} onOpen={openImage} />
+        <GkxStandardsApplications assets={assets} onOpen={openImage} onReturn={returnAvailable ? returnToSource : undefined} />
         <article id="gkx-collaboration" className="gkx-workbench-block"><header><h4>{rulesCopy.workbench.title}</h4><div>{rulesCopy.workbench.text}</div></header><div className="gkx-md-interactive"><iframe src={publicAsset("/assets/projects/gkx/design-preview/index.html?id=page-index&embed=1")} title="深圳国际科技信息中心可交互设计规范" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms"/></div></article>
       </section>
       <DeliveryReview onOpen={openImage} />
@@ -491,9 +521,8 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
 
     <section id="gkx-outcomes" className="gkx-chapter gkx-outcomes" aria-labelledby="gkx-outcomes-title">
       <SectionHeading section={outcomesCopy} titleId="gkx-outcomes-title" number="06" label="成果复盘" />
-      <div className="gkx-outcome-ledger">{outcomesCopy.outcomes.map((outcome, index) => <article key={outcome.title}><h3>{outcome.title}</h3><div><p>{outcome.text}</p><a className="gkx-section-reference" href={["#gkx-systems", "#gkx-collaboration", "#nsp-prototype"][index]}>{["查看界面成果", "查看规范预览", "查看门户实践"][index]}</a></div></article>)}</div>
       <ProjectFigure asset={assets.outcomeWorkflow} onOpen={openImage} className="gkx-outcome-workflow" />
-      <div className="gkx-reflection"><h3>项目复盘</h3><ol>{outcomesCopy.reflections.map(item => <li key={item.number}><strong>{item.title}</strong><p>{item.text}</p></li>)}</ol></div>
+      <section className="gkx-reflection" aria-labelledby="gkx-reflection-title"><h3 id="gkx-reflection-title">项目复盘</h3><ol>{outcomesCopy.reflections.map(item => <li key={item.number}><strong>{item.title}</strong><p>{item.text}</p></li>)}</ol></section>
     </section>
 
     {viewer ? <ImageViewer asset={viewer} originalSize={originalSize} setOriginalSize={setOriginalSize} onClose={() => setViewer(null)} dialogRef={dialogRef} closeButtonRef={closeButtonRef} /> : null}

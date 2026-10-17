@@ -12,6 +12,12 @@
   margin-bottom: 32px;
 }
 
+.gkx-standards-applications__return-context{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px 24px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #dedede;color:#5b5b5b;font-size:14px}
+.gkx-case .gkx-standards-applications__return.arco-btn{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1px solid #dedede;border-radius:8px;background:#fff;color:#202020;font-size:14px}
+.gkx-case .gkx-standards-applications__return.arco-btn:hover{border-color:#b8b8b8;background:#f5f5f5;color:#202020}
+.gkx-case .gkx-standards-applications__return.arco-btn:active{background:#e8e8e8}
+.gkx-case .gkx-standards-applications__return.arco-btn:focus-visible{outline:2px solid #303030;outline-offset:3px}
+
 .gkx-standards-applications > header h4 {
   margin: 0;
   font-size: 22px;

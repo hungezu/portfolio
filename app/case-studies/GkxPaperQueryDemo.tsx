@@ -1,11 +1,12 @@
 "use client";
 
 import { useId, useRef, useState, type FormEvent } from "react";
-import { Alert, Button, Card, ConfigProvider, Descriptions, Empty, Form, Input, Link, List, Modal, Pagination, Radio, Select, Space, Table } from "@arco-design/web-react";
+import { Alert, Button, Card, ConfigProvider, Descriptions, Empty, Form, Input, Link, List, Modal, Pagination, Select, Space, Table } from "@arco-design/web-react";
 import { IconFile, IconPlus } from "@arco-design/web-react/icon";
 import zhCN from "@arco-design/web-react/es/locale/zh-CN";
 import type { ColumnProps } from "@arco-design/web-react/es/Table/interface";
 import { emptyRecordQuery, queryResearchRecords, researchRecords, type QueryLayout, type RecordKind, type RecordQuery, type ResearchRecord } from "./gkx-paper-query";
+import { GkxSegmentedControl } from "./GkxSegmentedControl";
 import "./gkx-paper-query-demo.css";
 
 type ModalState = { action: "detail" | "edit" | "delete"; record: ResearchRecord } | { action: "add" | "import" };
@@ -125,8 +126,8 @@ export function GkxPaperQueryDemo() {
         <Card className="gkx-paper-demo__panel">
         <div className="gkx-paper-demo__controlbar">
           <span className="gkx-paper-demo__sample">本次复现 · 示例数据</span>
-          <div role="group" aria-label="查询布局对照"><Radio.Group type="button" size="default" value={layout} onChange={switchLayout} options={[{ label: "原查询布局", value: "original" }, { label: "统一查询布局", value: "unified" }]} /></div>
-          <div className="gkx-paper-demo__reuse" role="group" aria-label="复用演示：切换记录类型"><span>复用演示</span><Radio.Group type="button" size="default" value={kind} onChange={switchKind} options={[{ label: "论文记录", value: "paper" }, { label: "专利记录", value: "patent" }]} /></div>
+          <GkxSegmentedControl<QueryLayout> label="查询布局对照" value={layout} onChange={switchLayout} options={[{ label: "原查询布局", value: "original" }, { label: "统一查询布局", value: "unified" }]} />
+          <div className="gkx-paper-demo__reuse"><span>复用演示</span><GkxSegmentedControl<RecordKind> label="复用演示：切换记录类型" value={kind} onChange={switchKind} options={[{ label: "论文记录", value: "paper" }, { label: "专利记录", value: "patent" }]} /></div>
         </div>
         <div className="gkx-paper-demo__workspace">
           <div className="gkx-paper-demo__workarea">

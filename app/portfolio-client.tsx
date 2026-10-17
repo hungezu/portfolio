@@ -1,5 +1,7 @@
 "use client";
 
+import "./site-navigation.css";
+
 import {
   AnimatePresence,
   motion,
@@ -220,10 +222,16 @@ function SiteNav({
   projectView?: boolean;
 }) {
   const reduce = useReducedMotion();
+  const projectBack = projectView ? (
+    <a className="nav-pill nav-back" href="/portfolio/#work" onClick={onProjectBack}>
+      <span className="nav-circle nav-circle-dark"><ArrowLeft size={12} strokeWidth={2.6} /></span>
+      <span>返回作品</span>
+    </a>
+  ) : null;
 
   return (
     <motion.nav
-      className="site-nav"
+      className="site-nav site-navigation"
       initial={reduce ? false : { y: -16, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease }}
@@ -232,20 +240,9 @@ function SiteNav({
         <a className="brand-link" href="/portfolio/#top">
           <BrandMark />
         </a>
+        {projectBack}
       </div>
       <div className="nav-right">
-        {projectView ? (
-          <a
-            className="nav-pill nav-back"
-            href="/portfolio/#work"
-            onClick={onProjectBack}
-          >
-            <span className="nav-circle nav-circle-dark">
-              <ArrowLeft size={12} strokeWidth={2.6} />
-            </span>
-            <span>返回作品</span>
-          </a>
-        ) : null}
         <NavPill className="nav-pill-dark" onClick={onMenu} aria-label="打开导航菜单">
           <span className="nav-circle nav-circle-light">
             <Plus size={12} strokeWidth={3} />

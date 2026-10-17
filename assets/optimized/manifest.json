@@ -591,6 +591,22 @@
     "originalBytes": 105642,
     "optimizedBytes": 127064
   },
+  "/assets/projects/gkx/case-study/evidence/ai-cases-designer-panel-20261017.webp": {
+    "src": "/assets/optimized/projects/gkx/case-study/evidence/ai-cases-designer-panel-20261017.webp",
+    "width": 1662,
+    "height": 946,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/evidence/ai-cases-designer-panel-20261017-640.webp 640w, /assets/optimized/projects/gkx/case-study/evidence/ai-cases-designer-panel-20261017-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/evidence/ai-cases-designer-panel-20261017.webp 1662w",
+    "originalBytes": 121642,
+    "optimizedBytes": 74490
+  },
+  "/assets/projects/gkx/case-study/evidence/ai-cases-product-panel-20261017.webp": {
+    "src": "/assets/optimized/projects/gkx/case-study/evidence/ai-cases-product-panel-20261017.webp",
+    "width": 1658,
+    "height": 949,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/evidence/ai-cases-product-panel-20261017-640.webp 640w, /assets/optimized/projects/gkx/case-study/evidence/ai-cases-product-panel-20261017-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/evidence/ai-cases-product-panel-20261017.webp 1658w",
+    "originalBytes": 124330,
+    "optimizedBytes": 76508
+  },
   "/assets/projects/gkx/case-study/evidence/team-review-finding-redacted.png": {
     "src": "/assets/optimized/projects/gkx/case-study/evidence/team-review-finding-redacted.webp",
     "width": 1651,
@@ -710,6 +726,14 @@
     "srcSet": "/assets/optimized/projects/gkx/case-study/ui/design-system-page-types-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/design-system-page-types-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/design-system-page-types.webp 1796w",
     "originalBytes": 226020,
     "optimizedBytes": 122648
+  },
+  "/assets/projects/gkx/case-study/ui/design-workflow-gkx.webp": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/design-workflow-gkx.webp",
+    "width": 1840,
+    "height": 855,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/design-workflow-gkx-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/design-workflow-gkx-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/design-workflow-gkx.webp 1840w",
+    "originalBytes": 213834,
+    "optimizedBytes": 143436
   },
   "/assets/projects/gkx/case-study/ui/maas-model-gallery.png": {
     "src": "/assets/optimized/projects/gkx/case-study/ui/maas-model-gallery.webp",
