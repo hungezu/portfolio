@@ -2,6 +2,7 @@
 
 import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, useRef, useState } from "react";
 import { publicAsset } from "../portfolio-data";
+import { PortfolioImage } from "../portfolio-image";
 import { ProjectLocator } from "../project-locator";
 import "./national-science-platform.css";
 
@@ -225,7 +226,7 @@ function SystemScreenShowcase({ activeScreen, setActiveScreen }: { activeScreen:
   return (
     <div className="nsp-screen-showcase">
       <div className="nsp-screen-tabs" role="tablist" aria-label="系统界面切换">{screens.map((screen, index) => <button ref={node => { tabRefs.current[index] = node; }} id={`nsp-screen-tab-${index}`} type="button" role="tab" aria-selected={activeScreen === index} aria-controls="nsp-screen-panel" tabIndex={activeScreen === index ? 0 : -1} className={activeScreen === index ? "active" : ""} onClick={() => setActiveScreen(index)} onKeyDown={event => handleKeyDown(event, index)} key={screen.label}>{screen.label}</button>)}</div>
-      <div id="nsp-screen-panel" role="tabpanel" aria-labelledby={`nsp-screen-tab-${activeScreen}`} tabIndex={0}><figure className="nsp-screen-stage"><img src={publicAsset(currentScreen.src)} alt={`${currentScreen.label}界面，展示该业务的信息结构与操作入口`} loading="lazy" decoding="async" /><figcaption><div><strong>{currentScreen.title}</strong></div><p>{currentScreen.description}</p></figcaption></figure></div>
+      <div id="nsp-screen-panel" role="tabpanel" aria-labelledby={`nsp-screen-tab-${activeScreen}`} tabIndex={0}><figure className="nsp-screen-stage"><PortfolioImage src={publicAsset(currentScreen.src)} alt={`${currentScreen.label}界面，展示该业务的信息结构与操作入口`} loading="lazy" decoding="async" /><figcaption><div><strong>{currentScreen.title}</strong></div><p>{currentScreen.description}</p></figcaption></figure></div>
     </div>
   );
 }
@@ -281,7 +282,7 @@ function SystemsDetailPage({ activeScreen, setActiveScreen }: { activeScreen: nu
     <div className="national-platform-page nsp-subpage">
       <ProjectLocator sections={systemsSections} ariaLabel="系统实景页章节定位" />
       <header className="nsp-subpage-hero" id="nsp-systems-overview"><div className="nsp-shell"><ProjectSubnav active="systems" /><h1>跨系统的界面，<br />呈现不同业务任务</h1><p>围绕信息浏览、内容维护与流程建模，展示不同任务的信息架构与交互模式。业务内容和数据已脱敏或重构，仅用于呈现设计方法。</p></div></header>
-      <section className="nsp-section" id="nsp-system-screens"><div className="nsp-shell"><SystemScreenShowcase activeScreen={activeScreen} setActiveScreen={setActiveScreen} /><div className="nsp-evidence-wall" id="nsp-supporting-screens"><header><h2>补充页面</h2><p>进一步展示技术分析、报告浏览和人才信息等不同信息密度。</p></header><div>{supportingScreens.map(screen => <figure key={screen.title}><img src={publicAsset(screen.src)} alt={`${screen.title}代码运行页面`} loading="lazy" decoding="async" /><figcaption><strong>{screen.title}</strong><p>{screen.description}</p></figcaption></figure>)}</div></div></div></section>
+      <section className="nsp-section" id="nsp-system-screens"><div className="nsp-shell"><SystemScreenShowcase activeScreen={activeScreen} setActiveScreen={setActiveScreen} /><div className="nsp-evidence-wall" id="nsp-supporting-screens"><header><h2>补充页面</h2><p>进一步展示技术分析、报告浏览和人才信息等不同信息密度。</p></header><div>{supportingScreens.map(screen => <figure key={screen.title}><PortfolioImage src={publicAsset(screen.src)} alt={`${screen.title}代码运行页面`} loading="lazy" decoding="async" /><figcaption><strong>{screen.title}</strong><p>{screen.description}</p></figcaption></figure>)}</div></div></div></section>
     </div>
   );
 }
@@ -324,7 +325,7 @@ export function NationalSciencePlatformCase({ view = "story" }: { view?: Nationa
               <p>从整体风格和核心系统，到在线原型、Markdown 规范与多方评审，我同时负责产品体验和设计交付方式。</p>
             </header>
             <figure className="nsp-hero-proof">
-              <img src={publicAsset("/assets/projects/gkx/think-tank-home.jpg")} alt="高端新型智库代码运行首页" />
+              <PortfolioImage src={publicAsset("/assets/projects/gkx/think-tank-home.jpg")} alt="高端新型智库代码运行首页" loading="eager" fetchPriority="high" />
               <figcaption><strong>新型高端智库首页</strong><p>页面中的业务信息、数据和流程均已脱敏或重构，仅展示设计方法和工作方式。</p></figcaption>
             </figure>
           </div>
@@ -337,7 +338,7 @@ export function NationalSciencePlatformCase({ view = "story" }: { view?: Nationa
       <section className="nsp-section nsp-structure" id="nsp-structure" data-nsp-section>
         <div className="nsp-shell nsp-section-stack nsp-structure-layout">
           <header className="nsp-story-heading"><p className="nsp-kicker">01 / 项目背景</p><h2>一个由多层能力共同支撑的<br />科技信息服务平台</h2><p>国科信连接科技信息展示、战略咨询、专题服务与 AI 教育等业务，并由社区运营、用户权限、智能体、知识图谱和模型能力共同支撑。智谱主要负责智能服务集群与智慧认知大脑相关模块。</p></header>
-          <div className="nsp-story-body"><figure className="nsp-architecture-figure"><img src={publicAsset("/assets/projects/gkx/product-business-architecture.png")} alt="国科信产品业务架构图" loading="lazy" decoding="async" /><figcaption><strong>产品业务架构</strong><span>从用户触达到应用、业务、支撑与底层能力的整体关系。图中内容为项目材料的脱敏整理。</span></figcaption></figure><div className="nsp-structure-stage">
+          <div className="nsp-story-body"><figure className="nsp-architecture-figure"><PortfolioImage src={publicAsset("/assets/projects/gkx/product-business-architecture.png")} alt="国科信产品业务架构图" loading="lazy" decoding="async" /><figcaption><strong>产品业务架构</strong><span>从用户触达到应用、业务、支撑与底层能力的整体关系。图中内容为项目材料的脱敏整理。</span></figcaption></figure><div className="nsp-structure-stage">
               <div className="nsp-responsibility-notes"><article><strong>产品工作：确定系统、角色、任务和页面边界</strong><p>避免直接从标书标题推导页面，先确认用户要完成什么。</p></article><article className="is-codex"><strong>Codex：从长文档中提取模块与待确认项</strong><p>把材料转成可核对的结构，减少遗漏与重复理解。</p></article><article><strong>设计判断：重新组织优先级和系统关系</strong><p>删除不成立的默认内容，将争议问题带回评审。</p></article></div>
               <div className="nsp-requirement-board"><header><strong>需求结构化结果</strong><span>脱敏示意</span></header><div className="nsp-direction-grid"><span>科技资源</span><span>新型智库</span><span>决策支持</span><span>专题服务</span><span>信息交流</span><span>科学数据</span></div><dl><div><dt>已确认</dt><dd>系统范围、页面目标、核心任务</dd></div><div><dt>待确认</dt><dd>角色权限、字段内容、业务边界</dd></div></dl><footer>阶段产出：页面范围、需求清单与评审问题</footer></div>
             </div>
@@ -351,7 +352,7 @@ export function NationalSciencePlatformCase({ view = "story" }: { view?: Nationa
           <div className="nsp-story-body"><AIWorkflowMap />
             <div className="nsp-prototype-showcase">
               <div className="nsp-prototype-tabs" role="tablist" aria-label="原型页面切换">{prototypeScreens.map((screen, index) => <button type="button" role="tab" aria-selected={activePrototype === index} className={activePrototype === index ? "active" : ""} onClick={() => setActivePrototype(index)} key={screen.label}>{String(index + 1).padStart(2, "0")} · {screen.label}</button>)}</div>
-              <figure key={currentPrototype.label}><img src={publicAsset(currentPrototype.src)} alt={`${currentPrototype.label}代码运行页面`} loading="lazy" decoding="async" /><figcaption><div><strong>{currentPrototype.title}</strong></div><p>{currentPrototype.description}</p></figcaption></figure>
+              <figure key={currentPrototype.label}><PortfolioImage src={publicAsset(currentPrototype.src)} alt={`${currentPrototype.label}代码运行页面`} loading="lazy" decoding="async" /><figcaption><div><strong>{currentPrototype.title}</strong></div><p>{currentPrototype.description}</p></figcaption></figure>
             </div>
           </div>
         </div>
@@ -360,7 +361,7 @@ export function NationalSciencePlatformCase({ view = "story" }: { view?: Nationa
       <section className="nsp-section nsp-products" id="nsp-products" data-nsp-section>
         <div className="nsp-shell nsp-section-stack nsp-products-layout">
           <header className="nsp-story-heading"><h2>让不同系统，<br />共享同一套体验骨架</h2><p>高端智库、科技专题服务、门户后台和流程设计器承担不同任务，但共用导航、状态、组件与信息层级规则。主页面只保留一项代表性成果，完整页面统一放在系统实景中。</p></header>
-          <div className="nsp-story-body"><ExperienceLanguageMap /><figure className="nsp-system-teaser"><img src={publicAsset("/assets/projects/gkx/technology-route.jpg")} alt="领域技术路线代码运行页面" loading="lazy" decoding="async" /><figcaption><strong>领域技术路线</strong><p>将指标、趋势、里程碑和关键技术清单组织在同一分析视图中。</p></figcaption></figure>
+          <div className="nsp-story-body"><ExperienceLanguageMap /><figure className="nsp-system-teaser"><PortfolioImage src={publicAsset("/assets/projects/gkx/technology-route.jpg")} alt="领域技术路线代码运行页面" loading="lazy" decoding="async" /><figcaption><strong>领域技术路线</strong><p>将指标、趋势、里程碑和关键技术清单组织在同一分析视图中。</p></figcaption></figure>
             <a className="nsp-deep-link" href="/portfolio/project/gkx/systems/" onClick={event => openWithPortfolioContext(event, "/portfolio/project/gkx/systems/")}><strong>浏览全部8个代码运行页面</strong></a>
           </div>
         </div>

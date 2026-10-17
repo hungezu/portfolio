@@ -6,8 +6,6 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/portfolio/favicon-32.png?v=20260908b" />
     <link rel="shortcut icon" href="/portfolio/favicon-32.png?v=20260908b" />
     <link rel="apple-touch-icon" sizes="180x180" href="/portfolio/apple-touch-icon.png?v=20260908b" />
-    <link rel="preload" as="image" href="/portfolio/assets/visual/hero-poster-mobile.jpg" media="(max-width: 767px)" fetchpriority="high" />
-    <link rel="preload" as="image" href="/portfolio/assets/visual/hero-poster-desktop.jpg" media="(min-width: 768px)" fetchpriority="high" />
     <meta name="theme-color" content="#ffffff" />
     <meta
       name="description"
@@ -142,8 +140,8 @@
     <script>
       window.__PORTFOLIO_BASE__ = "/portfolio";
     </script>
-    <script type="module" crossorigin src="/portfolio/assets/index--ECrb8-F.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DkNfaTl_.css">
+    <script type="module" crossorigin src="/portfolio/assets/index-Dd2GTdZw.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-DN6S9i7_.css">
   </head>
   <body>
     <div class="portfolio-boot" id="portfolio-boot" role="status" aria-live="polite" aria-label="作品集加载中">
@@ -171,24 +169,80 @@
         let value = 0;
         let finished = false;
         let rootObserver;
+        let stopWaitingForContent = () => {};
 
-        const markLoaded = () => { criticalContentReady = true; };
+        const markLoaded = () => {
+          criticalContentReady = true;
+          stopWaitingForContent();
+        };
         window.setTimeout(markLoaded, 8000);
 
         const waitForCriticalContent = (root) => {
-          const poster = root.querySelector(".hero-poster img");
-          const posterReady = !poster
-            ? Promise.resolve()
-            : poster.complete && poster.naturalWidth > 0
-              ? (typeof poster.decode === "function" ? poster.decode().catch(() => {}) : Promise.resolve())
-              : new Promise((resolve) => {
-                  poster.addEventListener("load", resolve, { once: true });
-                  poster.addEventListener("error", resolve, { once: true });
-                });
-          const fontsReady = document.fonts?.ready?.catch(() => {}) ?? Promise.resolve();
-          Promise.all([posterReady, fontsReady]).then(() => {
+          let fontsReady = false;
+          let completing = false;
+          const decodedSources = new WeakMap();
+          const decodingSources = new WeakMap();
+          const resourceEvents = ["load", "error", "loadeddata", "canplay"];
+          const scheduleCheck = () => requestAnimationFrame(check);
+          const observer = new MutationObserver(scheduleCheck);
+
+          const imageIsReady = (image, allowFailure) => {
+            if (!image.complete) return false;
+            if (image.naturalWidth === 0) return allowFailure;
+            const source = image.currentSrc || image.src;
+            if (typeof image.decode !== "function" || decodedSources.get(image) === source) return true;
+            if (decodingSources.get(image) !== source) {
+              decodingSources.set(image, source);
+              image.decode().catch(() => {}).then(() => {
+                if ((image.currentSrc || image.src) === source) decodedSources.set(image, source);
+                scheduleCheck();
+              });
+            }
+            return false;
+          };
+
+          function check() {
+            if (finished || criticalContentReady || completing) return;
+            const hero = root.querySelector(".hero");
+            const project = root.querySelector("main[data-project]");
+            const notFound = root.querySelector(".not-found");
+            const image = hero
+              ? hero.querySelector(".hero-poster img")
+              : project?.querySelector('img[loading="eager"], img[fetchpriority="high"]');
+            // A lazy case module may still be mounting; wait for its first eager
+            // image instead of treating the initial Suspense fallback as ready.
+            const imageReady = image
+              ? imageIsReady(image, Boolean(hero))
+              : Boolean(notFound || (project && !project.querySelector(".case-loading") && project.querySelector(".image-fallback")));
+            const video = hero?.querySelector("video");
+            const videoState = video?.dataset.preloadState;
+            const videoReady = hero
+              ? Boolean(video && (["disabled", "ready", "error"].includes(videoState) || (videoState === "loading" && video.readyState >= 2)))
+              : Boolean(project || notFound);
+
+            // "pending" keeps the loader up until Hero has decided whether it
+            // should load motion, even before React attaches its video sources.
+            if (!fontsReady || !imageReady || !videoReady) return;
+            completing = true;
             requestAnimationFrame(() => requestAnimationFrame(markLoaded));
+          }
+
+          stopWaitingForContent = () => {
+            observer.disconnect();
+            resourceEvents.forEach(event => root.removeEventListener(event, scheduleCheck, true));
+          };
+          observer.observe(root, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ["data-preload-state", "src", "srcset", "loading", "fetchpriority"],
           });
+          resourceEvents.forEach(event => root.addEventListener(event, scheduleCheck, true));
+          (document.fonts?.ready?.catch(() => {}) ?? Promise.resolve()).then(() => {
+            fontsReady = true;
+            check();
+          });
+          check();
         };
 
         const watchApp = () => {
@@ -214,6 +268,7 @@
           if (finished) return;
           finished = true;
           rootObserver?.disconnect();
+          stopWaitingForContent();
           try { sessionStorage.setItem("leo-portfolio-loader-seen", "1"); } catch {}
           window.setTimeout(() => {
             progressNode.classList.remove("is-ready");

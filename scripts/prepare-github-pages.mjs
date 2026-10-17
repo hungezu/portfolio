@@ -1,4 +1,4 @@
-import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const outputDirectory = resolve(process.cwd(), "gh-pages-dist");
@@ -28,7 +28,7 @@ function withCaseMetadata(html, slug, view) {
   const image = `https://hungezu.github.io/portfolio/${metadata.image}`;
   const url = `https://hungezu.github.io/portfolio/project/${slug}/`;
   return html
-    .replace(/\s*<link\s+rel="preload"\s+as="image"[^>]*hero-poster-(?:mobile|desktop)\.jpg[^>]*>/g, "")
+    .replace(/\s*<link\s+rel="preload"\s+as="image"[^>]*hero-poster-(?:mobile|desktop)\.(?:jpg|webp)[^>]*>/g, "")
     .replace(/<title>[^<]*<\/title>/, `<title>${title}</title>`)
     .replace(/<meta\s+name="description"\s+content="[^"]*"\s*\/?\s*>/s, `<meta name="description" content="${description}" />`)
     .replace(/<meta\s+property="og:title"\s+content="[^"]*"\s*\/?\s*>/s, `<meta property="og:title" content="${title}" />`)
@@ -37,17 +37,15 @@ function withCaseMetadata(html, slug, view) {
 }
 
 await writeFile(resolve(outputDirectory, ".nojekyll"), "");
-await copyFile(
-  resolve(outputDirectory, "index.html"),
-  resolve(outputDirectory, "404.html"),
-);
+await writeFile(resolve(outputDirectory, "index.html"), baseHtml);
+await writeFile(resolve(outputDirectory, "404.html"), baseHtml);
 
 for (const slug of projectSlugs) {
   const routeDirectory = resolve(outputDirectory, "project", slug);
   await mkdir(routeDirectory, { recursive: true });
   await writeFile(
     resolve(routeDirectory, "index.html"),
-    slug === "zhaocai-smart" || slug === "gkx" ? withCaseMetadata(baseHtml, slug) : baseHtml,
+    slug === "zhaocai-smart" || slug === "gkx" ? withCaseMetadata(baseHtml, slug) : baseHtml.replace(/\s*<link\s+rel="preload"\s+as="image"[^>]*hero-poster-(?:mobile|desktop)\.(?:jpg|webp)[^>]*>/g, ""),
   );
 }
 

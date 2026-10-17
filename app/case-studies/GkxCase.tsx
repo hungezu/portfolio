@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type RefObject, type MouseEvent as ReactMo
 import { Steps } from "@arco-design/web-react";
 import { IconArrowDown, IconArrowRight } from "@arco-design/web-react/icon";
 import { publicAsset, type Project } from "../portfolio-data";
+import { PortfolioImage } from "../portfolio-image";
 import { ProjectLocator } from "../project-locator";
 import { GkxPaperQueryDemo } from "./GkxPaperQueryDemo";
 import { GkxSupplementalMaterials } from "./GkxSupplementalMaterials";
@@ -119,7 +120,7 @@ function ProjectFigure({ asset, onOpen, className = "", priority = false, descri
 }) {
   return <figure className={`gkx-project-figure ${className}`.trim()}>
     <button type="button" className="gkx-image-button" aria-label={`放大查看：${asset.caption}`} aria-description={description} onClick={event => onOpen(asset, event.currentTarget)}>
-      <img src={publicAsset(asset.src)} alt={asset.alt} width={asset.width} height={asset.height} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />
+      <PortfolioImage src={publicAsset(asset.src)} alt={asset.alt} width={asset.width} height={asset.height} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />
       <span aria-hidden="true">放大查看</span>
     </button>
     <figcaption><strong>{asset.caption}</strong></figcaption>
@@ -144,7 +145,7 @@ function ImageViewer({ asset, originalSize, setOriginalSize, onClose, dialogRef,
         </div>
       </header>
       <div className="gkx-lightbox__canvas">
-        <img src={publicAsset(asset.src)} alt={asset.alt} width={asset.width} height={asset.height} />
+        <PortfolioImage src={publicAsset(asset.src)} alt={asset.alt} width={asset.width} height={asset.height} original={originalSize} loading="eager" />
       </div>
     </div>
   </div>;

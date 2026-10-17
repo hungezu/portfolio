@@ -9,6 +9,11 @@ await rm(resolve(publicDirectory, "portfolio.html"), { force: true });
 await rm(resolve(publicDirectory, "assets"), { recursive: true, force: true });
 await mkdir(resolve(publicDirectory, "assets"), { recursive: true });
 await cp(
+  resolve(root, "assets", "optimized"),
+  resolve(publicDirectory, "assets", "optimized"),
+  { recursive: true, filter: (source) => !source.endsWith(".cache.json") },
+);
+await cp(
   resolve(root, "assets", "visual"),
   resolve(publicDirectory, "assets", "visual"),
   { recursive: true },

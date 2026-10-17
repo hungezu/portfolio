@@ -30,6 +30,9 @@ import {
   type PointerEvent as ReactPointerEvent,
   type ImgHTMLAttributes,
   type ReactNode,
+  Component,
+  lazy,
+  Suspense,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -50,10 +53,28 @@ import {
   type ChatReference,
 } from "./chat-knowledge";
 import portfolioPetAssets from "../assets/visual/sidebar-character/assets.json";
-import { ZhaocaiSmartCase } from "./case-studies/ZhaocaiSmartCase";
-import { GkxCase } from "./case-studies/GkxCase";
+import { optimizedImage, PortfolioImage } from "./portfolio-image";
 import type { NationalPlatformView } from "./case-studies/NationalSciencePlatformCase";
 import { ProjectLocator, type ProjectLocatorSection } from "./project-locator";
+
+const ZhaocaiSmartCase = lazy(() => import("./case-studies/ZhaocaiSmartCase").then(module => ({ default: module.ZhaocaiSmartCase })));
+const GkxCase = lazy(() => import("./case-studies/GkxCase").then(module => ({ default: module.GkxCase })));
+
+class ProjectContentBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  render() {
+    if (this.state.failed) return <div className="case-loading image-fallback" role="alert">
+      <p>项目内容暂时未能加载</p>
+      <button type="button" onClick={() => window.location.reload()}>重新加载</button>
+    </div>;
+    return this.props.children;
+  }
+}
 
 const ease = [0.16, 1, 0.3, 1] as const;
 const abilityAutoCycleMs = 4800;
@@ -974,19 +995,6 @@ function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peek
   const [frameIndex, setFrameIndex] = useState(0);
 
   useEffect(() => {
-    const sources = ["actions", "curious", "idle", "peek", "wave"];
-    const preloaders = sources.map(sourceId => {
-      const image = new Image();
-      image.src = publicAsset(`/assets/visual/sidebar-character/${portfolioCharacterMap.sources[sourceId].file}`);
-      return image;
-    });
-    return () => preloaders.forEach(image => {
-      image.onload = null;
-      image.onerror = null;
-    });
-  }, []);
-
-  useEffect(() => {
     if (requestedAssetState === assetState) return;
     const nextConfig = portfolioCharacterMap.states[requestedAssetState];
     const nextSource = portfolioCharacterMap.sources[nextConfig.source];
@@ -997,7 +1005,8 @@ function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peek
     };
     image.onload = showNextState;
     image.onerror = () => undefined;
-    image.src = publicAsset(`/assets/visual/sidebar-character/${nextSource.file}`);
+    const originalPath = `/assets/visual/sidebar-character/${nextSource.file}`;
+    image.src = publicAsset(optimizedImage(originalPath)?.src ?? originalPath);
     if (image.complete) showNextState();
     return () => {
       active = false;
@@ -1023,6 +1032,7 @@ function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peek
   const frame = config.frames[Math.min(frameIndex, config.frames.length - 1)];
   const [x, y, width, height] = frame.rect;
   const source = portfolioCharacterMap.sources[config.source];
+  const originalPath = `/assets/visual/sidebar-character/${source.file}`;
 
   return (
     <span
@@ -1045,10 +1055,11 @@ function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peek
             }}
           >
             <img
-              src={publicAsset(`/assets/visual/sidebar-character/${source.file}`)}
+              src={publicAsset(optimizedImage(originalPath)?.src ?? originalPath)}
               alt=""
               draggable={false}
               decoding="async"
+              fetchPriority="low"
               style={{
                 width: `${source.width / width * 100}%`,
                 height: `${source.height / height * 100}%`,
@@ -1669,13 +1680,42 @@ function PortfolioChat() {
 
 function Hero() {
   const reduce = useReducedMotion();
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [videoPreloadState, setVideoPreloadState] = useState<"pending" | "disabled" | "loading" | "ready" | "error">("pending");
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroVisibleRef = useRef(true);
 
   useEffect(() => {
+    const connection = (navigator as Navigator & {
+      connection?: { saveData?: boolean; effectiveType?: string };
+    }).connection;
+    if (
+      reduce ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      connection?.saveData ||
+      /^(slow-2g|2g|3g)$/.test(connection?.effectiveType ?? "") ||
+      !videoRef.current?.canPlayType("video/mp4")
+    ) {
+      setShouldLoadVideo(false);
+      setVideoPreloadState("disabled");
+      return;
+    }
+
+    // The opening loader waits for this video to have a first frame available.
+    setVideoPreloadState(current => current === "ready" ? current : "loading");
+    setShouldLoadVideo(true);
+  }, [reduce]);
+
+  useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+    if (!shouldLoadVideo) {
+      video.pause();
+      video.load();
+      setIsVideoPlaying(false);
+      return;
+    }
 
     const tryPlay = () => {
       if (document.visibilityState !== "visible" || !heroVisibleRef.current) {
@@ -1704,6 +1744,7 @@ function Hero() {
       { threshold: 0.08 },
     );
 
+    video.load();
     tryPlay();
     observer.observe(video.closest(".hero") ?? video);
     window.addEventListener("pageshow", syncPlayback);
@@ -1716,7 +1757,7 @@ function Hero() {
       document.removeEventListener("visibilitychange", syncPlayback);
       window.removeEventListener("touchstart", syncPlayback);
     };
-  }, []);
+  }, [shouldLoadVideo]);
 
   return (
     <section className="hero" id="top">
@@ -1729,10 +1770,10 @@ function Hero() {
         <picture className="hero-poster" aria-hidden="true">
           <source
             media="(max-width: 767px)"
-            srcSet={publicAsset("/assets/visual/hero-poster-mobile.jpg")}
+            srcSet={publicAsset("/assets/optimized/visual/hero-poster-mobile.webp")}
           />
           <img
-            src={publicAsset("/assets/visual/hero-poster-desktop.jpg")}
+            src={publicAsset("/assets/optimized/visual/hero-poster-desktop.webp")}
             alt=""
             fetchPriority="high"
             decoding="async"
@@ -1741,15 +1782,20 @@ function Hero() {
         <video
           ref={videoRef}
           className={isVideoPlaying ? "is-playing" : ""}
+          data-preload-state={videoPreloadState}
           aria-hidden="true"
-          autoPlay
+          autoPlay={shouldLoadVideo}
           disablePictureInPicture
           muted
           loop
           playsInline
-          preload="auto"
+          preload={shouldLoadVideo ? "auto" : "none"}
+          onLoadedData={(event) => {
+            if (shouldLoadVideo && event.currentTarget.readyState >= 2) setVideoPreloadState("ready");
+          }}
           onCanPlay={(event) => {
-            if (document.visibilityState !== "visible" || !heroVisibleRef.current) {
+            if (shouldLoadVideo && event.currentTarget.readyState >= 2) setVideoPreloadState("ready");
+            if (!shouldLoadVideo || document.visibilityState !== "visible" || !heroVisibleRef.current) {
               event.currentTarget.pause();
               return;
             }
@@ -1761,14 +1807,19 @@ function Hero() {
           }}
           onPlaying={() => setIsVideoPlaying(true)}
           onPause={() => setIsVideoPlaying(false)}
-          onError={() => setIsVideoPlaying(false)}
+          onError={() => {
+            setIsVideoPlaying(false);
+            if (shouldLoadVideo) setVideoPreloadState("error");
+          }}
         >
-          <source
-            media="(max-width: 767px)"
-            src={publicAsset(heroMobileVideoAsset)}
-            type="video/mp4"
-          />
-          <source src={publicAsset(heroVideoAsset)} type="video/mp4" />
+          {shouldLoadVideo ? <>
+            <source
+              media="(max-width: 767px)"
+              src={publicAsset(heroMobileVideoAsset)}
+              type="video/mp4"
+            />
+            <source src={publicAsset(heroVideoAsset)} type="video/mp4" onError={() => setVideoPreloadState("error")} />
+          </> : null}
         </video>
       </motion.div>
       <div className="hero-video-wash" aria-hidden="true" />
@@ -2468,37 +2519,13 @@ function ImageWithFallback({
   decoding = "async",
   ...props
 }: ImgHTMLAttributes<HTMLImageElement>) {
-  const webpSource = typeof props.src === "string" && /\/assets\/projects\/.*\.(?:png|jpe?g)(?:\?.*)?$/i.test(props.src)
-    ? props.src.replace(/\.(?:png|jpe?g)(\?.*)?$/i, ".webp$1")
-    : null;
-  const [imageStage, setImageStage] = useState<"webp" | "original" | "failed">(
-    webpSource ? "webp" : "original",
-  );
-
-  useEffect(() => {
-    setImageStage(webpSource ? "webp" : "original");
-  }, [props.src, webpSource]);
-
-  if (imageStage === "failed") {
-    return <div className={`image-fallback ${className}`}>项目图片暂时无法加载</div>;
-  }
-
   return (
     <picture className="optimized-picture">
-      {webpSource && imageStage === "webp" ? <source srcSet={webpSource} type="image/webp" /> : null}
-      <img
-        key={imageStage}
+      <PortfolioImage
         alt={alt}
         className={className}
         decoding={decoding}
         {...props}
-        onError={() => {
-          if (webpSource && imageStage === "webp") {
-            setImageStage("original");
-            return;
-          }
-          setImageStage("failed");
-        }}
       />
     </picture>
   );
@@ -2680,8 +2707,8 @@ function ProjectCard({
             alt={`${project.title}项目封面`}
             width={1672}
             height={941}
-            loading={index < 4 ? "eager" : "lazy"}
-            fetchPriority={index === 0 ? "high" : "auto"}
+            loading="lazy"
+            sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1200px) 50vw, 720px"
             style={{ objectPosition: project.coverPosition ?? "center" }}
           />
         </div>
@@ -3074,6 +3101,8 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
             </div>
           </motion.div>
         </header> : null}
+        <ProjectContentBoundary>
+        <Suspense fallback={<p className="case-loading" role="status">正在加载项目内容…</p>}>
         {isZhaocaiCase ? (
           <ZhaocaiSmartCase />
         ) : isNationalPlatformCase ? (
@@ -3081,6 +3110,8 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
         ) : (
           <ProjectImageGallery project={project} reduce={reduce} />
         )}
+        </Suspense>
+        </ProjectContentBoundary>
       </main>
       <BackToTop />
       <PortfolioChat />

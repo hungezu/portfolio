@@ -1,6 +1,7 @@
 "use client";
 
 import { publicAsset } from "../portfolio-data";
+import { PortfolioImage } from "../portfolio-image";
 import "./gkx-supplemental-materials.css";
 
 export type GkxSupplementalImageAsset = {
@@ -105,7 +106,7 @@ function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen
               aria-label={`查看原图：${material.title}`}
               onClick={event => onOpen(material, event.currentTarget)}
             >
-              <img
+              <PortfolioImage
                 src={publicAsset(material.src)}
                 alt={material.alt}
                 width={material.width}

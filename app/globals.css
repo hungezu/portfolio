@@ -346,6 +346,10 @@ video {
   max-width: 100%;
 }
 
+:where(img[data-portfolio-image]) {
+  height: auto;
+}
+
 h1,
 h2,
 h3,
@@ -2867,6 +2871,27 @@ a.contact-item:focus-visible {
   margin: 0 auto;
   padding-top: 24px;
   padding-bottom: 48px;
+}
+
+.case-loading {
+  min-height: 55vh;
+  display: grid;
+  place-items: center;
+  color: var(--quiet);
+}
+
+.image-fallback {
+  align-content: center;
+  gap: 12px;
+}
+
+.image-fallback button {
+  padding: 10px 16px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
 }
 
 .case-gallery figure {

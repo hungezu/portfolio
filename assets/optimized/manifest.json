@@ -1,0 +1,1642 @@
+{
+  "/assets/portfolio/about.jpg": {
+    "src": "/assets/optimized/portfolio/about.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/about-640.webp 640w, /assets/optimized/portfolio/about-1280.webp 1280w, /assets/optimized/portfolio/about.webp 1400w",
+    "originalBytes": 125671,
+    "optimizedBytes": 99670
+  },
+  "/assets/portfolio/aigc.jpg": {
+    "src": "/assets/optimized/portfolio/aigc.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/aigc-640.webp 640w, /assets/optimized/portfolio/aigc-1280.webp 1280w, /assets/optimized/portfolio/aigc.webp 1400w",
+    "originalBytes": 138433,
+    "optimizedBytes": 105118
+  },
+  "/assets/portfolio/c4d.jpg": {
+    "src": "/assets/optimized/portfolio/c4d.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/c4d-640.webp 640w, /assets/optimized/portfolio/c4d-1280.webp 1280w, /assets/optimized/portfolio/c4d.webp 1400w",
+    "originalBytes": 97171,
+    "optimizedBytes": 63382
+  },
+  "/assets/portfolio/catalog.jpg": {
+    "src": "/assets/optimized/portfolio/catalog.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/catalog-640.webp 640w, /assets/optimized/portfolio/catalog-1280.webp 1280w, /assets/optimized/portfolio/catalog.webp 1400w",
+    "originalBytes": 64590,
+    "optimizedBytes": 36940
+  },
+  "/assets/portfolio/chataxera-miniapp.jpg": {
+    "src": "/assets/optimized/portfolio/chataxera-miniapp.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/chataxera-miniapp-640.webp 640w, /assets/optimized/portfolio/chataxera-miniapp-1280.webp 1280w, /assets/optimized/portfolio/chataxera-miniapp.webp 1400w",
+    "originalBytes": 81499,
+    "optimizedBytes": 51944
+  },
+  "/assets/portfolio/cover.jpg": {
+    "src": "/assets/optimized/portfolio/cover.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/cover-640.webp 640w, /assets/optimized/portfolio/cover-1280.webp 1280w, /assets/optimized/portfolio/cover.webp 1400w",
+    "originalBytes": 56729,
+    "optimizedBytes": 32752
+  },
+  "/assets/portfolio/energy-dashboard.jpg": {
+    "src": "/assets/optimized/portfolio/energy-dashboard.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/energy-dashboard-640.webp 640w, /assets/optimized/portfolio/energy-dashboard-1280.webp 1280w, /assets/optimized/portfolio/energy-dashboard.webp 1400w",
+    "originalBytes": 114663,
+    "optimizedBytes": 79618
+  },
+  "/assets/portfolio/energy-group.jpg": {
+    "src": "/assets/optimized/portfolio/energy-group.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/energy-group-640.webp 640w, /assets/optimized/portfolio/energy-group-1280.webp 1280w, /assets/optimized/portfolio/energy-group.webp 1400w",
+    "originalBytes": 131736,
+    "optimizedBytes": 94978
+  },
+  "/assets/portfolio/interaction-principles.jpg": {
+    "src": "/assets/optimized/portfolio/interaction-principles.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/interaction-principles-640.webp 640w, /assets/optimized/portfolio/interaction-principles-1280.webp 1280w, /assets/optimized/portfolio/interaction-principles.webp 1400w",
+    "originalBytes": 62157,
+    "optimizedBytes": 41714
+  },
+  "/assets/portfolio/tax-cloud-app.jpg": {
+    "src": "/assets/optimized/portfolio/tax-cloud-app.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/tax-cloud-app-640.webp 640w, /assets/optimized/portfolio/tax-cloud-app-1280.webp 1280w, /assets/optimized/portfolio/tax-cloud-app.webp 1400w",
+    "originalBytes": 95497,
+    "optimizedBytes": 63712
+  },
+  "/assets/portfolio/tax-cloud-web.jpg": {
+    "src": "/assets/optimized/portfolio/tax-cloud-web.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/tax-cloud-web-640.webp 640w, /assets/optimized/portfolio/tax-cloud-web-1280.webp 1280w, /assets/optimized/portfolio/tax-cloud-web.webp 1400w",
+    "originalBytes": 125203,
+    "optimizedBytes": 83636
+  },
+  "/assets/portfolio/ticket-miniapp.jpg": {
+    "src": "/assets/optimized/portfolio/ticket-miniapp.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/ticket-miniapp-640.webp 640w, /assets/optimized/portfolio/ticket-miniapp-1280.webp 1280w, /assets/optimized/portfolio/ticket-miniapp.webp 1400w",
+    "originalBytes": 81480,
+    "optimizedBytes": 46056
+  },
+  "/assets/portfolio/visual-screen.jpg": {
+    "src": "/assets/optimized/portfolio/visual-screen.webp",
+    "width": 1400,
+    "height": 787,
+    "srcSet": "/assets/optimized/portfolio/visual-screen-640.webp 640w, /assets/optimized/portfolio/visual-screen-1280.webp 1280w, /assets/optimized/portfolio/visual-screen.webp 1400w",
+    "originalBytes": 103110,
+    "optimizedBytes": 66470
+  },
+  "/assets/projects/covers/data-visualisation-cover-20260828.jpg": {
+    "src": "/assets/optimized/projects/covers/data-visualisation-cover-20260828.webp",
+    "width": 1360,
+    "height": 765,
+    "srcSet": "/assets/optimized/projects/covers/data-visualisation-cover-20260828-640.webp 640w, /assets/optimized/projects/covers/data-visualisation-cover-20260828-1280.webp 1280w, /assets/optimized/projects/covers/data-visualisation-cover-20260828.webp 1360w",
+    "originalBytes": 192858,
+    "optimizedBytes": 104930
+  },
+  "/assets/projects/covers/data-visualisation-cover-20260828.webp": {
+    "src": "/assets/optimized/projects/covers/data-visualisation-cover-20260828.webp",
+    "width": 1360,
+    "height": 765,
+    "srcSet": "/assets/optimized/projects/covers/data-visualisation-cover-20260828-640.webp 640w, /assets/optimized/projects/covers/data-visualisation-cover-20260828-1280.webp 1280w, /assets/optimized/projects/covers/data-visualisation-cover-20260828.webp 1360w",
+    "originalBytes": 98522,
+    "optimizedBytes": 104930
+  },
+  "/assets/projects/covers/data-visualisation-cover.jpg": {
+    "src": "/assets/optimized/projects/covers/data-visualisation-cover.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/data-visualisation-cover-640.webp 640w, /assets/optimized/projects/covers/data-visualisation-cover-1280.webp 1280w, /assets/optimized/projects/covers/data-visualisation-cover.webp 1672w",
+    "originalBytes": 190323,
+    "optimizedBytes": 65092
+  },
+  "/assets/projects/covers/data-visualisation-cover.webp": {
+    "src": "/assets/optimized/projects/covers/data-visualisation-cover.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/data-visualisation-cover-640.webp 640w, /assets/optimized/projects/covers/data-visualisation-cover-1280.webp 1280w, /assets/optimized/projects/covers/data-visualisation-cover.webp 1672w",
+    "originalBytes": 59170,
+    "optimizedBytes": 65092
+  },
+  "/assets/projects/covers/energy-tax-cover-20260828.jpg": {
+    "src": "/assets/optimized/projects/covers/energy-tax-cover-20260828.webp",
+    "width": 1360,
+    "height": 765,
+    "srcSet": "/assets/optimized/projects/covers/energy-tax-cover-20260828-640.webp 640w, /assets/optimized/projects/covers/energy-tax-cover-20260828-1280.webp 1280w, /assets/optimized/projects/covers/energy-tax-cover-20260828.webp 1360w",
+    "originalBytes": 156262,
+    "optimizedBytes": 80090
+  },
+  "/assets/projects/covers/energy-tax-cover-20260828.webp": {
+    "src": "/assets/optimized/projects/covers/energy-tax-cover-20260828.webp",
+    "width": 1360,
+    "height": 765,
+    "srcSet": "/assets/optimized/projects/covers/energy-tax-cover-20260828-640.webp 640w, /assets/optimized/projects/covers/energy-tax-cover-20260828-1280.webp 1280w, /assets/optimized/projects/covers/energy-tax-cover-20260828.webp 1360w",
+    "originalBytes": 77776,
+    "optimizedBytes": 80090
+  },
+  "/assets/projects/covers/energy-tax-cover.jpg": {
+    "src": "/assets/optimized/projects/covers/energy-tax-cover.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/energy-tax-cover-640.webp 640w, /assets/optimized/projects/covers/energy-tax-cover-1280.webp 1280w, /assets/optimized/projects/covers/energy-tax-cover.webp 1672w",
+    "originalBytes": 148376,
+    "optimizedBytes": 41588
+  },
+  "/assets/projects/covers/energy-tax-cover.webp": {
+    "src": "/assets/optimized/projects/covers/energy-tax-cover.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/energy-tax-cover-640.webp 640w, /assets/optimized/projects/covers/energy-tax-cover-1280.webp 1280w, /assets/optimized/projects/covers/energy-tax-cover.webp 1672w",
+    "originalBytes": 38082,
+    "optimizedBytes": 41588
+  },
+  "/assets/projects/covers/gkx-card-cover-20260906.webp": {
+    "src": "/assets/optimized/projects/covers/gkx-card-cover-20260906.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/gkx-card-cover-20260906-640.webp 640w, /assets/optimized/projects/covers/gkx-card-cover-20260906-1280.webp 1280w, /assets/optimized/projects/covers/gkx-card-cover-20260906.webp 1672w",
+    "originalBytes": 121268,
+    "optimizedBytes": 106816
+  },
+  "/assets/projects/covers/gkx-cover.jpg": {
+    "src": "/assets/optimized/projects/covers/gkx-cover.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/gkx-cover-640.webp 640w, /assets/optimized/projects/covers/gkx-cover-1280.webp 1280w, /assets/optimized/projects/covers/gkx-cover.webp 1672w",
+    "originalBytes": 154593,
+    "optimizedBytes": 44242
+  },
+  "/assets/projects/covers/gkx-cover.webp": {
+    "src": "/assets/optimized/projects/covers/gkx-cover.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/gkx-cover-640.webp 640w, /assets/optimized/projects/covers/gkx-cover-1280.webp 1280w, /assets/optimized/projects/covers/gkx-cover.webp 1672w",
+    "originalBytes": 40472,
+    "optimizedBytes": 44242
+  },
+  "/assets/projects/covers/tax-cloud-cover-20260828.jpg": {
+    "src": "/assets/optimized/projects/covers/tax-cloud-cover-20260828.webp",
+    "width": 1360,
+    "height": 765,
+    "srcSet": "/assets/optimized/projects/covers/tax-cloud-cover-20260828-640.webp 640w, /assets/optimized/projects/covers/tax-cloud-cover-20260828-1280.webp 1280w, /assets/optimized/projects/covers/tax-cloud-cover-20260828.webp 1360w",
+    "originalBytes": 157050,
+    "optimizedBytes": 76286
+  },
+  "/assets/projects/covers/tax-cloud-cover-20260828.webp": {
+    "src": "/assets/optimized/projects/covers/tax-cloud-cover-20260828.webp",
+    "width": 1360,
+    "height": 765,
+    "srcSet": "/assets/optimized/projects/covers/tax-cloud-cover-20260828-640.webp 640w, /assets/optimized/projects/covers/tax-cloud-cover-20260828-1280.webp 1280w, /assets/optimized/projects/covers/tax-cloud-cover-20260828.webp 1360w",
+    "originalBytes": 73636,
+    "optimizedBytes": 76286
+  },
+  "/assets/projects/covers/tax-cloud-cover.jpg": {
+    "src": "/assets/optimized/projects/covers/tax-cloud-cover.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/tax-cloud-cover-640.webp 640w, /assets/optimized/projects/covers/tax-cloud-cover-1280.webp 1280w, /assets/optimized/projects/covers/tax-cloud-cover.webp 1672w",
+    "originalBytes": 155739,
+    "optimizedBytes": 47140
+  },
+  "/assets/projects/covers/tax-cloud-cover.webp": {
+    "src": "/assets/optimized/projects/covers/tax-cloud-cover.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/tax-cloud-cover-640.webp 640w, /assets/optimized/projects/covers/tax-cloud-cover-1280.webp 1280w, /assets/optimized/projects/covers/tax-cloud-cover.webp 1672w",
+    "originalBytes": 43208,
+    "optimizedBytes": 47140
+  },
+  "/assets/projects/covers/zhaocai-smart-cover-20260828.jpg": {
+    "src": "/assets/optimized/projects/covers/zhaocai-smart-cover-20260828.webp",
+    "width": 1360,
+    "height": 765,
+    "srcSet": "/assets/optimized/projects/covers/zhaocai-smart-cover-20260828-640.webp 640w, /assets/optimized/projects/covers/zhaocai-smart-cover-20260828-1280.webp 1280w, /assets/optimized/projects/covers/zhaocai-smart-cover-20260828.webp 1360w",
+    "originalBytes": 137654,
+    "optimizedBytes": 59630
+  },
+  "/assets/projects/covers/zhaocai-smart-cover-20260828.webp": {
+    "src": "/assets/optimized/projects/covers/zhaocai-smart-cover-20260828.webp",
+    "width": 1360,
+    "height": 765,
+    "srcSet": "/assets/optimized/projects/covers/zhaocai-smart-cover-20260828-640.webp 640w, /assets/optimized/projects/covers/zhaocai-smart-cover-20260828-1280.webp 1280w, /assets/optimized/projects/covers/zhaocai-smart-cover-20260828.webp 1360w",
+    "originalBytes": 59160,
+    "optimizedBytes": 59630
+  },
+  "/assets/projects/covers/zhaocai-smart-cover.jpg": {
+    "src": "/assets/optimized/projects/covers/zhaocai-smart-cover.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/zhaocai-smart-cover-640.webp 640w, /assets/optimized/projects/covers/zhaocai-smart-cover-1280.webp 1280w, /assets/optimized/projects/covers/zhaocai-smart-cover.webp 1672w",
+    "originalBytes": 143558,
+    "optimizedBytes": 39160
+  },
+  "/assets/projects/covers/zhaocai-smart-cover.webp": {
+    "src": "/assets/optimized/projects/covers/zhaocai-smart-cover.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/covers/zhaocai-smart-cover-640.webp 640w, /assets/optimized/projects/covers/zhaocai-smart-cover-1280.webp 1280w, /assets/optimized/projects/covers/zhaocai-smart-cover.webp 1672w",
+    "originalBytes": 35982,
+    "optimizedBytes": 39160
+  },
+  "/assets/projects/data-visualisation/01-project-overview.png": {
+    "src": "/assets/optimized/projects/data-visualisation/01-project-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/01-project-overview-640.webp 640w, /assets/optimized/projects/data-visualisation/01-project-overview-1280.webp 1280w, /assets/optimized/projects/data-visualisation/01-project-overview.webp 1920w",
+    "originalBytes": 1257786,
+    "optimizedBytes": 103262
+  },
+  "/assets/projects/data-visualisation/01-project-overview.webp": {
+    "src": "/assets/optimized/projects/data-visualisation/01-project-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/01-project-overview-640.webp 640w, /assets/optimized/projects/data-visualisation/01-project-overview-1280.webp 1280w, /assets/optimized/projects/data-visualisation/01-project-overview.webp 1920w",
+    "originalBytes": 95604,
+    "optimizedBytes": 103262
+  },
+  "/assets/projects/data-visualisation/02-multi-industry-dashboard.png": {
+    "src": "/assets/optimized/projects/data-visualisation/02-multi-industry-dashboard.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/02-multi-industry-dashboard-640.webp 640w, /assets/optimized/projects/data-visualisation/02-multi-industry-dashboard-1280.webp 1280w, /assets/optimized/projects/data-visualisation/02-multi-industry-dashboard.webp 1920w",
+    "originalBytes": 1053078,
+    "optimizedBytes": 138378
+  },
+  "/assets/projects/data-visualisation/02-multi-industry-dashboard.webp": {
+    "src": "/assets/optimized/projects/data-visualisation/02-multi-industry-dashboard.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/02-multi-industry-dashboard-640.webp 640w, /assets/optimized/projects/data-visualisation/02-multi-industry-dashboard-1280.webp 1280w, /assets/optimized/projects/data-visualisation/02-multi-industry-dashboard.webp 1920w",
+    "originalBytes": 131966,
+    "optimizedBytes": 138378
+  },
+  "/assets/projects/data-visualisation/03-transportation-dashboard.png": {
+    "src": "/assets/optimized/projects/data-visualisation/03-transportation-dashboard.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/03-transportation-dashboard-640.webp 640w, /assets/optimized/projects/data-visualisation/03-transportation-dashboard-1280.webp 1280w, /assets/optimized/projects/data-visualisation/03-transportation-dashboard.webp 1920w",
+    "originalBytes": 1143928,
+    "optimizedBytes": 118432
+  },
+  "/assets/projects/data-visualisation/03-transportation-dashboard.webp": {
+    "src": "/assets/optimized/projects/data-visualisation/03-transportation-dashboard.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/03-transportation-dashboard-640.webp 640w, /assets/optimized/projects/data-visualisation/03-transportation-dashboard-1280.webp 1280w, /assets/optimized/projects/data-visualisation/03-transportation-dashboard.webp 1920w",
+    "originalBytes": 113528,
+    "optimizedBytes": 118432
+  },
+  "/assets/projects/data-visualisation/04-real-estate-dashboard.png": {
+    "src": "/assets/optimized/projects/data-visualisation/04-real-estate-dashboard.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/04-real-estate-dashboard-640.webp 640w, /assets/optimized/projects/data-visualisation/04-real-estate-dashboard-1280.webp 1280w, /assets/optimized/projects/data-visualisation/04-real-estate-dashboard.webp 1920w",
+    "originalBytes": 496060,
+    "optimizedBytes": 99692
+  },
+  "/assets/projects/data-visualisation/04-real-estate-dashboard.webp": {
+    "src": "/assets/optimized/projects/data-visualisation/04-real-estate-dashboard.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/04-real-estate-dashboard-640.webp 640w, /assets/optimized/projects/data-visualisation/04-real-estate-dashboard-1280.webp 1280w, /assets/optimized/projects/data-visualisation/04-real-estate-dashboard.webp 1920w",
+    "originalBytes": 94030,
+    "optimizedBytes": 99692
+  },
+  "/assets/projects/data-visualisation/05-design-guidelines.png": {
+    "src": "/assets/optimized/projects/data-visualisation/05-design-guidelines.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/05-design-guidelines-640.webp 640w, /assets/optimized/projects/data-visualisation/05-design-guidelines-1280.webp 1280w, /assets/optimized/projects/data-visualisation/05-design-guidelines.webp 1920w",
+    "originalBytes": 603066,
+    "optimizedBytes": 117074
+  },
+  "/assets/projects/data-visualisation/05-design-guidelines.webp": {
+    "src": "/assets/optimized/projects/data-visualisation/05-design-guidelines.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/05-design-guidelines-640.webp 640w, /assets/optimized/projects/data-visualisation/05-design-guidelines-1280.webp 1280w, /assets/optimized/projects/data-visualisation/05-design-guidelines.webp 1920w",
+    "originalBytes": 111394,
+    "optimizedBytes": 117074
+  },
+  "/assets/projects/energy-tax/00-cover.png": {
+    "src": "/assets/optimized/projects/energy-tax/00-cover.webp",
+    "width": 2400,
+    "height": 2742,
+    "srcSet": "/assets/optimized/projects/energy-tax/00-cover-640.webp 640w, /assets/optimized/projects/energy-tax/00-cover-1280.webp 1280w, /assets/optimized/projects/energy-tax/00-cover.webp 2400w",
+    "originalBytes": 4083797,
+    "optimizedBytes": 238460
+  },
+  "/assets/projects/energy-tax/00-cover.webp": {
+    "src": "/assets/optimized/projects/energy-tax/00-cover.webp",
+    "width": 2400,
+    "height": 2742,
+    "srcSet": "/assets/optimized/projects/energy-tax/00-cover-640.webp 640w, /assets/optimized/projects/energy-tax/00-cover-1280.webp 1280w, /assets/optimized/projects/energy-tax/00-cover.webp 2400w",
+    "originalBytes": 531828,
+    "optimizedBytes": 238460
+  },
+  "/assets/projects/energy-tax/01-context.png": {
+    "src": "/assets/optimized/projects/energy-tax/01-context.webp",
+    "width": 2400,
+    "height": 3680,
+    "srcSet": "/assets/optimized/projects/energy-tax/01-context-640.webp 640w, /assets/optimized/projects/energy-tax/01-context-1280.webp 1280w, /assets/optimized/projects/energy-tax/01-context.webp 2400w",
+    "originalBytes": 1118905,
+    "optimizedBytes": 303506
+  },
+  "/assets/projects/energy-tax/01-context.webp": {
+    "src": "/assets/optimized/projects/energy-tax/01-context.webp",
+    "width": 2400,
+    "height": 3680,
+    "srcSet": "/assets/optimized/projects/energy-tax/01-context-640.webp 640w, /assets/optimized/projects/energy-tax/01-context-1280.webp 1280w, /assets/optimized/projects/energy-tax/01-context.webp 2400w",
+    "originalBytes": 579666,
+    "optimizedBytes": 303506
+  },
+  "/assets/projects/energy-tax/01-project-background.png": {
+    "src": "/assets/optimized/projects/energy-tax/01-project-background.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/01-project-background-640.webp 640w, /assets/optimized/projects/energy-tax/01-project-background-1280.webp 1280w, /assets/optimized/projects/energy-tax/01-project-background.webp 1920w",
+    "originalBytes": 950631,
+    "optimizedBytes": 141860
+  },
+  "/assets/projects/energy-tax/01-project-background.webp": {
+    "src": "/assets/optimized/projects/energy-tax/01-project-background.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/01-project-background-640.webp 640w, /assets/optimized/projects/energy-tax/01-project-background-1280.webp 1280w, /assets/optimized/projects/energy-tax/01-project-background.webp 1920w",
+    "originalBytes": 135276,
+    "optimizedBytes": 141860
+  },
+  "/assets/projects/energy-tax/02-design-goals.png": {
+    "src": "/assets/optimized/projects/energy-tax/02-design-goals.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/02-design-goals-640.webp 640w, /assets/optimized/projects/energy-tax/02-design-goals-1280.webp 1280w, /assets/optimized/projects/energy-tax/02-design-goals.webp 1920w",
+    "originalBytes": 376939,
+    "optimizedBytes": 89394
+  },
+  "/assets/projects/energy-tax/02-design-goals.webp": {
+    "src": "/assets/optimized/projects/energy-tax/02-design-goals.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/02-design-goals-640.webp 640w, /assets/optimized/projects/energy-tax/02-design-goals-1280.webp 1280w, /assets/optimized/projects/energy-tax/02-design-goals.webp 1920w",
+    "originalBytes": 85706,
+    "optimizedBytes": 89394
+  },
+  "/assets/projects/energy-tax/02-system.png": {
+    "src": "/assets/optimized/projects/energy-tax/02-system.webp",
+    "width": 2400,
+    "height": 5892,
+    "srcSet": "/assets/optimized/projects/energy-tax/02-system-640.webp 640w, /assets/optimized/projects/energy-tax/02-system-1280.webp 1280w, /assets/optimized/projects/energy-tax/02-system.webp 2400w",
+    "originalBytes": 2921193,
+    "optimizedBytes": 395938
+  },
+  "/assets/projects/energy-tax/02-system.webp": {
+    "src": "/assets/optimized/projects/energy-tax/02-system.webp",
+    "width": 2400,
+    "height": 5892,
+    "srcSet": "/assets/optimized/projects/energy-tax/02-system-640.webp 640w, /assets/optimized/projects/energy-tax/02-system-1280.webp 1280w, /assets/optimized/projects/energy-tax/02-system.webp 2400w",
+    "originalBytes": 757650,
+    "optimizedBytes": 395938
+  },
+  "/assets/projects/energy-tax/03-home-overview.png": {
+    "src": "/assets/optimized/projects/energy-tax/03-home-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/03-home-overview-640.webp 640w, /assets/optimized/projects/energy-tax/03-home-overview-1280.webp 1280w, /assets/optimized/projects/energy-tax/03-home-overview.webp 1920w",
+    "originalBytes": 821598,
+    "optimizedBytes": 128726
+  },
+  "/assets/projects/energy-tax/03-home-overview.webp": {
+    "src": "/assets/optimized/projects/energy-tax/03-home-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/03-home-overview-640.webp 640w, /assets/optimized/projects/energy-tax/03-home-overview-1280.webp 1280w, /assets/optimized/projects/energy-tax/03-home-overview.webp 1920w",
+    "originalBytes": 123270,
+    "optimizedBytes": 128726
+  },
+  "/assets/projects/energy-tax/03-home.png": {
+    "src": "/assets/optimized/projects/energy-tax/03-home.webp",
+    "width": 2400,
+    "height": 4822,
+    "srcSet": "/assets/optimized/projects/energy-tax/03-home-640.webp 640w, /assets/optimized/projects/energy-tax/03-home-1280.webp 1280w, /assets/optimized/projects/energy-tax/03-home.webp 2400w",
+    "originalBytes": 5184628,
+    "optimizedBytes": 444128
+  },
+  "/assets/projects/energy-tax/03-home.webp": {
+    "src": "/assets/optimized/projects/energy-tax/03-home.webp",
+    "width": 2400,
+    "height": 4822,
+    "srcSet": "/assets/optimized/projects/energy-tax/03-home-640.webp 640w, /assets/optimized/projects/energy-tax/03-home-1280.webp 1280w, /assets/optimized/projects/energy-tax/03-home.webp 2400w",
+    "originalBytes": 930434,
+    "optimizedBytes": 444128
+  },
+  "/assets/projects/energy-tax/04-tax-filing-workstation.png": {
+    "src": "/assets/optimized/projects/energy-tax/04-tax-filing-workstation.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/04-tax-filing-workstation-640.webp 640w, /assets/optimized/projects/energy-tax/04-tax-filing-workstation-1280.webp 1280w, /assets/optimized/projects/energy-tax/04-tax-filing-workstation.webp 1920w",
+    "originalBytes": 477077,
+    "optimizedBytes": 88776
+  },
+  "/assets/projects/energy-tax/04-tax-filing-workstation.webp": {
+    "src": "/assets/optimized/projects/energy-tax/04-tax-filing-workstation.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/04-tax-filing-workstation-640.webp 640w, /assets/optimized/projects/energy-tax/04-tax-filing-workstation-1280.webp 1280w, /assets/optimized/projects/energy-tax/04-tax-filing-workstation.webp 1920w",
+    "originalBytes": 83382,
+    "optimizedBytes": 88776
+  },
+  "/assets/projects/energy-tax/04-tax-workbench.png": {
+    "src": "/assets/optimized/projects/energy-tax/04-tax-workbench.webp",
+    "width": 2400,
+    "height": 4447,
+    "srcSet": "/assets/optimized/projects/energy-tax/04-tax-workbench-640.webp 640w, /assets/optimized/projects/energy-tax/04-tax-workbench-1280.webp 1280w, /assets/optimized/projects/energy-tax/04-tax-workbench.webp 2400w",
+    "originalBytes": 2369237,
+    "optimizedBytes": 284814
+  },
+  "/assets/projects/energy-tax/04-tax-workbench.webp": {
+    "src": "/assets/optimized/projects/energy-tax/04-tax-workbench.webp",
+    "width": 2400,
+    "height": 4447,
+    "srcSet": "/assets/optimized/projects/energy-tax/04-tax-workbench-640.webp 640w, /assets/optimized/projects/energy-tax/04-tax-workbench-1280.webp 1280w, /assets/optimized/projects/energy-tax/04-tax-workbench.webp 2400w",
+    "originalBytes": 559728,
+    "optimizedBytes": 284814
+  },
+  "/assets/projects/energy-tax/05-general-management-workstation.png": {
+    "src": "/assets/optimized/projects/energy-tax/05-general-management-workstation.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/05-general-management-workstation-640.webp 640w, /assets/optimized/projects/energy-tax/05-general-management-workstation-1280.webp 1280w, /assets/optimized/projects/energy-tax/05-general-management-workstation.webp 1920w",
+    "originalBytes": 407469,
+    "optimizedBytes": 85370
+  },
+  "/assets/projects/energy-tax/05-general-management-workstation.webp": {
+    "src": "/assets/optimized/projects/energy-tax/05-general-management-workstation.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/05-general-management-workstation-640.webp 640w, /assets/optimized/projects/energy-tax/05-general-management-workstation-1280.webp 1280w, /assets/optimized/projects/energy-tax/05-general-management-workstation.webp 1920w",
+    "originalBytes": 80562,
+    "optimizedBytes": 85370
+  },
+  "/assets/projects/energy-tax/05-management.png": {
+    "src": "/assets/optimized/projects/energy-tax/05-management.webp",
+    "width": 2400,
+    "height": 4782,
+    "srcSet": "/assets/optimized/projects/energy-tax/05-management-640.webp 640w, /assets/optimized/projects/energy-tax/05-management-1280.webp 1280w, /assets/optimized/projects/energy-tax/05-management.webp 2400w",
+    "originalBytes": 3805295,
+    "optimizedBytes": 345748
+  },
+  "/assets/projects/energy-tax/05-management.webp": {
+    "src": "/assets/optimized/projects/energy-tax/05-management.webp",
+    "width": 2400,
+    "height": 4782,
+    "srcSet": "/assets/optimized/projects/energy-tax/05-management-640.webp 640w, /assets/optimized/projects/energy-tax/05-management-1280.webp 1280w, /assets/optimized/projects/energy-tax/05-management.webp 2400w",
+    "originalBytes": 676034,
+    "optimizedBytes": 345748
+  },
+  "/assets/projects/energy-tax/06-grid-specification.png": {
+    "src": "/assets/optimized/projects/energy-tax/06-grid-specification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/06-grid-specification-640.webp 640w, /assets/optimized/projects/energy-tax/06-grid-specification-1280.webp 1280w, /assets/optimized/projects/energy-tax/06-grid-specification.webp 1920w",
+    "originalBytes": 118578,
+    "optimizedBytes": 78028
+  },
+  "/assets/projects/energy-tax/06-grid-specification.webp": {
+    "src": "/assets/optimized/projects/energy-tax/06-grid-specification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/06-grid-specification-640.webp 640w, /assets/optimized/projects/energy-tax/06-grid-specification-1280.webp 1280w, /assets/optimized/projects/energy-tax/06-grid-specification.webp 1920w",
+    "originalBytes": 75600,
+    "optimizedBytes": 78028
+  },
+  "/assets/projects/energy-tax/06-reflection.png": {
+    "src": "/assets/optimized/projects/energy-tax/06-reflection.webp",
+    "width": 2400,
+    "height": 4737,
+    "srcSet": "/assets/optimized/projects/energy-tax/06-reflection-640.webp 640w, /assets/optimized/projects/energy-tax/06-reflection-1280.webp 1280w, /assets/optimized/projects/energy-tax/06-reflection.webp 2400w",
+    "originalBytes": 3745758,
+    "optimizedBytes": 333738
+  },
+  "/assets/projects/energy-tax/06-reflection.webp": {
+    "src": "/assets/optimized/projects/energy-tax/06-reflection.webp",
+    "width": 2400,
+    "height": 4737,
+    "srcSet": "/assets/optimized/projects/energy-tax/06-reflection-640.webp 640w, /assets/optimized/projects/energy-tax/06-reflection-1280.webp 1280w, /assets/optimized/projects/energy-tax/06-reflection.webp 2400w",
+    "originalBytes": 641004,
+    "optimizedBytes": 333738
+  },
+  "/assets/projects/energy-tax/07-component-specification.png": {
+    "src": "/assets/optimized/projects/energy-tax/07-component-specification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/07-component-specification-640.webp 640w, /assets/optimized/projects/energy-tax/07-component-specification-1280.webp 1280w, /assets/optimized/projects/energy-tax/07-component-specification.webp 1920w",
+    "originalBytes": 261218,
+    "optimizedBytes": 61722
+  },
+  "/assets/projects/energy-tax/07-component-specification.webp": {
+    "src": "/assets/optimized/projects/energy-tax/07-component-specification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/07-component-specification-640.webp 640w, /assets/optimized/projects/energy-tax/07-component-specification-1280.webp 1280w, /assets/optimized/projects/energy-tax/07-component-specification.webp 1920w",
+    "originalBytes": 58324,
+    "optimizedBytes": 61722
+  },
+  "/assets/projects/energy-tax/08-empty-state-specification.png": {
+    "src": "/assets/optimized/projects/energy-tax/08-empty-state-specification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/08-empty-state-specification-640.webp 640w, /assets/optimized/projects/energy-tax/08-empty-state-specification-1280.webp 1280w, /assets/optimized/projects/energy-tax/08-empty-state-specification.webp 1920w",
+    "originalBytes": 232422,
+    "optimizedBytes": 39216
+  },
+  "/assets/projects/energy-tax/08-empty-state-specification.webp": {
+    "src": "/assets/optimized/projects/energy-tax/08-empty-state-specification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/08-empty-state-specification-640.webp 640w, /assets/optimized/projects/energy-tax/08-empty-state-specification-1280.webp 1280w, /assets/optimized/projects/energy-tax/08-empty-state-specification.webp 1920w",
+    "originalBytes": 37030,
+    "optimizedBytes": 39216
+  },
+  "/assets/projects/energy-tax/09-project-retrospective.png": {
+    "src": "/assets/optimized/projects/energy-tax/09-project-retrospective.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/09-project-retrospective-640.webp 640w, /assets/optimized/projects/energy-tax/09-project-retrospective-1280.webp 1280w, /assets/optimized/projects/energy-tax/09-project-retrospective.webp 1920w",
+    "originalBytes": 824006,
+    "optimizedBytes": 127064
+  },
+  "/assets/projects/energy-tax/09-project-retrospective.webp": {
+    "src": "/assets/optimized/projects/energy-tax/09-project-retrospective.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/energy-tax/09-project-retrospective-640.webp 640w, /assets/optimized/projects/energy-tax/09-project-retrospective-1280.webp 1280w, /assets/optimized/projects/energy-tax/09-project-retrospective.webp 1920w",
+    "originalBytes": 105642,
+    "optimizedBytes": 127064
+  },
+  "/assets/projects/gkx/case-study/reference/wang-p22-design-system-architecture.jpg": {
+    "src": "/assets/optimized/projects/gkx/case-study/reference/wang-p22-design-system-architecture.webp",
+    "width": 2400,
+    "height": 1296,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/reference/wang-p22-design-system-architecture-640.webp 640w, /assets/optimized/projects/gkx/case-study/reference/wang-p22-design-system-architecture-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/reference/wang-p22-design-system-architecture.webp 2400w",
+    "originalBytes": 641793,
+    "optimizedBytes": 123086
+  },
+  "/assets/projects/gkx/case-study/reference/wang-p23-layers.jpg": {
+    "src": "/assets/optimized/projects/gkx/case-study/reference/wang-p23-layers.webp",
+    "width": 2400,
+    "height": 1296,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/reference/wang-p23-layers-640.webp 640w, /assets/optimized/projects/gkx/case-study/reference/wang-p23-layers-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/reference/wang-p23-layers.webp 2400w",
+    "originalBytes": 351374,
+    "optimizedBytes": 101812
+  },
+  "/assets/projects/gkx/case-study/reference/wang-p28-container.jpg": {
+    "src": "/assets/optimized/projects/gkx/case-study/reference/wang-p28-container.webp",
+    "width": 2400,
+    "height": 1296,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/reference/wang-p28-container-640.webp 640w, /assets/optimized/projects/gkx/case-study/reference/wang-p28-container-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/reference/wang-p28-container.webp 2400w",
+    "originalBytes": 464995,
+    "optimizedBytes": 143778
+  },
+  "/assets/projects/gkx/case-study/reference/wang-p30-page-types.jpg": {
+    "src": "/assets/optimized/projects/gkx/case-study/reference/wang-p30-page-types.webp",
+    "width": 2400,
+    "height": 1296,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/reference/wang-p30-page-types-640.webp 640w, /assets/optimized/projects/gkx/case-study/reference/wang-p30-page-types-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/reference/wang-p30-page-types.webp 2400w",
+    "originalBytes": 313779,
+    "optimizedBytes": 88548
+  },
+  "/assets/projects/gkx/case-study/reference/wang-p36-ai-boundaries.jpg": {
+    "src": "/assets/optimized/projects/gkx/case-study/reference/wang-p36-ai-boundaries.webp",
+    "width": 2400,
+    "height": 1296,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/reference/wang-p36-ai-boundaries-640.webp 640w, /assets/optimized/projects/gkx/case-study/reference/wang-p36-ai-boundaries-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/reference/wang-p36-ai-boundaries.webp 2400w",
+    "originalBytes": 324557,
+    "optimizedBytes": 115472
+  },
+  "/assets/projects/gkx/case-study/reference/wang-p45-human-ai-loop.jpg": {
+    "src": "/assets/optimized/projects/gkx/case-study/reference/wang-p45-human-ai-loop.webp",
+    "width": 2400,
+    "height": 1296,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/reference/wang-p45-human-ai-loop-640.webp 640w, /assets/optimized/projects/gkx/case-study/reference/wang-p45-human-ai-loop-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/reference/wang-p45-human-ai-loop.webp 2400w",
+    "originalBytes": 547783,
+    "optimizedBytes": 193316
+  },
+  "/assets/projects/gkx/case-study/reference/wang-p47-context.jpg": {
+    "src": "/assets/optimized/projects/gkx/case-study/reference/wang-p47-context.webp",
+    "width": 2400,
+    "height": 1296,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/reference/wang-p47-context-640.webp 640w, /assets/optimized/projects/gkx/case-study/reference/wang-p47-context-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/reference/wang-p47-context.webp 2400w",
+    "originalBytes": 687125,
+    "optimizedBytes": 286942
+  },
+  "/assets/projects/gkx/case-study/reference/wang-p50-validation-loop.jpg": {
+    "src": "/assets/optimized/projects/gkx/case-study/reference/wang-p50-validation-loop.webp",
+    "width": 2400,
+    "height": 1296,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/reference/wang-p50-validation-loop-640.webp 640w, /assets/optimized/projects/gkx/case-study/reference/wang-p50-validation-loop-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/reference/wang-p50-validation-loop.webp 2400w",
+    "originalBytes": 584742,
+    "optimizedBytes": 232632
+  },
+  "/assets/projects/gkx/case-study/reference/wu-p09-task-feedback.jpg": {
+    "src": "/assets/optimized/projects/gkx/case-study/reference/wu-p09-task-feedback.webp",
+    "width": 2400,
+    "height": 1350,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/reference/wu-p09-task-feedback-640.webp 640w, /assets/optimized/projects/gkx/case-study/reference/wu-p09-task-feedback-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/reference/wu-p09-task-feedback.webp 2400w",
+    "originalBytes": 355597,
+    "optimizedBytes": 142192
+  },
+  "/assets/projects/gkx/case-study/textures/paper-grain-light.webp": {
+    "src": "/assets/optimized/projects/gkx/case-study/textures/paper-grain-light.webp",
+    "width": 1254,
+    "height": 1254,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/textures/paper-grain-light-640.webp 640w, /assets/optimized/projects/gkx/case-study/textures/paper-grain-light.webp 1254w",
+    "originalBytes": 364928,
+    "optimizedBytes": 430670
+  },
+  "/assets/projects/gkx/case-study/ui/ai-human-workflow-codex.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-codex.webp",
+    "width": 1862,
+    "height": 845,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-codex-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-codex-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-codex.webp 1862w",
+    "originalBytes": 1028629,
+    "optimizedBytes": 126158
+  },
+  "/assets/projects/gkx/case-study/ui/ai-human-workflow-spacious.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-spacious.webp",
+    "width": 1862,
+    "height": 845,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-spacious-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-spacious-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-spacious.webp 1862w",
+    "originalBytes": 1018036,
+    "optimizedBytes": 130452
+  },
+  "/assets/projects/gkx/case-study/ui/maas-model-gallery.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/maas-model-gallery.webp",
+    "width": 1400,
+    "height": 778,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/maas-model-gallery-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/maas-model-gallery-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/maas-model-gallery.webp 1400w",
+    "originalBytes": 375422,
+    "optimizedBytes": 66484
+  },
+  "/assets/projects/gkx/case-study/ui/paper-detail-modal.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/paper-detail-modal.webp",
+    "width": 1440,
+    "height": 800,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-detail-modal-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-detail-modal-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-detail-modal.webp 1440w",
+    "originalBytes": 269335,
+    "optimizedBytes": 62734
+  },
+  "/assets/projects/gkx/case-study/ui/paper-edit-modal.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/paper-edit-modal.webp",
+    "width": 1440,
+    "height": 800,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-edit-modal-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-edit-modal-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-edit-modal.webp 1440w",
+    "originalBytes": 256322,
+    "optimizedBytes": 58186
+  },
+  "/assets/projects/gkx/case-study/ui/paper-import-error.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/paper-import-error.webp",
+    "width": 1440,
+    "height": 800,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-import-error-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-import-error-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-import-error.webp 1440w",
+    "originalBytes": 257303,
+    "optimizedBytes": 50038
+  },
+  "/assets/projects/gkx/case-study/ui/paper-list-before.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/paper-list-before.webp",
+    "width": 1440,
+    "height": 800,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-list-before-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-list-before-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-list-before.webp 1440w",
+    "originalBytes": 375817,
+    "optimizedBytes": 85380
+  },
+  "/assets/projects/gkx/case-study/ui/paper-list-no-select-all.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/paper-list-no-select-all.webp",
+    "width": 1682,
+    "height": 935,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-list-no-select-all-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-list-no-select-all-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-list-no-select-all.webp 1682w",
+    "originalBytes": 1512413,
+    "optimizedBytes": 112222
+  },
+  "/assets/projects/gkx/case-study/ui/paper-list.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/paper-list.webp",
+    "width": 1440,
+    "height": 800,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-list-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-list-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-list.webp 1440w",
+    "originalBytes": 311793,
+    "optimizedBytes": 86328
+  },
+  "/assets/projects/gkx/case-study/ui/portal-reading.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/portal-reading.webp",
+    "width": 1400,
+    "height": 778,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/portal-reading-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/portal-reading-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/portal-reading.webp 1400w",
+    "originalBytes": 310846,
+    "optimizedBytes": 89580
+  },
+  "/assets/projects/gkx/case-study/ui/portal-workspace.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/portal-workspace.webp",
+    "width": 1400,
+    "height": 778,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/portal-workspace-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/portal-workspace-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/portal-workspace.webp 1400w",
+    "originalBytes": 195862,
+    "optimizedBytes": 42028
+  },
+  "/assets/projects/gkx/case-study/ui/project-scope-map.webp": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/project-scope-map.webp",
+    "width": 1817,
+    "height": 866,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/project-scope-map-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/project-scope-map-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/project-scope-map.webp 1817w",
+    "originalBytes": 79914,
+    "optimizedBytes": 61852
+  },
+  "/assets/projects/gkx/case-study/ui/ux-rule-annotations.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/ux-rule-annotations.webp",
+    "width": 2200,
+    "height": 470,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/ux-rule-annotations-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/ux-rule-annotations-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/ux-rule-annotations.webp 2200w",
+    "originalBytes": 201035,
+    "optimizedBytes": 61042
+  },
+  "/assets/projects/gkx/design-preview-button.jpg": {
+    "src": "/assets/optimized/projects/gkx/design-preview-button.webp",
+    "width": 1440,
+    "height": 960,
+    "srcSet": "/assets/optimized/projects/gkx/design-preview-button-640.webp 640w, /assets/optimized/projects/gkx/design-preview-button-1280.webp 1280w, /assets/optimized/projects/gkx/design-preview-button.webp 1440w",
+    "originalBytes": 187588,
+    "optimizedBytes": 49368
+  },
+  "/assets/projects/gkx/design-preview-button.png": {
+    "src": "/assets/optimized/projects/gkx/design-preview-button.webp",
+    "width": 1440,
+    "height": 960,
+    "srcSet": "/assets/optimized/projects/gkx/design-preview-button-640.webp 640w, /assets/optimized/projects/gkx/design-preview-button-1280.webp 1280w, /assets/optimized/projects/gkx/design-preview-button.webp 1440w",
+    "originalBytes": 79372,
+    "optimizedBytes": 49368
+  },
+  "/assets/projects/gkx/design-preview-pages.jpg": {
+    "src": "/assets/optimized/projects/gkx/design-preview-pages.webp",
+    "width": 1440,
+    "height": 960,
+    "srcSet": "/assets/optimized/projects/gkx/design-preview-pages-640.webp 640w, /assets/optimized/projects/gkx/design-preview-pages-1280.webp 1280w, /assets/optimized/projects/gkx/design-preview-pages.webp 1440w",
+    "originalBytes": 218435,
+    "optimizedBytes": 58806
+  },
+  "/assets/projects/gkx/design-preview-pages.png": {
+    "src": "/assets/optimized/projects/gkx/design-preview-pages.webp",
+    "width": 1440,
+    "height": 960,
+    "srcSet": "/assets/optimized/projects/gkx/design-preview-pages-640.webp 640w, /assets/optimized/projects/gkx/design-preview-pages-1280.webp 1280w, /assets/optimized/projects/gkx/design-preview-pages.webp 1440w",
+    "originalBytes": 95409,
+    "optimizedBytes": 58806
+  },
+  "/assets/projects/gkx/design-preview/assets/gkx-logo.png": {
+    "src": "/assets/optimized/projects/gkx/design-preview/assets/gkx-logo.webp",
+    "width": 28,
+    "height": 28,
+    "srcSet": "/assets/optimized/projects/gkx/design-preview/assets/gkx-logo.webp 28w",
+    "originalBytes": 2458,
+    "optimizedBytes": 1044
+  },
+  "/assets/projects/gkx/design-preview/assets/user-avatar.png": {
+    "src": "/assets/optimized/projects/gkx/design-preview/assets/user-avatar.webp",
+    "width": 32,
+    "height": 32,
+    "srcSet": "/assets/optimized/projects/gkx/design-preview/assets/user-avatar.webp 32w",
+    "originalBytes": 1656,
+    "optimizedBytes": 732
+  },
+  "/assets/projects/gkx/portal-admin-detail.jpg": {
+    "src": "/assets/optimized/projects/gkx/portal-admin-detail.webp",
+    "width": 1200,
+    "height": 700,
+    "srcSet": "/assets/optimized/projects/gkx/portal-admin-detail-640.webp 640w, /assets/optimized/projects/gkx/portal-admin-detail.webp 1200w",
+    "originalBytes": 121322,
+    "optimizedBytes": 31354
+  },
+  "/assets/projects/gkx/portal-admin-list.jpg": {
+    "src": "/assets/optimized/projects/gkx/portal-admin-list.webp",
+    "width": 1800,
+    "height": 1012,
+    "srcSet": "/assets/optimized/projects/gkx/portal-admin-list-640.webp 640w, /assets/optimized/projects/gkx/portal-admin-list-1280.webp 1280w, /assets/optimized/projects/gkx/portal-admin-list.webp 1800w",
+    "originalBytes": 174646,
+    "optimizedBytes": 58758
+  },
+  "/assets/projects/gkx/product-business-architecture.png": {
+    "src": "/assets/optimized/projects/gkx/product-business-architecture.webp",
+    "width": 1846,
+    "height": 1750,
+    "srcSet": "/assets/optimized/projects/gkx/product-business-architecture-640.webp 640w, /assets/optimized/projects/gkx/product-business-architecture-1280.webp 1280w, /assets/optimized/projects/gkx/product-business-architecture.webp 1846w",
+    "originalBytes": 2049773,
+    "optimizedBytes": 255078
+  },
+  "/assets/projects/gkx/strategy-reports.jpg": {
+    "src": "/assets/optimized/projects/gkx/strategy-reports.webp",
+    "width": 1800,
+    "height": 786,
+    "srcSet": "/assets/optimized/projects/gkx/strategy-reports-640.webp 640w, /assets/optimized/projects/gkx/strategy-reports-1280.webp 1280w, /assets/optimized/projects/gkx/strategy-reports.webp 1800w",
+    "originalBytes": 129690,
+    "optimizedBytes": 43562
+  },
+  "/assets/projects/gkx/talent-news.jpg": {
+    "src": "/assets/optimized/projects/gkx/talent-news.webp",
+    "width": 1800,
+    "height": 786,
+    "srcSet": "/assets/optimized/projects/gkx/talent-news-640.webp 640w, /assets/optimized/projects/gkx/talent-news-1280.webp 1280w, /assets/optimized/projects/gkx/talent-news.webp 1800w",
+    "originalBytes": 133291,
+    "optimizedBytes": 40342
+  },
+  "/assets/projects/gkx/technology-detail.jpg": {
+    "src": "/assets/optimized/projects/gkx/technology-detail.webp",
+    "width": 1800,
+    "height": 786,
+    "srcSet": "/assets/optimized/projects/gkx/technology-detail-640.webp 640w, /assets/optimized/projects/gkx/technology-detail-1280.webp 1280w, /assets/optimized/projects/gkx/technology-detail.webp 1800w",
+    "originalBytes": 127520,
+    "optimizedBytes": 37692
+  },
+  "/assets/projects/gkx/technology-route.jpg": {
+    "src": "/assets/optimized/projects/gkx/technology-route.webp",
+    "width": 1800,
+    "height": 786,
+    "srcSet": "/assets/optimized/projects/gkx/technology-route-640.webp 640w, /assets/optimized/projects/gkx/technology-route-1280.webp 1280w, /assets/optimized/projects/gkx/technology-route.webp 1800w",
+    "originalBytes": 132836,
+    "optimizedBytes": 43224
+  },
+  "/assets/projects/gkx/think-tank-home.jpg": {
+    "src": "/assets/optimized/projects/gkx/think-tank-home.webp",
+    "width": 1800,
+    "height": 786,
+    "srcSet": "/assets/optimized/projects/gkx/think-tank-home-640.webp 640w, /assets/optimized/projects/gkx/think-tank-home-1280.webp 1280w, /assets/optimized/projects/gkx/think-tank-home.webp 1800w",
+    "originalBytes": 186324,
+    "optimizedBytes": 67638
+  },
+  "/assets/projects/gkx/topic-service.jpg": {
+    "src": "/assets/optimized/projects/gkx/topic-service.webp",
+    "width": 1800,
+    "height": 1250,
+    "srcSet": "/assets/optimized/projects/gkx/topic-service-640.webp 640w, /assets/optimized/projects/gkx/topic-service-1280.webp 1280w, /assets/optimized/projects/gkx/topic-service.webp 1800w",
+    "originalBytes": 210589,
+    "optimizedBytes": 61370
+  },
+  "/assets/projects/gkx/workflow-builder-detail.jpg": {
+    "src": "/assets/optimized/projects/gkx/workflow-builder-detail.webp",
+    "width": 930,
+    "height": 580,
+    "srcSet": "/assets/optimized/projects/gkx/workflow-builder-detail-640.webp 640w, /assets/optimized/projects/gkx/workflow-builder-detail.webp 930w",
+    "originalBytes": 114144,
+    "optimizedBytes": 28672
+  },
+  "/assets/projects/gkx/workflow-builder.jpg": {
+    "src": "/assets/optimized/projects/gkx/workflow-builder.webp",
+    "width": 1800,
+    "height": 1012,
+    "srcSet": "/assets/optimized/projects/gkx/workflow-builder-640.webp 640w, /assets/optimized/projects/gkx/workflow-builder-1280.webp 1280w, /assets/optimized/projects/gkx/workflow-builder.webp 1800w",
+    "originalBytes": 189091,
+    "optimizedBytes": 60454
+  },
+  "/assets/projects/portfolio-images/06-energy-overview-system.png": {
+    "src": "/assets/optimized/projects/portfolio-images/06-energy-overview-system.webp",
+    "width": 1920,
+    "height": 3250,
+    "srcSet": "/assets/optimized/projects/portfolio-images/06-energy-overview-system-640.webp 640w, /assets/optimized/projects/portfolio-images/06-energy-overview-system-1280.webp 1280w, /assets/optimized/projects/portfolio-images/06-energy-overview-system.webp 1920w",
+    "originalBytes": 1336267,
+    "optimizedBytes": 278730
+  },
+  "/assets/projects/portfolio-images/07-energy-key-screens.png": {
+    "src": "/assets/optimized/projects/portfolio-images/07-energy-key-screens.webp",
+    "width": 1920,
+    "height": 3100,
+    "srcSet": "/assets/optimized/projects/portfolio-images/07-energy-key-screens-640.webp 640w, /assets/optimized/projects/portfolio-images/07-energy-key-screens-1280.webp 1280w, /assets/optimized/projects/portfolio-images/07-energy-key-screens.webp 1920w",
+    "originalBytes": 1278462,
+    "optimizedBytes": 259834
+  },
+  "/assets/projects/portfolio-images/08-data-visualisation.png": {
+    "src": "/assets/optimized/projects/portfolio-images/08-data-visualisation.webp",
+    "width": 1920,
+    "height": 3600,
+    "srcSet": "/assets/optimized/projects/portfolio-images/08-data-visualisation-640.webp 640w, /assets/optimized/projects/portfolio-images/08-data-visualisation-1280.webp 1280w, /assets/optimized/projects/portfolio-images/08-data-visualisation.webp 1920w",
+    "originalBytes": 2080324,
+    "optimizedBytes": 322200
+  },
+  "/assets/projects/tax-cloud/01-user-core-path.png": {
+    "src": "/assets/optimized/projects/tax-cloud/01-user-core-path.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/01-user-core-path-640.webp 640w, /assets/optimized/projects/tax-cloud/01-user-core-path-1280.webp 1280w, /assets/optimized/projects/tax-cloud/01-user-core-path.webp 1920w",
+    "originalBytes": 161361,
+    "optimizedBytes": 112202
+  },
+  "/assets/projects/tax-cloud/01-user-core-path.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/01-user-core-path.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/01-user-core-path-640.webp 640w, /assets/optimized/projects/tax-cloud/01-user-core-path-1280.webp 1280w, /assets/optimized/projects/tax-cloud/01-user-core-path.webp 1920w",
+    "originalBytes": 109698,
+    "optimizedBytes": 112202
+  },
+  "/assets/projects/tax-cloud/02-lean-canvas.png": {
+    "src": "/assets/optimized/projects/tax-cloud/02-lean-canvas.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/02-lean-canvas-640.webp 640w, /assets/optimized/projects/tax-cloud/02-lean-canvas-1280.webp 1280w, /assets/optimized/projects/tax-cloud/02-lean-canvas.webp 1920w",
+    "originalBytes": 417350,
+    "optimizedBytes": 91004
+  },
+  "/assets/projects/tax-cloud/02-lean-canvas.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/02-lean-canvas.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/02-lean-canvas-640.webp 640w, /assets/optimized/projects/tax-cloud/02-lean-canvas-1280.webp 1280w, /assets/optimized/projects/tax-cloud/02-lean-canvas.webp 1920w",
+    "originalBytes": 85982,
+    "optimizedBytes": 91004
+  },
+  "/assets/projects/tax-cloud/03-global-style.png": {
+    "src": "/assets/optimized/projects/tax-cloud/03-global-style.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/03-global-style-640.webp 640w, /assets/optimized/projects/tax-cloud/03-global-style-1280.webp 1280w, /assets/optimized/projects/tax-cloud/03-global-style.webp 1920w",
+    "originalBytes": 251435,
+    "optimizedBytes": 78362
+  },
+  "/assets/projects/tax-cloud/03-global-style.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/03-global-style.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/03-global-style-640.webp 640w, /assets/optimized/projects/tax-cloud/03-global-style-1280.webp 1280w, /assets/optimized/projects/tax-cloud/03-global-style.webp 1920w",
+    "originalBytes": 74732,
+    "optimizedBytes": 78362
+  },
+  "/assets/projects/tax-cloud/04-design-components.png": {
+    "src": "/assets/optimized/projects/tax-cloud/04-design-components.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/04-design-components-640.webp 640w, /assets/optimized/projects/tax-cloud/04-design-components-1280.webp 1280w, /assets/optimized/projects/tax-cloud/04-design-components.webp 1920w",
+    "originalBytes": 173974,
+    "optimizedBytes": 58660
+  },
+  "/assets/projects/tax-cloud/04-design-components.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/04-design-components.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/04-design-components-640.webp 640w, /assets/optimized/projects/tax-cloud/04-design-components-1280.webp 1280w, /assets/optimized/projects/tax-cloud/04-design-components.webp 1920w",
+    "originalBytes": 56558,
+    "optimizedBytes": 58660
+  },
+  "/assets/projects/tax-cloud/05-page-showcase-archives.png": {
+    "src": "/assets/optimized/projects/tax-cloud/05-page-showcase-archives.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/05-page-showcase-archives-640.webp 640w, /assets/optimized/projects/tax-cloud/05-page-showcase-archives-1280.webp 1280w, /assets/optimized/projects/tax-cloud/05-page-showcase-archives.webp 1920w",
+    "originalBytes": 413116,
+    "optimizedBytes": 120282
+  },
+  "/assets/projects/tax-cloud/05-page-showcase-archives.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/05-page-showcase-archives.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/05-page-showcase-archives-640.webp 640w, /assets/optimized/projects/tax-cloud/05-page-showcase-archives-1280.webp 1280w, /assets/optimized/projects/tax-cloud/05-page-showcase-archives.webp 1920w",
+    "originalBytes": 114612,
+    "optimizedBytes": 120282
+  },
+  "/assets/projects/tax-cloud/06-page-showcase-rules.png": {
+    "src": "/assets/optimized/projects/tax-cloud/06-page-showcase-rules.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/06-page-showcase-rules-640.webp 640w, /assets/optimized/projects/tax-cloud/06-page-showcase-rules-1280.webp 1280w, /assets/optimized/projects/tax-cloud/06-page-showcase-rules.webp 1920w",
+    "originalBytes": 314539,
+    "optimizedBytes": 82606
+  },
+  "/assets/projects/tax-cloud/06-page-showcase-rules.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/06-page-showcase-rules.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/06-page-showcase-rules-640.webp 640w, /assets/optimized/projects/tax-cloud/06-page-showcase-rules-1280.webp 1280w, /assets/optimized/projects/tax-cloud/06-page-showcase-rules.webp 1920w",
+    "originalBytes": 77766,
+    "optimizedBytes": 82606
+  },
+  "/assets/projects/tax-cloud/07-redesign-custom-card.png": {
+    "src": "/assets/optimized/projects/tax-cloud/07-redesign-custom-card.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/07-redesign-custom-card-640.webp 640w, /assets/optimized/projects/tax-cloud/07-redesign-custom-card-1280.webp 1280w, /assets/optimized/projects/tax-cloud/07-redesign-custom-card.webp 1920w",
+    "originalBytes": 354476,
+    "optimizedBytes": 65600
+  },
+  "/assets/projects/tax-cloud/07-redesign-custom-card.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/07-redesign-custom-card.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/07-redesign-custom-card-640.webp 640w, /assets/optimized/projects/tax-cloud/07-redesign-custom-card-1280.webp 1280w, /assets/optimized/projects/tax-cloud/07-redesign-custom-card.webp 1920w",
+    "originalBytes": 61568,
+    "optimizedBytes": 65600
+  },
+  "/assets/projects/tax-cloud/08-redesign-old-home.png": {
+    "src": "/assets/optimized/projects/tax-cloud/08-redesign-old-home.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/08-redesign-old-home-640.webp 640w, /assets/optimized/projects/tax-cloud/08-redesign-old-home-1280.webp 1280w, /assets/optimized/projects/tax-cloud/08-redesign-old-home.webp 1920w",
+    "originalBytes": 541389,
+    "optimizedBytes": 90176
+  },
+  "/assets/projects/tax-cloud/08-redesign-old-home.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/08-redesign-old-home.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/08-redesign-old-home-640.webp 640w, /assets/optimized/projects/tax-cloud/08-redesign-old-home-1280.webp 1280w, /assets/optimized/projects/tax-cloud/08-redesign-old-home.webp 1920w",
+    "originalBytes": 85420,
+    "optimizedBytes": 90176
+  },
+  "/assets/projects/tax-cloud/09-redesign-card-scenes.png": {
+    "src": "/assets/optimized/projects/tax-cloud/09-redesign-card-scenes.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/09-redesign-card-scenes-640.webp 640w, /assets/optimized/projects/tax-cloud/09-redesign-card-scenes-1280.webp 1280w, /assets/optimized/projects/tax-cloud/09-redesign-card-scenes.webp 1920w",
+    "originalBytes": 683260,
+    "optimizedBytes": 113988
+  },
+  "/assets/projects/tax-cloud/09-redesign-card-scenes.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/09-redesign-card-scenes.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/09-redesign-card-scenes-640.webp 640w, /assets/optimized/projects/tax-cloud/09-redesign-card-scenes-1280.webp 1280w, /assets/optimized/projects/tax-cloud/09-redesign-card-scenes.webp 1920w",
+    "originalBytes": 109176,
+    "optimizedBytes": 113988
+  },
+  "/assets/projects/tax-cloud/10-redesign-new-home.png": {
+    "src": "/assets/optimized/projects/tax-cloud/10-redesign-new-home.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/10-redesign-new-home-640.webp 640w, /assets/optimized/projects/tax-cloud/10-redesign-new-home-1280.webp 1280w, /assets/optimized/projects/tax-cloud/10-redesign-new-home.webp 1920w",
+    "originalBytes": 460299,
+    "optimizedBytes": 99780
+  },
+  "/assets/projects/tax-cloud/10-redesign-new-home.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/10-redesign-new-home.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/10-redesign-new-home-640.webp 640w, /assets/optimized/projects/tax-cloud/10-redesign-new-home-1280.webp 1280w, /assets/optimized/projects/tax-cloud/10-redesign-new-home.webp 1920w",
+    "originalBytes": 95796,
+    "optimizedBytes": 99780
+  },
+  "/assets/projects/tax-cloud/11-experience-walkthrough.png": {
+    "src": "/assets/optimized/projects/tax-cloud/11-experience-walkthrough.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/11-experience-walkthrough-640.webp 640w, /assets/optimized/projects/tax-cloud/11-experience-walkthrough-1280.webp 1280w, /assets/optimized/projects/tax-cloud/11-experience-walkthrough.webp 1920w",
+    "originalBytes": 546732,
+    "optimizedBytes": 134188
+  },
+  "/assets/projects/tax-cloud/11-experience-walkthrough.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/11-experience-walkthrough.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/11-experience-walkthrough-640.webp 640w, /assets/optimized/projects/tax-cloud/11-experience-walkthrough-1280.webp 1280w, /assets/optimized/projects/tax-cloud/11-experience-walkthrough.webp 1920w",
+    "originalBytes": 124766,
+    "optimizedBytes": 134188
+  },
+  "/assets/projects/tax-cloud/12-form-page.png": {
+    "src": "/assets/optimized/projects/tax-cloud/12-form-page.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/12-form-page-640.webp 640w, /assets/optimized/projects/tax-cloud/12-form-page-1280.webp 1280w, /assets/optimized/projects/tax-cloud/12-form-page.webp 1920w",
+    "originalBytes": 294025,
+    "optimizedBytes": 119252
+  },
+  "/assets/projects/tax-cloud/12-form-page.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/12-form-page.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/12-form-page-640.webp 640w, /assets/optimized/projects/tax-cloud/12-form-page-1280.webp 1280w, /assets/optimized/projects/tax-cloud/12-form-page.webp 1920w",
+    "originalBytes": 114982,
+    "optimizedBytes": 119252
+  },
+  "/assets/projects/tax-cloud/13-project-background.png": {
+    "src": "/assets/optimized/projects/tax-cloud/13-project-background.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/13-project-background-640.webp 640w, /assets/optimized/projects/tax-cloud/13-project-background-1280.webp 1280w, /assets/optimized/projects/tax-cloud/13-project-background.webp 1920w",
+    "originalBytes": 740089,
+    "optimizedBytes": 127150
+  },
+  "/assets/projects/tax-cloud/13-project-background.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/13-project-background.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/13-project-background-640.webp 640w, /assets/optimized/projects/tax-cloud/13-project-background-1280.webp 1280w, /assets/optimized/projects/tax-cloud/13-project-background.webp 1920w",
+    "originalBytes": 122068,
+    "optimizedBytes": 127150
+  },
+  "/assets/projects/tax-cloud/14-basic-info-config.png": {
+    "src": "/assets/optimized/projects/tax-cloud/14-basic-info-config.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/14-basic-info-config-640.webp 640w, /assets/optimized/projects/tax-cloud/14-basic-info-config-1280.webp 1280w, /assets/optimized/projects/tax-cloud/14-basic-info-config.webp 1920w",
+    "originalBytes": 197786,
+    "optimizedBytes": 82420
+  },
+  "/assets/projects/tax-cloud/14-basic-info-config.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/14-basic-info-config.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/14-basic-info-config-640.webp 640w, /assets/optimized/projects/tax-cloud/14-basic-info-config-1280.webp 1280w, /assets/optimized/projects/tax-cloud/14-basic-info-config.webp 1920w",
+    "originalBytes": 77958,
+    "optimizedBytes": 82420
+  },
+  "/assets/projects/tax-cloud/15-app-overview.png": {
+    "src": "/assets/optimized/projects/tax-cloud/15-app-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/15-app-overview-640.webp 640w, /assets/optimized/projects/tax-cloud/15-app-overview-1280.webp 1280w, /assets/optimized/projects/tax-cloud/15-app-overview.webp 1920w",
+    "originalBytes": 554438,
+    "optimizedBytes": 91154
+  },
+  "/assets/projects/tax-cloud/15-app-overview.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/15-app-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/15-app-overview-640.webp 640w, /assets/optimized/projects/tax-cloud/15-app-overview-1280.webp 1280w, /assets/optimized/projects/tax-cloud/15-app-overview.webp 1920w",
+    "originalBytes": 85746,
+    "optimizedBytes": 91154
+  },
+  "/assets/projects/tax-cloud/16-app-home.png": {
+    "src": "/assets/optimized/projects/tax-cloud/16-app-home.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/16-app-home-640.webp 640w, /assets/optimized/projects/tax-cloud/16-app-home-1280.webp 1280w, /assets/optimized/projects/tax-cloud/16-app-home.webp 1920w",
+    "originalBytes": 419331,
+    "optimizedBytes": 62858
+  },
+  "/assets/projects/tax-cloud/16-app-home.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/16-app-home.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/16-app-home-640.webp 640w, /assets/optimized/projects/tax-cloud/16-app-home-1280.webp 1280w, /assets/optimized/projects/tax-cloud/16-app-home.webp 1920w",
+    "originalBytes": 58972,
+    "optimizedBytes": 62858
+  },
+  "/assets/projects/tax-cloud/17-app-report-approval.png": {
+    "src": "/assets/optimized/projects/tax-cloud/17-app-report-approval.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/17-app-report-approval-640.webp 640w, /assets/optimized/projects/tax-cloud/17-app-report-approval-1280.webp 1280w, /assets/optimized/projects/tax-cloud/17-app-report-approval.webp 1920w",
+    "originalBytes": 339958,
+    "optimizedBytes": 86228
+  },
+  "/assets/projects/tax-cloud/17-app-report-approval.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/17-app-report-approval.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/17-app-report-approval-640.webp 640w, /assets/optimized/projects/tax-cloud/17-app-report-approval-1280.webp 1280w, /assets/optimized/projects/tax-cloud/17-app-report-approval.webp 1920w",
+    "originalBytes": 83600,
+    "optimizedBytes": 86228
+  },
+  "/assets/projects/tax-cloud/18-app-regulations.png": {
+    "src": "/assets/optimized/projects/tax-cloud/18-app-regulations.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/18-app-regulations-640.webp 640w, /assets/optimized/projects/tax-cloud/18-app-regulations-1280.webp 1280w, /assets/optimized/projects/tax-cloud/18-app-regulations.webp 1920w",
+    "originalBytes": 595183,
+    "optimizedBytes": 122722
+  },
+  "/assets/projects/tax-cloud/18-app-regulations.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/18-app-regulations.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/18-app-regulations-640.webp 640w, /assets/optimized/projects/tax-cloud/18-app-regulations-1280.webp 1280w, /assets/optimized/projects/tax-cloud/18-app-regulations.webp 1920w",
+    "originalBytes": 117872,
+    "optimizedBytes": 122722
+  },
+  "/assets/projects/tax-cloud/19-app-showcase.png": {
+    "src": "/assets/optimized/projects/tax-cloud/19-app-showcase.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/19-app-showcase-640.webp 640w, /assets/optimized/projects/tax-cloud/19-app-showcase-1280.webp 1280w, /assets/optimized/projects/tax-cloud/19-app-showcase.webp 1920w",
+    "originalBytes": 1214663,
+    "optimizedBytes": 185368
+  },
+  "/assets/projects/tax-cloud/19-app-showcase.webp": {
+    "src": "/assets/optimized/projects/tax-cloud/19-app-showcase.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/19-app-showcase-640.webp 640w, /assets/optimized/projects/tax-cloud/19-app-showcase-1280.webp 1280w, /assets/optimized/projects/tax-cloud/19-app-showcase.webp 1920w",
+    "originalBytes": 175442,
+    "optimizedBytes": 185368
+  },
+  "/assets/projects/zhaocai-smart/00-contact-sheet.jpg": {
+    "src": "/assets/optimized/projects/zhaocai-smart/00-contact-sheet.webp",
+    "width": 1638,
+    "height": 2290,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/00-contact-sheet-640.webp 640w, /assets/optimized/projects/zhaocai-smart/00-contact-sheet-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/00-contact-sheet.webp 1638w",
+    "originalBytes": 413839,
+    "optimizedBytes": 205136
+  },
+  "/assets/projects/zhaocai-smart/01-cover-and-overview.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/01-cover-and-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/01-cover-and-overview-640.webp 640w, /assets/optimized/projects/zhaocai-smart/01-cover-and-overview-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/01-cover-and-overview.webp 1920w",
+    "originalBytes": 376138,
+    "optimizedBytes": 83906
+  },
+  "/assets/projects/zhaocai-smart/01-cover-and-overview.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/01-cover-and-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/01-cover-and-overview-640.webp 640w, /assets/optimized/projects/zhaocai-smart/01-cover-and-overview-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/01-cover-and-overview.webp 1920w",
+    "originalBytes": 79390,
+    "optimizedBytes": 83906
+  },
+  "/assets/projects/zhaocai-smart/02-context-and-goals.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/02-context-and-goals.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/02-context-and-goals-640.webp 640w, /assets/optimized/projects/zhaocai-smart/02-context-and-goals-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/02-context-and-goals.webp 1920w",
+    "originalBytes": 249537,
+    "optimizedBytes": 89690
+  },
+  "/assets/projects/zhaocai-smart/02-context-and-goals.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/02-context-and-goals.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/02-context-and-goals-640.webp 640w, /assets/optimized/projects/zhaocai-smart/02-context-and-goals-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/02-context-and-goals.webp 1920w",
+    "originalBytes": 85906,
+    "optimizedBytes": 89690
+  },
+  "/assets/projects/zhaocai-smart/03-experience-strategy.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/03-experience-strategy.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/03-experience-strategy-640.webp 640w, /assets/optimized/projects/zhaocai-smart/03-experience-strategy-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/03-experience-strategy.webp 1920w",
+    "originalBytes": 343473,
+    "optimizedBytes": 83428
+  },
+  "/assets/projects/zhaocai-smart/03-experience-strategy.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/03-experience-strategy.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/03-experience-strategy-640.webp 640w, /assets/optimized/projects/zhaocai-smart/03-experience-strategy-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/03-experience-strategy.webp 1920w",
+    "originalBytes": 79424,
+    "optimizedBytes": 83428
+  },
+  "/assets/projects/zhaocai-smart/04-semantic-clarification.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/04-semantic-clarification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/04-semantic-clarification-640.webp 640w, /assets/optimized/projects/zhaocai-smart/04-semantic-clarification-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/04-semantic-clarification.webp 1920w",
+    "originalBytes": 305542,
+    "optimizedBytes": 99146
+  },
+  "/assets/projects/zhaocai-smart/04-semantic-clarification.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/04-semantic-clarification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/04-semantic-clarification-640.webp 640w, /assets/optimized/projects/zhaocai-smart/04-semantic-clarification-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/04-semantic-clarification.webp 1920w",
+    "originalBytes": 93362,
+    "optimizedBytes": 99146
+  },
+  "/assets/projects/zhaocai-smart/05-process-visualization.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/05-process-visualization.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/05-process-visualization-640.webp 640w, /assets/optimized/projects/zhaocai-smart/05-process-visualization-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/05-process-visualization.webp 1920w",
+    "originalBytes": 349835,
+    "optimizedBytes": 96282
+  },
+  "/assets/projects/zhaocai-smart/05-process-visualization.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/05-process-visualization.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/05-process-visualization-640.webp 640w, /assets/optimized/projects/zhaocai-smart/05-process-visualization-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/05-process-visualization.webp 1920w",
+    "originalBytes": 90652,
+    "optimizedBytes": 96282
+  },
+  "/assets/projects/zhaocai-smart/06-board-and-insight-retention.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/06-board-and-insight-retention.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/06-board-and-insight-retention-640.webp 640w, /assets/optimized/projects/zhaocai-smart/06-board-and-insight-retention-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/06-board-and-insight-retention.webp 1920w",
+    "originalBytes": 568031,
+    "optimizedBytes": 86216
+  },
+  "/assets/projects/zhaocai-smart/06-board-and-insight-retention.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/06-board-and-insight-retention.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/06-board-and-insight-retention-640.webp 640w, /assets/optimized/projects/zhaocai-smart/06-board-and-insight-retention-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/06-board-and-insight-retention.webp 1920w",
+    "originalBytes": 82560,
+    "optimizedBytes": 86216
+  },
+  "/assets/projects/zhaocai-smart/07-design-system-and-outcomes.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/07-design-system-and-outcomes.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/07-design-system-and-outcomes-640.webp 640w, /assets/optimized/projects/zhaocai-smart/07-design-system-and-outcomes-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/07-design-system-and-outcomes.webp 1920w",
+    "originalBytes": 272920,
+    "optimizedBytes": 81942
+  },
+  "/assets/projects/zhaocai-smart/07-design-system-and-outcomes.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/07-design-system-and-outcomes.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/07-design-system-and-outcomes-640.webp 640w, /assets/optimized/projects/zhaocai-smart/07-design-system-and-outcomes-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/07-design-system-and-outcomes.webp 1920w",
+    "originalBytes": 77288,
+    "optimizedBytes": 81942
+  },
+  "/assets/projects/zhaocai-smart/11-product-interface.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/11-product-interface.webp",
+    "width": 1180,
+    "height": 980,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/11-product-interface-640.webp 640w, /assets/optimized/projects/zhaocai-smart/11-product-interface.webp 1180w",
+    "originalBytes": 333630,
+    "optimizedBytes": 29204
+  },
+  "/assets/projects/zhaocai-smart/11-product-interface.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/11-product-interface.webp",
+    "width": 1180,
+    "height": 980,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/11-product-interface-640.webp 640w, /assets/optimized/projects/zhaocai-smart/11-product-interface.webp 1180w",
+    "originalBytes": 27812,
+    "optimizedBytes": 29204
+  },
+  "/assets/projects/zhaocai-smart/11-project-background.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/11-project-background.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/11-project-background-640.webp 640w, /assets/optimized/projects/zhaocai-smart/11-project-background-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/11-project-background.webp 1920w",
+    "originalBytes": 413366,
+    "optimizedBytes": 77548
+  },
+  "/assets/projects/zhaocai-smart/11-project-background.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/11-project-background.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/11-project-background-640.webp 640w, /assets/optimized/projects/zhaocai-smart/11-project-background-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/11-project-background.webp 1920w",
+    "originalBytes": 74434,
+    "optimizedBytes": 77548
+  },
+  "/assets/projects/zhaocai-smart/12-smart-query-introduction.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/12-smart-query-introduction.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/12-smart-query-introduction-640.webp 640w, /assets/optimized/projects/zhaocai-smart/12-smart-query-introduction-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/12-smart-query-introduction.webp 1920w",
+    "originalBytes": 552831,
+    "optimizedBytes": 101098
+  },
+  "/assets/projects/zhaocai-smart/12-smart-query-introduction.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/12-smart-query-introduction.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/12-smart-query-introduction-640.webp 640w, /assets/optimized/projects/zhaocai-smart/12-smart-query-introduction-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/12-smart-query-introduction.webp 1920w",
+    "originalBytes": 96328,
+    "optimizedBytes": 101098
+  },
+  "/assets/projects/zhaocai-smart/13-semantic-clarification.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/13-semantic-clarification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/13-semantic-clarification-640.webp 640w, /assets/optimized/projects/zhaocai-smart/13-semantic-clarification-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/13-semantic-clarification.webp 1920w",
+    "originalBytes": 192253,
+    "optimizedBytes": 57548
+  },
+  "/assets/projects/zhaocai-smart/13-semantic-clarification.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/13-semantic-clarification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/13-semantic-clarification-640.webp 640w, /assets/optimized/projects/zhaocai-smart/13-semantic-clarification-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/13-semantic-clarification.webp 1920w",
+    "originalBytes": 54546,
+    "optimizedBytes": 57548
+  },
+  "/assets/projects/zhaocai-smart/14-process-visualization.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/14-process-visualization.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/14-process-visualization-640.webp 640w, /assets/optimized/projects/zhaocai-smart/14-process-visualization-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/14-process-visualization.webp 1920w",
+    "originalBytes": 322106,
+    "optimizedBytes": 98948
+  },
+  "/assets/projects/zhaocai-smart/14-process-visualization.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/14-process-visualization.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/14-process-visualization-640.webp 640w, /assets/optimized/projects/zhaocai-smart/14-process-visualization-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/14-process-visualization.webp 1920w",
+    "originalBytes": 93874,
+    "optimizedBytes": 98948
+  },
+  "/assets/projects/zhaocai-smart/15-board-interaction.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/15-board-interaction.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/15-board-interaction-640.webp 640w, /assets/optimized/projects/zhaocai-smart/15-board-interaction-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/15-board-interaction.webp 1920w",
+    "originalBytes": 665914,
+    "optimizedBytes": 77528
+  },
+  "/assets/projects/zhaocai-smart/15-board-interaction.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/15-board-interaction.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/15-board-interaction-640.webp 640w, /assets/optimized/projects/zhaocai-smart/15-board-interaction-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/15-board-interaction.webp 1920w",
+    "originalBytes": 73848,
+    "optimizedBytes": 77528
+  },
+  "/assets/projects/zhaocai-smart/16-markdown-specification.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/16-markdown-specification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/16-markdown-specification-640.webp 640w, /assets/optimized/projects/zhaocai-smart/16-markdown-specification-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/16-markdown-specification.webp 1920w",
+    "originalBytes": 310922,
+    "optimizedBytes": 64810
+  },
+  "/assets/projects/zhaocai-smart/16-markdown-specification.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/16-markdown-specification.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/16-markdown-specification-640.webp 640w, /assets/optimized/projects/zhaocai-smart/16-markdown-specification-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/16-markdown-specification.webp 1920w",
+    "originalBytes": 62592,
+    "optimizedBytes": 64810
+  },
+  "/assets/projects/zhaocai-smart/17-page-overview.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/17-page-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/17-page-overview-640.webp 640w, /assets/optimized/projects/zhaocai-smart/17-page-overview-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/17-page-overview.webp 1920w",
+    "originalBytes": 1623650,
+    "optimizedBytes": 129294
+  },
+  "/assets/projects/zhaocai-smart/17-page-overview.webp": {
+    "src": "/assets/optimized/projects/zhaocai-smart/17-page-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/17-page-overview-640.webp 640w, /assets/optimized/projects/zhaocai-smart/17-page-overview-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/17-page-overview.webp 1920w",
+    "originalBytes": 120844,
+    "optimizedBytes": 129294
+  },
+  "/assets/projects/zhaocai-smart/long-image/assets/completed-output-original-cropped.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/long-image/assets/completed-output-original-cropped.webp",
+    "width": 1164,
+    "height": 1944,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/long-image/assets/completed-output-original-cropped-640.webp 640w, /assets/optimized/projects/zhaocai-smart/long-image/assets/completed-output-original-cropped.webp 1164w",
+    "originalBytes": 564346,
+    "optimizedBytes": 102776
+  },
+  "/assets/projects/zhaocai-smart/long-image/assets/completed-output-original.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/long-image/assets/completed-output-original.webp",
+    "width": 1282,
+    "height": 1944,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/long-image/assets/completed-output-original-640.webp 640w, /assets/optimized/projects/zhaocai-smart/long-image/assets/completed-output-original-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/long-image/assets/completed-output-original.webp 1282w",
+    "originalBytes": 1400852,
+    "optimizedBytes": 103528
+  },
+  "/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/long-image/assets/homepage-original.webp",
+    "width": 1445,
+    "height": 800,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/long-image/assets/homepage-original-640.webp 640w, /assets/optimized/projects/zhaocai-smart/long-image/assets/homepage-original-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/long-image/assets/homepage-original.webp 1445w",
+    "originalBytes": 128530,
+    "optimizedBytes": 24712
+  },
+  "/assets/projects/zhaocai-smart/long-image/zhaocai-smart-framework-restored.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/long-image/zhaocai-smart-framework-restored.webp",
+    "width": 2400,
+    "height": 1200,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/long-image/zhaocai-smart-framework-restored-640.webp 640w, /assets/optimized/projects/zhaocai-smart/long-image/zhaocai-smart-framework-restored-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/long-image/zhaocai-smart-framework-restored.webp 2400w",
+    "originalBytes": 548188,
+    "optimizedBytes": 121718
+  },
+  "/assets/projects/zhaocai-smart/web/board-selection-v3.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/web/board-selection-v3.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/web/board-selection-v3-640.webp 640w, /assets/optimized/projects/zhaocai-smart/web/board-selection-v3-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/web/board-selection-v3.webp 1920w",
+    "originalBytes": 665914,
+    "optimizedBytes": 77528
+  },
+  "/assets/projects/zhaocai-smart/web/hero-interface-collage-v2.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/web/hero-interface-collage-v2.webp",
+    "width": 1180,
+    "height": 980,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/web/hero-interface-collage-v2-640.webp 640w, /assets/optimized/projects/zhaocai-smart/web/hero-interface-collage-v2.webp 1180w",
+    "originalBytes": 333630,
+    "optimizedBytes": 29204
+  },
+  "/assets/projects/zhaocai-smart/web/process-dashboard-v2.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/web/process-dashboard-v2.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/web/process-dashboard-v2-640.webp 640w, /assets/optimized/projects/zhaocai-smart/web/process-dashboard-v2-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/web/process-dashboard-v2.webp 1920w",
+    "originalBytes": 322106,
+    "optimizedBytes": 98948
+  },
+  "/assets/projects/zhaocai-smart/zhaocai-smart-framework.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/zhaocai-smart-framework.webp",
+    "width": 1723,
+    "height": 913,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/zhaocai-smart-framework-640.webp 640w, /assets/optimized/projects/zhaocai-smart/zhaocai-smart-framework-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/zhaocai-smart-framework.webp 1723w",
+    "originalBytes": 1236532,
+    "optimizedBytes": 102860
+  },
+  "/assets/projects/zhaocai-smart/zhaocai-smart-hero.png": {
+    "src": "/assets/optimized/projects/zhaocai-smart/zhaocai-smart-hero.webp",
+    "width": 1672,
+    "height": 941,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/zhaocai-smart-hero-640.webp 640w, /assets/optimized/projects/zhaocai-smart/zhaocai-smart-hero-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/zhaocai-smart-hero.webp 1672w",
+    "originalBytes": 1510803,
+    "optimizedBytes": 67596
+  },
+  "/assets/projects/zhaocai-smart/zhaocai-smart-problem-evidence.jpg": {
+    "src": "/assets/optimized/projects/zhaocai-smart/zhaocai-smart-problem-evidence.webp",
+    "width": 1448,
+    "height": 1086,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/zhaocai-smart-problem-evidence-640.webp 640w, /assets/optimized/projects/zhaocai-smart/zhaocai-smart-problem-evidence-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/zhaocai-smart-problem-evidence.webp 1448w",
+    "originalBytes": 156338,
+    "optimizedBytes": 121654
+  },
+  "/assets/visual/hero-poster-desktop.jpg": {
+    "src": "/assets/optimized/visual/hero-poster-desktop.webp",
+    "width": 1920,
+    "height": 1081,
+    "srcSet": "/assets/optimized/visual/hero-poster-desktop-640.webp 640w, /assets/optimized/visual/hero-poster-desktop-1280.webp 1280w, /assets/optimized/visual/hero-poster-desktop.webp 1920w",
+    "originalBytes": 147848,
+    "optimizedBytes": 16848
+  },
+  "/assets/visual/hero-poster-mobile.jpg": {
+    "src": "/assets/optimized/visual/hero-poster-mobile.webp",
+    "width": 608,
+    "height": 1080,
+    "srcSet": "/assets/optimized/visual/hero-poster-mobile.webp 608w",
+    "originalBytes": 57842,
+    "optimizedBytes": 8966
+  },
+  "/assets/visual/sidebar-character/actions.png": {
+    "src": "/assets/optimized/visual/sidebar-character/actions.webp",
+    "width": 1254,
+    "height": 1254,
+    "srcSet": "/assets/optimized/visual/sidebar-character/actions.webp 1254w",
+    "originalBytes": 1407523,
+    "optimizedBytes": 279102
+  },
+  "/assets/visual/sidebar-character/curious.png": {
+    "src": "/assets/optimized/visual/sidebar-character/curious.webp",
+    "width": 1254,
+    "height": 1254,
+    "srcSet": "/assets/optimized/visual/sidebar-character/curious.webp 1254w",
+    "originalBytes": 896182,
+    "optimizedBytes": 122522
+  },
+  "/assets/visual/sidebar-character/idle.png": {
+    "src": "/assets/optimized/visual/sidebar-character/idle.webp",
+    "width": 1254,
+    "height": 1254,
+    "srcSet": "/assets/optimized/visual/sidebar-character/idle.webp 1254w",
+    "originalBytes": 904839,
+    "optimizedBytes": 134672
+  },
+  "/assets/visual/sidebar-character/jump.png": {
+    "src": "/assets/optimized/visual/sidebar-character/jump.webp",
+    "width": 1254,
+    "height": 1254,
+    "srcSet": "/assets/optimized/visual/sidebar-character/jump.webp 1254w",
+    "originalBytes": 1347997,
+    "optimizedBytes": 234168
+  },
+  "/assets/visual/sidebar-character/peek.png": {
+    "src": "/assets/optimized/visual/sidebar-character/peek.webp",
+    "width": 1254,
+    "height": 1254,
+    "srcSet": "/assets/optimized/visual/sidebar-character/peek.webp 1254w",
+    "originalBytes": 1215558,
+    "optimizedBytes": 156064
+  },
+  "/assets/visual/sidebar-character/walk.png": {
+    "src": "/assets/optimized/visual/sidebar-character/walk.webp",
+    "width": 1254,
+    "height": 1254,
+    "srcSet": "/assets/optimized/visual/sidebar-character/walk.webp 1254w",
+    "originalBytes": 1517850,
+    "optimizedBytes": 305298
+  },
+  "/assets/visual/sidebar-character/wave.png": {
+    "src": "/assets/optimized/visual/sidebar-character/wave.webp",
+    "width": 1254,
+    "height": 1254,
+    "srcSet": "/assets/optimized/visual/sidebar-character/wave.webp 1254w",
+    "originalBytes": 934480,
+    "optimizedBytes": 135210
+  }
+}

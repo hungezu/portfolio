@@ -25,6 +25,7 @@ import UserRound from "lucide-react/dist/esm/icons/user-round.mjs";
 import X from "lucide-react/dist/esm/icons/x.mjs";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { publicAsset } from "../portfolio-data";
+import { PortfolioImage } from "../portfolio-image";
 import { ProjectLocator } from "../project-locator";
 import { ZhaocaiBoardEvidence, ZhaocaiAnswerEvidence } from "./ZhaocaiDesignEvidence";
 import "./zhaocai-smart-complete.css";
@@ -676,7 +677,7 @@ export function ZhaocaiSmartCompleteCase() {
       <header className="zc4-hero" id="zcs-project-overview" tabIndex={-1}>
         <div className="zc4-opening">
           <div className="zc4-opening-copy"><p className="zc4-chapter-label">01 / 项目概况</p><h1>招财 <span>Smart</span></h1><h2>财务智能问数的<br/>核心交互设计</h2><p>用户用自然语言查询经营数据。我负责口径确认、查询反馈、结果依据与看板复用，让用户在使用结果前核对统计范围和来源。</p><a className="zc4-opening-link" href="#zcs-core-interaction">体验完整任务<ArrowUpRight size={18}/></a></div>
-          <figure className="zc4-opening-ui"><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png")} target="_blank" rel="noreferrer" aria-label="在新标签页查看招财 Smart 产品首页原图"><img src={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png")} width="1445" height="800" fetchPriority="high" decoding="async" alt="招财 Smart 产品首页：财务智能体导航、自然语言提问框与财务问数入口。"/></a><figcaption>产品首页 · 原始脱敏界面 · 可查看原图</figcaption></figure>
+          <figure className="zc4-opening-ui"><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png")} target="_blank" rel="noreferrer" aria-label="在新标签页查看招财 Smart 产品首页原图"><PortfolioImage src={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png")} width="1445" height="800" loading="eager" fetchPriority="high" decoding="async" alt="招财 Smart 产品首页：财务智能体导航、自然语言提问框与财务问数入口。"/></a><figcaption>产品首页 · 原始脱敏界面 · 可查看原图</figcaption></figure>
         </div>
         <dl className="zc4-opening-meta"><div><dt>我的角色</dt><dd>UX/UI 设计</dd></div><div><dt>项目时间</dt><dd>2025.07—2025.11</dd></div><div><dt>项目类型</dt><dd>AI 财务智能问数 / Web</dd></div><div><dt>设计范围</dt><dd>核心交互、结果呈现与回答规范</dd></div></dl>
         <p className="zc4-opening-scope">口径确认 · 过程反馈 · 结果追溯 · 看板复用</p>
@@ -759,7 +760,7 @@ export function ZhaocaiSmartCompleteCase() {
             <ZhaocaiAnswerEvidence/>
             <details className="zc4-disclosure"><summary>体验完整回答规范与八类场景</summary><div className="zc4-disclosure-body"><SpecWorkbench/><p className="zc4-spec-open"><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/spec-workbench.html")} target="_blank" rel="noreferrer">在独立页面打开完整回答规范<ArrowUpRight aria-hidden="true" size={15}/><span className="zc4-sr-only">（新标签页）</span></a></p></div></details>
           </div>
-          <details className="zc4-disclosure" id="zcs-original-output"><summary>查看历史设计稿与原始表入口</summary><div className="zc4-disclosure-body"><div className="zc4-history-evidence"><figure className="zc4-history-viewport"><img src={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/completed-output-original-cropped.png")} width="1164" height="1944" alt="历史脱敏设计稿局部：业务明细表和查看原始表格入口，完整稿可通过旁边链接打开。" loading="lazy"/></figure><aside><h3>原始表，保留在结论之后。</h3><p>历史稿中的明细表与原始表入口，为结果核对提供进一步查看的路径。</p><p className="zc4-material-note">历史脱敏设计稿</p><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/completed-output-original.png")} target="_blank" rel="noreferrer">查看完整设计稿<ArrowUpRight size={16}/><span className="zc4-sr-only">（新标签页）</span></a></aside></div></div></details>
+          <details className="zc4-disclosure" id="zcs-original-output"><summary>查看历史设计稿与原始表入口</summary><div className="zc4-disclosure-body"><div className="zc4-history-evidence"><figure className="zc4-history-viewport"><PortfolioImage src={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/completed-output-original-cropped.png")} width="1164" height="1944" alt="历史脱敏设计稿局部：业务明细表和查看原始表格入口，完整稿可通过旁边链接打开。" loading="lazy"/></figure><aside><h3>原始表，保留在结论之后。</h3><p>历史稿中的明细表与原始表入口，为结果核对提供进一步查看的路径。</p><p className="zc4-material-note">历史脱敏设计稿</p><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/completed-output-original.png")} target="_blank" rel="noreferrer">查看完整设计稿<ArrowUpRight size={16}/><span className="zc4-sr-only">（新标签页）</span></a></aside></div></div></details>
         </section>
 
         <section className="zc4-section" id="zcs-ai-governance">
@@ -790,7 +791,7 @@ export function ZhaocaiSmartCompleteCase() {
               { source: "/assets/projects/zhaocai-smart/15-board-interaction.webp", title: "看板与合集", description: "明确卡片移动、位置反馈与合并确认。", alt: "历史看板交互设计稿：合集归组、卡片拖动与落点反馈方案。", action: "查看协作与验收边界", href: "#zcs-ai-strategy" },
               { source: "/assets/projects/zhaocai-smart/16-markdown-specification.webp", title: "回答与规范", description: "将输出类型对应到组件层级和阅读规则。", alt: "历史Markdown规范稿：标题、列表、引用、段落、公式与代码的分类和界面实例。", action: "查看回答规范", href: publicAsset("/assets/projects/zhaocai-smart/long-image/spec-workbench.html"), external: true },
             ].map(item=><article key={item.source}>
-              <figure className="zc4-artifact-image"><a href={publicAsset(item.source)} target="_blank" rel="noopener noreferrer" aria-label={`在新标签页查看${item.title}原稿`}><img src={publicAsset(item.source)} width="1920" height="1080" alt={item.alt} loading="lazy" decoding="async"/></a></figure>
+              <figure className="zc4-artifact-image"><a href={publicAsset(item.source)} target="_blank" rel="noopener noreferrer" aria-label={`在新标签页查看${item.title}原稿`}><PortfolioImage src={publicAsset(item.source)} width="1920" height="1080" alt={item.alt} loading="lazy" decoding="async"/></a></figure>
               <h3>{item.title}</h3><p>{item.description}</p>
               <a className="zc4-delivery-link" href={publicAsset(item.source)} target="_blank" rel="noopener noreferrer">查看原稿<ArrowUpRight aria-hidden="true" size={16}/><span className="zc4-sr-only">（新标签页）</span></a>
               <a className="zc4-delivery-link" href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>{item.action}<ArrowUpRight aria-hidden="true" size={16}/>{item.external ? <span className="zc4-sr-only">（新标签页）</span> : null}</a>

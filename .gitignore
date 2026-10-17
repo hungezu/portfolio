@@ -11,3 +11,4 @@ tmp/
 public/portfolio.html
 public/assets/
 output/
+assets/optimized/.cache.json

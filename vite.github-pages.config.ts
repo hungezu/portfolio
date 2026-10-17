@@ -8,6 +8,7 @@ export default defineConfig({
   publicDir: resolve(process.cwd(), "public"),
   plugins: [react()],
   build: {
+    manifest: true,
     outDir: resolve(process.cwd(), "gh-pages-dist"),
     emptyOutDir: true,
   },
