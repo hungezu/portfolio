@@ -223,7 +223,7 @@ const projectData: Project[] = [
     visible: true,
     title: "深圳国际科技信息中心",
     shortTitle: "深圳国际科技信息中心",
-    period: "2025.11 - 至今",
+    period: "2025.11 - 2027.03",
     type: "平台级体验设计 / Web",
     summary:
       "负责门户内多业务系统的设计样式规范，借助 AI 编写整套设计 MD，统一页面与组件规则，并用于原型设计和评审优化。",

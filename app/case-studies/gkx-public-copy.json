@@ -5,9 +5,7 @@
     "roleLabel": "我的职责",
     "role": "交互设计 · UI 设计 · 门户规范 · 协作审核",
     "scopeLabel": "项目范围",
-    "scope": "智慧门户及其四大主要业务系统",
-    "methodLabel": "工作方式",
-    "method": "设计稿 → 设计 MD 与交互原型 → 人工优化 → 前端复现"
+    "scope": "智慧门户及其四大主要业务系统"
   },
   "navigation": [
     {
@@ -41,11 +39,8 @@
       "title": "连接多系统，统一使用与交付体验",
       "lead": "国科信（深圳国际科技信息中心）面向科技信息服务，连接情报检索、内容管理与模型应用等不同任务，涉及多套业务界面与多方协同交付。",
       "projectScale": {
-        "amount": "4.62",
-        "unit": "亿元",
-        "label": "整体项目合同金额约",
-        "sourceLabel": "公开合同 · 2026.07",
-        "sourceUrl": "https://www.szggzy.com/jygg/details.html?contentId=20529951"
+        "amount": "数亿元",
+        "label": "整体项目合同金额"
       },
       "goals": [
         {
@@ -199,8 +194,7 @@
       ],
       "workbench": {
         "title": "将页面中的共用做法整理为规范",
-        "text": "按页面类型、组件与交互说明组织目录，供设计和实现时查阅。",
-        "interactionHint": "切换左侧目录查看规范结构；受保密约束，具体条款仅展示开头。"
+        "text": "按页面类型、组件与交互说明组织目录，供设计和实现时查阅。"
       }
     },
     {
@@ -217,8 +211,22 @@
     },
     {
       "id": "gkx-supplier",
-      "title": "按四个维度审核合作方交付",
-      "lead": "依据需规参与智谱合作商的交付审核，将修改意见具体到页面位置、操作状态与预期行为。",
+      "title": "交付评审与核对",
+      "lead": "参与合作方交付的 UI 评审，将审核结论、修改要求与处理状态留在评审台账中。",
+      "reviewer": "李家豪",
+      "reviewRecords": [
+        { "date": "2026/06/04", "module": "工单管理", "conclusion": "需修改", "currentStatus": "通过", "finalStatus": "通过", "sourceRow": 8 },
+        { "date": "2026/08/03", "module": "信息发布", "conclusion": "需修改", "currentStatus": "通过", "finalStatus": "通过", "sourceRow": 11 },
+        { "date": "2026/10/08", "module": "基础数据管理模块", "conclusion": "通过", "currentStatus": "通过", "finalStatus": "通过", "sourceRow": 15 }
+      ],
+      "recordNote": "基础数据管理模块备注：微调即可，组件样式调整。",
+      "teamFinding": {
+        "title": "一次规范一致性评审",
+        "date": "2026/05/21",
+        "object": "同事关系、企业关系模块",
+        "issue": "UI 与规范稿风格不统一",
+        "decision": "未通过，要求修改后重新提交"
+      },
       "auditDimensions": [
         {
           "number": "01",

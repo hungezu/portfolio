@@ -591,6 +591,22 @@
     "originalBytes": 105642,
     "optimizedBytes": 127064
   },
+  "/assets/projects/gkx/case-study/evidence/team-review-finding-redacted.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/evidence/team-review-finding-redacted.webp",
+    "width": 1651,
+    "height": 871,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/evidence/team-review-finding-redacted-640.webp 640w, /assets/optimized/projects/gkx/case-study/evidence/team-review-finding-redacted-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/evidence/team-review-finding-redacted.webp 1651w",
+    "originalBytes": 623649,
+    "optimizedBytes": 99262
+  },
+  "/assets/projects/gkx/case-study/evidence/ui-review-records-redacted.png": {
+    "src": "/assets/optimized/projects/gkx/case-study/evidence/ui-review-records-redacted.webp",
+    "width": 1651,
+    "height": 871,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/evidence/ui-review-records-redacted-640.webp 640w, /assets/optimized/projects/gkx/case-study/evidence/ui-review-records-redacted-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/evidence/ui-review-records-redacted.webp 1651w",
+    "originalBytes": 772848,
+    "optimizedBytes": 136002
+  },
   "/assets/projects/gkx/case-study/reference/wang-p22-design-system-architecture.jpg": {
     "src": "/assets/optimized/projects/gkx/case-study/reference/wang-p22-design-system-architecture.webp",
     "width": 2400,
@@ -679,13 +695,21 @@
     "originalBytes": 1028629,
     "optimizedBytes": 126158
   },
-  "/assets/projects/gkx/case-study/ui/ai-human-workflow-spacious.png": {
-    "src": "/assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-spacious.webp",
+  "/assets/projects/gkx/case-study/ui/design-system-gkx-mapping.webp": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/design-system-gkx-mapping.webp",
     "width": 1862,
     "height": 845,
-    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-spacious-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-spacious-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/ai-human-workflow-spacious.webp 1862w",
-    "originalBytes": 1018036,
-    "optimizedBytes": 130452
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/design-system-gkx-mapping-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/design-system-gkx-mapping-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/design-system-gkx-mapping.webp 1862w",
+    "originalBytes": 236430,
+    "optimizedBytes": 133552
+  },
+  "/assets/projects/gkx/case-study/ui/design-system-page-types.webp": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/design-system-page-types.webp",
+    "width": 1796,
+    "height": 876,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/design-system-page-types-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/design-system-page-types-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/design-system-page-types.webp 1796w",
+    "originalBytes": 226020,
+    "optimizedBytes": 122648
   },
   "/assets/projects/gkx/case-study/ui/maas-model-gallery.png": {
     "src": "/assets/optimized/projects/gkx/case-study/ui/maas-model-gallery.webp",
