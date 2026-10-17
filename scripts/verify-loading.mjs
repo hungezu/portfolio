@@ -36,7 +36,7 @@ function element() {
   };
 }
 
-function scenario({ page = "hero", decode, fonts } = {}) {
+function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = {}) {
   let now = 0;
   let nextId = 0;
   const jobs = [];
@@ -57,6 +57,7 @@ function scenario({ page = "hero", decode, fonts } = {}) {
     decode: decode ?? (() => Promise.resolve()),
   };
   const video = { dataset: { preloadState: "pending" }, readyState: 0 };
+  const capability = page === "hero" ? { dataset: { renderer: capabilityState } } : null;
   const hero = {
     querySelector(selector) {
       if (selector === "video") return video;
@@ -81,6 +82,7 @@ function scenario({ page = "hero", decode, fonts } = {}) {
       if (selector === ".hero") return page === "hero" ? hero : null;
       if (selector === "main[data-project]") return page === "project" ? project : null;
       if (selector === ".not-found") return page === "not-found" ? element() : null;
+      if (selector === "[data-ability-visual]") return capability;
       throw new Error(`Unsupported root selector in loader test: ${selector}`);
     },
     addEventListener(event, listener) {
@@ -122,7 +124,7 @@ function scenario({ page = "hero", decode, fonts } = {}) {
     sessionStorage: { setItem() {} },
     MutationObserver: class {
       constructor(callback) { this.callback = callback; }
-      observe() { observers.add(this); }
+      observe(_target, options) { this.options = options; observers.add(this); }
       disconnect() { observers.delete(this); }
     },
   };
@@ -132,6 +134,7 @@ function scenario({ page = "hero", decode, fonts } = {}) {
   return {
     image,
     video,
+    capability,
     project,
     loader,
     assertWaiting(message) {
@@ -142,8 +145,12 @@ function scenario({ page = "hero", decode, fonts } = {}) {
       assert.equal(loader.removed, true, message);
       assert.equal(documentClasses.contains("portfolio-loading"), false, message);
     },
-    changed() {
-      for (const observer of [...observers]) observer.callback([]);
+    changed(attributeName) {
+      for (const observer of [...observers]) {
+        if (attributeName && (!observer.options.attributes ||
+          (observer.options.attributeFilter && !observer.options.attributeFilter.includes(attributeName)))) continue;
+        observer.callback(attributeName ? [{ type: "attributes", attributeName }] : []);
+      }
     },
     resourceEvent(event) {
       for (const listener of resourceListeners.get(event) ?? []) listener();
@@ -198,6 +205,32 @@ const checks = [
     await test.advance(3000);
     test.assertRevealed(`${state} motion must not prevent a decoded poster from appearing.`);
   }]),
+  ["homepage waits for the first capability frame", async () => {
+    const test = scenario({ capabilityState: "loading" });
+    test.video.dataset.preloadState = "ready";
+    test.video.readyState = 2;
+    await test.advance(3000);
+    test.assertWaiting("Ready Hero media must not reveal the homepage before its first capability frame.");
+  }],
+  ["first capability frame releases the loader", async () => {
+    const test = scenario({ capabilityState: "loading" });
+    test.video.dataset.preloadState = "ready";
+    test.video.readyState = 2;
+    await test.advance(3000);
+    test.capability.dataset.renderer = "ready";
+    test.changed("data-renderer");
+    await test.advance(1800);
+    test.assertRevealed("The first rendered capability frame must reveal an otherwise ready homepage.");
+  }],
+  ["unavailable capability renderer does not block the homepage", async () => {
+    const test = scenario({ capabilityState: "loading" });
+    test.video.dataset.preloadState = "disabled";
+    await test.advance(3000);
+    test.capability.dataset.renderer = "unavailable";
+    test.changed("data-renderer");
+    await test.advance(1800);
+    test.assertRevealed("A reported renderer failure must allow the homepage and its fallback to appear.");
+  }],
   ["project Suspense waits for case content", async () => {
     const test = scenario({ page: "project" });
     await test.advance(3000);
@@ -219,6 +252,24 @@ const checks = [
     decode.resolve();
     await test.advance(1800);
     test.assertRevealed("A loaded and decoded first eager image must reveal the project.");
+  }],
+  ["project without a capability renderer can reveal", async () => {
+    const test = scenario({ page: "project" });
+    assert.equal(test.capability, null, "Project fixtures must not contain a homepage capability renderer.");
+    test.project.loading = false;
+    test.project.image = test.image;
+    test.changed();
+    await test.advance(3000);
+    test.assertRevealed("A ready project page must not wait for the homepage capability renderer.");
+  }],
+  ["eight-second timeout releases a stalled capability renderer", async () => {
+    const test = scenario({ capabilityState: "loading" });
+    test.video.dataset.preloadState = "ready";
+    test.video.readyState = 2;
+    await test.advance(7900);
+    test.assertWaiting("A stalled capability renderer must not trigger the fallback before eight seconds.");
+    await test.advance(2100);
+    test.assertRevealed("The eight-second fallback must release the homepage when model loading stalls.");
   }],
   ["eight-second timeout releases stalled content", async () => {
     const test = scenario();

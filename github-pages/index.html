@@ -219,10 +219,12 @@
             const videoReady = hero
               ? Boolean(video && (["disabled", "ready", "error"].includes(videoState) || (videoState === "loading" && video.readyState >= 2)))
               : Boolean(project || notFound);
+            const capabilityState = hero ? root.querySelector("[data-ability-visual]")?.dataset.renderer : undefined;
+            const capabilityReady = !hero || ["ready", "unavailable"].includes(capabilityState);
 
             // "pending" keeps the loader up until Hero has decided whether it
             // should load motion, even before React attaches its video sources.
-            if (!fontsReady || !imageReady || !videoReady) return;
+            if (!fontsReady || !imageReady || !videoReady || !capabilityReady) return;
             completing = true;
             requestAnimationFrame(() => requestAnimationFrame(markLoaded));
           }
@@ -235,7 +237,7 @@
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ["data-preload-state", "src", "srcset", "loading", "fetchpriority"],
+            attributeFilter: ["data-preload-state", "data-renderer", "src", "srcset", "loading", "fetchpriority"],
           });
           resourceEvents.forEach(event => root.addEventListener(event, scheduleCheck, true));
           (document.fonts?.ready?.catch(() => {}) ?? Promise.resolve()).then(() => {

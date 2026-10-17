@@ -305,9 +305,16 @@ function disposeObject(root: THREE.Object3D) {
   geometries.forEach(geometry => geometry.dispose());
 }
 
-/** A small on-demand renderer: no timeline, continuous spin, controls, or remote media. */
-export function createCapabilityScene(host: HTMLDivElement, spec: CapabilitySceneSpec, family: readonly CapabilitySceneSpec[] = [spec]): { dispose(): void } {
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
+export type CapabilitySceneHandle = {
+  ready: Promise<void>;
+  setSpec(spec: CapabilitySceneSpec): void;
+  dispose(): void;
+};
+
+/** One context and prebuilt family: tab changes only swap the visible sculpture. */
+export function createCapabilityScene(host: HTMLDivElement, spec: CapabilitySceneSpec, family: readonly CapabilitySceneSpec[] = [spec]): CapabilitySceneHandle {
+  // A settled on-demand frame must survive compositing and scrolling into view.
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, powerPreference: "low-power" });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -322,8 +329,6 @@ export function createCapabilityScene(host: HTMLDivElement, spec: CapabilityScen
   host.dataset.sceneRenderCount = "0";
 
   const scene = new THREE.Scene();
-  const model = new THREE.Group();
-  scene.add(model);
   const camera = new THREE.OrthographicCamera(-350, 350, 150, -150, 1, 2400);
   const cameraDirection = new THREE.Vector3(420, 340, 700).normalize();
   const cameraTarget = new THREE.Vector3(0, 85, 0);
@@ -384,106 +389,131 @@ export function createCapabilityScene(host: HTMLDivElement, spec: CapabilityScen
     transparent: true, opacity: 0.38, depthWrite: false,
   });
   const materials = { porcelain: white, graphite: charcoal, metal, glass };
-  const xMin = Math.min(...spec.boxes.map(box => box.x - box.width / 2));
-  const xMax = Math.max(...spec.boxes.map(box => box.x + box.width / 2));
-  const zMin = Math.min(...spec.boxes.map(box => (box.z || 0) - box.depth / 2));
-  const zMax = Math.max(...spec.boxes.map(box => (box.z || 0) + box.depth / 2));
-  const groundWidth = xMax - xMin + 100;
-  const groundDepth = zMax - zMin + 140;
-  const groundCenterX = (xMin + xMax) / 2;
-  const groundCenterZ = (zMin + zMax) / 2;
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(groundWidth, groundDepth),
-    new THREE.MeshBasicMaterial({ map: groundTexture(), transparent: true, depthWrite: false, toneMapped: false }),
-  );
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.set(groundCenterX, -1.2, groundCenterZ);
-  scene.add(ground);
-  const shadow = new THREE.Mesh(
-    new THREE.PlaneGeometry(2200, 1800),
-    new THREE.ShadowMaterial({ color: 0x151515, opacity: 0.085, depthWrite: false }),
-  );
-  shadow.rotation.x = -Math.PI / 2;
-  shadow.position.y = -1;
-  shadow.receiveShadow = true;
-  scene.add(shadow);
   const ambientShadow = contactTexture();
-  const moving: Array<{ object: THREE.Group; baseY: number; amount: number }> = [];
   const usedMaterials = new Set<THREE.Material>();
-
-  spec.boxes.forEach(box => {
-    const group = new THREE.Group();
-    group.position.set(box.x, box.y, box.z || 0);
-    const bevel = Math.min(2.6, box.depth * 0.09, box.height * 0.09);
-    const material = materials[box.material ?? (box.dark ? "graphite" : "porcelain")];
-    usedMaterials.add(material);
-    const mesh = new THREE.Mesh(
-      new RoundedBoxGeometry(box.width, box.height, box.depth, 5, bevel),
-      material,
+  type Assembly = {
+    root: THREE.Group;
+    model: THREE.Group;
+    moving: Array<{ object: THREE.Group; baseY: number; amount: number }>;
+  };
+  const createAssembly = (spec: CapabilitySceneSpec): Assembly => {
+    const root = new THREE.Group();
+    const model = new THREE.Group();
+    root.add(model);
+    scene.add(root);
+    const xMin = Math.min(...spec.boxes.map(box => box.x - box.width / 2));
+    const xMax = Math.max(...spec.boxes.map(box => box.x + box.width / 2));
+    const zMin = Math.min(...spec.boxes.map(box => (box.z || 0) - box.depth / 2));
+    const zMax = Math.max(...spec.boxes.map(box => (box.z || 0) + box.depth / 2));
+    const groundWidth = xMax - xMin + 100;
+    const groundDepth = zMax - zMin + 140;
+    const groundCenterX = (xMin + xMax) / 2;
+    const groundCenterZ = (zMin + zMax) / 2;
+    const ground = new THREE.Mesh(
+      new THREE.PlaneGeometry(groundWidth, groundDepth),
+      new THREE.MeshBasicMaterial({ map: groundTexture(), transparent: true, depthWrite: false, toneMapped: false }),
     );
-    mesh.castShadow = box.material !== "glass";
-    mesh.receiveShadow = true;
-    group.add(mesh);
-    if (box.label || box.graphic) {
-      const face = new THREE.Mesh(
-        new THREE.PlaneGeometry(box.width - 0.8, box.height - 0.8),
-        new THREE.MeshBasicMaterial({
-          map: faceTexture(box), transparent: true, depthWrite: false,
-          toneMapped: false, polygonOffset: true, polygonOffsetFactor: -1,
-        }),
-      );
-      face.position.z = box.depth / 2 + 0.07;
-      group.add(face);
-    }
-    model.add(group);
-    if (box.hover) moving.push({ object: group, baseY: box.y, amount: box.hover });
-    if (box.y - box.height / 2 < 8) {
-      const contactWidth = box.width * 1.3;
-      const contactDepth = box.depth * 1.65 + 12;
-      const contact = new THREE.Mesh(
-        new THREE.PlaneGeometry(contactWidth, contactDepth),
-        new THREE.MeshBasicMaterial({ map: ambientShadow, transparent: true, opacity: 0.24, depthWrite: false, toneMapped: false }),
-      );
-      contact.rotation.x = -Math.PI / 2;
-      contact.position.set(box.x, -0.75, box.z || 0);
-      scene.add(contact);
-      const contactEdge = new THREE.Mesh(
-        new THREE.PlaneGeometry(box.width * 1.08, box.depth * 0.7 + 6),
-        new THREE.MeshBasicMaterial({ map: ambientShadow, transparent: true, opacity: 0.34, depthWrite: false, toneMapped: false }),
-      );
-      contactEdge.rotation.x = -Math.PI / 2;
-      contactEdge.position.set(box.x, -0.65, box.z || 0);
-      scene.add(contactEdge);
-    }
-  });
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.set(groundCenterX, -1.2, groundCenterZ);
+    root.add(ground);
+    const shadow = new THREE.Mesh(
+      new THREE.PlaneGeometry(2200, 1800),
+      new THREE.ShadowMaterial({ color: 0x151515, opacity: 0.085, depthWrite: false }),
+    );
+    shadow.rotation.x = -Math.PI / 2;
+    shadow.position.y = -1;
+    shadow.receiveShadow = true;
+    root.add(shadow);
+    const moving: Assembly["moving"] = [];
 
-  if (spec.grid) {
-    const positions: number[] = [];
-    const front = zMax + 18;
-    positions.push(xMin - 14, -0.5, front, xMax + 14, -0.5, front);
-    spec.boxes.filter(box => box.label).forEach(box => {
-      positions.push(box.x, -0.5, front - 5, box.x, -0.5, front + 5);
+    spec.boxes.forEach(box => {
+      const group = new THREE.Group();
+      group.position.set(box.x, box.y, box.z || 0);
+      const bevel = Math.min(2.6, box.depth * 0.09, box.height * 0.09);
+      const material = materials[box.material ?? (box.dark ? "graphite" : "porcelain")];
+      usedMaterials.add(material);
+      const mesh = new THREE.Mesh(
+        new RoundedBoxGeometry(box.width, box.height, box.depth, 5, bevel),
+        material,
+      );
+      mesh.castShadow = box.material !== "glass";
+      mesh.receiveShadow = true;
+      group.add(mesh);
+      if (box.label || box.graphic) {
+        const face = new THREE.Mesh(
+          new THREE.PlaneGeometry(box.width - 0.8, box.height - 0.8),
+          new THREE.MeshBasicMaterial({
+            map: faceTexture(box), transparent: true, depthWrite: false,
+            toneMapped: false, polygonOffset: true, polygonOffsetFactor: -1,
+          }),
+        );
+        face.position.z = box.depth / 2 + 0.07;
+        group.add(face);
+      }
+      model.add(group);
+      if (box.hover) moving.push({ object: group, baseY: box.y, amount: box.hover });
+      if (box.y - box.height / 2 < 8) {
+        const contactWidth = box.width * 1.3;
+        const contactDepth = box.depth * 1.65 + 12;
+        const contact = new THREE.Mesh(
+          new THREE.PlaneGeometry(contactWidth, contactDepth),
+          new THREE.MeshBasicMaterial({ map: ambientShadow, transparent: true, opacity: 0.24, depthWrite: false, toneMapped: false }),
+        );
+        contact.rotation.x = -Math.PI / 2;
+        contact.position.set(box.x, -0.75, box.z || 0);
+        root.add(contact);
+        const contactEdge = new THREE.Mesh(
+          new THREE.PlaneGeometry(box.width * 1.08, box.depth * 0.7 + 6),
+          new THREE.MeshBasicMaterial({ map: ambientShadow, transparent: true, opacity: 0.34, depthWrite: false, toneMapped: false }),
+        );
+        contactEdge.rotation.x = -Math.PI / 2;
+        contactEdge.position.set(box.x, -0.65, box.z || 0);
+        root.add(contactEdge);
+      }
     });
-    const grid = new THREE.LineSegments(
-      new THREE.BufferGeometry().setAttribute("position", new THREE.Float32BufferAttribute(positions, 3)),
-      new THREE.LineDashedMaterial({ color: 0x8c8c8c, transparent: true, opacity: 0.28, dashSize: 2, gapSize: 3, depthWrite: false }),
-    );
-    grid.computeLineDistances();
-    model.add(grid);
-  }
-  if (spec.ring) {
-    const curve = new THREE.EllipseCurve(groundCenterX, groundCenterZ, (xMax - xMin) / 2 + 14, (zMax - zMin) / 2 + 28, 0, Math.PI * 2, false, 0);
-    const points = curve.getPoints(100).map(point => new THREE.Vector3(point.x, -0.5, point.y));
-    const ring = new THREE.LineLoop(
-      new THREE.BufferGeometry().setFromPoints(points),
-      new THREE.LineDashedMaterial({ color: 0x9f9f9f, transparent: true, opacity: 0.28, dashSize: 2, gapSize: 4 }),
-    );
-    ring.computeLineDistances();
-    model.add(ring);
-  }
+
+    if (spec.grid) {
+      const positions: number[] = [];
+      const front = zMax + 18;
+      positions.push(xMin - 14, -0.5, front, xMax + 14, -0.5, front);
+      spec.boxes.filter(box => box.label).forEach(box => {
+        positions.push(box.x, -0.5, front - 5, box.x, -0.5, front + 5);
+      });
+      const grid = new THREE.LineSegments(
+        new THREE.BufferGeometry().setAttribute("position", new THREE.Float32BufferAttribute(positions, 3)),
+        new THREE.LineDashedMaterial({ color: 0x8c8c8c, transparent: true, opacity: 0.28, dashSize: 2, gapSize: 3, depthWrite: false }),
+      );
+      grid.computeLineDistances();
+      model.add(grid);
+    }
+    if (spec.ring) {
+      const curve = new THREE.EllipseCurve(groundCenterX, groundCenterZ, (xMax - xMin) / 2 + 14, (zMax - zMin) / 2 + 28, 0, Math.PI * 2, false, 0);
+      const points = curve.getPoints(100).map(point => new THREE.Vector3(point.x, -0.5, point.y));
+      const ring = new THREE.LineLoop(
+        new THREE.BufferGeometry().setFromPoints(points),
+        new THREE.LineDashedMaterial({ color: 0x9f9f9f, transparent: true, opacity: 0.28, dashSize: 2, gapSize: 4 }),
+      );
+      ring.computeLineDistances();
+      model.add(ring);
+    }
+
+    return { root, model, moving };
+  };
+  const familySpecs = [...family];
+  if (!familySpecs.some(item => item.boxes === spec.boxes)) familySpecs.unshift(spec);
+  const assemblies = new Map<CapabilityBox[], Assembly>();
+  familySpecs.forEach(item => {
+    if (!assemblies.has(item.boxes)) assemblies.set(item.boxes, createAssembly(item));
+  });
+  let activeSpec = spec;
+  let activeAssembly = assemblies.get(spec.boxes)!;
+  const selectAssembly = () => assemblies.forEach(assembly => { assembly.root.visible = assembly === activeAssembly; });
+  selectAssembly();
 
   let disposed = false;
-  let visible = true;
+  let initialized = false;
+  let contextLost = false;
+  let visible = document.visibilityState !== "hidden";
   let inViewport = true;
   let frame = 0;
   let currentX = 0;
@@ -494,28 +524,33 @@ export function createCapabilityScene(host: HTMLDivElement, spec: CapabilityScen
   let targetLift = 0;
   let lastTime = 0;
   let renderCount = 0;
-  const motionScale = spec.reducedMotion ? 0.5 : 1;
+  let canvasWidth = 0;
+  let canvasHeight = 0;
+  let preparationGeneration = 0;
+  let pendingCompilation: Promise<unknown> | null = null;
+  let resolveReady!: () => void;
+  let rejectReady!: (reason: unknown) => void;
+  const ready = new Promise<void>((resolve, reject) => { resolveReady = resolve; rejectReady = reject; });
   // Cached framing includes the complete hover, cast-shadow and contact envelope.
   camera.updateMatrixWorld();
   const lightDirection = key.target.position.clone().sub(key.position);
-  const framing = measureFraming(spec, motionScale, camera.matrixWorldInverse, lightDirection);
-  const familyFraming = family.map(item => measureFraming(item, motionScale, camera.matrixWorldInverse, lightDirection));
 
-  const renderFrame = (time: number) => {
+  const renderFrame = (time: number, force = false) => {
     frame = 0;
-    if (disposed || !visible) return;
+    if (disposed || !initialized || contextLost || (!force && !visible)) return;
     const step = lastTime ? Math.min(48, time - lastTime) : 16;
     lastTime = time;
     const smooth = 1 - Math.exp(-step / 105);
     currentX += (targetX - currentX) * smooth;
     currentY += (targetY - currentY) * smooth;
     currentLift += (targetLift - currentLift) * smooth;
-    model.rotation.set(currentY * 0.009 * motionScale, currentX * 0.036 * motionScale, 0);
-    moving.forEach(item => { item.object.position.y = item.baseY + currentLift * item.amount * motionScale; });
+    const motionScale = activeSpec.reducedMotion ? 0.5 : 1;
+    activeAssembly.model.rotation.set(currentY * 0.009 * motionScale, currentX * 0.036 * motionScale, 0);
+    activeAssembly.moving.forEach(item => { item.object.position.y = item.baseY + currentLift * item.amount * motionScale; });
     renderer.render(scene, camera);
     host.dataset.sceneRenderCount = String(++renderCount);
     const settling = Math.abs(targetX - currentX) + Math.abs(targetY - currentY) + Math.abs(targetLift - currentLift);
-    if (settling > 0.0015) {
+    if (visible && settling > 0.0015) {
       host.dataset.sceneState = "settling";
       frame = requestAnimationFrame(renderFrame);
     } else {
@@ -524,13 +559,27 @@ export function createCapabilityScene(host: HTMLDivElement, spec: CapabilityScen
     }
   };
   const requestRender = () => {
-    if (!disposed && visible && !frame) frame = requestAnimationFrame(renderFrame);
+    if (!disposed && initialized && !contextLost && visible && !frame) frame = requestAnimationFrame(renderFrame);
   };
-  const resize = () => {
-    if (disposed) return;
+  const renderNow = () => {
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+    // Preparation and tab swaps draw before the viewport observer fires.
+    renderFrame(performance.now(), true);
+  };
+  const resize = (force = false) => {
+    if (disposed || contextLost) return;
     const width = Math.max(1, host.clientWidth);
     const height = Math.max(1, host.clientHeight);
-    renderer.setSize(width, height, false);
+    // Setting canvas size clears its buffer, including an otherwise settled frame.
+    if (width !== canvasWidth || height !== canvasHeight) {
+      renderer.setSize(width, height, false);
+      canvasWidth = width;
+      canvasHeight = height;
+    }
+    const motionScale = activeSpec.reducedMotion ? 0.5 : 1;
+    const framing = measureFraming(activeSpec, motionScale, camera.matrixWorldInverse, lightDirection);
+    const familyFraming = familySpecs.map(item => measureFraming(item, motionScale, camera.matrixWorldInverse, lightDirection));
     const aspect = width / height;
     const sharedFrame = Math.max(...familyFraming.map(item => Math.max(
       item.envelope.top - item.centerY, item.centerY - item.envelope.bottom,
@@ -552,7 +601,7 @@ export function createCapabilityScene(host: HTMLDivElement, spec: CapabilityScen
     host.dataset.sceneSafeInset = inset.toFixed(1);
     host.dataset.sceneSubjectWidth = ((framing.subject.right - framing.subject.left) * height / frameHeight).toFixed(1);
     host.dataset.sceneSubjectHeight = ((framing.subject.top - framing.subject.bottom) * height / frameHeight).toFixed(1);
-    requestRender();
+    if (force || visible) renderNow();
   };
   const pointerMove = (event: PointerEvent) => {
     if (event.pointerType !== "mouse") return;
@@ -563,45 +612,108 @@ export function createCapabilityScene(host: HTMLDivElement, spec: CapabilityScen
     requestRender();
   };
   const pointerLeave = () => { targetX = 0; targetY = 0; targetLift = 0; requestRender(); };
-  const onVisibility = () => {
+  const updateVisibility = () => {
     visible = inViewport && document.visibilityState !== "hidden";
-    if (visible) requestRender();
+    if (visible) renderNow();
     else if (frame) { cancelAnimationFrame(frame); frame = 0; lastTime = 0; }
+  };
+  const prepare = () => {
+    const generation = ++preparationGeneration;
+    initialized = false;
+    // compileAsync traverses synchronously, so compile all six before selecting.
+    assemblies.forEach(assembly => { assembly.root.visible = true; });
+    let compilation: Promise<unknown>;
+    try { compilation = renderer.compileAsync(scene, camera); }
+    catch (error) { selectAssembly(); rejectReady(error); return; }
+    selectAssembly();
+    pendingCompilation = compilation;
+    compilation.then(() => {
+      if (disposed || contextLost || generation !== preparationGeneration) return;
+      initialized = true;
+      resize(true);
+      resolveReady();
+    }).catch(error => {
+      if (!disposed && !contextLost && generation === preparationGeneration) rejectReady(error);
+    });
+  };
+  const onContextLost = (event: Event) => {
+    event.preventDefault();
+    contextLost = true;
+    initialized = false;
+    preparationGeneration++;
+    if (frame) cancelAnimationFrame(frame);
+    frame = 0;
+    lastTime = 0;
+    host.dataset.sceneState = "context-lost";
+  };
+  const onContextRestored = () => {
+    if (disposed) return;
+    contextLost = false;
+    canvasWidth = canvasHeight = 0;
+    resize();
+    prepare();
   };
   host.addEventListener("pointerenter", pointerMove);
   host.addEventListener("pointermove", pointerMove);
   host.addEventListener("pointerleave", pointerLeave);
-  document.addEventListener("visibilitychange", onVisibility);
-  const resizeObserver = new ResizeObserver(resize);
+  document.addEventListener("visibilitychange", updateVisibility);
+  renderer.domElement.addEventListener("webglcontextlost", onContextLost);
+  renderer.domElement.addEventListener("webglcontextrestored", onContextRestored);
+  const resizeObserver = new ResizeObserver(() => resize());
   resizeObserver.observe(host);
   const intersectionObserver = new IntersectionObserver(entries => {
     inViewport = Boolean(entries[0]?.isIntersecting);
-    visible = inViewport && document.visibilityState !== "hidden";
-    if (visible) requestRender();
-    else if (frame) { cancelAnimationFrame(frame); frame = 0; lastTime = 0; }
+    updateVisibility();
   }, { rootMargin: "50px" });
   intersectionObserver.observe(host);
   resize();
+  prepare();
 
   return {
+    ready,
+    setSpec(nextSpec) {
+      if (disposed) return;
+      let assembly = assemblies.get(nextSpec.boxes);
+      if (!assembly) {
+        familySpecs.push(nextSpec);
+        assembly = createAssembly(nextSpec);
+        assemblies.set(nextSpec.boxes, assembly);
+      }
+      activeSpec = nextSpec;
+      activeAssembly = assembly;
+      selectAssembly();
+      currentX = currentY = currentLift = targetX = targetY = targetLift = 0;
+      lastTime = 0;
+      // A tab change is an immediate draw, without a renderer restart or hover.
+      resize(true);
+    },
     dispose() {
       if (disposed) return;
       disposed = true;
+      preparationGeneration++;
       cancelAnimationFrame(frame);
       resizeObserver.disconnect();
       intersectionObserver.disconnect();
       host.removeEventListener("pointerenter", pointerMove);
       host.removeEventListener("pointermove", pointerMove);
       host.removeEventListener("pointerleave", pointerLeave);
-      document.removeEventListener("visibilitychange", onVisibility);
-      disposeObject(scene);
-      Object.values(materials).forEach(material => { if (!usedMaterials.has(material)) material.dispose(); });
-      environment.dispose();
-      key.shadow.dispose();
-      renderer.renderLists.dispose();
-      renderer.dispose();
-      renderer.forceContextLoss();
+      document.removeEventListener("visibilitychange", updateVisibility);
+      renderer.domElement.removeEventListener("webglcontextlost", onContextLost);
+      renderer.domElement.removeEventListener("webglcontextrestored", onContextRestored);
       renderer.domElement.remove();
+      resolveReady();
+      const release = () => {
+        disposeObject(scene);
+        Object.values(materials).forEach(material => { if (!usedMaterials.has(material)) material.dispose(); });
+        environment.dispose();
+        key.shadow.dispose();
+        renderer.renderLists.dispose();
+        renderer.dispose();
+        renderer.forceContextLoss();
+      };
+      // Three polls its programs during compileAsync; release after polling ends.
+      if (pendingCompilation) pendingCompilation.then(release, release);
+      else release();
       delete host.dataset.sceneState;
       delete host.dataset.sceneRenderCount;
       delete host.dataset.sceneSafeInset;

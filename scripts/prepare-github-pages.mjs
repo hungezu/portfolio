@@ -10,7 +10,15 @@ const projectSlugs = [
   "data-visualisation",
 ];
 
-const baseHtml = (await readFile(resolve(outputDirectory, "index.html"), "utf8")).replace(/\r\n/g, "\n");
+const baseHtml = (await readFile(resolve(outputDirectory, "index.html"), "utf8"))
+  .replace(/\r\n/g, "\n")
+  .replace(/\s*<link\b[^>]*data-capability-preload[^>]*>/g, "");
+const manifest = JSON.parse(await readFile(resolve(outputDirectory, ".vite", "manifest.json"), "utf8"));
+const capabilityEntry = Object.values(manifest).find(entry => entry.name === "capability-scene" && entry.isDynamicEntry);
+if (!capabilityEntry?.file) throw new Error("Capability scene chunk is missing from the build manifest.");
+// Start the small 3D module download with the homepage HTML, before React mounts.
+// Case pages keep their own first-screen resources as the only preloads.
+const homeHtml = baseHtml.replace("</head>", `  <link rel="modulepreload" crossorigin href="/portfolio/${capabilityEntry.file}" fetchpriority="low" data-capability-preload />\n  </head>`);
 
 function withCaseMetadata(html, slug, view) {
   const metadata = slug === "zhaocai-smart" ? {
@@ -37,7 +45,7 @@ function withCaseMetadata(html, slug, view) {
 }
 
 await writeFile(resolve(outputDirectory, ".nojekyll"), "");
-await writeFile(resolve(outputDirectory, "index.html"), baseHtml);
+await writeFile(resolve(outputDirectory, "index.html"), homeHtml);
 await writeFile(resolve(outputDirectory, "404.html"), baseHtml);
 
 for (const slug of projectSlugs) {

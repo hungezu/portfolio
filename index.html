@@ -142,8 +142,9 @@
     <script>
       window.__PORTFOLIO_BASE__ = "/portfolio";
     </script>
-    <script type="module" crossorigin src="/portfolio/assets/index-B46NJSmh.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-Dv6VO74l.css">
+    <script type="module" crossorigin src="/portfolio/assets/index-B30UZt3C.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-FxUTarGJ.css">
+    <link rel="modulepreload" crossorigin href="/portfolio/assets/capability-scene-BwP67xJ2.js" fetchpriority="low" data-capability-preload />
   </head>
   <body>
     <div class="portfolio-boot" id="portfolio-boot" role="status" aria-live="polite" aria-label="作品集加载中">
@@ -221,10 +222,12 @@
             const videoReady = hero
               ? Boolean(video && (["disabled", "ready", "error"].includes(videoState) || (videoState === "loading" && video.readyState >= 2)))
               : Boolean(project || notFound);
+            const capabilityState = hero ? root.querySelector("[data-ability-visual]")?.dataset.renderer : undefined;
+            const capabilityReady = !hero || ["ready", "unavailable"].includes(capabilityState);
 
             // "pending" keeps the loader up until Hero has decided whether it
             // should load motion, even before React attaches its video sources.
-            if (!fontsReady || !imageReady || !videoReady) return;
+            if (!fontsReady || !imageReady || !videoReady || !capabilityReady) return;
             completing = true;
             requestAnimationFrame(() => requestAnimationFrame(markLoaded));
           }
@@ -237,7 +240,7 @@
             childList: true,
             subtree: true,
             attributes: true,
-            attributeFilter: ["data-preload-state", "src", "srcset", "loading", "fetchpriority"],
+            attributeFilter: ["data-preload-state", "data-renderer", "src", "srcset", "loading", "fetchpriority"],
           });
           resourceEvents.forEach(event => root.addEventListener(event, scheduleCheck, true));
           (document.fonts?.ready?.catch(() => {}) ?? Promise.resolve()).then(() => {
