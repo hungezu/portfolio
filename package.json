@@ -17,12 +17,14 @@
   "dependencies": {
     "@arco-design/web-react": "^2.66.18",
     "@types/d3-force": "^3.0.10",
+    "@types/three": "^0.180.0",
     "d3-force": "^3.0.0",
     "lucide-react": "^1.26.0",
     "motion": "^12.42.2",
     "next": "16.2.6",
     "react": "19.2.6",
-    "react-dom": "19.2.6"
+    "react-dom": "19.2.6",
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",

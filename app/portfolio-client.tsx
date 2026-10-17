@@ -8,14 +8,6 @@ import {
   useSpring,
   useTransform,
 } from "motion/react";
-import {
-  forceLink,
-  forceManyBody,
-  forceSimulation,
-  forceX,
-  forceY,
-  type SimulationNodeDatum,
-} from "d3-force";
 import ArrowLeft from "lucide-react/dist/esm/icons/arrow-left.mjs";
 import ArrowUp from "lucide-react/dist/esm/icons/arrow-up.mjs";
 import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
@@ -54,6 +46,7 @@ import {
 } from "./chat-knowledge";
 import portfolioPetAssets from "../assets/visual/sidebar-character/assets.json";
 import { optimizedImage, PortfolioImage } from "./portfolio-image";
+import { CapabilitySection } from "./capability-section";
 import type { NationalPlatformView } from "./case-studies/NationalSciencePlatformCase";
 import { ProjectLocator, type ProjectLocatorSection } from "./project-locator";
 
@@ -77,261 +70,9 @@ class ProjectContentBoundary extends Component<{ children: ReactNode }, { failed
 }
 
 const ease = [0.16, 1, 0.3, 1] as const;
-const abilityAutoCycleMs = 4800;
 const heroVideoAsset = "/assets/visual/hero-motion.mp4";
 const heroMobileVideoAsset = "/assets/visual/hero-motion-mobile.mp4";
 const abilityLabelById = new Map(abilities.map(ability => [ability.id, ability.axisLabel]));
-
-type AbilityNetworkSide = "left" | "right" | "above" | "below";
-
-type AbilityNetworkNode = {
-  id: AbilityId;
-  x: number;
-  y: number;
-  z: number;
-  side: AbilityNetworkSide;
-  details: Array<{
-    label: string;
-    x: number;
-    y: number;
-    z: number;
-    side: AbilityNetworkSide;
-  }>;
-};
-
-const abilityNetworkNodes: AbilityNetworkNode[] = [
-  {
-    id: "ai-workflow",
-    x: 31,
-    y: 20,
-    z: -40,
-    side: "left",
-    details: [
-      { label: "AI 原型快速验证", x: 13, y: 36, z: -62, side: "right" },
-      { label: "界面方案辅助设计", x: 20, y: 9, z: -34, side: "above" },
-      { label: "设计规范 Markdown 化", x: 42, y: 9, z: -12, side: "below" },
-      { label: "设计资产持续维护", x: 45, y: 29, z: -28, side: "left" },
-    ],
-  },
-  {
-    id: "complex-systems",
-    x: 63,
-    y: 20,
-    z: 28,
-    side: "right",
-    details: [
-      { label: "业务规则与角色关系", x: 77, y: 12, z: -5, side: "right" },
-      { label: "权限与数据边界", x: 89, y: 25, z: -38, side: "left" },
-      { label: "复杂流程拆解", x: 78, y: 34, z: 18, side: "left" },
-      { label: "系统模块规划", x: 60, y: 8, z: 8, side: "below" },
-    ],
-  },
-  {
-    id: "ai-experience",
-    x: 76,
-    y: 47,
-    z: 68,
-    side: "right",
-    details: [
-      { label: "意图澄清", x: 82, y: 36, z: 20, side: "right" },
-      { label: "处理过程反馈", x: 80, y: 56, z: 48, side: "right" },
-      { label: "结果解释", x: 81, y: 70, z: 24, side: "right" },
-      { label: "引用与异常提示", x: 67, y: 61, z: 4, side: "right" },
-    ],
-  },
-  {
-    id: "interaction-design",
-    x: 20,
-    y: 47,
-    z: 30,
-    side: "left",
-    details: [
-      { label: "任务流程与信息架构", x: 7, y: 35, z: -12, side: "right" },
-      { label: "状态与反馈", x: 7, y: 56, z: 18, side: "right" },
-      { label: "复杂交互", x: 6, y: 68, z: 50, side: "right" },
-      { label: "高保真原型验证", x: 22, y: 62, z: -18, side: "right" },
-    ],
-  },
-  {
-    id: "data-visualization",
-    x: 35,
-    y: 77,
-    z: -48,
-    side: "left",
-    details: [
-      { label: "指标层级", x: 16, y: 80, z: -30, side: "left" },
-      { label: "地图与趋势", x: 27, y: 88, z: -56, side: "below" },
-      { label: "多维对比", x: 46, y: 88, z: -8, side: "below" },
-      { label: "大屏场景适配", x: 51, y: 78, z: -22, side: "left" },
-    ],
-  },
-  {
-    id: "design-system",
-    x: 65,
-    y: 78,
-    z: 48,
-    side: "right",
-    details: [
-      { label: "信息层级与版式", x: 54, y: 77, z: 8, side: "above" },
-      { label: "组件与状态规范", x: 76, y: 69, z: 52, side: "left" },
-      { label: "多页面一致性", x: 84, y: 88, z: 18, side: "left" },
-      { label: "品牌与业务适配", x: 56, y: 93, z: 32, side: "above" },
-    ],
-  },
-];
-
-const abilityNetworkMeshLinks: Array<[string, string]> = [
-  ["ai-workflow", "complex-systems"],
-  ["complex-systems", "ai-experience"],
-  ["ai-experience", "design-system"],
-  ["design-system", "data-visualization"],
-  ["data-visualization", "interaction-design"],
-  ["interaction-design", "ai-workflow"],
-  ["ai-workflow", "ai-experience"],
-  ["ai-workflow", "design-system"],
-  ["interaction-design", "complex-systems"],
-  ["interaction-design", "design-system"],
-  ["data-visualization", "complex-systems"],
-  ["data-visualization", "ai-experience"],
-  [abilityDetailNodeId("ai-workflow", "AI 原型快速验证"), abilityDetailNodeId("interaction-design", "任务流程与信息架构")],
-  [abilityDetailNodeId("ai-workflow", "设计资产持续维护"), abilityDetailNodeId("design-system", "组件与状态规范")],
-  [abilityDetailNodeId("complex-systems", "业务规则与角色关系"), abilityDetailNodeId("ai-experience", "意图澄清")],
-  [abilityDetailNodeId("complex-systems", "权限与数据边界"), abilityDetailNodeId("design-system", "多页面一致性")],
-  [abilityDetailNodeId("ai-experience", "处理过程反馈"), abilityDetailNodeId("interaction-design", "状态与反馈")],
-  [abilityDetailNodeId("interaction-design", "任务流程与信息架构"), abilityDetailNodeId("data-visualization", "指标层级")],
-  [abilityDetailNodeId("interaction-design", "复杂交互"), abilityDetailNodeId("data-visualization", "多维对比")],
-  [abilityDetailNodeId("data-visualization", "指标层级"), abilityDetailNodeId("design-system", "信息层级与版式")],
-  [abilityDetailNodeId("data-visualization", "地图与趋势"), abilityDetailNodeId("design-system", "品牌与业务适配")],
-  [abilityDetailNodeId("ai-workflow", "AI 原型快速验证"), abilityDetailNodeId("complex-systems", "复杂流程拆解")],
-];
-
-const abilityNetworkAnchorById = new Map<string, AbilityNetworkPosition>(
-  abilityNetworkNodes.flatMap(node => [
-    [node.id, { x: node.x, y: node.y }],
-    ...node.details.map(detail => [
-      abilityDetailNodeId(node.id, detail.label),
-      { x: detail.x, y: detail.y },
-    ] as [string, AbilityNetworkPosition]),
-  ] as Array<[string, AbilityNetworkPosition]>),
-);
-const abilityNetworkDepthById = new Map<string, number>(
-  abilityNetworkNodes.flatMap(node => [
-    [node.id, node.z],
-    ...node.details.map(detail => [
-      abilityDetailNodeId(node.id, detail.label),
-      detail.z,
-    ] as [string, number]),
-  ] as Array<[string, number]>),
-);
-
-const abilityNetworkMotionIndexById = new Map<string, number>(
-  abilityNetworkNodes
-    .flatMap(node => [
-      node.id,
-      ...node.details.map(detail => abilityDetailNodeId(node.id, detail.label)),
-    ])
-    .map((id, index) => [id, index]),
-);
-
-const abilityDetailIndexesByNodeId = new Map<string, readonly number[]>([
-  [abilityDetailNodeId("ai-experience", "意图澄清"), [0]],
-  [abilityDetailNodeId("ai-experience", "处理过程反馈"), [1]],
-  [abilityDetailNodeId("ai-experience", "结果解释"), [2]],
-  [abilityDetailNodeId("ai-experience", "引用与异常提示"), [3]],
-  [abilityDetailNodeId("ai-workflow", "AI 原型快速验证"), [0]],
-  [abilityDetailNodeId("ai-workflow", "界面方案辅助设计"), [1]],
-  [abilityDetailNodeId("ai-workflow", "设计规范 Markdown 化"), [2]],
-  [abilityDetailNodeId("ai-workflow", "设计资产持续维护"), [3]],
-  [abilityDetailNodeId("complex-systems", "业务规则与角色关系"), [0]],
-  [abilityDetailNodeId("complex-systems", "权限与数据边界"), [1]],
-  [abilityDetailNodeId("complex-systems", "复杂流程拆解"), [2]],
-  [abilityDetailNodeId("complex-systems", "系统模块规划"), [3]],
-  [abilityDetailNodeId("interaction-design", "任务流程与信息架构"), [0]],
-  [abilityDetailNodeId("interaction-design", "状态与反馈"), [1]],
-  [abilityDetailNodeId("interaction-design", "复杂交互"), [2]],
-  [abilityDetailNodeId("interaction-design", "高保真原型验证"), [3]],
-  [abilityDetailNodeId("data-visualization", "指标层级"), [0]],
-  [abilityDetailNodeId("data-visualization", "地图与趋势"), [1]],
-  [abilityDetailNodeId("data-visualization", "多维对比"), [2]],
-  [abilityDetailNodeId("data-visualization", "大屏场景适配"), [3]],
-  [abilityDetailNodeId("design-system", "信息层级与版式"), [0]],
-  [abilityDetailNodeId("design-system", "组件与状态规范"), [1]],
-  [abilityDetailNodeId("design-system", "多页面一致性"), [2]],
-  [abilityDetailNodeId("design-system", "品牌与业务适配"), [3]],
-]);
-
-type AbilitySimulationNode = SimulationNodeDatum & {
-  id: string;
-  anchorX: number;
-  anchorY: number;
-};
-
-type AbilityNetworkPosition = { x: number; y: number };
-
-function projectAbilityPoint(point: AbilityNetworkPosition, depth: number) {
-  const perspective = 1 + depth / 520;
-  return {
-    x: 50 + (point.x - 50) * perspective,
-    y: 50 + (point.y - 50) * perspective,
-  };
-}
-
-function abilityDetailNodeId(abilityId: AbilityId, label: string) {
-  return `${abilityId}:${label}`;
-}
-
-function addAbilityNetworkDrift(
-  id: string,
-  point: AbilityNetworkPosition,
-  phase: number,
-  amplitudeScale = 1,
-) {
-  const index = abilityNetworkMotionIndexById.get(id) ?? 0;
-  const isDetail = id.includes(":");
-  const xAmplitude = (isDetail ? .48 : .68) * amplitudeScale;
-  const yAmplitude = (isDetail ? .36 : .48) * amplitudeScale;
-  return {
-    x: point.x + Math.sin(phase * (.72 + index % 3 * .055) + index * 1.17) * xAmplitude,
-    y: point.y + Math.cos(phase * (.64 + index % 4 * .035) + index * 1.63) * yAmplitude,
-  };
-}
-
-function addAbilityNetworkDepthDrift(id: string, depth: number, phase: number, amplitudeScale = 1) {
-  const index = abilityNetworkMotionIndexById.get(id) ?? 0;
-  const amplitude = (id.includes(":") ? 3.2 : 4.8) * amplitudeScale;
-  return depth + Math.sin(phase * (.62 + index % 5 * .03) + index * 1.39) * amplitude;
-}
-
-function abilityNetworkLineOpacity(fromDepth: number, toDepth: number) {
-  const normalizedDepth = Math.max(-1, Math.min(1, (fromDepth + toDepth) / 140));
-  return .3 + normalizedDepth * .14;
-}
-
-function getAbilityNetworkNeighbors(id: string) {
-  const neighbors = new Set<string>();
-  abilityNetworkNodes.forEach(node => {
-    const detailIds = node.details.map(detail => abilityDetailNodeId(node.id, detail.label));
-    if (node.id === id) detailIds.forEach(detailId => neighbors.add(detailId));
-    if (detailIds.includes(id)) neighbors.add(node.id);
-  });
-  abilityNetworkMeshLinks.forEach(([fromId, toId]) => {
-    if (fromId === id) neighbors.add(toId);
-    if (toId === id) neighbors.add(fromId);
-  });
-  return neighbors;
-}
-
-function createAbilityNetworkPositions() {
-  return Object.fromEntries(
-    abilityNetworkNodes.flatMap(node => [
-      [node.id, { x: node.x, y: node.y }],
-      ...node.details.map(detail => [
-        abilityDetailNodeId(node.id, detail.label),
-        { x: detail.x, y: detail.y },
-      ]),
-    ]),
-  ) as Record<string, AbilityNetworkPosition>;
-}
 
 const homeProjectContent: Record<string, { titleLines: string[]; summary: string }> = {
   gkx: {
@@ -1682,21 +1423,21 @@ function Hero() {
   const reduce = useReducedMotion();
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [videoPreloadState, setVideoPreloadState] = useState<"pending" | "disabled" | "loading" | "ready" | "error">("pending");
+  const [videoFallbackReason, setVideoFallbackReason] = useState<string>();
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroVisibleRef = useRef(true);
 
   useEffect(() => {
     const connection = (navigator as Navigator & {
-      connection?: { saveData?: boolean; effectiveType?: string };
+      connection?: { saveData?: boolean };
     }).connection;
-    if (
-      reduce ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      connection?.saveData ||
-      /^(slow-2g|2g|3g)$/.test(connection?.effectiveType ?? "") ||
-      !videoRef.current?.canPlayType("video/mp4")
-    ) {
+    // Keep the requested hero film independent of reduced entrance animation.
+    // Data-saving connections and unsupported video still use the poster.
+    const fallbackReason = connection?.saveData ? "save-data"
+      : !videoRef.current?.canPlayType("video/mp4") ? "unsupported-format" : undefined;
+    setVideoFallbackReason(fallbackReason);
+    if (fallbackReason) {
       setShouldLoadVideo(false);
       setVideoPreloadState("disabled");
       return;
@@ -1705,7 +1446,7 @@ function Hero() {
     // The opening loader waits for this video to have a first frame available.
     setVideoPreloadState(current => current === "ready" ? current : "loading");
     setShouldLoadVideo(true);
-  }, [reduce]);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -1749,13 +1490,15 @@ function Hero() {
     observer.observe(video.closest(".hero") ?? video);
     window.addEventListener("pageshow", syncPlayback);
     document.addEventListener("visibilitychange", syncPlayback);
-    window.addEventListener("touchstart", syncPlayback, { passive: true, once: true });
+    window.addEventListener("pointerdown", syncPlayback, { passive: true, once: true });
+    window.addEventListener("keydown", syncPlayback, { once: true });
 
     return () => {
       observer.disconnect();
       window.removeEventListener("pageshow", syncPlayback);
       document.removeEventListener("visibilitychange", syncPlayback);
-      window.removeEventListener("touchstart", syncPlayback);
+      window.removeEventListener("pointerdown", syncPlayback);
+      window.removeEventListener("keydown", syncPlayback);
     };
   }, [shouldLoadVideo]);
 
@@ -1783,6 +1526,7 @@ function Hero() {
           ref={videoRef}
           className={isVideoPlaying ? "is-playing" : ""}
           data-preload-state={videoPreloadState}
+          data-fallback-reason={videoFallbackReason}
           aria-hidden="true"
           autoPlay={shouldLoadVideo}
           disablePictureInPicture
@@ -1889,627 +1633,6 @@ function SectionIntro({
         transition={{ duration: 0.7, delay: 0.08, ease }}
       />
     </motion.div>
-  );
-}
-
-function AbilitySection({
-  onShowProjects,
-}: {
-  onShowProjects: (abilityId: AbilityId) => void;
-}) {
-  const [active, setActive] = useState(0);
-  const [networkPositions, setNetworkPositions] = useState<Record<string, AbilityNetworkPosition>>(
-    createAbilityNetworkPositions,
-  );
-  const [networkSettleVersion, setNetworkSettleVersion] = useState(0);
-  const [networkMotionPhase, setNetworkMotionPhase] = useState(0);
-  const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
-  const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
-  const [selectedDetailNodeId, setSelectedDetailNodeId] = useState<string | null>(null);
-  const [abilityInView, setAbilityInView] = useState(false);
-  const [pageVisible, setPageVisible] = useState(true);
-  const [autoCyclePaused, setAutoCyclePaused] = useState(false);
-  const [autoCycleVersion, setAutoCycleVersion] = useState(0);
-  const reduce = useReducedMotion();
-  const abilitySectionRef = useRef<HTMLElement>(null);
-  const networkViewportRef = useRef<HTMLDivElement>(null);
-  const networkRef = useRef<HTMLDivElement>(null);
-  const networkPositionsRef = useRef(networkPositions);
-  const networkSimulationRef = useRef<{ stop: () => void } | null>(null);
-  const suppressNetworkClickRef = useRef(false);
-  const networkDragRef = useRef<{
-    id: string | null;
-    pointerId: number;
-    startX: number;
-    startY: number;
-    startPositions: Record<string, AbilityNetworkPosition>;
-    moved: boolean;
-  }>({ id: null, pointerId: -1, startX: 0, startY: 0, startPositions: {}, moved: false });
-  networkPositionsRef.current = networkPositions;
-  const current = abilities[active];
-  const activeAbilityId = current.id;
-  const networkMotionScale = (id: string) => {
-    if (draggingNodeId === id) return 0;
-    if (hoveredNodeId === id) return .16;
-    if (selectedDetailNodeId === id) return .12;
-    if (id === activeAbilityId || id.startsWith(`${activeAbilityId}:`)) return .3;
-    return 1;
-  };
-  const animatedNetworkPosition = (
-    id: string,
-    fallback: AbilityNetworkPosition,
-  ) => {
-    const base = networkPositions[id] ?? fallback;
-    return reduce
-      ? base
-      : addAbilityNetworkDrift(id, base, networkMotionPhase, networkMotionScale(id));
-  };
-  const animatedNetworkDepth = (id: string, fallback: number) => reduce
-    ? fallback
-    : addAbilityNetworkDepthDrift(id, fallback, networkMotionPhase, networkMotionScale(id));
-  const selectedDetailIndexes = selectedDetailNodeId
-    ? abilityDetailIndexesByNodeId.get(selectedDetailNodeId) ?? []
-    : [];
-  const projectCount = new Set(current.evidence.map(item => item.projectSlug)).size;
-  const groupedEvidence = current.evidence.reduce<Array<{
-    projectSlug: string;
-    projectTitle: string;
-    items: typeof current.evidence;
-  }>>((groups, item) => {
-    const group = groups.find(entry => entry.projectSlug === item.projectSlug);
-    if (group) group.items.push(item);
-    else groups.push({ projectSlug: item.projectSlug, projectTitle: item.projectTitle, items: [item] });
-    return groups;
-  }, []);
-
-  useEffect(() => {
-    const viewport = networkViewportRef.current;
-    if (!viewport) return;
-    let frame = 0;
-    const syncViewport = () => {
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        viewport.scrollLeft = window.innerWidth <= 767
-          ? Math.max(0, (viewport.scrollWidth - viewport.clientWidth) / 2)
-          : 0;
-      });
-    };
-    syncViewport();
-    window.addEventListener("resize", syncViewport);
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("resize", syncViewport);
-    };
-  }, []);
-
-  useEffect(() => {
-    const section = abilitySectionRef.current;
-    if (!section) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      setAbilityInView(entry.isIntersecting);
-    }, { threshold: .35 });
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const syncVisibility = () => setPageVisible(document.visibilityState === "visible");
-    syncVisibility();
-    document.addEventListener("visibilitychange", syncVisibility);
-    return () => document.removeEventListener("visibilitychange", syncVisibility);
-  }, []);
-
-  useEffect(() => {
-    if (reduce || !abilityInView || !pageVisible || autoCyclePaused || selectedDetailNodeId) return;
-    const timer = window.setTimeout(() => {
-      const activeNodeIndex = abilityNetworkNodes.findIndex(node => node.id === abilities[active]?.id);
-      const nextNode = abilityNetworkNodes[(Math.max(0, activeNodeIndex) + 1) % abilityNetworkNodes.length];
-      const nextAbilityIndex = abilities.findIndex(ability => ability.id === nextNode.id);
-      if (nextAbilityIndex >= 0) {
-        setActive(nextAbilityIndex);
-        setSelectedDetailNodeId(null);
-      }
-    }, abilityAutoCycleMs);
-    return () => window.clearTimeout(timer);
-  }, [active, abilityInView, autoCyclePaused, autoCycleVersion, pageVisible, reduce, selectedDetailNodeId]);
-
-  useEffect(() => {
-    const network = networkRef.current;
-    if (!network || reduce) {
-      setNetworkMotionPhase(0);
-      return;
-    }
-
-    let frame = 0;
-    let visible = false;
-    let phase = 0;
-    let lastTime = 0;
-    let lastPaint = 0;
-
-    const stop = () => {
-      window.cancelAnimationFrame(frame);
-      frame = 0;
-      lastTime = 0;
-    };
-    const tick = (time: number) => {
-      frame = 0;
-      if (!visible || document.visibilityState !== "visible") return;
-      if (!lastTime) lastTime = time;
-      phase += Math.min(50, time - lastTime) / 1000;
-      lastTime = time;
-      if (time - lastPaint >= 34) {
-        setNetworkMotionPhase(phase);
-        lastPaint = time;
-      }
-      frame = window.requestAnimationFrame(tick);
-    };
-    const start = () => {
-      if (!frame && visible && document.visibilityState === "visible") {
-        frame = window.requestAnimationFrame(tick);
-      }
-    };
-    const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (visible) start();
-      else stop();
-    }, { rootMargin: "120px 0px" });
-    const handleVisibility = () => {
-      if (document.visibilityState === "visible") start();
-      else stop();
-    };
-
-    observer.observe(network);
-    document.addEventListener("visibilitychange", handleVisibility);
-    return () => {
-      stop();
-      observer.disconnect();
-      document.removeEventListener("visibilitychange", handleVisibility);
-    };
-  }, [reduce]);
-
-  useEffect(() => {
-    if (reduce) {
-      setNetworkPositions(createAbilityNetworkPositions());
-      return;
-    }
-
-    const nodes: AbilitySimulationNode[] = abilityNetworkNodes.flatMap((node, nodeIndex) => {
-      const currentNode = networkPositionsRef.current[node.id] ?? node;
-      return [{
-        id: node.id,
-        anchorX: node.x,
-        anchorY: node.y,
-        x: currentNode.x,
-        y: currentNode.y,
-        vx: Math.sin((nodeIndex + 1) * (active + 2)) * .55,
-        vy: Math.cos((nodeIndex + 2) * (active + 1)) * .48,
-      }, ...node.details.map((detail, detailIndex) => {
-        const id = abilityDetailNodeId(node.id, detail.label);
-        const currentDetail = networkPositionsRef.current[id] ?? detail;
-        return {
-          id,
-          anchorX: detail.x,
-          anchorY: detail.y,
-          x: currentDetail.x,
-          y: currentDetail.y,
-          vx: Math.sin((nodeIndex + detailIndex + 2) * (active + 1)) * .36,
-          vy: Math.cos((nodeIndex + detailIndex + 3) * (active + 2)) * .34,
-        };
-      })];
-    });
-    const links = abilityNetworkNodes.flatMap(node =>
-      node.details.map<{ source: string; target: string }>(detail => ({
-        source: node.id,
-        target: abilityDetailNodeId(node.id, detail.label),
-      })),
-    ).concat(abilityNetworkMeshLinks.map(([source, target]) => ({ source, target })));
-
-    let frame = 0;
-    const simulation = forceSimulation(nodes)
-      .alpha(.32)
-      .alphaDecay(.06)
-      .velocityDecay(.56)
-      .force("link", forceLink<AbilitySimulationNode, { source: string | AbilitySimulationNode; target: string | AbilitySimulationNode }>(links)
-        .id(node => node.id)
-        .strength(.02))
-      .force("charge", forceManyBody<AbilitySimulationNode>().strength(-.28))
-      .force("x", forceX<AbilitySimulationNode>(node => node.anchorX).strength(.36))
-      .force("y", forceY<AbilitySimulationNode>(node => node.anchorY).strength(.36))
-      .on("tick", () => {
-        window.cancelAnimationFrame(frame);
-        frame = window.requestAnimationFrame(() => {
-          const next: Record<string, AbilityNetworkPosition> = {};
-          nodes.forEach(node => {
-            if (node.id === "network-center") return;
-            const x = node.x ?? node.anchorX;
-            const y = node.y ?? node.anchorY;
-            next[node.id] = {
-              x: node.anchorX + Math.max(-.45, Math.min(.45, x - node.anchorX)),
-              y: node.anchorY + Math.max(-.45, Math.min(.45, y - node.anchorY)),
-            };
-          });
-          networkPositionsRef.current = next;
-          setNetworkPositions(next);
-        });
-      });
-    networkSimulationRef.current = simulation;
-    const driftTimer = window.setInterval(() => {
-      nodes.forEach((node, index) => {
-        if (node.id === "network-center") return;
-        const phase = Date.now() / 2200 + index * 1.7;
-        node.vx = (node.vx ?? 0) + Math.sin(phase) * .08;
-        node.vy = (node.vy ?? 0) + Math.cos(phase * .86) * .07;
-      });
-      simulation.alpha(.055).restart();
-    }, 2200);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.clearInterval(driftTimer);
-      simulation.stop();
-      if (networkSimulationRef.current === simulation) networkSimulationRef.current = null;
-    };
-  }, [active, networkSettleVersion, reduce]);
-
-  const handleNetworkPointerDown = (
-    event: ReactPointerEvent<HTMLButtonElement>,
-    id: string,
-  ) => {
-    if (event.button !== 0) return;
-    networkSimulationRef.current?.stop();
-    networkDragRef.current = {
-      id,
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      startPositions: { ...networkPositionsRef.current },
-      moved: false,
-    };
-    try {
-      event.currentTarget.setPointerCapture(event.pointerId);
-    } catch {
-      // Pointer capture is unavailable for some synthetic pointer events.
-    }
-  };
-
-  const handleNetworkPointerMove = (event: ReactPointerEvent<HTMLButtonElement>) => {
-    const drag = networkDragRef.current;
-    const network = networkRef.current;
-    if (!drag.id || drag.pointerId !== event.pointerId || !network) return;
-    const dx = event.clientX - drag.startX;
-    const dy = event.clientY - drag.startY;
-    if (!drag.moved && Math.hypot(dx, dy) < 4) return;
-    drag.moved = true;
-    setDraggingNodeId(drag.id);
-    event.preventDefault();
-
-    const rect = network.getBoundingClientRect();
-    const deltaX = dx / Math.max(1, rect.width) * 100;
-    const deltaY = dy / Math.max(1, rect.height) * 100;
-    const neighbors = getAbilityNetworkNeighbors(drag.id);
-    const next = { ...drag.startPositions };
-    const applyOffset = (nodeId: string, strength: number, limit: number) => {
-      const anchor = abilityNetworkAnchorById.get(nodeId);
-      const start = drag.startPositions[nodeId] ?? anchor;
-      if (!anchor || !start) return;
-      next[nodeId] = {
-        x: Math.max(anchor.x - limit, Math.min(anchor.x + limit, start.x + deltaX * strength)),
-        y: Math.max(anchor.y - limit, Math.min(anchor.y + limit, start.y + deltaY * strength)),
-      };
-    };
-    applyOffset(drag.id, 1, 3);
-    neighbors.forEach(nodeId => applyOffset(nodeId, .12, .7));
-    networkPositionsRef.current = next;
-    setNetworkPositions(next);
-  };
-
-  const finishNetworkDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
-    const drag = networkDragRef.current;
-    if (!drag.id || drag.pointerId !== event.pointerId) return;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-    setDraggingNodeId(null);
-    if (drag.moved) {
-      suppressNetworkClickRef.current = true;
-      window.setTimeout(() => {
-        suppressNetworkClickRef.current = false;
-      }, 240);
-      setNetworkSettleVersion(version => version + 1);
-    }
-    networkDragRef.current.id = null;
-    networkDragRef.current.pointerId = -1;
-  };
-
-  const selectNetworkAbility = (index: number, detailId: string | null = null) => {
-    if (suppressNetworkClickRef.current) {
-      suppressNetworkClickRef.current = false;
-      return;
-    }
-    setActive(index);
-    setSelectedDetailNodeId(detailId);
-    setAutoCycleVersion(version => version + 1);
-  };
-
-  return (
-    <section className="section ability-section" id="ability" ref={abilitySectionRef}>
-      <div className="section-shell">
-        <SectionIntro
-          title="核心能力"
-          description="以 AI 体验与交互策略为核心，整合复杂系统、设计系统与数据表达能力，形成面向复杂产品的系统化设计能力。"
-        />
-        <div
-          className={`ability-layout${autoCyclePaused ? " is-paused" : ""}`}
-          data-auto-cycle={reduce ? "reduced" : abilityInView && pageVisible && !autoCyclePaused ? "running" : "paused"}
-          onFocusCapture={() => setAutoCyclePaused(true)}
-          onBlurCapture={event => {
-            if (!(event.relatedTarget instanceof Node) || !event.currentTarget.contains(event.relatedTarget)) {
-              setAutoCyclePaused(false);
-            }
-          }}
-        >
-          <div className="ability-visual">
-            <div className="ability-network-viewport" ref={networkViewportRef}>
-              <div
-                className="ability-network"
-                ref={networkRef}
-                data-motion-phase={networkMotionPhase.toFixed(2)}
-                role="group"
-                aria-label={`能力体系三维关系图，当前为${current.name}`}
-              >
-                <svg viewBox="0 0 1000 560" preserveAspectRatio="none" aria-hidden="true">
-                  {abilityNetworkNodes.map(node => {
-                    const nodeDepth = animatedNetworkDepth(node.id, node.z);
-                    const nodePosition = projectAbilityPoint(animatedNetworkPosition(node.id, node), nodeDepth);
-                    return (
-                      <g
-                        key={node.id}
-                        className={active === abilities.findIndex(item => item.id === node.id) ? "is-active" : undefined}
-                        style={{ opacity: .72 + Math.max(-.14, Math.min(.2, nodeDepth / 300)) }}
-                      >
-                        {node.details.map(detail => {
-                          const detailId = abilityDetailNodeId(node.id, detail.label);
-                          const detailDepth = animatedNetworkDepth(detailId, detail.z);
-                          const detailPosition = projectAbilityPoint(
-                            animatedNetworkPosition(detailId, detail),
-                            detailDepth,
-                          );
-                          return (
-                            <line
-                              key={detail.label}
-                              className={`ability-network-line is-branch${selectedDetailNodeId === detailId ? " is-selected" : ""}`}
-                              pathLength="1"
-                              x1={nodePosition.x * 10}
-                              y1={nodePosition.y * 5.6}
-                              x2={detailPosition.x * 10}
-                              y2={detailPosition.y * 5.6}
-                              style={{ opacity: abilityNetworkLineOpacity(nodeDepth, detailDepth) }}
-                            />
-                          );
-                        })}
-                      </g>
-                    );
-                  })}
-                  {abilityNetworkMeshLinks.map(([fromId, toId]) => {
-                    const from = abilityNetworkAnchorById.get(fromId);
-                    const to = abilityNetworkAnchorById.get(toId);
-                    if (!from || !to) return null;
-                    const fromDepth = animatedNetworkDepth(fromId, abilityNetworkDepthById.get(fromId) ?? 0);
-                    const toDepth = animatedNetworkDepth(toId, abilityNetworkDepthById.get(toId) ?? 0);
-                    const fromPosition = projectAbilityPoint(animatedNetworkPosition(fromId, from), fromDepth);
-                    const toPosition = projectAbilityPoint(animatedNetworkPosition(toId, to), toDepth);
-                    return (
-                      <line
-                        key={`${fromId}-${toId}`}
-                        className="ability-network-line is-mesh"
-                        pathLength="1"
-                        x1={fromPosition.x * 10}
-                        y1={fromPosition.y * 5.6}
-                        x2={toPosition.x * 10}
-                        y2={toPosition.y * 5.6}
-                        style={{ opacity: abilityNetworkLineOpacity(fromDepth, toDepth) }}
-                      />
-                    );
-                  })}
-                </svg>
-
-                <div
-                  className="ability-network-center"
-                  style={{ "--node-z": "28px" } as CSSProperties}
-                  aria-hidden="true"
-                >
-                  <span className="ability-network-core-mark">
-                    <svg viewBox="0 0 64 64" aria-hidden="true">
-                      <g className="ability-network-core-orbits">
-                        <ellipse cx="32" cy="32" rx="27" ry="10" />
-                        <ellipse cx="32" cy="32" rx="27" ry="10" transform="rotate(60 32 32)" />
-                        <ellipse cx="32" cy="32" rx="27" ry="10" transform="rotate(120 32 32)" />
-                      </g>
-                      <g className="ability-network-core-satellites">
-                        <circle cx="59" cy="32" r="2.6" />
-                        <circle cx="45.5" cy="8.6" r="2.6" />
-                        <circle cx="18.5" cy="8.6" r="2.6" />
-                        <circle cx="5" cy="32" r="2.6" />
-                        <circle cx="18.5" cy="55.4" r="2.6" />
-                        <circle cx="45.5" cy="55.4" r="2.6" />
-                      </g>
-                      <circle className="ability-network-core-disc" cx="32" cy="32" r="8" />
-                      <circle className="ability-network-core-cutout" cx="32" cy="32" r="2.5" />
-                    </svg>
-                  </span>
-                  <strong>能力体系</strong>
-                </div>
-
-                <div className="ability-network-tabs" role="tablist" aria-label="核心能力切换">
-                  {abilityNetworkNodes.map(node => {
-                    const index = abilities.findIndex(ability => ability.id === node.id);
-                    const ability = abilities[index];
-                    const nodeDepth = animatedNetworkDepth(node.id, node.z);
-                    const nodePosition = projectAbilityPoint(animatedNetworkPosition(node.id, node), nodeDepth);
-                    const depthScale = 1 + nodeDepth / 260;
-                    return (
-                      <button
-                        key={node.id}
-                        id={`ability-tab-${index}`}
-                        type="button"
-                        role="tab"
-                        aria-selected={active === index}
-                        aria-controls="ability-panel"
-                        tabIndex={active === index ? 0 : -1}
-                        className={`ability-network-node is-main is-${node.side}${active === index ? " is-active" : ""}${draggingNodeId === node.id ? " is-dragging" : ""}`}
-                        style={{
-                          left: `${nodePosition.x}%`,
-                          top: `${nodePosition.y}%`,
-                          opacity: .72 + Math.max(-.14, Math.min(.2, nodeDepth / 300)),
-                          "--node-z": `${nodeDepth}px`,
-                          "--node-scale": depthScale.toFixed(3),
-                          "--node-hover-scale": (depthScale * 1.14).toFixed(3),
-                          "--node-active-scale": (depthScale * 1.34).toFixed(3),
-                        } as CSSProperties}
-                        onClick={() => selectNetworkAbility(index)}
-                        onPointerEnter={() => setHoveredNodeId(node.id)}
-                        onPointerLeave={() => setHoveredNodeId(current => current === node.id ? null : current)}
-                        onPointerDown={event => handleNetworkPointerDown(event, node.id)}
-                        onPointerMove={handleNetworkPointerMove}
-                        onPointerUp={finishNetworkDrag}
-                        onPointerCancel={finishNetworkDrag}
-                        onKeyDown={(event) => {
-                          const directions: Record<string, number> = {
-                            ArrowRight: 1,
-                            ArrowDown: 1,
-                            ArrowLeft: -1,
-                            ArrowUp: -1,
-                          };
-                          const direction = directions[event.key];
-                          if (!direction && event.key !== "Home" && event.key !== "End") return;
-                          event.preventDefault();
-                          const next = event.key === "Home"
-                            ? 0
-                            : event.key === "End"
-                              ? abilities.length - 1
-                              : (index + direction + abilities.length) % abilities.length;
-                          setActive(next);
-                          setSelectedDetailNodeId(null);
-                          setAutoCycleVersion(version => version + 1);
-                          window.requestAnimationFrame(() => {
-                            document.getElementById(`ability-tab-${next}`)?.focus();
-                          });
-                        }}
-                      >
-                        <span className="ability-network-node-content">
-                          <span className="ability-network-dot" aria-hidden="true" />
-                          <span className="ability-network-label">{ability.axisLabel}</span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="ability-network-detail-nodes">
-                  {abilityNetworkNodes.flatMap(node => {
-                    const index = abilities.findIndex(ability => ability.id === node.id);
-                    const ability = abilities[index];
-                    return node.details.map(detail => {
-                      const detailId = abilityDetailNodeId(node.id, detail.label);
-                      const detailDepth = animatedNetworkDepth(detailId, detail.z);
-                      const detailPosition = projectAbilityPoint(animatedNetworkPosition(detailId, detail), detailDepth);
-                      const depthScale = 1 + detailDepth / 300;
-                      return (
-                        <button
-                          key={`${node.id}-${detail.label}`}
-                          type="button"
-                          aria-pressed={selectedDetailNodeId === detailId}
-                          aria-label={`查看${ability.name}：${detail.label}`}
-                          className={`ability-network-node is-detail is-${detail.side}${active === index ? " is-parent-active" : ""}${selectedDetailNodeId === detailId ? " is-active" : ""}${draggingNodeId === detailId ? " is-dragging" : ""}`}
-                          style={{
-                            left: `${detailPosition.x}%`,
-                            top: `${detailPosition.y}%`,
-                            opacity: .72 + Math.max(-.14, Math.min(.2, detailDepth / 300)),
-                            "--node-z": `${detailDepth}px`,
-                            "--node-scale": depthScale.toFixed(3),
-                            "--node-hover-scale": (depthScale * 1.22).toFixed(3),
-                            "--node-active-scale": (depthScale * 1.42).toFixed(3),
-                          } as CSSProperties}
-                          onClick={() => selectNetworkAbility(index, detailId)}
-                          onPointerEnter={() => setHoveredNodeId(detailId)}
-                          onPointerLeave={() => setHoveredNodeId(current => current === detailId ? null : current)}
-                          onPointerDown={event => handleNetworkPointerDown(event, detailId)}
-                          onPointerMove={handleNetworkPointerMove}
-                          onPointerUp={finishNetworkDrag}
-                          onPointerCancel={finishNetworkDrag}
-                        >
-                          <span className="ability-network-node-content">
-                            <span className="ability-network-dot" aria-hidden="true" />
-                            <span className="ability-network-label">{detail.label}</span>
-                          </span>
-                        </button>
-                      );
-                    });
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            className="ability-detail"
-            id="ability-panel"
-            role="tabpanel"
-            aria-labelledby={`ability-tab-${active}`}
-            aria-live={autoCyclePaused ? "polite" : "off"}
-          >
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={current.name}
-                initial={reduce ? false : { opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduce ? undefined : { opacity: 0, y: -8 }}
-                transition={{ duration: 0.24, ease }}
-              >
-                <h3>{current.name}</h3>
-                <p>{current.description}</p>
-                <ul>
-                  {current.details.map((detail, detailIndex) => (
-                    <li
-                      className={selectedDetailIndexes.includes(detailIndex) ? "is-active" : undefined}
-                      key={detail}
-                    >
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-                <section className="ability-proof ability-proof-compact" aria-label={`${current.name}对应项目`}>
-                  <header>
-                    <span>对应项目</span>
-                    <button type="button" onClick={() => onShowProjects(current.id)}>
-                      突出相关项目（{projectCount}）
-                    </button>
-                  </header>
-                  <div className="ability-jump-list">
-                    {groupedEvidence.map(group => (
-                      <div className="ability-project-group" key={group.projectSlug}>
-                        <strong>{group.projectTitle}</strong>
-                        <div>
-                          {group.items.map(item => (
-                            <a
-                              key={item.section}
-                              href={`/portfolio/project/${item.projectSlug}/${item.anchor ? `#${item.anchor}` : ""}`}
-                              onClick={event => openProjectEvidence(event, item.projectSlug, item.anchor)}
-                            >
-                              <span>{item.section}</span>
-                              <ArrowUpRight size={14} strokeWidth={1.8} aria-hidden="true" />
-                            </a>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -2939,6 +2062,11 @@ function HomePage() {
 
   const showRelatedProjects = (abilityId: AbilityId) => {
     setHighlightedAbilityId(abilityId);
+    try {
+      window.sessionStorage.setItem("portfolio-work-highlight", abilityId);
+    } catch {
+      // Keep the current-page highlight available when storage is unavailable.
+    }
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
         document.getElementById("work")?.scrollIntoView({
@@ -2949,12 +2077,37 @@ function HomePage() {
     });
   };
 
+  const clearProjectHighlight = () => {
+    setHighlightedAbilityId(null);
+    try {
+      window.sessionStorage.removeItem("portfolio-work-highlight");
+    } catch {
+      // Clearing the visible highlight does not depend on storage access.
+    }
+  };
+
   useLayoutEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const returnProject = params.get("returnProject");
     const returnY = Number.parseInt(params.get("returnY") ?? "", 10);
     const shouldRestoreWork = params.get("returnSection") === "work";
-    if (!returnProject && !shouldRestoreWork) return;
+    if (!returnProject && !shouldRestoreWork) {
+      try {
+        window.sessionStorage.removeItem("portfolio-work-highlight");
+      } catch {
+        // A fresh visit starts without an active project highlight.
+      }
+      return;
+    }
+
+    try {
+      const savedHighlight = window.sessionStorage.getItem("portfolio-work-highlight");
+      if (abilities.some(ability => ability.id === savedHighlight)) {
+        setHighlightedAbilityId(savedHighlight as AbilityId);
+      }
+    } catch {
+      // Scroll restoration still works when storage is unavailable.
+    }
 
     const root = document.documentElement;
     const previousBehavior = root.style.scrollBehavior;
@@ -3008,10 +2161,14 @@ function HomePage() {
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
       <main className="portfolio-home">
         <Hero />
-        <AbilitySection onShowProjects={showRelatedProjects} />
+        <CapabilitySection
+          highlightedAbilityId={highlightedAbilityId}
+          onShowProjects={showRelatedProjects}
+          onOpenEvidence={openProjectEvidence}
+        />
         <WorkSection
           highlightedAbilityId={highlightedAbilityId}
-          onClearHighlight={() => setHighlightedAbilityId(null)}
+          onClearHighlight={clearProjectHighlight}
         />
         <ExperienceSection />
         <ContactSection />

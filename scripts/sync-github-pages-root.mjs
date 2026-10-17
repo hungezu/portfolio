@@ -12,7 +12,7 @@ const outputDirectory = resolve(repositoryRoot, "gh-pages-dist");
 const outputAssetsDirectory = resolve(outputDirectory, "assets");
 const rootAssetsDirectory = resolve(repositoryRoot, "assets");
 
-const isBuiltAsset = (name) => /^(?:index|GkxCase|ZhaocaiSmartCase)-.*\.(?:css|js)$/.test(name);
+const isBuiltAsset = (name) => /^(?:index|GkxCase|ZhaocaiSmartCase|capability-scene)-.*\.(?:css|js)$/.test(name);
 
 await mkdir(rootAssetsDirectory, { recursive: true });
 
