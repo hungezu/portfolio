@@ -17,6 +17,7 @@ import MessageCircle from "lucide-react/dist/esm/icons/message-circle.mjs";
 import Plus from "lucide-react/dist/esm/icons/plus.mjs";
 import RotateCcw from "lucide-react/dist/esm/icons/rotate-ccw.mjs";
 import Send from "lucide-react/dist/esm/icons/send.mjs";
+import Square from "lucide-react/dist/esm/icons/square.mjs";
 import X from "lucide-react/dist/esm/icons/x.mjs";
 import {
   type CSSProperties,
@@ -42,10 +43,24 @@ import {
 } from "./portfolio-data";
 import {
   buildLocalChatReply,
-  CHAT_QUICK_PROMPTS,
+  collectChatReferences,
+  getChatFollowUpPrompts,
+  getChatQuickPrompts,
+  parseChatReplyContext,
+  resolveChatPageContext,
   OUT_OF_SCOPE_REPLY,
+  type ChatReplyContext,
   type ChatReference,
 } from "./chat-knowledge";
+import {
+  clearChatSession,
+  parseChatReference,
+  readChatSession,
+  writeChatSession,
+  type PortfolioChatMessage,
+  type PortfolioChatMode,
+  type PortfolioChatSession,
+} from "./portfolio-chat-session";
 import portfolioPetAssets from "../assets/visual/sidebar-character/assets.json";
 import { optimizedImage, PortfolioImage } from "./portfolio-image";
 import { CapabilitySection } from "./capability-section";
@@ -428,26 +443,19 @@ declare global {
   }
 }
 
-type PortfolioChatMode = "unknown" | "api" | "local" | "local-fallback" | "guardrail";
-
-type PortfolioChatMessage = {
-  id: string;
-  role: "assistant" | "user";
-  content: string;
-  references?: ChatReference[];
-};
-
 const CHAT_WELCOME_MESSAGE: PortfolioChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "你好，我是 Leo。\n想了解我的经历、项目，还是某个设计取舍？",
+    "**想先了解哪一面？**\n\n我是 Leo 的作品集助手。可以帮你找案例、看经历，也聊设计思路和协作方式。",
 };
 
-function createWelcomeMessage(): PortfolioChatMessage {
+function createWelcomeMessage(project?: Project): PortfolioChatMessage {
   return {
     ...CHAT_WELCOME_MESSAGE,
     id: createChatMessageId(),
+    context: { ...(project ? { projectSlug: project.slug } : {}), entryIds: [] },
+    ...(project ? { content: `**一起看看${project.shortTitle.replace(/\n/g, "")}。**\n\n我可以帮你了解 Leo 在这个项目中的职责、关键决策和交付内容。` } : {}),
   };
 }
 
@@ -478,21 +486,15 @@ function getPortfolioRoute(href: string) {
 function parseChatReferences(value: unknown): ChatReference[] {
   if (!Array.isArray(value)) return [];
   return value
-    .filter((item): item is { label?: unknown; href?: unknown; kind?: unknown } => Boolean(item) && typeof item === "object")
-    .map(item => ({
-      label: typeof item.label === "string" ? item.label.trim().slice(0, 80) : "",
-      href: typeof item.href === "string" ? item.href.trim() : "",
-      kind: item.kind === "section" ? "section" as const : "project" as const,
-    }))
-    .filter(reference => reference.label && reference.href.startsWith("/") && !reference.href.startsWith("//"))
-    .slice(0, 4);
+    .slice(0, 12)
+    .map(parseChatReference)
+    .filter((reference): reference is ChatReference => Boolean(reference))
+    .slice(0, 3);
 }
 
 function chatModeLabel(mode: PortfolioChatMode) {
-  if (mode === "api") return "我找到相关内容了";
-  if (mode === "guardrail") return "这个我不方便展开";
-  if (mode === "local" || mode === "local-fallback") return "我先从作品集里找";
-  return "想聊哪个项目？";
+  if (mode === "api") return "Leo.li · AI 作品集导览";
+  return "Leo.li · 项目与设计导览";
 }
 
 function renderPortfolioChatInline(text: string, keyPrefix: string) {
@@ -631,54 +633,56 @@ type PortfolioChatContext = {
 };
 
 const HOME_CHAT_CONTEXTS: PortfolioChatContext[] = [
-  { id: "home", elementId: "top", text: "我是 Leo。你可以直接问我擅长的方向、代表项目，或某个方案为什么这样设计。" },
-  { id: "ability", elementId: "ability", text: "点任一能力，会同步突出能证明它的项目；也可以问我具体用在哪个案例里。" },
-  { id: "work", elementId: "work", text: "想快速判断匹配度？可以问我哪个项目最能代表 AI 体验、复杂系统或设计系统能力。" },
-  { id: "experience", elementId: "experience", text: "展开任一段经历能看到项目范围与职责；也可以直接告诉我公司或项目名。" },
-  { id: "contact", elementId: "contact", text: "还没决定要不要联系？可以先问我协作方式、交付范围或项目细节。" },
+  { id: "home", elementId: "top", text: "想了解 Leo 的设计与经历？点我聊聊。" },
+  { id: "ability", elementId: "ability", text: "想看能力对应的案例？可以问我。" },
+  { id: "work", elementId: "work", text: "想了解某个项目的职责与难点？可以问我。" },
+  { id: "experience", elementId: "experience", text: "想了解某段经历里 Leo 负责什么？" },
+  { id: "contact", elementId: "contact", text: "想聊合作？这里有 Leo 的联系方式。" },
 ];
 
 const PROJECT_CHAT_CONTEXTS: Record<string, PortfolioChatContext[]> = {
   gkx: [
-    { id: "gkx-overview", elementId: "gkx-overview", text: "这个项目覆盖多个业务系统，阅读时可以重点看我如何统一规则，而不只是页面数量。" },
-    { id: "gkx-scope", elementId: "gkx-scope", text: "这一段关注哪些规则应该跨系统统一，以及哪些业务差异必须保留。" },
-    { id: "gkx-decisions", elementId: "gkx-decisions", text: "这里把选择依据摆出来，方便区分审美偏好和能够验证的设计判断。" },
-    { id: "gkx-system", elementId: "gkx-system", text: "规范分层是为了复用通用组件，同时避免给特殊业务套错模板。" },
-    { id: "gkx-workflow", elementId: "gkx-workflow", text: "AI 负责整理初稿，我保留边界判断、校准和应用检查，不把生成结果直接当结论。" },
-    { id: "gkx-validation", elementId: "gkx-validation", text: "原型在这里承担检查工具：用真实状态验证规则能否落到操作流程。" },
-    { id: "gkx-collaboration", elementId: "gkx-collaboration", text: "共享设计 MD 的价值，是让业务、设计和实现围绕同一份规则讨论。" },
-    { id: "gkx-outcomes", elementId: "gkx-outcomes", text: "没有可靠数据的部分不补写，这里只呈现可追溯的设计资产与验证结果。" },
+    { id: "gkx-overview", elementId: "gkx-overview", text: "国科信的主线：让多个系统保持一致体验。" },
+    { id: "gkx-scope", elementId: "gkx-scope", text: "哪些规则统一，哪些业务差异保留？" },
+    { id: "gkx-decisions", elementId: "gkx-decisions", text: "想了解这些设计取舍的依据？可以问我。" },
+    { id: "gkx-system", elementId: "gkx-design-system", text: "这里可以试用设计规范和组件。" },
+    { id: "gkx-workflow", elementId: "gkx-workflow", text: "AI 做什么、Leo 判断什么，这里有实例。" },
+    { id: "gkx-validation", elementId: "nsp-prototype", text: "可以操作原型，看看规则怎样落到流程里。" },
+    { id: "gkx-collaboration", elementId: "gkx-collaboration", text: "想了解规范怎样用于团队协作？可以问我。" },
+    { id: "gkx-outcomes", elementId: "gkx-outcomes", text: "这里收束了交付成果与项目复盘。" },
   ],
   "zhaocai-smart": [
-    { id: "zcs-homepage", elementId: "zcs-homepage", text: "可以先记住一条主线：提问之后，系统还要完成澄清、执行、解释和沉淀。" },
-    { id: "zcs-trust-mechanism", elementId: "zcs-trust-mechanism", text: "可信感不是一句提示文案，而是来源、过程和结果都能被用户理解与核对。" },
-    { id: "zcs-process-feedback", elementId: "zcs-process-feedback", text: "过程反馈要持续说明系统正在做什么，避免用户把等待误认为失败。" },
-    { id: "zcs-original-output", elementId: "zcs-original-output", text: "保留原始输出作为对照，能更清楚地看到信息组织问题，而不只比较视觉差异。" },
-    { id: "zcs-markdown-system", elementId: "zcs-markdown-system", text: "统一输出结构，是为了让表格、图表、引用和代码在不同答案里保持可读。" },
+    { id: "zcs-overview", elementId: "zcs-project-overview", text: "想了解一句提问怎样变成可核对的结果？" },
+    { id: "zcs-business", elementId: "zcs-business-needs", text: "同一句“利润”，可能对应不同统计口径。" },
+    { id: "zcs-demo", elementId: "zcs-experience-journey", text: "可以试试完整任务，也能体验超时和恢复。" },
+    { id: "zcs-clarification", elementId: "zcs-clarification", text: "为什么先确认口径？这里有设计依据。" },
+    { id: "zcs-process-feedback", elementId: "zcs-process-feedback", text: "等待时，用户也能查看进度和停止任务。" },
+    { id: "zcs-markdown-system", elementId: "zcs-markdown-system", text: "结果怎样保留依据、继续复用？往这里看。" },
+    { id: "zcs-trust-mechanism", elementId: "zcs-trust-mechanism", text: "想了解 AI 和设计师怎样分工？可以问我。" },
   ],
   "tax-cloud": [
-    { id: "tax-cloud-overview", elementId: "project-overview", text: "这个项目跨 Web 与 App，建议沿着角色任务与申报链路看，而不是逐张浏览页面。" },
-    { id: "tax-cloud-entry", elementId: "case-gallery-0", text: "后面的内容会按业务理解、流程重构、设计规范和跨端落地逐步展开。" },
-    { id: "tax-cloud-path", elementId: "case-gallery-2", text: "这张路径图解释不同角色怎样进入申报任务，后面的页面都围绕这条主线展开。" },
-    { id: "tax-cloud-form", elementId: "case-gallery-4", text: "表单部分可以重点看信息密度、筛选和错误预防，而不只是视觉样式。" },
-    { id: "tax-cloud-redesign", elementId: "case-gallery-8", text: "新旧首页的核心差别在任务优先级与信息分组，可以和前面的旧版问题对照看。" },
-    { id: "tax-cloud-mobile", elementId: "case-gallery-14", text: "移动端没有简单缩小桌面版，而是优先保留审批、查询等高频任务。" },
+    { id: "tax-cloud-overview", elementId: "project-overview", text: "税纪云可以沿着角色任务与申报流程看。" },
+    { id: "tax-cloud-entry", elementId: "case-gallery-0", text: "从业务梳理开始，看看跨端改版怎样展开。" },
+    { id: "tax-cloud-path", elementId: "case-gallery-2", text: "这张图串起了不同角色的申报路径。" },
+    { id: "tax-cloud-form", elementId: "case-gallery-4", text: "表单重点：信息分组、筛选与错误预防。" },
+    { id: "tax-cloud-redesign", elementId: "case-gallery-8", text: "可以对照新旧首页的任务优先级。" },
+    { id: "tax-cloud-mobile", elementId: "case-gallery-14", text: "看看审批、查询怎样适配移动端。" },
   ],
   "energy-tax": [
-    { id: "energy-overview", elementId: "project-overview", text: "这是从 0 到 1 独立负责的项目，可以先看职责范围，再对照后面的页面落地。" },
-    { id: "energy-entry", elementId: "case-gallery-0", text: "接下来会从背景与规范进入首页、申报和管理场景，可以连续看设计怎样逐步落地。" },
-    { id: "energy-system", elementId: "case-gallery-2", text: "先统一栅格、组件和缺省规则，后面的首页与工作台才能保持一致结构。" },
-    { id: "energy-home", elementId: "case-gallery-3", text: "首页重点是把数据展示与任务入口分层，避免所有信息同时争夺注意力。" },
-    { id: "energy-workbench", elementId: "case-gallery-4", text: "申报工作台更值得看任务执行顺序和状态反馈，而不只是表格排版。" },
-    { id: "energy-review", elementId: "case-gallery-6", text: "最后补充了缺省状态与复盘，用来覆盖正常流程之外容易被遗漏的情况。" },
+    { id: "energy-overview", elementId: "project-overview", text: "先看职责范围，再看报税平台怎样落地。" },
+    { id: "energy-entry", elementId: "case-gallery-0", text: "从项目背景开始了解设计范围。" },
+    { id: "energy-system", elementId: "case-gallery-2", text: "统一栅格、组件和缺省状态，让页面有章可循。" },
+    { id: "energy-home", elementId: "case-gallery-3", text: "首页怎样分开数据概览与任务入口？" },
+    { id: "energy-workbench", elementId: "case-gallery-4", text: "看看申报任务的操作顺序与状态反馈。" },
+    { id: "energy-review", elementId: "case-gallery-6", text: "别漏掉缺省状态，这里也有项目复盘。" },
   ],
   "data-visualisation": [
-    { id: "visual-overview", elementId: "project-overview", text: "这是一组跨行业案例，建议先找共同框架，再比较各行业的信息优先级。" },
-    { id: "visual-entry", elementId: "case-gallery-0", text: "接下来可以用同一套观察方法：先看信息层级，再看图表组合，最后看规范复用。" },
-    { id: "visual-multi", elementId: "case-gallery-1", text: "地图、指标、趋势和排行可以复用，但每个行业的主阅读顺序并不相同。" },
-    { id: "visual-transport", elementId: "case-gallery-2", text: "运输场景可以重点看空间信息与业务指标怎样同时保持可读。" },
-    { id: "visual-estate", elementId: "case-gallery-3", text: "地产场景更适合观察高密度数据的分区方式与横向对比关系。" },
-    { id: "visual-rules", elementId: "case-gallery-4", text: "最后沉淀的是可复用布局规范，而不只是某一张大屏的视觉样式。" },
+    { id: "visual-overview", elementId: "project-overview", text: "这些行业大屏，怎样安排信息优先级？" },
+    { id: "visual-entry", elementId: "case-gallery-0", text: "先看信息层级，再看图表怎样组合。" },
+    { id: "visual-multi", elementId: "case-gallery-1", text: "同样是地图和指标，各行业的阅读重点不同。" },
+    { id: "visual-transport", elementId: "case-gallery-2", text: "看看空间信息与业务指标怎样放在一起。" },
+    { id: "visual-estate", elementId: "case-gallery-3", text: "高密度数据，可以从分区和对比关系看。" },
+    { id: "visual-rules", elementId: "case-gallery-4", text: "这里整理了可复用的大屏布局规范。" },
   ],
 };
 
@@ -687,7 +691,7 @@ function getPortfolioChatContexts() {
   const projectSlug = projectRoot?.dataset.project;
   if (projectSlug && PROJECT_CHAT_CONTEXTS[projectSlug]) return PROJECT_CHAT_CONTEXTS[projectSlug];
   if (projectRoot) {
-    return [{ id: "case", elementId: "", text: "这是项目案例，往下看会有页面和设计过程。" }];
+    return [{ id: "case", elementId: "", text: "想了解这个项目的设计思路？可以问我。" }];
   }
   return HOME_CHAT_CONTEXTS;
 }
@@ -812,30 +816,39 @@ function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peek
   );
 }
 
-function PortfolioChat() {
+function PortfolioChat({ project }: { project?: Project }) {
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const [mode, setMode] = useState<PortfolioChatMode>("unknown");
-  const [messages, setMessages] = useState<PortfolioChatMessage[]>(() => [createWelcomeMessage()]);
+  const [messages, setMessages] = useState<PortfolioChatMessage[]>(() => [createWelcomeMessage(project)]);
+  const [sessionReady, setSessionReady] = useState(false);
+  const [activeContext, setActiveContext] = useState<ChatReplyContext>(() => ({ ...(project ? { projectSlug: project.slug } : {}), entryIds: [] }));
   const [context, setContext] = useState<PortfolioChatContext>(HOME_CHAT_CONTEXTS[0]);
   const [contextVisible, setContextVisible] = useState(false);
+  const [hintMode, setHintMode] = useState<"auto" | "intent">("auto");
   const [petState, setPetState] = useState<PortfolioPetState>("idle");
   const [petDrag, setPetDrag] = useState<PortfolioPetDrag>({ x: 0, y: 0 });
   const [petDragging, setPetDragging] = useState(false);
-  const panelRef = useRef<HTMLElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const messageEndRef = useRef<HTMLDivElement>(null);
+  const chatRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const messageListRef = useRef<HTMLDivElement>(null);
   const contextIdRef = useRef(HOME_CHAT_CONTEXTS[0].id);
   const shownContextIdsRef = useRef(new Set<string>());
   const contextTimerRef = useRef<number | null>(null);
   const scrollTimerRef = useRef<number | null>(null);
   const petTimerRef = useRef<number | null>(null);
   const requestRef = useRef<AbortController | null>(null);
+  const pendingQueryRef = useRef<string | null>(null);
   const conversationIdRef = useRef(0);
+  const sessionReadyRef = useRef(false);
+  const sessionSnapshotRef = useRef<PortfolioChatSession>({ messages, draft, mode, activeContext, pageProjectSlug: project?.slug ?? null });
+  const activeContextRef = useRef(activeContext);
   const sendingRef = useRef(sending);
+  const openRef = useRef(open);
+  const restoreLauncherFocusRef = useRef(true);
   const petDragRef = useRef({
     active: false,
     pointerId: -1,
@@ -847,6 +860,86 @@ function PortfolioChat() {
   });
   const suppressPetClickRef = useRef(false);
   sendingRef.current = sending;
+  openRef.current = open;
+  activeContextRef.current = activeContext;
+  sessionSnapshotRef.current = { messages, draft, mode, activeContext, pageProjectSlug: project?.slug ?? null };
+
+  const persistChatSession = () => {
+    if (!sessionReadyRef.current) return;
+    try {
+      const snapshot = sessionSnapshotRef.current;
+      if (snapshot.messages.length === 1 && !snapshot.draft) clearChatSession(window.sessionStorage);
+      else writeChatSession(window.sessionStorage, snapshot);
+    } catch {
+      // Storage can be unavailable in private browsing; the current chat still works.
+    }
+  };
+
+  useEffect(() => {
+    const restoreSession = () => {
+      try {
+        const saved = readChatSession(window.sessionStorage) ?? {
+          messages: [createWelcomeMessage(project)], draft: "", mode: "unknown" as const,
+          activeContext: { ...(project ? { projectSlug: project.slug } : {}), entryIds: [] },
+          pageProjectSlug: project?.slug ?? null,
+        };
+        const restoredContext = resolveChatPageContext(
+          saved.activeContext ?? [...saved.messages].reverse().find(message => message.role === "assistant" && message.context)?.context,
+          saved.pageProjectSlug,
+          project?.slug,
+        );
+        if (saved.messages.length === 1 && saved.messages[0].role === "assistant") saved.messages = [createWelcomeMessage(project)];
+        const last = saved.messages[saved.messages.length - 1];
+        if (last?.role === "user") {
+          saved.messages.push({
+            id: createChatMessageId(),
+            role: "assistant",
+            content: "上次回复未完成，聊天记录已保留。你可以重新发送这条问题，或继续提问。",
+            state: "stopped",
+            retryQuery: last.content,
+            context: restoredContext,
+          });
+        }
+        sessionSnapshotRef.current = { ...saved, activeContext: restoredContext, pageProjectSlug: project?.slug ?? null };
+        activeContextRef.current = restoredContext;
+        setActiveContext(restoredContext);
+        setMessages(saved.messages);
+        setDraft(saved.draft);
+        setMode(saved.mode);
+        setSending(false);
+        setPetState("idle");
+      } catch {
+        // No persistence is required to ask a question.
+      }
+    };
+    restoreSession();
+    sessionReadyRef.current = true;
+    setSessionReady(true);
+    const onPageHide = () => {
+      persistChatSession();
+      conversationIdRef.current += 1;
+      requestRef.current?.abort();
+      requestRef.current = null;
+      pendingQueryRef.current = null;
+      sendingRef.current = false;
+    };
+    const onPageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) restoreSession();
+    };
+    window.addEventListener("pagehide", onPageHide);
+    window.addEventListener("pageshow", onPageShow);
+    return () => {
+      persistChatSession();
+      window.removeEventListener("pagehide", onPageHide);
+      window.removeEventListener("pageshow", onPageShow);
+      conversationIdRef.current += 1;
+      requestRef.current?.abort();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (sessionReady) persistChatSession();
+  }, [messages, draft, mode, activeContext, sessionReady]);
 
   const pulsePet = (nextState: PortfolioPetState, duration = 1100) => {
     setPetState(nextState);
@@ -924,94 +1017,121 @@ function PortfolioChat() {
 
   useEffect(() => {
     const contexts = getPortfolioChatContexts();
-    let frame = 0;
+    let welcomeTimer: number | undefined;
 
     const revealContext = () => {
+      setHintMode("auto");
       setContextVisible(true);
       if (contextTimerRef.current !== null) window.clearTimeout(contextTimerRef.current);
       contextTimerRef.current = window.setTimeout(() => {
         setContextVisible(false);
         contextTimerRef.current = null;
-      }, 4200);
+      }, 6000);
     };
 
     const syncContext = (show = false) => {
       const next = getNearestPortfolioChatContext(contexts);
       const changed = next.id !== contextIdRef.current;
-      if (!changed) return false;
-      contextIdRef.current = next.id;
-      setContext(next);
-      if (show) {
-        if (shownContextIdsRef.current.has(next.id)) {
-          setContextVisible(false);
-          if (contextTimerRef.current !== null) window.clearTimeout(contextTimerRef.current);
-          contextTimerRef.current = null;
-        } else {
-          shownContextIdsRef.current.add(next.id);
-          revealContext();
-          pulsePet("pointing", 1500);
-        }
+      if (changed) {
+        contextIdRef.current = next.id;
+        setContext(next);
       }
-      return true;
+      if (
+        !show || openRef.current || petDragRef.current.active ||
+        document.documentElement.classList.contains("portfolio-loading") ||
+        shownContextIdsRef.current.has(next.id)
+      ) return;
+      shownContextIdsRef.current.add(next.id);
+      revealContext();
+      pulsePet("pointing", 1500);
     };
 
     // 项目页的第一段不一定和首页相同，挂载后立即校准一次。
     syncContext();
 
+    const showWelcomeHint = () => {
+      if (document.documentElement.classList.contains("portfolio-loading")) {
+        welcomeTimer = window.setTimeout(showWelcomeHint, 300);
+        return;
+      }
+      syncContext(true);
+    };
+    welcomeTimer = window.setTimeout(showWelcomeHint, 1800);
+
     const onScroll = () => {
+      setContextVisible(false);
       if (scrollTimerRef.current !== null) window.clearTimeout(scrollTimerRef.current);
       scrollTimerRef.current = window.setTimeout(() => {
         if (!sendingRef.current) setPetState("idle");
-        scrollTimerRef.current = null;
-      }, 520);
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => {
-        frame = 0;
         syncContext(true);
-      });
+        scrollTimerRef.current = null;
+      }, 650);
     };
 
     const onResize = () => syncContext();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
     return () => {
-      window.cancelAnimationFrame(frame);
+      window.clearTimeout(welcomeTimer);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       if (contextTimerRef.current !== null) window.clearTimeout(contextTimerRef.current);
       if (scrollTimerRef.current !== null) window.clearTimeout(scrollTimerRef.current);
-      if (petTimerRef.current !== null) window.clearTimeout(petTimerRef.current);
     };
+  }, [open]);
+
+  useEffect(() => () => {
+    if (petTimerRef.current !== null) window.clearTimeout(petTimerRef.current);
   }, []);
 
   useEffect(() => {
     if (!open) return;
+    const viewport = window.visualViewport;
+    const element = chatRef.current;
+    if (!viewport || !element) return;
+    let frame = 0;
+    const syncViewport = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        // Keep the composer above the on-screen keyboard without changing pinch zoom.
+        if (viewport.scale !== 1) return;
+        element.style.setProperty("--chat-viewport-height", `${viewport.height}px`);
+        element.style.setProperty("--chat-viewport-bottom", `${Math.max(0, document.documentElement.clientHeight - viewport.height - viewport.offsetTop)}px`);
+      });
+    };
+    syncViewport();
+    viewport.addEventListener("resize", syncViewport);
+    viewport.addEventListener("scroll", syncViewport);
+    window.addEventListener("resize", syncViewport);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      viewport.removeEventListener("resize", syncViewport);
+      viewport.removeEventListener("scroll", syncViewport);
+      window.removeEventListener("resize", syncViewport);
+      element.style.removeProperty("--chat-viewport-height");
+      element.style.removeProperty("--chat-viewport-bottom");
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    restoreLauncherFocusRef.current = true;
     const previouslyFocused = document.activeElement instanceof HTMLElement
       ? document.activeElement
       : null;
-    const focusFrame = window.requestAnimationFrame(() => inputRef.current?.focus());
+    const focusFrame = window.requestAnimationFrame(() => {
+      // Opening the panel on touch devices should not immediately summon the keyboard.
+      if (window.matchMedia("(min-width: 768px) and (pointer: fine)").matches) inputRef.current?.focus({ preventScroll: true });
+      else document.getElementById("portfolio-chat-panel")?.focus({ preventScroll: true });
+    });
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && !event.isComposing && !event.defaultPrevented) {
         event.preventDefault();
         setOpen(false);
         setContextVisible(false);
         setPetState("idle");
         return;
-      }
-      if (event.key !== "Tab") return;
-      const focusable = panelRef.current?.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
-      );
-      if (!focusable?.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
       }
     };
 
@@ -1019,26 +1139,38 @@ function PortfolioChat() {
     return () => {
       window.cancelAnimationFrame(focusFrame);
       window.removeEventListener("keydown", onKeyDown);
+      if (!restoreLauncherFocusRef.current) return;
       window.requestAnimationFrame(() => {
         if (
           previouslyFocused &&
           previouslyFocused !== document.body &&
           document.contains(previouslyFocused)
-        ) previouslyFocused.focus();
-        else launcherRef.current?.focus();
+        ) previouslyFocused.focus({ preventScroll: true });
+        else launcherRef.current?.focus({ preventScroll: true });
       });
     };
   }, [open]);
 
   useEffect(() => {
     if (!open) return;
-    messageEndRef.current?.scrollIntoView({
-      behavior: reduce ? "auto" : "smooth",
-      block: "nearest",
+    const list = messageListRef.current;
+    if (!list) return;
+    const latest = messages[messages.length - 1];
+    const reply = !sending && latest?.role === "assistant" && messages.length > 1
+      ? list.querySelector<HTMLElement>(`[data-chat-message-id="${latest.id}"]`)
+      : null;
+    const frame = window.requestAnimationFrame(() => {
+      list.scrollTo({
+        top: reply
+          ? list.scrollTop + reply.getBoundingClientRect().top - list.getBoundingClientRect().top - 16
+          : messages.length === 1 ? 0 : list.scrollHeight,
+        behavior: reduce ? "auto" : "smooth",
+      });
     });
+    return () => window.cancelAnimationFrame(frame);
   }, [messages, sending, open, reduce]);
 
-  const sendMessage = async (rawValue: string) => {
+  const sendMessage = async (rawValue: string, preserveDraft = false) => {
     if (sending || sendingRef.current) return;
     const conversationId = conversationIdRef.current;
     const startedAt = performance.now();
@@ -1046,6 +1178,9 @@ function PortfolioChat() {
     const query = rawValue.trim().slice(0, 600);
     if (!query) return;
     sendingRef.current = true;
+    const controller = new AbortController();
+    requestRef.current = controller;
+    pendingQueryRef.current = query;
 
     const userMessage: PortfolioChatMessage = {
       id: createChatMessageId(),
@@ -1053,22 +1188,28 @@ function PortfolioChat() {
       content: query,
     };
     const nextConversation = [...messages, userMessage];
+    const usedQuestionButton = messageListRef.current?.contains(document.activeElement);
     setMessages(nextConversation);
-    setDraft("");
+    if (!preserveDraft) setDraft("");
     setSending(true);
     setPetState("thinking");
+    if (usedQuestionButton) window.requestAnimationFrame(() => {
+      if (!openRef.current) return;
+      if (window.matchMedia("(pointer: fine)").matches) inputRef.current?.focus({ preventScroll: true });
+      else document.getElementById("portfolio-chat-panel")?.focus({ preventScroll: true });
+    });
 
-    const userContext = nextConversation
-      .filter(message => message.role === "user")
-      .slice(-3)
-      .map(message => message.content)
-      .join(" ");
-    // GitHub Pages 只提供静态文件；已知静态基路径时直接走同一份本地白名单，避免等待一个必然 404 的请求。
-    if (window.__PORTFOLIO_BASE__ && !window.__PORTFOLIO_CHAT_API__) {
-      await waitForChatReply(startedAt, minimumReplyDelay);
-      if (conversationId !== conversationIdRef.current) return;
-      const local = buildLocalChatReply(query, userContext);
-      setMode(local.reply === OUT_OF_SCOPE_REPLY ? "guardrail" : "local");
+    const previousContext = activeContextRef.current;
+    const userContext = previousContext
+      ? [project?.slug ?? "", previousContext.projectSlug ?? "", query].join(" ")
+      : [project?.slug ?? "", ...nextConversation.filter(message => message.role === "user").slice(-3).map(message => message.content)].join(" ");
+    const requestIsCurrent = () => conversationId === conversationIdRef.current && requestRef.current === controller;
+    const appendLocalReply = (fallback: boolean) => {
+      if (!requestIsCurrent()) return;
+      const local = buildLocalChatReply(query, userContext, previousContext);
+      activeContextRef.current = local.context;
+      setActiveContext(local.context);
+      setMode(local.reply === OUT_OF_SCOPE_REPLY ? "guardrail" : fallback ? "local-fallback" : "local");
       pulsePet(local.reply === OUT_OF_SCOPE_REPLY ? "curious" : "success");
       setMessages(current => [
         ...current,
@@ -1076,26 +1217,29 @@ function PortfolioChat() {
           id: createChatMessageId(),
           role: "assistant",
           content: local.reply,
-          references: local.entries.flatMap(entry => entry.references ?? []).filter((reference, index, all) =>
-            all.findIndex(item => item.href === reference.href) === index,
-          ).slice(0, 4),
+          references: collectChatReferences(local.entries, 3),
+          context: local.context,
+          ...(fallback && local.reply !== OUT_OF_SCOPE_REPLY ? { state: "fallback" as const } : {}),
         },
       ]);
-      sendingRef.current = false;
-      setSending(false);
-      window.requestAnimationFrame(() => inputRef.current?.focus());
-      return;
-    }
+    };
 
-    const controller = new AbortController();
-    requestRef.current = controller;
-    const timeout = window.setTimeout(() => controller.abort(), 11_000);
+    let timeout: number | undefined;
     try {
+      // Static hosting uses the same knowledge directly, with cancellable pending state.
+      if (window.__PORTFOLIO_BASE__ && !window.__PORTFOLIO_CHAT_API__) {
+        await waitForChatReply(startedAt, minimumReplyDelay);
+        appendLocalReply(false);
+        return;
+      }
+      timeout = window.setTimeout(() => controller.abort(), 11_000);
       const response = await fetch(getChatEndpoint(), {
         method: "POST",
         signal: controller.signal,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          projectSlug: project?.slug,
+          conversationContext: previousContext,
           messages: nextConversation.slice(-8).map(message => ({
             role: message.role,
             content: message.content,
@@ -1106,20 +1250,24 @@ function PortfolioChat() {
         reply?: unknown;
         mode?: unknown;
         references?: unknown;
+        context?: unknown;
       } | null;
       if (!response.ok || typeof payload?.reply !== "string" || !payload.reply.trim()) {
         throw new Error("chat endpoint unavailable");
       }
       const reply = payload.reply.trim();
       await waitForChatReply(startedAt, minimumReplyDelay);
-      if (conversationId !== conversationIdRef.current) return;
+      if (!requestIsCurrent()) return;
 
       const responseMode: PortfolioChatMode = payload.mode === "api"
         ? "api"
         : payload.mode === "guardrail"
           ? "guardrail"
-          : "local";
+          : payload.mode === "local-fallback" ? "local-fallback" : "local";
       setMode(responseMode);
+      const nextContext = parseChatReplyContext(payload.context) ?? buildLocalChatReply(query, userContext, previousContext).context;
+      activeContextRef.current = nextContext;
+      setActiveContext(nextContext);
       pulsePet(reply === OUT_OF_SCOPE_REPLY ? "curious" : "success");
       setMessages(current => [
         ...current,
@@ -1128,50 +1276,68 @@ function PortfolioChat() {
           role: "assistant",
           content: reply,
           references: parseChatReferences(payload.references),
+          context: nextContext,
+          ...(responseMode === "local-fallback" ? { state: "fallback" as const } : {}),
         },
       ]);
     } catch {
+      if (!requestIsCurrent()) return;
       await waitForChatReply(startedAt, minimumReplyDelay);
-      if (conversationId !== conversationIdRef.current) return;
-      const local = buildLocalChatReply(query, userContext);
-      setMode(local.reply === OUT_OF_SCOPE_REPLY ? "guardrail" : "local-fallback");
-      pulsePet(local.reply === OUT_OF_SCOPE_REPLY ? "curious" : "success");
-      setMessages(current => [
-        ...current,
-        {
-          id: createChatMessageId(),
-          role: "assistant",
-          content: local.reply,
-          references: local.entries.flatMap(entry => entry.references ?? []).filter((reference, index, all) =>
-            all.findIndex(item => item.href === reference.href) === index,
-          ).slice(0, 4),
-        },
-      ]);
+      appendLocalReply(true);
     } finally {
       window.clearTimeout(timeout);
-      if (requestRef.current === controller) requestRef.current = null;
-      if (conversationId === conversationIdRef.current) {
+      if (requestIsCurrent()) {
+        requestRef.current = null;
+        pendingQueryRef.current = null;
         sendingRef.current = false;
         setSending(false);
-        window.requestAnimationFrame(() => inputRef.current?.focus());
       }
     }
+  };
+
+  const stopReply = () => {
+    if (!sendingRef.current) return;
+    const query = pendingQueryRef.current;
+    const previousContext = activeContextRef.current;
+    conversationIdRef.current += 1;
+    requestRef.current?.abort();
+    requestRef.current = null;
+    pendingQueryRef.current = null;
+    sendingRef.current = false;
+    setSending(false);
+    setPetState("idle");
+    setMessages(current => [...current, {
+      id: createChatMessageId(),
+      role: "assistant",
+      content: "已停止这次回复。聊天记录已保留，可以继续提问。",
+      state: "stopped",
+      ...(query ? { retryQuery: query } : {}),
+      context: previousContext,
+    }]);
   };
 
   const startNewConversation = () => {
     conversationIdRef.current += 1;
     requestRef.current?.abort();
     requestRef.current = null;
+    pendingQueryRef.current = null;
     sendingRef.current = false;
-    setMessages([createWelcomeMessage()]);
+    const initialMessages = [createWelcomeMessage(project)];
+    const initialContext: ChatReplyContext = { ...(project ? { projectSlug: project.slug } : {}), entryIds: [] };
+    activeContextRef.current = initialContext;
+    setActiveContext(initialContext);
+    sessionSnapshotRef.current = { messages: initialMessages, draft: "", mode: "unknown", activeContext: initialContext, pageProjectSlug: project?.slug ?? null };
+    try { clearChatSession(window.sessionStorage); } catch { /* Storage is optional. */ }
+    setMessages(initialMessages);
     setDraft("");
     setSending(false);
     setMode("unknown");
     setPetState("idle");
-    window.requestAnimationFrame(() => inputRef.current?.focus());
+    window.requestAnimationFrame(() => { if (openRef.current) inputRef.current?.focus({ preventScroll: true }); });
   };
 
-  const closeChat = () => {
+  const closeChat = (restoreFocus = true) => {
+    restoreLauncherFocusRef.current = restoreFocus;
     setOpen(false);
     setContextVisible(false);
     setPetState("idle");
@@ -1195,6 +1361,19 @@ function PortfolioChat() {
     toggleChat();
   };
 
+  const showPetHint = () => {
+    if (open || petDragging) return;
+    setContext(getNearestPortfolioChatContext(getPortfolioChatContexts()));
+    setHintMode("intent");
+    setContextVisible(true);
+    if (contextTimerRef.current !== null) window.clearTimeout(contextTimerRef.current);
+    contextTimerRef.current = null;
+  };
+
+  const quickPrompts = messages.length === 1
+    ? getChatQuickPrompts(project?.slug)
+    : getChatFollowUpPrompts(activeContext, messages.filter(message => message.role === "user").map(message => message.content));
+
   const visiblePetState: PortfolioPetState = sending ? "thinking" : petState;
   const petPositionStyle = {
     "--pet-drag-right": `${-petDrag.x}px`,
@@ -1203,17 +1382,21 @@ function PortfolioChat() {
 
   return (
     <div
+      ref={chatRef}
       className="portfolio-chat"
       style={petPositionStyle}
       data-chat-mode={mode}
+      data-chat-open={open}
       data-pet-state={visiblePetState}
     >
       <AnimatePresence initial={false}>
         {!open && contextVisible ? (
           <motion.div
             className="portfolio-pet-context"
+            id="portfolio-pet-hint"
+            data-hint-mode={hintMode}
             key={context.id}
-            role="status"
+            role="tooltip"
             initial={reduce ? false : { opacity: 0, x: 10, y: 4 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
             exit={reduce ? undefined : { opacity: 0, x: 8, y: 3 }}
@@ -1229,10 +1412,15 @@ function PortfolioChat() {
         type="button"
         data-pet-drag-react="true"
         aria-label={open ? "关闭作品集助手" : "打开作品集助手"}
-          aria-controls={open ? "portfolio-chat-panel" : undefined}
+        aria-controls={open ? "portfolio-chat-panel" : undefined}
+        aria-describedby={!open && contextVisible ? "portfolio-pet-hint" : undefined}
         aria-expanded={open}
         title={open ? "关闭作品集助手" : "打开作品集助手"}
         onClick={handlePetClick}
+        onPointerEnter={event => { if (event.pointerType === "mouse") showPetHint(); }}
+        onPointerLeave={() => { if (hintMode === "intent") setContextVisible(false); }}
+        onFocus={showPetHint}
+        onBlur={() => { if (hintMode === "intent") setContextVisible(false); }}
         onPointerDown={handlePetPointerDown}
         onPointerMove={handlePetPointerMove}
         onPointerUp={finishPetDrag}
@@ -1247,12 +1435,12 @@ function PortfolioChat() {
       <AnimatePresence>
         {open ? (
           <motion.section
-            ref={panelRef}
             id="portfolio-chat-panel"
-            className="portfolio-chat-panel"
+            className={`portfolio-chat-panel${messages.length === 1 ? " is-empty" : ""}`}
             role="dialog"
             aria-modal="false"
             aria-labelledby="portfolio-chat-title"
+            tabIndex={-1}
             initial={reduce ? false : { opacity: 0, y: 18, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduce ? undefined : { opacity: 0, y: 12, scale: 0.98 }}
@@ -1264,26 +1452,30 @@ function PortfolioChat() {
                   <MessageCircle size={16} strokeWidth={2.1} />
                 </span>
                 <div>
-                  <h2 id="portfolio-chat-title">和 Leo 聊聊</h2>
+                  <h2 id="portfolio-chat-title">作品集助手</h2>
                   <p>{chatModeLabel(mode)}</p>
                 </div>
               </div>
               <div className="portfolio-chat-actions">
+                <span className="portfolio-chat-reset-wrap">
                 <button
                   className="portfolio-chat-new"
                   type="button"
-                  aria-label="开始新对话"
-                  title="开始新对话"
+                  aria-label="重置对话"
+                  aria-describedby="portfolio-chat-reset-hint"
                   onClick={startNewConversation}
+                  disabled={messages.length === 1 && !draft.trim()}
                 >
-                  <RotateCcw size={14} strokeWidth={2} />
-                  <span>新对话</span>
+                  <RotateCcw size={16} strokeWidth={2} />
                 </button>
+                <span id="portfolio-chat-reset-hint" className="portfolio-chat-action-tooltip" role="tooltip">重置对话</span>
+                </span>
                 <button
                   className="portfolio-chat-close"
                   type="button"
                   aria-label="关闭作品集助手"
-                  onClick={closeChat}
+                  title="关闭对话（Esc）"
+                  onClick={() => closeChat()}
                 >
                   <X size={17} strokeWidth={2} />
                 </button>
@@ -1291,6 +1483,7 @@ function PortfolioChat() {
             </header>
 
             <div
+              ref={messageListRef}
               className="portfolio-chat-messages"
               role="log"
               aria-live="polite"
@@ -1298,9 +1491,10 @@ function PortfolioChat() {
               aria-label="对话内容"
             >
               <AnimatePresence initial={false} mode="popLayout">
-                {messages.map(message => (
+                {messages.map((message, messageIndex) => (
                   <motion.div
-                    className={`portfolio-chat-message is-${message.role}`}
+                    className={`portfolio-chat-message is-${message.role}${messageIndex === 0 ? " is-intro" : ""}`}
+                    data-chat-message-id={message.id}
                     key={message.id}
                     layout="position"
                     initial={reduce ? false : { opacity: 0, y: 10, scale: 0.985 }}
@@ -1308,8 +1502,8 @@ function PortfolioChat() {
                     exit={reduce ? undefined : { opacity: 0, y: -5, scale: 0.99 }}
                     transition={{ duration: reduce ? 0 : 0.24, ease }}
                   >
-                    {message.role === "assistant" ? (
-                      <span className="portfolio-chat-avatar" aria-hidden="true">Leo</span>
+                    {message.role === "assistant" && messageIndex !== 0 ? (
+                      <span className="portfolio-chat-avatar" aria-hidden="true"><MessageCircle size={14} /></span>
                     ) : null}
                     <div className="portfolio-chat-bubble-wrap">
                       <div className="portfolio-chat-bubble">
@@ -1317,15 +1511,27 @@ function PortfolioChat() {
                           ? <PortfolioChatMessageContent content={message.content} />
                           : message.content}
                       </div>
+                      {message.state === "fallback" ? <p className="portfolio-chat-reply-note">本次根据作品集资料整理</p> : null}
+                      {message.retryQuery ? (
+                        <button
+                          className="portfolio-chat-retry"
+                          type="button"
+                          disabled={sending}
+                          onClick={() => { if (message.retryQuery) void sendMessage(message.retryQuery, true); }}
+                        >
+                          <RotateCcw size={13} aria-hidden="true" />
+                          重新发送
+                        </button>
+                      ) : null}
                       {message.references?.length ? (
                         <div className="portfolio-chat-references">
-                          <span>相关内容</span>
+                          <span>{message.references.every(reference => reference.kind === "project") ? "相关案例" : "相关内容"}</span>
                           <div>
                             {message.references.map(reference => (
                               <a
                                 key={`${message.id}-${reference.href}`}
                                 href={getPortfolioRoute(reference.href)}
-                                onClick={closeChat}
+                                onClick={() => { persistChatSession(); closeChat(false); }}
                               >
                                 <span>{reference.label}</span>
                                 <ArrowUpRight size={12} strokeWidth={1.9} aria-hidden="true" />
@@ -1337,7 +1543,7 @@ function PortfolioChat() {
                     </div>
                   </motion.div>
                 ))}
-                {messages.length === 1 ? (
+                {!sending && quickPrompts.length ? (
                   <motion.div
                     className="portfolio-chat-quick-prompts"
                     aria-label="常用问题"
@@ -1348,15 +1554,16 @@ function PortfolioChat() {
                     exit={reduce ? undefined : { opacity: 0, y: -6 }}
                     transition={{ duration: reduce ? 0 : 0.22, ease }}
                   >
-                    {CHAT_QUICK_PROMPTS.map(prompt => (
+                    <p>{messages.length === 1 ? "可以从这里开始" : "也可以继续了解"}</p>
+                    {quickPrompts.map(prompt => (
                       <button
                         key={prompt}
                         type="button"
                         disabled={sending}
                         aria-label={`提问：${prompt}`}
-                        onClick={() => void sendMessage(prompt)}
+                        onClick={() => void sendMessage(prompt, true)}
                       >
-                        {prompt}
+                        <span>{prompt}</span>
                       </button>
                     ))}
                   </motion.div>
@@ -1372,14 +1579,14 @@ function PortfolioChat() {
                     exit={reduce ? undefined : { opacity: 0, y: -4 }}
                     transition={{ duration: reduce ? 0 : 0.2, ease }}
                   >
-                    <span className="portfolio-chat-avatar" aria-hidden="true">Leo</span>
+                    <span className="portfolio-chat-avatar" aria-hidden="true"><MessageCircle size={14} /></span>
                     <div className="portfolio-chat-bubble portfolio-chat-loading-bubble">
                       <span /><span /><span />
+                      <p>正在整理相关内容</p>
                     </div>
                   </motion.div>
                 ) : null}
               </AnimatePresence>
-              <div ref={messageEndRef} aria-hidden="true" />
             </div>
 
             <form
@@ -1389,25 +1596,41 @@ function PortfolioChat() {
                 void sendMessage(draft);
               }}
             >
-              <input
+              <div className="portfolio-chat-input-row">
+              <textarea
                 ref={inputRef}
                 value={draft}
                 onChange={event => setDraft(event.target.value)}
-                type="text"
+                rows={2}
                 maxLength={600}
-                placeholder="问经历、项目难点或设计方法…"
+                placeholder={project ? "问问这个项目的职责、难点…" : "问问项目、经历或设计思路…"}
                 aria-label="输入关于李家豪及其设计作品的问题"
-                disabled={sending}
                 autoComplete="off"
                 enterKeyHint="send"
+                onKeyDown={event => {
+                  if (event.key !== "Enter" || event.shiftKey) return;
+                  if (event.nativeEvent.isComposing || event.keyCode === 229) return;
+                  event.preventDefault();
+                  event.currentTarget.form?.requestSubmit();
+                }}
               />
               <button
-                type="submit"
-                aria-label="发送问题"
-                disabled={sending || !draft.trim()}
+                type={sending ? "button" : "submit"}
+                aria-label={sending ? "停止本次回复" : "发送问题"}
+                title={sending ? "停止本次回复" : "发送问题"}
+                onClick={sending ? event => {
+                  event.preventDefault();
+                  stopReply();
+                } : undefined}
+                disabled={!sessionReady || (!sending && !draft.trim())}
               >
-                <Send size={16} strokeWidth={2.1} />
+                {sending ? <Square size={13} fill="currentColor" strokeWidth={0} /> : <Send size={16} strokeWidth={2.1} />}
               </button>
+              </div>
+              <div className="portfolio-chat-composer-note">
+                <span>{sending ? "可点击方块停止，聊天记录会保留" : "根据作品集公开内容回答"}</span>
+                <span className="portfolio-chat-key-hint">{sending ? "可点击方块停止，聊天记录会保留" : "Enter 发送 · Shift + Enter 换行"}</span>
+              </div>
             </form>
           </motion.section>
         ) : null}
@@ -2268,7 +2491,7 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
         </ProjectContentBoundary>
       </main>
       <BackToTop />
-      <PortfolioChat />
+      <PortfolioChat project={project} />
     </>
   );
 }
