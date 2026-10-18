@@ -98,7 +98,7 @@ const homeProjectContent: Record<string, {
   role: string;
 }> = {
   gkx: {
-    titleLines: ["深圳国际", "科技信息中心"],
+    titleLines: ["GKX智慧门户"],
     category: "政企多业务平台",
     platform: "Web",
     summary: "面向门户内多个业务系统，统一页面与组件的设计规则。",
@@ -676,7 +676,7 @@ const HOME_CHAT_CONTEXTS: PortfolioChatContext[] = [
 
 const PROJECT_CHAT_CONTEXTS: Record<string, PortfolioChatContext[]> = {
   gkx: [
-    { id: "gkx-overview", elementId: "gkx-overview", text: "国科信的主线：让多个系统保持一致体验。" },
+    { id: "gkx-overview", elementId: "gkx-overview", text: "GKX的主线：让多个系统保持一致体验。" },
     { id: "gkx-scope", elementId: "gkx-scope", text: "哪些规则统一，哪些业务差异保留？" },
     { id: "gkx-decisions", elementId: "gkx-decisions", text: "想了解这些设计取舍的依据？可以问我。" },
     { id: "gkx-system", elementId: "gkx-design-system", text: "这里可以试用设计规范和组件。" },

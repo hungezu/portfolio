@@ -41,15 +41,15 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "project-overview", title: "我做过哪些项目",
-    content: "作品集中的项目覆盖几个方向：\n\n- **AI 与平台体验**：国科信、招财 Smart。\n- **财税系统与跨端设计**：税纪云、国家能源集团报税平台。\n- **数据表达**：可视化大屏项目合集。\n\n你可以按感兴趣的方向继续了解项目职责、设计难点和具体方案。",
+    content: "作品集中的项目覆盖几个方向：\n\n- **AI 与平台体验**：GKX、招财 Smart。\n- **财税系统与跨端设计**：税纪云、国家能源集团报税平台。\n- **数据表达**：可视化大屏项目合集。\n\n你可以按感兴趣的方向继续了解项目职责、设计难点和具体方案。",
     keywords: ["项目", "作品", "案例", "有哪些", "做过什么", "项目概览"],
-    references: [section("浏览全部精选作品", "work"), project("查看国科信案例", "gkx"), project("查看招财 Smart 案例", "zhaocai-smart")],
+    references: [section("浏览全部精选作品", "work"), project("查看GKX案例", "gkx"), project("查看招财 Smart 案例", "zhaocai-smart")],
   },
   {
     id: "project-recommendation", title: "如果只看一个项目",
-    content: "建议先看 **国科信（深圳国际科技信息中心）**。这个案例把多系统体验、AI 辅助设计与规范交付串在一起，比较完整地展示了我如何做设计判断。\n\n可以先看**跨系统策略**，再看 **AI 原型与人工校正**，最后看**规范和交付评审**。如果想继续了解 AI 问数体验，可以看招财 Smart；跨端财税流程则可以看税纪云。",
+    content: "建议先看 **GKX**。这个案例把多系统体验、AI 辅助设计与规范交付串在一起，比较完整地展示了我如何做设计判断。\n\n可以先看**跨系统策略**，再看 **AI 原型与人工校正**，最后看**规范和交付评审**。如果想继续了解 AI 问数体验，可以看招财 Smart；跨端财税流程则可以看税纪云。",
     keywords: ["推荐项目", "推荐案例", "先看哪个", "代表项目", "只看一个"],
-    references: [project("国科信 · 跨系统策略", "gkx", "gkx-systems"), project("国科信 · AI 原型实践", "gkx", "nsp-prototype"), project("国科信 · 规范与交付", "gkx", "gkx-design-system")],
+    references: [project("GKX · 跨系统策略", "gkx", "gkx-systems"), project("GKX · AI 原型实践", "gkx", "nsp-prototype"), project("GKX · 规范与交付", "gkx", "gkx-design-system")],
   },
   {
     id: "experience-current", title: "近期工作",
@@ -77,27 +77,27 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "ai-workflow", title: "我如何与 AI 协作",
-    content: "我使用 Codex、Gemini 辅助需求拆解、可运行原型、界面探索与 Markdown 规范整理。范围判断、业务规则核对、体验评审和最终交付由我完成。\n\n国科信案例还展示了：把产品提供的 AI 原型按项目规范校正，再用交互复现检查查询、筛选和恢复规则。",
+    content: "我使用 Codex、Gemini 辅助需求拆解、可运行原型、界面探索与 Markdown 规范整理。范围判断、业务规则核对、体验评审和最终交付由我完成。\n\nGKX案例还展示了：把产品提供的 AI 原型按项目规范校正，再用交互复现检查查询、筛选和恢复规则。",
     keywords: ["AI 工作流", "AI工作流", "AI协作", "AI 协作", "Codex", "Gemini", "工具", "人工", "原型"],
-    references: [project("国科信 · AI 实践与人工校正", "gkx", "nsp-prototype")],
+    references: [project("GKX · AI 实践与人工校正", "gkx", "nsp-prototype")],
   },
   {
     id: "collaboration", title: "如何与产品、研发协作",
-    content: "我会把任务流、组件状态和异常反馈写进交付规范，让评审意见对应具体页面与预期行为。国科信案例保留了合作方 UI 评审记录；招财 Smart 则明确区分设计交付、业务口径确认与研发实现，便于逐项核对。",
+    content: "我会把任务流、组件状态和异常反馈写进交付规范，让评审意见对应具体页面与预期行为。GKX案例保留了合作方 UI 评审记录；招财 Smart 则明确区分设计交付、业务口径确认与研发实现，便于逐项核对。",
     keywords: ["开发", "研发", "产品经理", "团队", "协作", "合作", "沟通", "评审", "走查", "交付"],
-    references: [project("国科信 · 交付评审与核对", "gkx", "gkx-supplier"), project("招财 Smart · 协作边界", "zhaocai-smart", "zcs-ai-strategy")],
+    references: [project("GKX · 交付评审与核对", "gkx", "gkx-supplier"), project("招财 Smart · 协作边界", "zhaocai-smart", "zcs-ai-strategy")],
   },
   {
     id: "complex-systems", title: "复杂系统如何拆解",
-    content: "先厘清系统、角色、任务与页面边界，再判断哪些操作可以共用、哪些结构应随任务变化。例如国科信统一查询、选择与反馈规则，同时为论文管理、持续阅读和模型选择保留不同的页面结构。",
+    content: "先厘清系统、角色、任务与页面边界，再判断哪些操作可以共用、哪些结构应随任务变化。例如GKX统一查询、选择与反馈规则，同时为论文管理、持续阅读和模型选择保留不同的页面结构。",
     keywords: ["复杂系统", "B端", "B 端", "角色", "权限", "业务规则", "架构", "流程", "多系统"],
-    references: [project("国科信 · 跨系统策略", "gkx", "gkx-systems")],
+    references: [project("GKX · 跨系统策略", "gkx", "gkx-systems")],
   },
   {
     id: "design-system", title: "设计规范如何落地",
-    content: "从栅格、组件、页面类型到交互状态分层组织规范，再把规则对应到具体页面与交付核对项。国科信案例提供了可查阅的 Markdown 规范，也展示了如何按需求、交互、视觉和接口四个维度审核交付。",
+    content: "从栅格、组件、页面类型到交互状态分层组织规范，再把规则对应到具体页面与交付核对项。GKX案例提供了可查阅的 Markdown 规范，也展示了如何按需求、交互、视觉和接口四个维度审核交付。",
     keywords: ["设计系统", "设计规范", "组件", "栅格", "一致性", "状态", "视觉规范", "MD", "Markdown"],
-    references: [project("国科信 · 规范与交付", "gkx", "gkx-design-system")],
+    references: [project("GKX · 规范与交付", "gkx", "gkx-design-system")],
   },
   {
     id: "data-visualization", title: "如何组织数据表达",
@@ -109,43 +109,43 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
     id: "design-approach", title: "我的设计方法",
     content: "先明确业务任务与边界，再比较页面结构、交互状态和异常路径的取舍，用原型检查关键规则，最后沉淀为组件与规范。案例里可以看到具体判断：何时先澄清问题、何时用弹窗或独立工作区，以及失败后如何继续任务。",
     keywords: ["设计方法", "设计思路", "设计决策", "取舍", "原则", "研究", "思考", "工作方式", "难点", "挑战"],
-    references: [project("招财 Smart · 关键设计", "zhaocai-smart", "zcs-clarification"), project("国科信 · 交互决策", "gkx", "nsp-rules")],
+    references: [project("招财 Smart · 关键设计", "zhaocai-smart", "zcs-clarification"), project("GKX · 交互决策", "gkx", "nsp-rules")],
   },
   {
-    id: "project-gkx", title: "国科信是什么项目",
-    content: "国科信（深圳国际科技信息中心）是多系统平台体验设计项目，范围包括智慧门户和四大主要业务系统。案例围绕跨系统操作规则、AI 原型校正、设计规范和合作方交付评审，展示我的设计与协作过程。",
-    keywords: ["国科信", "深圳国际科技信息中心", "gkx", "平台项目", "背景"],
-    references: [project("打开国科信案例", "gkx", "gkx-project-context")],
+    id: "project-gkx", title: "GKX是什么项目",
+    content: "GKX是多系统平台体验设计项目，范围包括智慧门户和四大主要业务系统。案例围绕跨系统操作规则、AI 原型校正、设计规范和合作方交付评审，展示我的设计与协作过程。",
+    keywords: ["GKX", "平台项目", "背景"],
+    references: [project("打开GKX案例", "gkx", "gkx-project-context")],
   },
   {
-    id: "project-gkx-challenge", title: "国科信的设计难点",
+    id: "project-gkx-challenge", title: "GKX的设计难点",
     content: "主要难点是**多系统要容易学，各类任务又需要不同空间**。论文管理重在查找与维护，智能阅读需要稳定阅读区，模型广场重在发现与选择。我统一导航、查询、选择和反馈规则，再按任务选择列表、弹窗或独立工作区，并把这些规则用于多方交付核对。",
-    keywords: ["国科信难点", "国科信挑战", "跨系统", "统一", "一致性", "取舍"],
-    references: [project("国科信 · 跨系统策略", "gkx", "gkx-systems"), project("国科信 · 交互决策", "gkx", "nsp-rules")],
+    keywords: ["GKX难点", "GKX挑战", "跨系统", "统一", "一致性", "取舍"],
+    references: [project("GKX · 跨系统策略", "gkx", "gkx-systems"), project("GKX · 交互决策", "gkx", "nsp-rules")],
   },
   {
-    id: "project-gkx-role", title: "我在国科信负责什么",
+    id: "project-gkx-role", title: "我在GKX负责什么",
     content: "我负责交互与 UI 设计、门户样式规范、定制组件及协作审核。我借助 AI 编写和维护设计 MD，按项目规范校正原型，并参与合作方 UI 评审，将修改要求与处理状态记录下来。",
-    keywords: ["国科信职责", "国科信负责", "门户规范", "协作审核"],
-    references: [project("国科信 · 规范与交付", "gkx", "gkx-design-system"), project("国科信 · 署名评审记录", "gkx", "gkx-supplier")],
+    keywords: ["GKX职责", "GKX负责", "门户规范", "协作审核"],
+    references: [project("GKX · 规范与交付", "gkx", "gkx-design-system"), project("GKX · 署名评审记录", "gkx", "gkx-supplier")],
   },
   {
-    id: "project-gkx-ai", title: "国科信中的 AI 协作",
+    id: "project-gkx-ai", title: "GKX中的 AI 协作",
     content: "**AI 辅助原型与规范整理，我负责设计判断与核对。**案例里有两项具体实践：\n\n- 按项目规范调整产品提供的 AI 原型，集中查询操作区，整理卡片信息层级。\n- 将论文查询要求写成 MD，用交互复现核对关键词匹配、机构筛选、空结果和重置，再切换专利记录检查规则复用。",
-    keywords: ["国科信AI", "国科信原型", "AI工作流", "Codex", "Markdown"],
-    references: [project("国科信 · AI 实践与核对", "gkx", "nsp-prototype")],
+    keywords: ["GKXAI", "GKX原型", "AI工作流", "Codex", "Markdown"],
+    references: [project("GKX · AI 实践与核对", "gkx", "nsp-prototype")],
   },
   {
-    id: "project-gkx-collaboration", title: "国科信如何推进协作交付",
+    id: "project-gkx-collaboration", title: "GKX如何推进协作交付",
     content: "我用共享规范对齐页面与操作规则，参与合作方 UI 评审，并在台账中保留模块、日期、修改要求和处理状态。案例提供了署名评审记录，可核对具体问题的处理；它也明确提出，后续应继续补齐修改前后页面与复核结论。",
-    keywords: ["国科信交付", "合作方", "评审", "研发", "沟通"],
-    references: [project("国科信 · 交付评审与核对", "gkx", "gkx-supplier")],
+    keywords: ["GKX交付", "合作方", "评审", "研发", "沟通"],
+    references: [project("GKX · 交付评审与核对", "gkx", "gkx-supplier")],
   },
   {
-    id: "project-gkx-outcomes", title: "国科信有哪些可核对的成果",
+    id: "project-gkx-outcomes", title: "GKX有哪些可核对的成果",
     content: "可以核对的内容包括共用设计规范、查询交互复现、AI 原型人工调整对照，以及合作方评审记录。作品集没有提供完整的线上效率或通过率统计，因此不能给出提升百分比，也不能把本次页面核对当成项目验收。",
-    keywords: ["国科信成果", "成效", "指标", "提升", "验证", "通过率", "验收"],
-    references: [project("国科信 · 成果复盘", "gkx", "gkx-outcomes")],
+    keywords: ["GKX成果", "成效", "指标", "提升", "验证", "通过率", "验收"],
+    references: [project("GKX · 成果复盘", "gkx", "gkx-outcomes")],
   },
   {
     id: "project-zhaocai", title: "招财 Smart 是什么项目",
@@ -242,7 +242,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
 type ProjectSlug = "gkx" | "zhaocai-smart" | "tax-cloud" | "energy-tax" | "data-visualisation";
 type Topic = "challenge" | "role" | "ai" | "collaboration" | "outcomes" | "clarification" | "process" | "board" | "output" | "design-system" | "overview";
 const PROJECT_ALIASES: Record<ProjectSlug, readonly string[]> = {
-  gkx: ["国科信", "深圳国际科技信息中心", "gkx"],
+  gkx: ["gkx"],
   "zhaocai-smart": ["招财", "smart", "zhaocai"],
   "tax-cloud": ["税纪云", "全税种申报", "tax-cloud"],
   "energy-tax": ["国家能源", "国能", "能源报税", "energy-tax"],
@@ -263,7 +263,7 @@ const UNRELATED_PATTERNS = [
   /天气|气温|新闻|热搜|股票|股市|彩票|汇率|航班|酒店|旅行|旅游|攻略|食谱|菜谱|做饭|电影|音乐|星座|笑话|写诗|作文|小说|数学|物理|化学|医学|症状|药物|法律咨询|考试|作业|购物|优惠|快递/i,
   /翻译|帮我(?:写|做|生成).{0,8}(?:诗|代码|程序|论文)|(?:修复|解决).{0,6}(?:报错|bug)/i,
 ];
-const PORTFOLIO_SIGNAL = /李家豪|leo|作品|项目|案例|经历|经验|工作|职业|公司|职位|能力|优势|擅长|设计|体验|交互|系统|规范|原型|流程|看板|问数|招财|smart|税纪云|国能|国科信|可视化|数据|指标|背景|目标|职责|角色|权限|业务|需求|研究|洞察|意图|澄清|反馈|解释|依据|引用|异常|上线|复盘|AI|智能|Codex|Gemini|联系|邮箱|微信|手机|电话|导航|章节|负责|参与|主导|难点|挑战|痛点|决策|方法|思路|原则|取舍|协作|合作|开发|研发|沟通|评审|走查|交付|学历|毕业|学校|年龄|到岗|薪资|薪酬|薪水|工资/i;
+const PORTFOLIO_SIGNAL = /李家豪|leo|作品|项目|案例|经历|经验|工作|职业|公司|职位|能力|优势|擅长|设计|体验|交互|系统|规范|原型|流程|看板|问数|招财|smart|税纪云|国能|GKX|可视化|数据|指标|背景|目标|职责|角色|权限|业务|需求|研究|洞察|意图|澄清|反馈|解释|依据|引用|异常|上线|复盘|AI|智能|Codex|Gemini|联系|邮箱|微信|手机|电话|导航|章节|负责|参与|主导|难点|挑战|痛点|决策|方法|思路|原则|取舍|协作|合作|开发|研发|沟通|评审|走查|交付|学历|毕业|学校|年龄|到岗|薪资|薪酬|薪水|工资/i;
 const FOLLOW_UP = /^(?:那|它|这个|该项目|该案例|上面|刚才|前面|具体|还有|然后|除此之外|详细|能展开|展开|继续)|^(?:为什么|怎么做|如何做|难点|挑战|职责|负责什么|怎么协作|效果如何|有什么成果)/i;
 const GREETING = /^(?:你好|您好|嗨|哈[喽啰罗]|hello|hi|在吗|早上好|下午好|晚上好)[!！。,.，?？\s]*$/i;
 const THANKS = /^(?:谢谢(?:你|啦|了)?|多谢|感谢|好的|好哒|明白了|了解了|收到|ok|thanks|thank you)[!！。,.，\s]*$/i;
@@ -442,11 +442,11 @@ export function buildLocalChatReply(query: string, contextQuery = query, convers
 export const CHAT_QUICK_PROMPTS = [
   "你擅长解决什么设计问题？",
   "你有哪些工作经历？",
-  "国科信项目里，你负责什么？",
+  "GKX项目里，你负责什么？",
   "你如何与产品、研发协作？",
 ] as const;
 const PROJECT_QUICK_PROMPTS: Record<ProjectSlug, readonly string[]> = {
-  gkx: ["国科信的设计难点是什么？", "你在国科信具体负责什么？", "国科信如何用 AI 辅助设计？", "国科信如何审核合作方交付？"],
+  gkx: ["GKX的设计难点是什么？", "你在GKX具体负责什么？", "GKX如何用 AI 辅助设计？", "GKX如何审核合作方交付？"],
   "zhaocai-smart": ["招财 Smart 的设计难点是什么？", "你在招财 Smart 负责什么？", "招财 Smart 为什么先澄清口径？", "招财 Smart 如何处理查询失败？"],
   "tax-cloud": ["税纪云主要解决什么问题？", "你在税纪云负责什么？", "税纪云如何处理跨端设计？", "如何联系你聊聊这个项目？"],
   "energy-tax": ["国能报税平台是什么项目？", "你在国能报税平台负责什么？", "国能报税平台有哪些设计规范？", "如何联系你聊聊这个项目？"],
@@ -473,7 +473,7 @@ const TOPIC_FOLLOW_UP_PROMPTS: Record<string, readonly string[]> = {
   "contact": ["你如何与产品、研发协作？", "你擅长解决什么设计问题？"],
 };
 const PROJECT_FOLLOW_UP_PROMPTS: Record<ProjectSlug, readonly string[]> = {
-  gkx: [...PROJECT_QUICK_PROMPTS.gkx, "国科信有哪些可核对的成果？", "国科信的设计规范如何落地？"],
+  gkx: [...PROJECT_QUICK_PROMPTS.gkx, "GKX有哪些可核对的成果？", "GKX的设计规范如何落地？"],
   "zhaocai-smart": [...PROJECT_QUICK_PROMPTS["zhaocai-smart"], "招财 Smart 为什么把回答保存到看板？", "招财 Smart 的回答规范解决什么问题？", "招财 Smart 中 AI 与研发如何分工？", "招财 Smart 有哪些可核对的成果？"],
   "tax-cloud": [...PROJECT_QUICK_PROMPTS["tax-cloud"], "税纪云有哪些公开成果？"],
   "energy-tax": [...PROJECT_QUICK_PROMPTS["energy-tax"], "国能报税平台有哪些公开成果？"],

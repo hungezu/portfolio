@@ -1,4 +1,4 @@
-/** 国科信案例内容。保留真实职责；未提供的数量和统计值不补造。 */
+/** GKX案例内容。保留真实职责；未提供的数量和统计值不补造。 */
 export type DiagramNode = {
   id: string;
   title: string;

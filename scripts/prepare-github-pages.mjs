@@ -27,10 +27,10 @@ function withCaseMetadata(html, slug, view) {
     image: "assets/projects/zhaocai-smart/long-image/assets/homepage-original.png",
     imageAlt: "招财 Smart 财务智能问数产品界面",
   } : {
-    title: "国科信｜门户与多系统体验设计｜李家豪",
-    description: "国科信项目案例：统一门户与多系统设计，梳理业务任务、可信机制、操作反馈、AI 原型和设计交付核对。",
+    title: "GKX｜门户与多系统体验设计｜李家豪",
+    description: "GKX项目案例：统一门户与多系统设计，梳理业务任务、可信机制、操作反馈、AI 原型和设计交付核对。",
     image: "assets/projects/gkx/case-study/ui/portal-workspace.png",
-    imageAlt: "国科信智慧门户工作区产品界面",
+    imageAlt: "GKX智慧门户工作区产品界面",
   };
   const { title, description, imageAlt } = metadata;
   const image = `https://hungezu.github.io/portfolio/${metadata.image}`;

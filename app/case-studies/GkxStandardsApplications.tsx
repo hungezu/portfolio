@@ -57,11 +57,11 @@ export function GkxStandardsApplications({ assets, onOpen, onReturn }: {
   return <article id="gkx-standards-applications" className="gkx-standards-applications" aria-labelledby="gkx-standards-applications-title" tabIndex={-1}>
     {onReturn && <div className="gkx-standards-applications__return-context"><span>来自 AI 实践 · 复用规则</span><Button type="outline" icon={<IconArrowLeft aria-hidden="true" />} className="gkx-standards-applications__return" onClick={onReturn}>返回刚才位置</Button></div>}
     <header>
-      <h4 id="gkx-standards-applications-title">这些规范如何用于国科信</h4>
+      <h4 id="gkx-standards-applications-title">这些规范如何用于GKX</h4>
       <p>以论文管理的三个任务为例，将公开目录中的规范主题与核对重点对应到具体界面。</p>
     </header>
     <Table<StandardsApplication>
-      aria-label="国科信页面与设计规范的对应示例"
+      aria-label="GKX页面与设计规范的对应示例"
       rowKey="key"
       data={applications}
       pagination={false}

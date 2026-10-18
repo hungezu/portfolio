@@ -599,6 +599,14 @@
     "originalBytes": 121642,
     "optimizedBytes": 74490
   },
+  "/assets/projects/gkx/case-study/evidence/ai-cases-designer-panel-filters-20261018.webp": {
+    "src": "/assets/optimized/projects/gkx/case-study/evidence/ai-cases-designer-panel-filters-20261018.webp",
+    "width": 1662,
+    "height": 946,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/evidence/ai-cases-designer-panel-filters-20261018-640.webp 640w, /assets/optimized/projects/gkx/case-study/evidence/ai-cases-designer-panel-filters-20261018-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/evidence/ai-cases-designer-panel-filters-20261018.webp 1662w",
+    "originalBytes": 384828,
+    "optimizedBytes": 76168
+  },
   "/assets/projects/gkx/case-study/evidence/ai-cases-product-panel-20261017.webp": {
     "src": "/assets/optimized/projects/gkx/case-study/evidence/ai-cases-product-panel-20261017.webp",
     "width": 1658,
@@ -740,56 +748,48 @@
     "width": 1400,
     "height": 778,
     "srcSet": "/assets/optimized/projects/gkx/case-study/ui/maas-model-gallery-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/maas-model-gallery-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/maas-model-gallery.webp 1400w",
-    "originalBytes": 375422,
-    "optimizedBytes": 66484
+    "originalBytes": 295446,
+    "optimizedBytes": 66196
   },
   "/assets/projects/gkx/case-study/ui/paper-detail-modal.png": {
     "src": "/assets/optimized/projects/gkx/case-study/ui/paper-detail-modal.webp",
     "width": 1440,
     "height": 800,
     "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-detail-modal-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-detail-modal-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-detail-modal.webp 1440w",
-    "originalBytes": 269335,
-    "optimizedBytes": 62734
+    "originalBytes": 212336,
+    "optimizedBytes": 62626
   },
   "/assets/projects/gkx/case-study/ui/paper-edit-modal.png": {
     "src": "/assets/optimized/projects/gkx/case-study/ui/paper-edit-modal.webp",
     "width": 1440,
     "height": 800,
     "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-edit-modal-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-edit-modal-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-edit-modal.webp 1440w",
-    "originalBytes": 256322,
-    "optimizedBytes": 58186
+    "originalBytes": 203970,
+    "optimizedBytes": 58132
   },
   "/assets/projects/gkx/case-study/ui/paper-import-error.png": {
     "src": "/assets/optimized/projects/gkx/case-study/ui/paper-import-error.webp",
     "width": 1440,
     "height": 800,
     "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-import-error-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-import-error-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-import-error.webp 1440w",
-    "originalBytes": 257303,
-    "optimizedBytes": 50038
+    "originalBytes": 206568,
+    "optimizedBytes": 49906
   },
   "/assets/projects/gkx/case-study/ui/paper-list-before.png": {
     "src": "/assets/optimized/projects/gkx/case-study/ui/paper-list-before.webp",
     "width": 1440,
     "height": 800,
     "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-list-before-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-list-before-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-list-before.webp 1440w",
-    "originalBytes": 375817,
-    "optimizedBytes": 85380
+    "originalBytes": 276262,
+    "optimizedBytes": 85142
   },
   "/assets/projects/gkx/case-study/ui/paper-list-no-select-all.png": {
     "src": "/assets/optimized/projects/gkx/case-study/ui/paper-list-no-select-all.webp",
     "width": 1682,
     "height": 935,
     "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-list-no-select-all-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-list-no-select-all-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-list-no-select-all.webp 1682w",
-    "originalBytes": 1512413,
-    "optimizedBytes": 112222
-  },
-  "/assets/projects/gkx/case-study/ui/paper-list.png": {
-    "src": "/assets/optimized/projects/gkx/case-study/ui/paper-list.webp",
-    "width": 1440,
-    "height": 800,
-    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/paper-list-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/paper-list-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/paper-list.webp 1440w",
-    "originalBytes": 311793,
-    "optimizedBytes": 86328
+    "originalBytes": 1392358,
+    "optimizedBytes": 111786
   },
   "/assets/projects/gkx/case-study/ui/portal-reading.png": {
     "src": "/assets/optimized/projects/gkx/case-study/ui/portal-reading.webp",
@@ -815,54 +815,6 @@
     "originalBytes": 79914,
     "optimizedBytes": 61852
   },
-  "/assets/projects/gkx/case-study/ui/ux-rule-annotations.png": {
-    "src": "/assets/optimized/projects/gkx/case-study/ui/ux-rule-annotations.webp",
-    "width": 2200,
-    "height": 470,
-    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/ux-rule-annotations-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/ux-rule-annotations-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/ux-rule-annotations.webp 2200w",
-    "originalBytes": 201035,
-    "optimizedBytes": 61042
-  },
-  "/assets/projects/gkx/design-preview-button.jpg": {
-    "src": "/assets/optimized/projects/gkx/design-preview-button.webp",
-    "width": 1440,
-    "height": 960,
-    "srcSet": "/assets/optimized/projects/gkx/design-preview-button-640.webp 640w, /assets/optimized/projects/gkx/design-preview-button-1280.webp 1280w, /assets/optimized/projects/gkx/design-preview-button.webp 1440w",
-    "originalBytes": 187588,
-    "optimizedBytes": 49368
-  },
-  "/assets/projects/gkx/design-preview-button.png": {
-    "src": "/assets/optimized/projects/gkx/design-preview-button.webp",
-    "width": 1440,
-    "height": 960,
-    "srcSet": "/assets/optimized/projects/gkx/design-preview-button-640.webp 640w, /assets/optimized/projects/gkx/design-preview-button-1280.webp 1280w, /assets/optimized/projects/gkx/design-preview-button.webp 1440w",
-    "originalBytes": 79372,
-    "optimizedBytes": 49368
-  },
-  "/assets/projects/gkx/design-preview-pages.jpg": {
-    "src": "/assets/optimized/projects/gkx/design-preview-pages.webp",
-    "width": 1440,
-    "height": 960,
-    "srcSet": "/assets/optimized/projects/gkx/design-preview-pages-640.webp 640w, /assets/optimized/projects/gkx/design-preview-pages-1280.webp 1280w, /assets/optimized/projects/gkx/design-preview-pages.webp 1440w",
-    "originalBytes": 218435,
-    "optimizedBytes": 58806
-  },
-  "/assets/projects/gkx/design-preview-pages.png": {
-    "src": "/assets/optimized/projects/gkx/design-preview-pages.webp",
-    "width": 1440,
-    "height": 960,
-    "srcSet": "/assets/optimized/projects/gkx/design-preview-pages-640.webp 640w, /assets/optimized/projects/gkx/design-preview-pages-1280.webp 1280w, /assets/optimized/projects/gkx/design-preview-pages.webp 1440w",
-    "originalBytes": 95409,
-    "optimizedBytes": 58806
-  },
-  "/assets/projects/gkx/design-preview/assets/gkx-logo.png": {
-    "src": "/assets/optimized/projects/gkx/design-preview/assets/gkx-logo.webp",
-    "width": 28,
-    "height": 28,
-    "srcSet": "/assets/optimized/projects/gkx/design-preview/assets/gkx-logo.webp 28w",
-    "originalBytes": 2458,
-    "optimizedBytes": 1044
-  },
   "/assets/projects/gkx/design-preview/assets/user-avatar.png": {
     "src": "/assets/optimized/projects/gkx/design-preview/assets/user-avatar.webp",
     "width": 32,
@@ -876,16 +828,16 @@
     "width": 1200,
     "height": 700,
     "srcSet": "/assets/optimized/projects/gkx/portal-admin-detail-640.webp 640w, /assets/optimized/projects/gkx/portal-admin-detail.webp 1200w",
-    "originalBytes": 121322,
-    "optimizedBytes": 31354
+    "originalBytes": 207934,
+    "optimizedBytes": 31076
   },
   "/assets/projects/gkx/portal-admin-list.jpg": {
     "src": "/assets/optimized/projects/gkx/portal-admin-list.webp",
     "width": 1800,
     "height": 1012,
     "srcSet": "/assets/optimized/projects/gkx/portal-admin-list-640.webp 640w, /assets/optimized/projects/gkx/portal-admin-list-1280.webp 1280w, /assets/optimized/projects/gkx/portal-admin-list.webp 1800w",
-    "originalBytes": 174646,
-    "optimizedBytes": 58758
+    "originalBytes": 347773,
+    "optimizedBytes": 58714
   },
   "/assets/projects/gkx/product-business-architecture.png": {
     "src": "/assets/optimized/projects/gkx/product-business-architecture.webp",
@@ -900,64 +852,64 @@
     "width": 1800,
     "height": 786,
     "srcSet": "/assets/optimized/projects/gkx/strategy-reports-640.webp 640w, /assets/optimized/projects/gkx/strategy-reports-1280.webp 1280w, /assets/optimized/projects/gkx/strategy-reports.webp 1800w",
-    "originalBytes": 129690,
-    "optimizedBytes": 43562
+    "originalBytes": 318435,
+    "optimizedBytes": 43088
   },
   "/assets/projects/gkx/talent-news.jpg": {
     "src": "/assets/optimized/projects/gkx/talent-news.webp",
     "width": 1800,
     "height": 786,
     "srcSet": "/assets/optimized/projects/gkx/talent-news-640.webp 640w, /assets/optimized/projects/gkx/talent-news-1280.webp 1280w, /assets/optimized/projects/gkx/talent-news.webp 1800w",
-    "originalBytes": 133291,
-    "optimizedBytes": 40342
+    "originalBytes": 324803,
+    "optimizedBytes": 40532
   },
   "/assets/projects/gkx/technology-detail.jpg": {
     "src": "/assets/optimized/projects/gkx/technology-detail.webp",
     "width": 1800,
     "height": 786,
     "srcSet": "/assets/optimized/projects/gkx/technology-detail-640.webp 640w, /assets/optimized/projects/gkx/technology-detail-1280.webp 1280w, /assets/optimized/projects/gkx/technology-detail.webp 1800w",
-    "originalBytes": 127520,
-    "optimizedBytes": 37692
+    "originalBytes": 324781,
+    "optimizedBytes": 36992
   },
   "/assets/projects/gkx/technology-route.jpg": {
     "src": "/assets/optimized/projects/gkx/technology-route.webp",
     "width": 1800,
     "height": 786,
     "srcSet": "/assets/optimized/projects/gkx/technology-route-640.webp 640w, /assets/optimized/projects/gkx/technology-route-1280.webp 1280w, /assets/optimized/projects/gkx/technology-route.webp 1800w",
-    "originalBytes": 132836,
-    "optimizedBytes": 43224
+    "originalBytes": 343412,
+    "optimizedBytes": 42702
   },
   "/assets/projects/gkx/think-tank-home.jpg": {
     "src": "/assets/optimized/projects/gkx/think-tank-home.webp",
     "width": 1800,
     "height": 786,
     "srcSet": "/assets/optimized/projects/gkx/think-tank-home-640.webp 640w, /assets/optimized/projects/gkx/think-tank-home-1280.webp 1280w, /assets/optimized/projects/gkx/think-tank-home.webp 1800w",
-    "originalBytes": 186324,
-    "optimizedBytes": 67638
+    "originalBytes": 564731,
+    "optimizedBytes": 67326
   },
   "/assets/projects/gkx/topic-service.jpg": {
     "src": "/assets/optimized/projects/gkx/topic-service.webp",
     "width": 1800,
     "height": 1250,
     "srcSet": "/assets/optimized/projects/gkx/topic-service-640.webp 640w, /assets/optimized/projects/gkx/topic-service-1280.webp 1280w, /assets/optimized/projects/gkx/topic-service.webp 1800w",
-    "originalBytes": 210589,
-    "optimizedBytes": 61370
+    "originalBytes": 558863,
+    "optimizedBytes": 60432
   },
   "/assets/projects/gkx/workflow-builder-detail.jpg": {
     "src": "/assets/optimized/projects/gkx/workflow-builder-detail.webp",
     "width": 930,
     "height": 580,
     "srcSet": "/assets/optimized/projects/gkx/workflow-builder-detail-640.webp 640w, /assets/optimized/projects/gkx/workflow-builder-detail.webp 930w",
-    "originalBytes": 114144,
-    "optimizedBytes": 28672
+    "originalBytes": 201768,
+    "optimizedBytes": 28780
   },
   "/assets/projects/gkx/workflow-builder.jpg": {
     "src": "/assets/optimized/projects/gkx/workflow-builder.webp",
     "width": 1800,
     "height": 1012,
     "srcSet": "/assets/optimized/projects/gkx/workflow-builder-640.webp 640w, /assets/optimized/projects/gkx/workflow-builder-1280.webp 1280w, /assets/optimized/projects/gkx/workflow-builder.webp 1800w",
-    "originalBytes": 189091,
-    "optimizedBytes": 60454
+    "originalBytes": 388074,
+    "optimizedBytes": 60580
   },
   "/assets/projects/portfolio-images/06-energy-overview-system.png": {
     "src": "/assets/optimized/projects/portfolio-images/06-energy-overview-system.webp",

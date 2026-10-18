@@ -18,12 +18,12 @@ type OpenMaterial = (asset: GkxSupplementalImageAsset, trigger: HTMLButtonElemen
 
 const materials: SupplementalMaterial[] = [
   {
-    title: "高端智库首页",
+    title: "高端智库详情页",
     featured: true,
-    purpose: "从首页概览进入技术路线、报告与人才信息。",
+    purpose: "集中展示高端智库服务介绍、概览指标与相关内容入口。",
     src: "/assets/projects/gkx/think-tank-home.jpg",
-    alt: "高端智库首页图稿，包含科技情报概览和技术、报告、人才入口",
-    caption: "高端智库首页 · 脱敏与重构图稿",
+    alt: "集群服务中的高端智库详情页图稿，包含服务介绍、概览指标和技术、报告、人才入口",
+    caption: "集群服务 · 高端智库详情页 · 脱敏与重构图稿",
     width: 1800,
     height: 786,
   },
@@ -106,15 +106,17 @@ function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen
               aria-label={`查看原图：${material.title}`}
               onClick={event => onOpen(material, event.currentTarget)}
             >
-              <PortfolioImage
-                src={publicAsset(material.src)}
-                alt={material.alt}
-                width={material.width}
-                height={material.height}
-                loading="lazy"
-                decoding="async"
-              />
-              <span>
+              <span className="gkx-supplemental-material__preview">
+                <PortfolioImage
+                  src={publicAsset(material.src)}
+                  alt={material.alt}
+                  width={material.width}
+                  height={material.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+              <span className="gkx-supplemental-material__action">
                 查看原图
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5" />
@@ -130,13 +132,13 @@ function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen
 export function GkxSupplementalMaterials({ onOpen, compact = false }: { onOpen: OpenMaterial; compact?: boolean }) {
   if (compact) return <details id="gkx-materials" className="gkx-supplemental-materials gkx-supplemental-materials__disclosure is-compact">
     <summary>更多业务图稿：流程建模、专题服务与内容管理</summary>
-    <MaterialGrid items={materials.filter(material => material.title !== "高端智库首页")} onOpen={onOpen} />
+    <MaterialGrid items={materials.filter(material => material.src !== "/assets/projects/gkx/think-tank-home.jpg")} onOpen={onOpen} />
   </details>;
   return (
     <section className="gkx-supplemental-materials" aria-labelledby="gkx-supplemental-title">
       <header className="gkx-supplemental-materials__intro">
         <h3 id="gkx-supplemental-title">更多业务任务，沿用共同规则</h3>
-        <p>高端智库首页承接情报内容浏览，流程设计器承接流程建模。以下图稿均已脱敏与重构，可打开原图查看各自的界面细节。</p>
+        <p>高端智库详情页承接集群服务浏览，流程设计器承接流程建模。以下图稿均已脱敏与重构，可打开原图查看各自的界面细节。</p>
       </header>
       <MaterialGrid items={materials.filter(material => material.featured)} onOpen={onOpen} />
       <details id="gkx-materials" className="gkx-supplemental-materials__disclosure">

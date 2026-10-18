@@ -17,7 +17,7 @@ const storage = {
 };
 const welcome = { id: "welcome", role: "assistant", content: "欢迎了解 Leo。" };
 const sample = {
-  messages: [welcome, { id: "user-1", role: "user", content: "国科信有什么难点？" }, {
+  messages: [welcome, { id: "user-1", role: "user", content: "GKX有什么难点？" }, {
     id: "assistant-1", role: "assistant", content: "跨系统策略。",
     references: [{ label: "查看案例", href: "/portfolio/project/gkx/#gkx-systems", kind: "project" }],
     context: { projectSlug: "gkx", entryIds: ["project-gkx-challenge"] },
@@ -35,6 +35,33 @@ check("One tab shares messages, references, context and draft across homepage an
   const fromProjectPage = readChatSession(storage);
   assert.deepEqual(fromHomepage, sample);
   assert.deepEqual(fromProjectPage, sample);
+});
+check("Legacy assistant replies refresh from trusted IDs while personal text and context survive", () => {
+  const legacyContext = { projectSlug: "gkx", entryIds: ["project-gkx-challenge"] };
+  const legacy = {
+    ...sample,
+    messages: [welcome, { id: "legacy-user", role: "user", content: "旧项目有什么难点？" }, {
+      id: "legacy-assistant", role: "assistant", content: "旧项目名称的跨系统策略。",
+      references: [{ label: "旧项目名称案例", href: "/portfolio/project/gkx/#gkx-systems", kind: "project" }],
+      context: legacyContext, state: "fallback", retryQuery: "旧项目如何协作？",
+    }],
+    draft: "旧项目的职责", activeContext: legacyContext,
+  };
+  replaceStored(JSON.stringify({ version: 1, ...legacy }));
+  const restored = readChatSession(storage);
+  assert.equal(restored.messages.length, legacy.messages.length);
+  assert.equal(restored.messages[1].content, legacy.messages[1].content);
+  assert.match(restored.messages[2].content, /GKX的设计难点/);
+  assert.doesNotMatch(restored.messages[2].content, /旧项目名称/);
+  assert.equal(restored.messages[2].references[0].label, "GKX · 跨系统策略");
+  assert.equal(restored.messages[2].retryQuery, legacy.messages[2].retryQuery);
+  assert.equal(restored.draft, legacy.draft);
+  assert.deepEqual(restored.messages[2].context, legacyContext);
+  assert.deepEqual(restored.activeContext, legacyContext);
+  assert.deepEqual(JSON.parse(storedRaw()).messages, legacy.messages);
+  writeChatSession(storage, restored);
+  assert.equal(JSON.parse(storedRaw()).version, 3);
+  assert.deepEqual(readChatSession(storage), restored);
 });
 check("Earlier voices refresh without changing visitor text or stopped replies", () => {
   const oldWelcome = { ...welcome, content: "**想先了解哪一面？**\n\n我是 Leo 的作品集助手。可以帮你找案例、看经历，也聊设计思路和协作方式。" };

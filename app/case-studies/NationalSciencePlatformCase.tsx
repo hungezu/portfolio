@@ -29,9 +29,9 @@ const designSystemSections = [
 
 const screens = [
   {
-    label: "高端智库首页",
-    title: "先建立科技情报的整体认知，再进入具体任务",
-    description: "持续完善首页、我的素材库、案例广场、研究需求分析和技术体系分析，并补充关键交互状态。",
+    label: "集群服务 · 高端智库详情页",
+    title: "从高端智库服务详情进入相关内容",
+    description: "详情页集中呈现高端智库的服务介绍、概览指标与技术、报告、人才相关入口。",
     src: "/assets/projects/gkx/think-tank-home.jpg",
   },
   {
@@ -205,7 +205,7 @@ export function ProjectSubnav({ active }: { active: NationalPlatformView }) {
     ["design-system", "设计规范", "/portfolio/project/gkx/design-system/"],
   ];
   return (
-    <nav className="nsp-subnav" aria-label="深圳国际科技信息中心内容导航">
+    <nav className="nsp-subnav" aria-label="GKX内容导航">
       {items.map(([id, label, href]) => <a href={href} onClick={event => openWithPortfolioContext(event, href)} className={active === id ? "active" : ""} aria-current={active === id ? "page" : undefined} key={id}>{label}</a>)}
     </nav>
   );
@@ -289,14 +289,14 @@ function SystemsDetailPage({ activeScreen, setActiveScreen }: { activeScreen: nu
 
 export function GkxDesignSystemInteractive() {
   const previewUrl = publicAsset("/assets/projects/gkx/design-preview/index.html?id=page-index&embed=1");
-  return <div className="nsp-design-embed gkx-md-interactive"><iframe src={previewUrl} title="深圳国际科技信息中心可交互设计规范" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms" /></div>;
+  return <div className="nsp-design-embed gkx-md-interactive"><iframe src={previewUrl} title="GKX可交互设计规范" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms" /></div>;
 }
 
 function DesignSystemDetailPage() {
   return (
     <div className="national-platform-page nsp-subpage">
       <ProjectLocator sections={designSystemSections} ariaLabel="设计规范页章节定位" />
-      <header className="nsp-subpage-hero" id="nsp-design-overview"><div className="nsp-shell"><ProjectSubnav active="design-system" /><h1>让多支团队，<br />做出同一个平台</h1><p>深圳国际科技信息中心包含多个子系统，参与方和交付节奏并不一致。我的工作不只是一套界面，而是让总集成方、合作方和研发沿用同一套设计判断。</p></div></header>
+      <header className="nsp-subpage-hero" id="nsp-design-overview"><div className="nsp-shell"><ProjectSubnav active="design-system" /><h1>让多支团队，<br />做出同一个平台</h1><p>GKX包含多个子系统，参与方和交付节奏并不一致。我的工作不只是一套界面，而是让总集成方、合作方和研发沿用同一套设计判断。</p></div></header>
       <section className="nsp-section nsp-spec-story-section" id="nsp-design-method"><div className="nsp-shell"><div className="nsp-spec-narrative"><h2>我把反复出现在评审里的问题，写进一套可执行规范</h2><div className="nsp-spec-narrative-copy"><p>前期，我与总集成方对齐整体风格和页面布局；随着更多系统并行推进，再把页面类型、组件状态、响应式和交付检查整理为 Markdown，提供给合作方和研发使用。</p><p>Codex 负责把规则持续转成可浏览、可操作的网页工作台。我保留对业务内容、交互边界和最终质量的判断，并在评审中继续修正规范。</p><dl><div><dt>我的工作</dt><dd>设计方向、UX/UI、规范维护与还原度审核</dd></div><div><dt>AI 参与</dt><dd>规则整理、页面生成、状态补全与版本维护</dd></div></dl></div></div></div></section>
       <section className="nsp-section nsp-spec-visual-section" id="nsp-design-preview"><div className="nsp-shell"><header className="nsp-story-heading nsp-spec-heading"><h2>让规范在页面与组件中，<br />被查阅、应用和核对</h2><p>左侧目录展示规范覆盖的页面与组件，选择后可以看到对应内容的开头。受保密协议约束，具体规则、交互说明和实现细节不对外公开。</p></header><GkxDesignSystemInteractive /></div></section>
     </div>
@@ -313,20 +313,20 @@ export function NationalSciencePlatformCase({ view = "story" }: { view?: Nationa
   const currentPrototype = prototypeScreens[activePrototype];
 
   return (
-    <div className="national-platform-page" aria-label="深圳国际科技信息中心项目案例">
-      <ProjectLocator sections={sections} ariaLabel="深圳国际科技信息中心项目章节定位" />
+    <div className="national-platform-page" aria-label="GKX项目案例">
+      <ProjectLocator sections={sections} ariaLabel="GKX项目章节定位" />
 
       <section className="nsp-hero" id="nsp-overview" data-nsp-section>
         <div className="nsp-shell">
           <ProjectSubnav active="story" />
           <div className="nsp-hero-main">
             <header className="nsp-hero-heading">
-              <div><h1><span>深圳国际</span><span>科技信息中心</span></h1></div>
+              <div><h1><span>GKX智慧门户</span></h1></div>
               <p>从整体风格和核心系统，到在线原型、Markdown 规范与多方评审，我同时负责产品体验和设计交付方式。</p>
             </header>
             <figure className="nsp-hero-proof">
-              <PortfolioImage src={publicAsset("/assets/projects/gkx/think-tank-home.jpg")} alt="高端新型智库代码运行首页" loading="eager" fetchPriority="high" />
-              <figcaption><strong>新型高端智库首页</strong><p>页面中的业务信息、数据和流程均已脱敏或重构，仅展示设计方法和工作方式。</p></figcaption>
+              <PortfolioImage src={publicAsset("/assets/projects/gkx/think-tank-home.jpg")} alt="集群服务中的高端智库详情页" loading="eager" fetchPriority="high" />
+              <figcaption><strong>集群服务 · 高端智库详情页</strong><p>页面中的业务信息、数据和流程均已脱敏或重构，仅展示设计方法和工作方式。</p></figcaption>
             </figure>
           </div>
           <div className="nsp-hero-meta">
@@ -337,8 +337,8 @@ export function NationalSciencePlatformCase({ view = "story" }: { view?: Nationa
 
       <section className="nsp-section nsp-structure" id="nsp-structure" data-nsp-section>
         <div className="nsp-shell nsp-section-stack nsp-structure-layout">
-          <header className="nsp-story-heading"><p className="nsp-kicker">01 / 项目背景</p><h2>一个由多层能力共同支撑的<br />科技信息服务平台</h2><p>国科信连接科技信息展示、战略咨询、专题服务与 AI 教育等业务，并由社区运营、用户权限、智能体、知识图谱和模型能力共同支撑。智谱主要负责智能服务集群与智慧认知大脑相关模块。</p></header>
-          <div className="nsp-story-body"><figure className="nsp-architecture-figure"><PortfolioImage src={publicAsset("/assets/projects/gkx/product-business-architecture.png")} alt="国科信产品业务架构图" loading="lazy" decoding="async" /><figcaption><strong>产品业务架构</strong><span>从用户触达到应用、业务、支撑与底层能力的整体关系。图中内容为项目材料的脱敏整理。</span></figcaption></figure><div className="nsp-structure-stage">
+          <header className="nsp-story-heading"><p className="nsp-kicker">01 / 项目背景</p><h2>一个由多层能力共同支撑的<br />科技信息服务平台</h2><p>GKX连接科技信息展示、战略咨询、专题服务与 AI 教育等业务，并由社区运营、用户权限、智能体、知识图谱和模型能力共同支撑。智谱主要负责智能服务集群与智慧认知大脑相关模块。</p></header>
+          <div className="nsp-story-body"><figure className="nsp-architecture-figure"><PortfolioImage src={publicAsset("/assets/projects/gkx/product-business-architecture.png")} alt="GKX产品业务架构图" loading="lazy" decoding="async" /><figcaption><strong>产品业务架构</strong><span>从用户触达到应用、业务、支撑与底层能力的整体关系。图中内容为项目材料的脱敏整理。</span></figcaption></figure><div className="nsp-structure-stage">
               <div className="nsp-responsibility-notes"><article><strong>产品工作：确定系统、角色、任务和页面边界</strong><p>避免直接从标书标题推导页面，先确认用户要完成什么。</p></article><article className="is-codex"><strong>Codex：从长文档中提取模块与待确认项</strong><p>把材料转成可核对的结构，减少遗漏与重复理解。</p></article><article><strong>设计判断：重新组织优先级和系统关系</strong><p>删除不成立的默认内容，将争议问题带回评审。</p></article></div>
               <div className="nsp-requirement-board"><header><strong>需求结构化结果</strong><span>脱敏示意</span></header><div className="nsp-direction-grid"><span>科技资源</span><span>新型智库</span><span>决策支持</span><span>专题服务</span><span>信息交流</span><span>科学数据</span></div><dl><div><dt>已确认</dt><dd>系统范围、页面目标、核心任务</dd></div><div><dt>待确认</dt><dd>角色权限、字段内容、业务边界</dd></div></dl><footer>阶段产出：页面范围、需求清单与评审问题</footer></div>
             </div>

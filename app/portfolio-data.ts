@@ -97,7 +97,7 @@ export const abilities: Ability[] = [
     evidence: [
       {
         projectSlug: "gkx",
-        projectTitle: "深圳国际科技信息中心",
+        projectTitle: "GKX智慧门户",
         section: "可运行原型验证",
         description: "用 Codex 生成可运行网页，再由我调整流程、字段与关键状态。",
         anchor: "nsp-prototype",
@@ -121,7 +121,7 @@ export const abilities: Ability[] = [
     evidence: [
       {
         projectSlug: "gkx",
-        projectTitle: "深圳国际科技信息中心",
+        projectTitle: "GKX智慧门户",
         section: "多系统需求结构",
         description: "从分散材料中界定系统、角色、任务与页面边界。",
         anchor: "gkx-systems",
@@ -150,7 +150,7 @@ export const abilities: Ability[] = [
     evidence: [
       {
         projectSlug: "gkx",
-        projectTitle: "深圳国际科技信息中心",
+        projectTitle: "GKX智慧门户",
         section: "Markdown 设计规范",
         description: "将评审共识转化为多团队可执行、可维护的设计规则。",
         anchor: "gkx-design-system",
@@ -221,8 +221,8 @@ const projectData: Project[] = [
   {
     slug: "gkx",
     visible: true,
-    title: "深圳国际科技信息中心",
-    shortTitle: "深圳国际科技信息中心",
+    title: "GKX智慧门户",
+    shortTitle: "GKX智慧门户",
     period: "2025.11 - 2027.03",
     type: "平台级体验设计 / Web",
     summary:
@@ -240,8 +240,8 @@ const projectData: Project[] = [
       "/assets/projects/gkx/workflow-builder.jpg",
     ],
     galleryAlt: [
-      "深圳国际科技信息中心项目视觉封面",
-      "高端智库首页",
+      "GKX项目视觉封面",
+      "集群服务 · 高端智库详情页",
       "科技专题服务页面",
       "门户后台列表页面",
       "流程设计器页面",
@@ -444,7 +444,7 @@ export const experiences: Experience[] = [
       "参与 AI 产品与政企平台设计，重点负责智能问数体验、多系统设计规范与原型验证。",
     details: [
       "AI 产品体验｜负责招财 Smart 的 UX/UI，覆盖提问、语义澄清、过程反馈、结果解释与看板交互。",
-      "平台规范与验证｜负责深圳国际科技信息中心多业务系统的页面样式与组件规范，借助 AI 维护 Markdown 设计规范，并参与原型设计与评审优化。",
+      "平台规范与验证｜负责GKX多业务系统的页面样式与组件规范，借助 AI 维护 Markdown 设计规范，并参与原型设计与评审优化。",
       "其他 AI 场景｜参与中行澳门 AI 系统、火火兔 AI 陪伴硬件及单证识别项目，承担相关流程、界面与状态设计。",
     ],
   },
