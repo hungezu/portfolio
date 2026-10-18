@@ -1887,7 +1887,7 @@ function ExperienceSection() {
         <div className="experience-heading">
           <SectionIntro
             title="工作经历"
-            description="7 年持续参与财税、数据可视化、AI 产品与政企平台设计，覆盖业务梳理、交互策略、视觉系统和研发协作。"
+            description="从财税系统到 AI 产品与政企平台，围绕复杂业务开展交互设计、界面设计与设计规范建设。"
           />
           <motion.dl
             className="experience-stats"
