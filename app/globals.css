@@ -739,9 +739,11 @@ p {
   gap: 6px;
 }
 
-.portfolio-chat-new {
+.portfolio-chat-new,
+.portfolio-chat-close {
   display: inline-flex;
   width: 36px;
+  flex: 0 0 auto;
   min-height: 36px;
   height: 36px;
   align-items: center;
@@ -762,24 +764,26 @@ p {
 }
 
 .portfolio-chat-new:hover:not(:disabled),
-.portfolio-chat-new:focus-visible {
-  border-color: var(--ink);
-  background: var(--page);
+.portfolio-chat-new:focus-visible,
+.portfolio-chat-close:hover:not(:disabled),
+.portfolio-chat-close:focus-visible {
+  background: #f0f0f0;
   color: var(--ink);
-  transform: translateY(-1px);
 }
 
-.portfolio-chat-new:active {
-  transform: translateY(1px) scale(.98);
+.portfolio-chat-new:active:not(:disabled),
+.portfolio-chat-close:active:not(:disabled) {
+  transform: scale(.96);
 }
 
-.portfolio-chat-new:disabled {
+.portfolio-chat-new:disabled,
+.portfolio-chat-close:disabled {
   opacity: .4;
   cursor: default;
   transform: none;
 }
 
-.portfolio-chat-reset-wrap {
+.portfolio-chat-action-wrap {
   position: relative;
   display: inline-flex;
 }
@@ -803,8 +807,8 @@ p {
   transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
 }
 
-.portfolio-chat-reset-wrap:hover .portfolio-chat-action-tooltip,
-.portfolio-chat-reset-wrap:focus-within .portfolio-chat-action-tooltip {
+.portfolio-chat-action-wrap:hover .portfolio-chat-action-tooltip,
+.portfolio-chat-action-wrap:focus-within .portfolio-chat-action-tooltip {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -855,24 +859,6 @@ p {
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.portfolio-chat-close {
-  display: grid;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 11px;
-  background: transparent;
-  color: var(--ink);
-  cursor: pointer;
-  transition: background 180ms ease, transform 180ms ease;
-}
-
-.portfolio-chat-close:hover {
-  background: #e6e6e6;
-  transform: rotate(5deg);
 }
 
 .portfolio-chat-messages {
@@ -1371,16 +1357,12 @@ p {
     gap: 4px;
   }
 
-  .portfolio-chat-new {
+  .portfolio-chat-new,
+  .portfolio-chat-close {
     width: 44px;
     height: 44px;
     min-height: 44px;
     padding: 0;
-  }
-
-  .portfolio-chat-close {
-    width: 44px;
-    height: 44px;
   }
 
   .portfolio-chat-messages {

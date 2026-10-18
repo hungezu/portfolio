@@ -1459,7 +1459,7 @@ function PortfolioChat({ project }: { project?: Project }) {
                 </div>
               </div>
               <div className="portfolio-chat-actions">
-                <span className="portfolio-chat-reset-wrap">
+                <span className="portfolio-chat-action-wrap">
                 <button
                   className="portfolio-chat-new"
                   type="button"
@@ -1472,15 +1472,18 @@ function PortfolioChat({ project }: { project?: Project }) {
                 </button>
                 <span id="portfolio-chat-reset-hint" className="portfolio-chat-action-tooltip" role="tooltip">重置对话</span>
                 </span>
+                <span className="portfolio-chat-action-wrap">
                 <button
                   className="portfolio-chat-close"
                   type="button"
                   aria-label="关闭作品集助手"
-                  title="关闭对话（Esc）"
+                  aria-describedby="portfolio-chat-close-hint"
                   onClick={() => closeChat()}
                 >
-                  <X size={17} strokeWidth={2} />
+                  <X size={16} strokeWidth={2} />
                 </button>
+                <span id="portfolio-chat-close-hint" className="portfolio-chat-action-tooltip" role="tooltip">关闭对话（Esc）</span>
+                </span>
               </div>
             </header>
 
