@@ -838,6 +838,18 @@ p {
   color: #fff;
 }
 
+.portfolio-chat-logo {
+  display: block;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.portfolio-chat-avatar .portfolio-chat-logo {
+  width: 18px;
+  height: 18px;
+}
+
 .portfolio-chat-title-wrap > div {
   min-width: 0;
 }

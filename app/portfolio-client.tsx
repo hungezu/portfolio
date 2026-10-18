@@ -13,7 +13,6 @@ import {
 import ArrowLeft from "lucide-react/dist/esm/icons/arrow-left.mjs";
 import ArrowUp from "lucide-react/dist/esm/icons/arrow-up.mjs";
 import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
-import MessageCircle from "lucide-react/dist/esm/icons/message-circle.mjs";
 import Plus from "lucide-react/dist/esm/icons/plus.mjs";
 import RotateCcw from "lucide-react/dist/esm/icons/rotate-ccw.mjs";
 import Send from "lucide-react/dist/esm/icons/send.mjs";
@@ -462,6 +461,20 @@ declare global {
     /** 可选的跨域对话服务地址；未配置时使用同源 /api/chat。 */
     __PORTFOLIO_CHAT_API__?: string;
   }
+}
+
+function PortfolioChatLogo() {
+  return (
+    <img
+      className="portfolio-chat-logo"
+      src={publicAsset("/assets/visual/hj-logo-112.png")}
+      alt=""
+      width="112"
+      height="112"
+      decoding="async"
+      aria-hidden="true"
+    />
+  );
 }
 
 const CHAT_WELCOME_MESSAGE: PortfolioChatMessage = {
@@ -1472,7 +1485,7 @@ function PortfolioChat({ project }: { project?: Project }) {
             <header className="portfolio-chat-header">
               <div className="portfolio-chat-title-wrap">
                 <span className="portfolio-chat-mark" aria-hidden="true">
-                  <MessageCircle size={16} strokeWidth={2.1} />
+                  <PortfolioChatLogo />
                 </span>
                 <div>
                   <h2 id="portfolio-chat-title">作品集助手</h2>
@@ -1529,7 +1542,7 @@ function PortfolioChat({ project }: { project?: Project }) {
                     transition={{ duration: reduce ? 0 : 0.24, ease }}
                   >
                     {message.role === "assistant" && messageIndex !== 0 ? (
-                      <span className="portfolio-chat-avatar" aria-hidden="true"><MessageCircle size={14} /></span>
+                      <span className="portfolio-chat-avatar" aria-hidden="true"><PortfolioChatLogo /></span>
                     ) : null}
                     <div className="portfolio-chat-bubble-wrap">
                       <div className="portfolio-chat-bubble">
@@ -1605,7 +1618,7 @@ function PortfolioChat({ project }: { project?: Project }) {
                     exit={reduce ? undefined : { opacity: 0, y: -4 }}
                     transition={{ duration: reduce ? 0 : 0.2, ease }}
                   >
-                    <span className="portfolio-chat-avatar" aria-hidden="true"><MessageCircle size={14} /></span>
+                    <span className="portfolio-chat-avatar" aria-hidden="true"><PortfolioChatLogo /></span>
                     <div className="portfolio-chat-bubble portfolio-chat-loading-bubble">
                       <span /><span /><span />
                       <p>正在整理相关内容</p>
