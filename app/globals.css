@@ -3166,6 +3166,32 @@ a.contact-item:focus-visible {
   padding-bottom: 48px;
 }
 
+/* Keep image-led cases clear of the shared desktop section locator. */
+.case-page:is([data-project="tax-cloud"], [data-project="data-visualisation"]) {
+  --case-content-gutter: 32px;
+}
+
+.case-page:is([data-project="tax-cloud"], [data-project="data-visualisation"]) :is(.case-hero, .case-gallery) {
+  width: min(1200px, calc(100% - 2 * var(--case-content-gutter)));
+}
+
+.case-page:is([data-project="tax-cloud"], [data-project="data-visualisation"]) .case-hero {
+  padding-inline: 0;
+}
+
+@media (min-width: 1500px) {
+  .case-page:is([data-project="tax-cloud"], [data-project="data-visualisation"]) {
+    /* 104px locator + 18px edge offset + 32px breathing room. */
+    --case-content-gutter: 154px;
+  }
+}
+
+@media (max-width: 767px) {
+  .case-page:is([data-project="tax-cloud"], [data-project="data-visualisation"]) {
+    --case-content-gutter: 16px;
+  }
+}
+
 .case-loading {
   min-height: 55vh;
   display: grid;

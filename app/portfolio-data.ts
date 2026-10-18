@@ -41,6 +41,7 @@ export type Project = {
   gallery: string[];
   galleryAlt?: string[];
   galleryLabels?: string[];
+  gallerySections?: { startIndex: number; label: string }[];
 };
 
 export type Experience = {
@@ -352,6 +353,14 @@ const projectData: Project[] = [
       "报表审批",
       "法规查询",
       "移动端总览",
+    ],
+    gallerySections: [
+      { startIndex: 2, label: "核心流程" },
+      { startIndex: 5, label: "设计规范" },
+      { startIndex: 7, label: "首页改版" },
+      { startIndex: 11, label: "业务页面" },
+      { startIndex: 13, label: "体验走查" },
+      { startIndex: 14, label: "移动体验" },
     ],
   },
   {

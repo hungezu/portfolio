@@ -2557,9 +2557,12 @@ function ProjectImageGallery({
   const isEnergyProject = project.slug === "energy-tax";
   const locatorSections: ProjectLocatorSection[] = [
     ["project-overview", "项目介绍"],
-    ...project.gallery.map((_, index) => [
-      `case-gallery-${index}`,
-      project.galleryLabels?.[index] ?? `项目图片 ${index + 1}`,
+    ...(project.gallerySections ?? project.gallery.map((_, index) => ({
+      startIndex: index,
+      label: project.galleryLabels?.[index] ?? `项目图片 ${index + 1}`,
+    }))).map(({ startIndex, label }) => [
+      `case-gallery-${startIndex}`,
+      label,
     ] as const),
   ];
 
