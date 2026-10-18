@@ -40,10 +40,6 @@
 .capability-item-heading button[aria-expanded="true"] .capability-disclosure-icon { color: #111; transform: rotate(45deg); }
 .capability-item-heading button:hover { color: #111; }
 .capability-tab-marker { position: absolute; left: 0; top: 50%; width: 2px; height: 12px; background: #111; transform: translateY(-50%); pointer-events: none; }
-.capability-playback { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 8px; color: #666; font-size: 12px; line-height: 1.5; }
-.capability-playback button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 0; border: 0; background: transparent; color: #555; font: inherit; cursor: pointer; text-underline-offset: 4px; }
-.capability-playback button svg { flex: none; }
-.capability-playback button:hover { color: #111; text-decoration: underline; }
 .capability-disclosure { display: grid; grid-template-rows: 0fr; opacity: 0; visibility: hidden; }
 .capability-disclosure[data-open="true"] { grid-template-rows: 1fr; opacity: 1; visibility: visible; }
 .capability-disclosure-clip { min-height: 0; overflow: hidden; }

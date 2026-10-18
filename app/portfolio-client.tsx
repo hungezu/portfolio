@@ -2310,26 +2310,28 @@ function ExperienceSection() {
               <article className={`experience-item ${expanded ? "is-open" : ""}`} key={experience.company}>
                 <button
                   type="button"
+                  id={`experience-trigger-${index}`}
                   aria-expanded={expanded}
+                  aria-controls={`experience-panel-${index}`}
                   onClick={() => setOpen(expanded ? -1 : index)}
                 >
                   <span className="experience-company">{experience.company}</span>
                   <span className="experience-role">{experience.role}</span>
                   <span className="experience-period">{experience.period}</span>
                   <span className="experience-toggle">
-                    <Plus size={18} strokeWidth={1.8} />
+                    <Plus size={20} strokeWidth={1.3} aria-hidden="true" />
                   </span>
                 </button>
-                <AnimatePresence initial={false}>
-                  {expanded ? (
-                    <motion.div
-                      className="experience-panel"
-                      initial={reduce ? false : { height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={reduce ? undefined : { height: 0, opacity: 0 }}
-                      transition={{ duration: reduce ? 0 : 0.28, ease }}
-                    >
-                      <div>
+                <div
+                  className="experience-panel"
+                  id={`experience-panel-${index}`}
+                  role="region"
+                  aria-labelledby={`experience-trigger-${index}`}
+                  aria-hidden={!expanded}
+                  inert={!expanded}
+                >
+                  <div className="experience-panel-clip">
+                      <div className="experience-panel-content">
                         <p>{experience.summary}</p>
                         <ul>
                           {experience.details.map((detail) => {
@@ -2350,9 +2352,8 @@ function ExperienceSection() {
                           })}
                         </ul>
                       </div>
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
+                  </div>
+                </div>
               </article>
             );
           })}

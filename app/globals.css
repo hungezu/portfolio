@@ -2787,45 +2787,40 @@ html.portfolio-transitioning body {
 
 .experience-list {
   --experience-grid: minmax(280px, 1.25fr) minmax(130px, 0.9fr) minmax(130px, 0.75fr) 34px;
+  --experience-inline-padding: 24px;
+  --experience-column-gap: 28px;
+  --experience-expand-duration: 420ms;
   border-top: 1px solid var(--line-strong);
+  overflow-anchor: none;
 }
 
 .experience-item {
   border-bottom: 1px solid var(--line);
+  transition: background-color 180ms ease;
 }
 
 .experience-item > button {
   display: grid;
   width: 100%;
   grid-template-columns: var(--experience-grid);
-  gap: 28px;
+  gap: var(--experience-column-gap);
   align-items: center;
-  padding: 28px 0;
+  padding: 28px var(--experience-inline-padding);
   background: transparent;
   text-align: left;
   cursor: pointer;
-  transition: background 180ms ease;
-}
-
-.experience-item > button:focus-visible {
-  background: rgba(255, 255, 255, 0.52);
 }
 
 .experience-company {
   font-size: clamp(17px, 1.7vw, 24px);
   font-weight: 400;
   letter-spacing: -0.025em;
-  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.experience-item > button:focus-visible .experience-company {
-  transform: translateX(5px);
 }
 
 .experience-role,
 .experience-period {
   color: var(--muted);
-  font-size: var(--type-meta);
+  font-size: 14px;
 }
 
 .experience-toggle {
@@ -2833,32 +2828,27 @@ html.portfolio-transitioning body {
   width: 34px;
   height: 34px;
   place-items: center;
-  border-radius: 50%;
-  background: #111;
-  color: #fff;
-  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: transparent;
+  color: #707070;
+  transition: color 180ms ease;
 }
 
 .experience-item > button:focus-visible .experience-toggle {
-  transform: scale(1.06);
+  color: #111;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .experience-item > button:hover {
+  .experience-item:hover {
     background: rgba(255, 255, 255, 0.52);
   }
 
-  .experience-item > button:hover .experience-company {
-    transform: translateX(5px);
-  }
-
-  .experience-item > button:hover .experience-toggle {
-    transform: scale(1.06);
+  .experience-item:hover .experience-toggle {
+    color: #111;
   }
 }
 
 .experience-toggle svg {
-  transition: transform 320ms ease;
+  transition: transform 400ms cubic-bezier(.22, .61, .36, 1);
 }
 
 .experience-item.is-open .experience-toggle svg {
@@ -2866,14 +2856,38 @@ html.portfolio-transitioning body {
 }
 
 .experience-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  /* Keep this functional disclosure perceptible under the global motion reset. */
+  transition: grid-template-rows var(--experience-expand-duration) cubic-bezier(.22, .61, .36, 1), visibility 0s linear var(--experience-expand-duration) !important;
+}
+
+.experience-item.is-open .experience-panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition-delay: 0s !important;
+}
+
+.experience-panel-clip {
+  min-height: 0;
   overflow: hidden;
 }
 
-.experience-panel > div {
+.experience-panel-content {
   display: grid;
   grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
   gap: clamp(32px, 7vw, 112px);
-  padding: 0 0 48px;
+  padding: 8px var(--experience-inline-padding) 48px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 140ms ease-out, transform 240ms cubic-bezier(.22, .61, .36, 1);
+}
+
+.experience-item.is-open .experience-panel-content {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 240ms ease-out 50ms, transform 360ms cubic-bezier(.22, .61, .36, 1);
 }
 
 .experience-panel p {
@@ -2905,15 +2919,36 @@ html.portfolio-transitioning body {
 }
 
 @media (min-width: 768px) {
-  .experience-panel > div {
+  .experience-panel-content {
     grid-template-columns: var(--experience-grid);
-    gap: 28px;
+    gap: var(--experience-column-gap);
   }
 
   .experience-panel ul {
     grid-column: 2 / 4;
   }
 
+}
+
+@media (min-width: 768px) and (max-width: 900px) {
+  .experience-list {
+    --experience-column-gap: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .experience-list {
+    --experience-expand-duration: 320ms;
+  }
+
+  .experience-toggle svg {
+    transition: none;
+  }
+
+  .experience-list .experience-panel-content {
+    transform: none;
+    transition: opacity 160ms ease-out !important;
+  }
 }
 
 .contact-section {
@@ -4924,10 +4959,14 @@ a.contact-item:focus-visible {
     font-size: var(--type-caption);
   }
 
+  .experience-list {
+    --experience-inline-padding: 16px;
+  }
+
   .experience-item > button {
     grid-template-columns: 1fr auto;
     gap: 8px 16px;
-    padding: 24px 0;
+    padding: 24px var(--experience-inline-padding);
   }
 
   .experience-company {
@@ -4944,7 +4983,7 @@ a.contact-item:focus-visible {
     grid-row: 1 / 4;
   }
 
-  .experience-panel > div {
+  .experience-panel-content {
     grid-template-columns: 1fr;
     gap: 24px;
     padding-bottom: 36px;

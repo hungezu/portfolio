@@ -1,8 +1,6 @@
 "use client";
 
 import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
-import Pause from "lucide-react/dist/esm/icons/pause.mjs";
-import Play from "lucide-react/dist/esm/icons/play.mjs";
 import Plus from "lucide-react/dist/esm/icons/plus.mjs";
 import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useLayoutEffect, useRef, useState, type AnimationEvent, type CSSProperties, type MouseEvent } from "react";
@@ -68,7 +66,6 @@ export function CapabilitySection({
   const [animateDisclosure, setAnimateDisclosure] = useState(false);
   const [cycleGeneration, setCycleGeneration] = useState(0);
   const [cooldownUntil, setCooldownUntil] = useState(0);
-  const [pausedByUser, setPausedByUser] = useState(false);
   const [indexVisible, setIndexVisible] = useState(false);
   const [pageVisible, setPageVisible] = useState(false);
   const [pointerReading, setPointerReading] = useState(false);
@@ -79,7 +76,7 @@ export function CapabilitySection({
   const current = abilities.find(ability => ability.id === activeId)!;
   // This local showcase never changes the work highlight; only its CTA does.
   const matchedProjects = projects.filter(project => project.abilityIds.includes(activeId));
-  const cycleState = pausedByUser ? "paused" : cooldownUntil ? "cooldown"
+  const cycleState = cooldownUntil ? "cooldown"
     : !pageVisible ? "hidden" : !indexVisible ? "offscreen"
     : pointerReading || keyboardReading ? "reading" : "running";
 
@@ -92,7 +89,6 @@ export function CapabilitySection({
       const params = new URLSearchParams(window.location.search);
       const returning = params.has("returnProject") || params.get("returnSection") === "work";
       const saved = window.sessionStorage.getItem("portfolio-capability-selection");
-      setPausedByUser(window.sessionStorage.getItem("portfolio-capability-autoplay-paused") === "true");
       if (returning && saved && capabilityOrder.includes(saved as AbilityId)) {
         setActiveId(saved as AbilityId);
         const expanded = window.sessionStorage.getItem("portfolio-capability-expanded");
@@ -182,21 +178,6 @@ export function CapabilitySection({
     saveSelection(next, nextExpanded);
   }
 
-  function togglePlayback() {
-    const paused = !pausedByUser;
-    cycleRunningRef.current = false;
-    setPausedByUser(paused);
-    if (!paused) {
-      setCooldownUntil(0);
-      setPointerReading(false);
-      setKeyboardReading(false);
-      setCycleGeneration(value => value + 1);
-    }
-    try {
-      window.sessionStorage.setItem("portfolio-capability-autoplay-paused", String(paused));
-    } catch { /* Storage can be disabled. */ }
-  }
-
   const pauseForPointer = (event: { pointerType: string }) => {
     if (event.pointerType !== "mouse") return;
     cycleRunningRef.current = false;
@@ -278,12 +259,6 @@ export function CapabilitySection({
                 </div>
               </div>;
             })}
-          </div>
-          <div className="capability-playback">
-            <button type="button" onClick={togglePlayback} aria-controls="capability-panel">
-              {pausedByUser ? <Play size={18} aria-hidden="true" /> : <Pause size={18} aria-hidden="true" />}
-              {pausedByUser ? "继续轮播" : "暂停轮播"}
-            </button>
           </div>
         </aside>
 
