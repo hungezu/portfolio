@@ -284,6 +284,7 @@
               window.setTimeout(() => {
                 document.documentElement.classList.add("portfolio-loader-seen");
                 loader.remove();
+                window.dispatchEvent(new Event("portfolio-loader-exit"));
               }, reducedMotion ? 90 : 450);
             }, reducedMotion ? 100 : 500);
           }, reducedMotion ? 80 : 440);

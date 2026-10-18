@@ -42,6 +42,7 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
   const jobs = [];
   const observers = new Set();
   const resourceListeners = new Map();
+  const dispatched = [];
   const loader = element();
   const value = element();
   const progress = element();
@@ -122,6 +123,12 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
     setTimeout: (callback, delay) => schedule(callback, delay),
     clearTimeout: cancel,
     sessionStorage: { setItem() {} },
+    Event: class { constructor(type) { this.type = type; } },
+    dispatchEvent(event) {
+      assert.equal(loader.removed, true, "The hero reveal signal must wait until the loader has left.");
+      assert.equal(documentClasses.contains("portfolio-loading"), false, "The hero reveal signal must follow page unlock.");
+      dispatched.push(event.type);
+    },
     MutationObserver: class {
       constructor(callback) { this.callback = callback; }
       observe(_target, options) { this.options = options; observers.add(this); }
@@ -138,12 +145,14 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
     project,
     loader,
     assertWaiting(message) {
+      assert.deepEqual(dispatched, [], "Hero entrance must not start behind a waiting loader.");
       assert.equal(loader.removed, false, message);
       assert.equal(documentClasses.contains("portfolio-loading"), true, message);
     },
     assertRevealed(message) {
       assert.equal(loader.removed, true, message);
       assert.equal(documentClasses.contains("portfolio-loading"), false, message);
+      assert.deepEqual(dispatched, ["portfolio-loader-exit"], "Every finished loader must emit its entrance signal exactly once.");
     },
     changed(attributeName) {
       for (const observer of [...observers]) {

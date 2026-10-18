@@ -65,6 +65,8 @@ import { optimizedImage, PortfolioImage } from "./portfolio-image";
 import { CapabilitySection } from "./capability-section";
 import type { NationalPlatformView } from "./case-studies/NationalSciencePlatformCase";
 import { ProjectLocator, type ProjectLocatorSection } from "./project-locator";
+import { homeEntranceTiming, initialHomeOpeningPhase, useHomeOpeningPhase, type HomeOpeningPhase } from "./home-entrance";
+import { scrollToHomeSection, useHomeAnchorNavigation } from "./home-scroll";
 
 const ZhaocaiSmartCase = lazy(() => import("./case-studies/ZhaocaiSmartCase").then(module => ({ default: module.ZhaocaiSmartCase })));
 const GkxCase = lazy(() => import("./case-studies/GkxCase").then(module => ({ default: module.GkxCase })));
@@ -88,6 +90,7 @@ class ProjectContentBoundary extends Component<{ children: ReactNode }, { failed
 const ease = [0.16, 1, 0.3, 1] as const;
 const heroVideoAsset = "/assets/visual/hero-motion.mp4";
 const heroMobileVideoAsset = "/assets/visual/hero-motion-mobile.mp4";
+const assistantHintSessionKey = "leo-portfolio-assistant-auto-hint-seen";
 const abilityLabelById = new Map(abilities.map(ability => [ability.id, ability.axisLabel]));
 
 const homeProjectContent: Record<string, {
@@ -251,12 +254,16 @@ function SiteNav({
   onMenu,
   onProjectBack,
   projectView = false,
+  openingPhase,
 }: {
   onMenu: () => void;
   onProjectBack?: (event: ReactMouseEvent<HTMLAnchorElement>) => void;
   projectView?: boolean;
+  openingPhase?: HomeOpeningPhase;
 }) {
   const reduce = useReducedMotion();
+  const { navigationDelay } = homeEntranceTiming(reduce);
+  const [navigationReady, setNavigationReady] = useState(!openingPhase || openingPhase === "settled");
   const projectBack = projectView ? (
     <a className="nav-pill nav-back" href="/portfolio/#work" onClick={onProjectBack}>
       <span className="nav-circle nav-circle-dark"><ArrowLeft size={12} strokeWidth={2.6} /></span>
@@ -267,8 +274,16 @@ function SiteNav({
   return (
     <motion.nav
       className="site-nav site-navigation"
-      initial={reduce ? false : { y: -16, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
+      initial={openingPhase ? false : reduce ? false : { y: -16, opacity: 0 }}
+      animate={openingPhase ?? { y: 0, opacity: 1 }}
+      variants={openingPhase ? {
+        waiting: { opacity: 0, transform: reduce ? "none" : "translate3d(0px, -10px, 0px)", transition: { duration: 0 } },
+        visible: { opacity: 1, transform: "translate3d(0px, 0px, 0px)", transition: { duration: reduce ? 0.3 : 0.45, delay: navigationDelay, ease }, transitionEnd: { transform: "none" } },
+        settled: { opacity: 1, transform: "none", transition: { duration: 0 } },
+      } : undefined}
+      inert={!navigationReady}
+      style={{ visibility: openingPhase === "waiting" ? "hidden" : undefined }}
+      onAnimationComplete={phase => { if (phase === "visible") setNavigationReady(true); }}
       transition={{ duration: 0.8, ease }}
     >
       <div className="nav-left">
@@ -326,12 +341,10 @@ function BackToTop() {
           transition={{ duration: reduce ? 0 : 0.28, ease }}
           whileHover={reduce ? undefined : { y: -3 }}
           whileTap={reduce ? undefined : { scale: 0.94 }}
-          onClick={() =>
-            window.scrollTo({
-              top: 0,
-              behavior: reduce ? "auto" : "smooth",
-            })
-          }
+          onClick={event => {
+            if (document.querySelector(".portfolio-home")) scrollToHomeSection("top", event.detail === 0);
+            else window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+          }}
         >
           <ArrowUp size={18} strokeWidth={2} />
         </motion.button>
@@ -394,7 +407,7 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
       document.body.classList.remove("menu-is-open");
       pageMain?.removeAttribute("inert");
       siteNav?.removeAttribute("inert");
-      window.requestAnimationFrame(() => previouslyFocused?.focus());
+      window.requestAnimationFrame(() => previouslyFocused?.focus({ preventScroll: true }));
     };
   }, [open, onClose]);
 
@@ -438,9 +451,9 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
                 key={href}
                 href={href}
                 onClick={onClose}
-                initial={{ y: 24, opacity: 0 }}
+                initial={reduce ? false : { y: 16, opacity: 0.85 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.08 + index * 0.055, duration: 0.55, ease }}
+                transition={{ delay: reduce ? 0 : 0.04 + index * 0.045, duration: reduce ? 0 : 0.36, ease }}
               >
                 {label}
               </motion.a>
@@ -852,8 +865,12 @@ function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peek
   );
 }
 
-function PortfolioChat({ project }: { project?: Project }) {
+function PortfolioChat({ project, openingPhase }: { project?: Project; openingPhase?: HomeOpeningPhase }) {
   const reduce = useReducedMotion();
+  const { assistantDelay } = homeEntranceTiming(reduce);
+  const [entranceComplete, setEntranceComplete] = useState(!openingPhase || openingPhase === "settled");
+  const entranceCompleteRef = useRef(entranceComplete);
+  entranceCompleteRef.current = entranceComplete;
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
@@ -872,7 +889,7 @@ function PortfolioChat({ project }: { project?: Project }) {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messageListRef = useRef<HTMLDivElement>(null);
   const contextIdRef = useRef(HOME_CHAT_CONTEXTS[0].id);
-  const shownContextIdsRef = useRef(new Set<string>());
+  const automaticHintSeenRef = useRef(false);
   const contextTimerRef = useRef<number | null>(null);
   const scrollTimerRef = useRef<number | null>(null);
   const petTimerRef = useRef<number | null>(null);
@@ -899,6 +916,11 @@ function PortfolioChat({ project }: { project?: Project }) {
   openRef.current = open;
   activeContextRef.current = activeContext;
   sessionSnapshotRef.current = { messages, draft, mode, activeContext, pageProjectSlug: project?.slug ?? null };
+
+  const rememberAutomaticHint = () => {
+    automaticHintSeenRef.current = true;
+    try { window.sessionStorage.setItem(assistantHintSessionKey, "1"); } catch { /* The current page still remembers the hint. */ }
+  };
 
   const persistChatSession = () => {
     if (!sessionReadyRef.current) return;
@@ -1054,6 +1076,10 @@ function PortfolioChat({ project }: { project?: Project }) {
   useEffect(() => {
     const contexts = getPortfolioChatContexts();
     let welcomeTimer: number | undefined;
+    let welcomeWaitedForLoader = false;
+    try {
+      if (window.sessionStorage.getItem(assistantHintSessionKey) === "1") automaticHintSeenRef.current = true;
+    } catch { /* Automatic hints remain limited for the current page. */ }
 
     const revealContext = () => {
       setHintMode("auto");
@@ -1073,11 +1099,13 @@ function PortfolioChat({ project }: { project?: Project }) {
         setContext(next);
       }
       if (
-        !show || openRef.current || petDragRef.current.active ||
+        !show || !entranceCompleteRef.current || automaticHintSeenRef.current || openRef.current || petDragRef.current.active ||
+        document.visibilityState !== "visible" ||
         document.documentElement.classList.contains("portfolio-loading") ||
-        shownContextIdsRef.current.has(next.id)
+        document.body.classList.contains("menu-is-open")
       ) return;
-      shownContextIdsRef.current.add(next.id);
+      // Welcome and section prompts share one automatic invitation per session.
+      rememberAutomaticHint();
       revealContext();
       pulsePet("pointing", 1500);
     };
@@ -1086,13 +1114,19 @@ function PortfolioChat({ project }: { project?: Project }) {
     syncContext();
 
     const showWelcomeHint = () => {
-      if (document.documentElement.classList.contains("portfolio-loading")) {
+      if (!entranceCompleteRef.current || document.documentElement.classList.contains("portfolio-loading") || document.getElementById("portfolio-boot")) {
+        welcomeWaitedForLoader = true;
         welcomeTimer = window.setTimeout(showWelcomeHint, 300);
+        return;
+      }
+      if (welcomeWaitedForLoader) {
+        welcomeWaitedForLoader = false;
+        welcomeTimer = window.setTimeout(showWelcomeHint, 1800);
         return;
       }
       syncContext(true);
     };
-    welcomeTimer = window.setTimeout(showWelcomeHint, 1800);
+    if (!automaticHintSeenRef.current) welcomeTimer = window.setTimeout(showWelcomeHint, 1800);
 
     const onScroll = () => {
       setContextVisible(false);
@@ -1384,6 +1418,7 @@ function PortfolioChat({ project }: { project?: Project }) {
       closeChat();
       return;
     }
+    rememberAutomaticHint();
     setOpen(true);
     setContextVisible(false);
     pulsePet("waving", 1100);
@@ -1399,6 +1434,8 @@ function PortfolioChat({ project }: { project?: Project }) {
 
   const showPetHint = () => {
     if (open || petDragging) return;
+    // An intentional visit also prevents a later automatic prompt repeating it.
+    rememberAutomaticHint();
     setContext(getNearestPortfolioChatContext(getPortfolioChatContexts()));
     setHintMode("intent");
     setContextVisible(true);
@@ -1417,10 +1454,19 @@ function PortfolioChat({ project }: { project?: Project }) {
   } as CSSProperties;
 
   return (
-    <div
+    <motion.div
       ref={chatRef}
       className="portfolio-chat"
-      style={petPositionStyle}
+      style={{ ...petPositionStyle, visibility: openingPhase === "waiting" ? "hidden" : undefined }}
+      initial={false}
+      animate={openingPhase}
+      variants={openingPhase ? {
+        waiting: { opacity: 0, transition: { duration: 0 } },
+        visible: { opacity: 1, transition: { duration: reduce ? 0.28 : 0.42, delay: assistantDelay, ease } },
+        settled: { opacity: 1, transition: { duration: 0 } },
+      } : undefined}
+      onAnimationComplete={phase => { if (phase === "visible") setEntranceComplete(true); }}
+      inert={!entranceComplete}
       data-chat-mode={mode}
       data-chat-open={open}
       data-pet-state={visiblePetState}
@@ -1674,18 +1720,64 @@ function PortfolioChat({ project }: { project?: Project }) {
           </motion.section>
         ) : null}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
 function Hero() {
   const reduce = useReducedMotion();
+  const { copyDelay, copyDuration: copyEntranceDuration, actionDelay: actionEntranceDelay, actionDuration } = homeEntranceTiming(reduce);
+  const [copyEntranceOffset, setCopyEntranceOffset] = useState(() =>
+    typeof window === "undefined" ? 2000 : window.innerHeight + 32);
+  const [entrancePhase, setEntrancePhase] = useState(initialHomeOpeningPhase);
+  const [actionReady, setActionReady] = useState(entrancePhase === "settled");
+  const heroHeadingRef = useRef<HTMLHeadingElement>(null);
+  const entrancePlayedRef = useRef(entrancePhase !== "waiting");
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [videoPreloadState, setVideoPreloadState] = useState<"pending" | "disabled" | "loading" | "ready" | "error">("pending");
   const [videoFallbackReason, setVideoFallbackReason] = useState<string>();
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroVisibleRef = useRef(true);
+
+  useLayoutEffect(() => {
+    if (entrancePhase !== "waiting" || entrancePlayedRef.current || !heroHeadingRef.current) return;
+    const root = document.documentElement;
+    const heading = heroHeadingRef.current;
+    const cleanup = () => {
+      observer.disconnect();
+      visibilityObserver.disconnect();
+      window.removeEventListener("portfolio-loader-exit", reveal);
+      window.removeEventListener("resize", updateEntranceOffset);
+      window.removeEventListener("scroll", updateEntranceOffset);
+      document.removeEventListener("visibilitychange", reveal);
+    };
+    const reveal = () => {
+      if (entrancePlayedRef.current || document.visibilityState !== "visible" ||
+        root.classList.contains("portfolio-loading") || document.getElementById("portfolio-boot")) return;
+      // Check the copy itself so a deep link cannot play the entrance offscreen.
+      const rect = heading.getBoundingClientRect();
+      const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+      if (rect.height <= 0 || visibleHeight < Math.min(rect.height * 0.2, 80)) return;
+      entrancePlayedRef.current = true;
+      cleanup();
+      setEntrancePhase("visible");
+    };
+    const observer = new MutationObserver(reveal);
+    const visibilityObserver = new IntersectionObserver(reveal, { threshold: [0, 0.2] });
+    const updateEntranceOffset = () => setCopyEntranceOffset(
+      Math.max(0, window.innerHeight - heading.getBoundingClientRect().top) + 32,
+    );
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+    visibilityObserver.observe(heading);
+    window.addEventListener("portfolio-loader-exit", reveal);
+    window.addEventListener("resize", updateEntranceOffset);
+    window.addEventListener("scroll", updateEntranceOffset, { passive: true });
+    document.addEventListener("visibilitychange", reveal);
+    updateEntranceOffset();
+    reveal();
+    return cleanup;
+  }, [entrancePhase]);
 
   useEffect(() => {
     const connection = (navigator as Navigator & {
@@ -1762,12 +1854,16 @@ function Hero() {
   }, [shouldLoadVideo]);
 
   return (
-    <section className="hero" id="top">
+    <section className="hero" id="top" data-hero-reveal={entrancePhase}>
       <motion.div
         className="hero-media"
-        initial={reduce ? false : { opacity: 0, scale: 1.035, clipPath: "inset(0 0 8% 0)" }}
-        animate={{ opacity: 1, scale: 1, clipPath: "inset(0 0 0% 0)" }}
-        transition={{ duration: 1.25, ease }}
+        initial={false}
+        animate={entrancePhase}
+        variants={{
+          waiting: { opacity: 0, transform: reduce ? "none" : "translate3d(0px, 20px, 0px) scale(1.035)", transition: { duration: 0 } },
+          visible: { opacity: 1, transform: "translate3d(0px, 0px, 0px) scale(1)", transition: { duration: reduce ? 0.7 : 1.1, ease: [0.25, 0.1, 0.25, 1] } },
+          settled: { opacity: 1, transform: "none", transition: { duration: 0 } },
+        }}
       >
         <picture className="hero-poster" aria-hidden="true">
           <source
@@ -1828,28 +1924,37 @@ function Hero() {
       <div className="hero-video-wash" aria-hidden="true" />
       <motion.div
         className="hero-footer"
-        initial={reduce ? false : { y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5, duration: 1, ease }}
+        initial={false}
+        animate={entrancePhase}
+        variants={{ waiting: {}, visible: {}, settled: {} }}
       >
         <div className="hero-copy">
-          <motion.h1
-            initial={reduce ? false : { y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.8, ease }}
-          >
-            <span className="hero-name">我是李家豪</span>
-            <span className="hero-statement">
-              <span className="hero-role-en">AI</span> 体验产品设计师，
-              <br />
-              让复杂业务更清晰，让智能体验更可控。
-            </span>
-          </motion.h1>
+          <h1 ref={heroHeadingRef}>
+            <motion.span style={{ display: "block" }} variants={{
+              waiting: { transform: `translate3d(0px, ${copyEntranceOffset}px, 0px)`, opacity: 0, transition: { duration: 0 } },
+              visible: { transform: "translate3d(0px, 0px, 0px)", opacity: 1, transition: {
+                transform: { duration: copyEntranceDuration, delay: copyDelay, ease: [0.25, 0.1, 0.25, 1] },
+                opacity: { duration: copyEntranceDuration, delay: copyDelay, ease: "linear" },
+              } },
+              settled: { transform: "translate3d(0px, 0px, 0px)", opacity: 1, transition: { duration: 0 } },
+            }}>
+              <span className="hero-name">我是李家豪</span>
+              <span className="hero-statement">
+                <span className="hero-role-en">AI</span> 体验产品设计师，
+                <br />
+                让复杂业务更清晰，让智能体验更可控。
+              </span>
+            </motion.span>
+          </h1>
           <motion.div
             className="hero-actions"
-            initial={reduce ? false : { y: 16, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1, duration: 0.8, ease }}
+            inert={!actionReady}
+            onAnimationComplete={phase => { if (phase === "visible") setActionReady(true); }}
+            variants={{
+              waiting: { opacity: 0 },
+              visible: { opacity: 1, transition: { duration: actionDuration, delay: actionEntranceDelay, ease: "easeOut" } },
+              settled: { opacity: 1, transition: { duration: 0 } },
+            }}
           >
             <a className="hero-contact-button" href="#work">
               <span>查看精选作品</span>
@@ -1876,20 +1981,23 @@ function SectionIntro({
   return (
     <motion.div
       className="section-intro"
-      initial={reduce ? false : { opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.55 }}
-      transition={{ duration: 0.52, ease }}
+      initial={reduce ? false : "rest"}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={{
+        rest: { opacity: 0.85, y: 12 },
+        visible: { opacity: 1, y: 0, transition: { duration: reduce ? 0 : 0.42, ease, delayChildren: reduce ? 0 : 0.08 } },
+      }}
     >
       <h2>{title}</h2>
       {description ? <p>{description}</p> : null}
       <motion.span
         className="section-intro-rule"
         aria-hidden="true"
-        initial={reduce ? false : { scaleX: 0.18, opacity: 0.3 }}
-        whileInView={{ scaleX: 1, opacity: 1 }}
-        viewport={{ once: true, amount: 0.8 }}
-        transition={{ duration: 0.7, delay: 0.08, ease }}
+        variants={{
+          rest: { scaleX: 0.6, opacity: 0.85 },
+          visible: { scaleX: 1, opacity: 1, transition: { duration: reduce ? 0 : 0.36, ease } },
+        }}
       />
     </motion.div>
   );
@@ -1979,7 +2087,7 @@ function ProjectCard({
     let frame = 0;
 
     const render = () => {
-      const approachDistance = Math.min(380, Math.max(260, window.innerHeight * 0.46));
+      const approachDistance = Math.min(260, Math.max(200, window.innerHeight * 0.28));
       const start = nextCardTop - approachDistance;
       const end = nextCardTop - stickyTop;
       const progress = (window.scrollY - start) / Math.max(1, end - start);
@@ -2024,7 +2132,7 @@ function ProjectCard({
   const opacity = useTransform(
     smoothProgress,
     [0, 0.2, 1],
-    [1, 0.985, reduce ? 1 : 0.78],
+    [1, 0.995, reduce ? 1 : 0.9],
   );
   const y = useTransform(
     smoothProgress,
@@ -2198,10 +2306,10 @@ function ExperienceSection() {
                   {expanded ? (
                     <motion.div
                       className="experience-panel"
-                      initial={{ height: 0, opacity: 0 }}
+                      initial={reduce ? false : { height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.45, ease }}
+                      exit={reduce ? undefined : { height: 0, opacity: 0 }}
+                      transition={{ duration: reduce ? 0 : 0.28, ease }}
                     >
                       <div>
                         <p>{experience.summary}</p>
@@ -2323,25 +2431,18 @@ function ContactSection() {
 }
 
 function HomePage() {
+  const openingPhase = useHomeOpeningPhase();
+  useHomeAnchorNavigation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [highlightedAbilityId, setHighlightedAbilityId] = useState<AbilityId | null>(null);
-  const reduce = useReducedMotion();
-
-  const showRelatedProjects = (abilityId: AbilityId) => {
+  const showRelatedProjects = (abilityId: AbilityId, keyboard = false) => {
     setHighlightedAbilityId(abilityId);
     try {
       window.sessionStorage.setItem("portfolio-work-highlight", abilityId);
     } catch {
       // Keep the current-page highlight available when storage is unavailable.
     }
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        document.getElementById("work")?.scrollIntoView({
-          behavior: reduce ? "auto" : "smooth",
-          block: "start",
-        });
-      });
-    });
+    scrollToHomeSection("work", keyboard);
   };
 
   const clearProjectHighlight = () => {
@@ -2424,7 +2525,7 @@ function HomePage() {
 
   return (
     <>
-      <SiteNav onMenu={() => setMenuOpen(true)} />
+      <SiteNav onMenu={() => setMenuOpen(true)} openingPhase={openingPhase} />
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
       <main className="portfolio-home">
         <Hero />
@@ -2441,7 +2542,7 @@ function HomePage() {
         <ContactSection />
       </main>
       <BackToTop />
-      <PortfolioChat />
+      <PortfolioChat openingPhase={openingPhase} />
     </>
   );
 }

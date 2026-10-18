@@ -21,6 +21,8 @@ function loadSceneModule() {
 export function CapabilityVisual({ abilityId }: { abilityId: AbilityId }) {
   const hostRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<SceneController | undefined>(undefined);
+  const transitionRef = useRef<Animation | null>(null);
+  const previousAbilityRef = useRef(abilityId);
   const reducedMotion = useReducedMotion();
   const presentationRef = useRef(capabilitySceneSpecs[abilityId]);
   presentationRef.current = { ...capabilitySceneSpecs[abilityId], reducedMotion: Boolean(reducedMotion) };
@@ -47,14 +49,29 @@ export function CapabilityVisual({ abilityId }: { abilityId: AbilityId }) {
     });
     return () => {
       cancelled = true;
+      transitionRef.current?.cancel();
+      transitionRef.current = null;
       controller?.dispose();
       if (sceneRef.current === controller) sceneRef.current = undefined;
     };
-  }, [reducedMotion]);
+  }, []);
 
   useEffect(() => {
+    const changed = previousAbilityRef.current !== abilityId;
+    previousAbilityRef.current = abilityId;
+    transitionRef.current?.cancel();
+    transitionRef.current = null;
+    // setSpec draws the new first frame synchronously in the existing canvas.
     sceneRef.current?.setSpec(presentationRef.current);
-  }, [abilityId, reducedMotion]);
+    if (!changed || state !== "ready" || reducedMotion || !hostRef.current?.animate) return;
+    const transition = hostRef.current.animate([{ opacity: 0.8 }, { opacity: 1 }], {
+      duration: 200, easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+    });
+    transitionRef.current = transition;
+    transition.onfinish = () => {
+      if (transitionRef.current === transition) transitionRef.current = null;
+    };
+  }, [abilityId, reducedMotion, state]);
 
   return <div className="capability-visual" ref={hostRef} role="img"
     aria-label={capabilitySceneDescriptions[abilityId]} aria-busy={state === "loading"}

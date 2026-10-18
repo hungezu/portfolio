@@ -4,6 +4,7 @@ import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
 import Pause from "lucide-react/dist/esm/icons/pause.mjs";
 import Play from "lucide-react/dist/esm/icons/play.mjs";
 import Plus from "lucide-react/dist/esm/icons/plus.mjs";
+import { motion, useReducedMotion } from "motion/react";
 import { useEffect, useLayoutEffect, useRef, useState, type AnimationEvent, type CSSProperties, type MouseEvent } from "react";
 import { abilities, projects, type AbilityId } from "./portfolio-data";
 import { CapabilityVisual } from "./capability-visual";
@@ -54,13 +55,14 @@ const presentations: Record<AbilityId, {
 
 type CapabilitySectionProps = {
   highlightedAbilityId: AbilityId | null;
-  onShowProjects: (abilityId: AbilityId) => void;
+  onShowProjects: (abilityId: AbilityId, keyboard?: boolean) => void;
   onOpenEvidence: (event: MouseEvent<HTMLAnchorElement>, slug: string, anchor?: string) => void;
 };
 
 export function CapabilitySection({
   highlightedAbilityId, onShowProjects, onOpenEvidence,
 }: CapabilitySectionProps) {
+  const reduce = useReducedMotion();
   const [activeId, setActiveId] = useState<AbilityId>("ai-experience");
   const [expandedId, setExpandedId] = useState<AbilityId | null>("ai-experience");
   const [animateDisclosure, setAnimateDisclosure] = useState(false);
@@ -203,11 +205,17 @@ export function CapabilitySection({
 
   return <section className="section capability-section" id="ability" aria-label="核心能力">
     <div className="section-shell capability-shell">
-      <header className="section-intro capability-section-heading">
+      <motion.header className="section-intro capability-section-heading"
+        initial={reduce ? false : "hidden"} whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={{ hidden: { opacity: 0.85, y: 12 }, visible: { opacity: 1, y: 0 } }}
+        transition={{ duration: reduce ? 0 : 0.42, ease: [0.16, 1, 0.3, 1] }}>
         <h2>核心能力</h2>
         <p>从方法，到项目实践。</p>
-        <span className="section-intro-rule" aria-hidden="true" />
-      </header>
+        <motion.span className="section-intro-rule" aria-hidden="true"
+          variants={{ hidden: { scaleX: 0.6, opacity: 0.85 }, visible: { scaleX: 1, opacity: 1 } }}
+          transition={{ duration: reduce ? 0 : 0.36, delay: reduce ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }} />
+      </motion.header>
       <div className="capability-layout" onPointerDownCapture={() => setKeyboardReading(false)} onFocusCapture={event => {
         if (event.target.matches(":focus-visible")) {
           cycleRunningRef.current = false;
@@ -290,6 +298,7 @@ export function CapabilitySection({
               <h3>相关项目 <span>{String(matchedProjects.length).padStart(2, "0")}</span></h3>
             </div>
             <div
+              key={activeId}
               className="capability-project-links"
               aria-label={`${current.name}对应项目`}
             >
@@ -320,7 +329,7 @@ export function CapabilitySection({
               type="button"
               className="capability-project-action"
               aria-controls="work"
-              onClick={() => { holdForReading(); onShowProjects(activeId); }}
+              onClick={event => { holdForReading(); onShowProjects(activeId, event.detail === 0); }}
             >
               <span>在作品区查看 {matchedProjects.length} 个项目</span>
               <ArrowUpRight size={18} strokeWidth={1.5} aria-hidden="true" />

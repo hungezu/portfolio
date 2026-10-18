@@ -142,8 +142,8 @@
     <script>
       window.__PORTFOLIO_BASE__ = "/portfolio";
     </script>
-    <script type="module" crossorigin src="/portfolio/assets/index-DHlpIrL8.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-BVRE3Gip.css">
+    <script type="module" crossorigin src="/portfolio/assets/index-D4wtFxto.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-B3RI5X7X.css">
     <link rel="modulepreload" crossorigin href="/portfolio/assets/capability-scene-BwP67xJ2.js" fetchpriority="low" data-capability-preload />
   </head>
   <body>
@@ -287,6 +287,7 @@
               window.setTimeout(() => {
                 document.documentElement.classList.add("portfolio-loader-seen");
                 loader.remove();
+                window.dispatchEvent(new Event("portfolio-loader-exit"));
               }, reducedMotion ? 90 : 450);
             }, reducedMotion ? 100 : 500);
           }, reducedMotion ? 80 : 440);
