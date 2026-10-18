@@ -1,4 +1,4 @@
-export const OUT_OF_SCOPE_REPLY = "这部分超出了我掌握的作品集资料。我可以帮你了解 Leo 的项目、设计职责和工作方式，也可以带你找到联系方式。";
+export const OUT_OF_SCOPE_REPLY = "这部分超出了我掌握的作品集资料。可以继续聊我的项目、设计职责和工作方式，也可以带你找到联系方式。";
 
 export type ChatReference = { label: string; href: string; kind: "section" | "project" };
 export type ChatReplyContext = { projectSlug?: string; entryIds: string[] };
@@ -16,38 +16,38 @@ const project = (label: string, slug: string, anchor = ""): ChatReference => ({ 
 /** 只索引作品集中已经公开的内容；示例、设计目标和验证计划不能表述为真实业务成效。 */
 export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   {
-    id: "profile", title: "认识 Leo",
-    content: "李家豪（Leo.li）是一名 AI 体验产品设计师，项目覆盖 AI 智能问数、复杂 B 端系统、设计系统与数据可视化。他关注的是：让用户理解产品正在做什么，能控制过程，也能核对结果。",
+    id: "profile", title: "认识我",
+    content: "我是一名 AI 体验产品设计师，项目覆盖 AI 智能问数、复杂 B 端系统、设计系统与数据可视化。我关注的是：让用户理解产品正在做什么，能控制过程，也能核对结果。",
     keywords: ["李家豪", "Leo", "介绍", "是谁", "背景", "个人", "职业定位", "做什么"],
     references: [section("查看个人介绍", "top")],
   },
   {
-    id: "capability-overview", title: "Leo 擅长解决什么问题",
-    content: "可以从三个方向了解他的能力：\n\n- **AI 体验**：澄清模糊问题，让等待、结果与异常有明确反馈。\n- **复杂系统**：梳理角色与业务任务，建立可复用的页面、组件和状态规则。\n- **跨端与数据表达**：组织高密度信息，并将方案交付到 Web、App 和大屏。",
+    id: "capability-overview", title: "我擅长解决什么问题",
+    content: "可以从三个方向了解我的能力：\n\n- **AI 体验**：澄清模糊问题，让等待、结果与异常有明确反馈。\n- **复杂系统**：梳理角色与业务任务，建立可复用的页面、组件和状态规则。\n- **跨端与数据表达**：组织高密度信息，并将方案交付到 Web、App 和大屏。",
     keywords: ["能力", "擅长", "优势", "技能", "长处", "强项", "会什么", "能解决"],
     references: [section("查看能力与项目证据", "ability")],
   },
   {
     id: "assistant-scope", title: "我能帮你了解什么",
-    content: "我是 Leo 的作品集助手，可以介绍他的公开项目、设计职责和工作经历，也能帮你定位案例章节。想快速了解，可以从「他擅长什么」或「先看哪个项目」开始。",
+    content: "我是李家豪的 AI 分身，可以结合这份作品集，聊聊我的项目、设计职责和工作经历，也能帮你找到对应的案例章节。你可以从「你擅长什么」或「先看哪个项目」开始。",
     keywords: ["你是谁", "你叫什么", "你能", "可以问什么", "能回答什么", "帮助", "范围"],
     references: [section("浏览精选作品", "work")],
   },
   {
-    id: "contact", title: "联系 Leo",
-    content: "可以通过微信 **Hungezu**、邮箱 **2146953949@qq.com** 或手机 **13670115683** 联系李家豪。联系区也提供了微信二维码。",
+    id: "contact", title: "联系我",
+    content: "可以通过微信 **Hungezu**、邮箱 **2146953949@qq.com** 或手机 **13670115683** 联系我。联系区也提供了微信二维码。",
     keywords: ["联系", "邮箱", "邮件", "微信", "手机", "电话", "联络", "约聊"],
     references: [section("打开联系区", "contact")],
   },
   {
-    id: "project-overview", title: "Leo 做过哪些项目",
+    id: "project-overview", title: "我做过哪些项目",
     content: "作品集中的项目覆盖几个方向：\n\n- **AI 与平台体验**：国科信、招财 Smart。\n- **财税系统与跨端设计**：税纪云、国家能源集团报税平台。\n- **数据表达**：可视化大屏项目合集。\n\n你可以按感兴趣的方向继续了解项目职责、设计难点和具体方案。",
     keywords: ["项目", "作品", "案例", "有哪些", "做过什么", "项目概览"],
     references: [section("浏览全部精选作品", "work"), project("查看国科信案例", "gkx"), project("查看招财 Smart 案例", "zhaocai-smart")],
   },
   {
     id: "project-recommendation", title: "如果只看一个项目",
-    content: "建议先看 **国科信（深圳国际科技信息中心）**。这个案例把多系统体验、AI 辅助设计与规范交付串在一起，比较完整地展示了 Leo 如何做设计判断。\n\n可以先看**跨系统策略**，再看 **AI 原型与人工校正**，最后看**规范和交付评审**。如果想继续了解 AI 问数体验，可以看招财 Smart；跨端财税流程则可以看税纪云。",
+    content: "建议先看 **国科信（深圳国际科技信息中心）**。这个案例把多系统体验、AI 辅助设计与规范交付串在一起，比较完整地展示了我如何做设计判断。\n\n可以先看**跨系统策略**，再看 **AI 原型与人工校正**，最后看**规范和交付评审**。如果想继续了解 AI 问数体验，可以看招财 Smart；跨端财税流程则可以看税纪云。",
     keywords: ["推荐项目", "推荐案例", "先看哪个", "代表项目", "只看一个"],
     references: [project("国科信 · 跨系统策略", "gkx", "gkx-systems"), project("国科信 · AI 原型实践", "gkx", "nsp-prototype"), project("国科信 · 规范与交付", "gkx", "gkx-design-system")],
   },
@@ -65,25 +65,25 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "experience-tax", title: "财税产品经历",
-    content: "在答税科技，Leo 独立推进智汇算企业版新功能的 UX/UI 设计；在华盟财税科技，他主导税纪云 2.0 Web / App 改版，并独立负责国家能源集团报税平台从 0 到 1 的 UI 与组件体系设计。",
+    content: "在答税科技，我独立推进智汇算企业版新功能的 UX/UI 设计；在华盟财税科技，我主导税纪云 2.0 Web / App 改版，并独立负责国家能源集团报税平台从 0 到 1 的 UI 与组件体系设计。",
     keywords: ["答税", "华盟", "智汇算", "财税经历", "以前", "过去"],
     references: [section("查看工作经历", "experience"), project("查看税纪云案例", "tax-cloud")],
   },
   {
     id: "ai-experience", title: "AI 体验设计",
-    content: "Leo 将 AI 的不确定性转成用户可以理解和处理的状态：提问含糊时确认条件，执行中说明阶段并允许停止，结果出现后提供口径与来源，失败时保留条件和恢复入口。招财 Smart 展示了这些设计如何串成完整任务。",
+    content: "我将 AI 的不确定性转成用户可以理解和处理的状态：提问含糊时确认条件，执行中说明阶段并允许停止，结果出现后提供口径与来源，失败时保留条件和恢复入口。招财 Smart 展示了这些设计如何串成完整任务。",
     keywords: ["AI 体验", "AI体验", "智能体验", "不确定性", "可信", "可控", "对话产品", "人机协作"],
     references: [project("招财 Smart · 完整任务演示", "zhaocai-smart", "zcs-core-interaction")],
   },
   {
-    id: "ai-workflow", title: "Leo 如何与 AI 协作",
-    content: "他使用 Codex、Gemini 辅助需求拆解、可运行原型、界面探索与 Markdown 规范整理。范围判断、业务规则核对、体验评审和最终交付由他完成。\n\n国科信案例还展示了：把产品提供的 AI 原型按项目规范校正，再用交互复现检查查询、筛选和恢复规则。",
+    id: "ai-workflow", title: "我如何与 AI 协作",
+    content: "我使用 Codex、Gemini 辅助需求拆解、可运行原型、界面探索与 Markdown 规范整理。范围判断、业务规则核对、体验评审和最终交付由我完成。\n\n国科信案例还展示了：把产品提供的 AI 原型按项目规范校正，再用交互复现检查查询、筛选和恢复规则。",
     keywords: ["AI 工作流", "AI工作流", "AI协作", "AI 协作", "Codex", "Gemini", "工具", "人工", "原型"],
     references: [project("国科信 · AI 实践与人工校正", "gkx", "nsp-prototype")],
   },
   {
     id: "collaboration", title: "如何与产品、研发协作",
-    content: "Leo 会把任务流、组件状态和异常反馈写进交付规范，让评审意见对应具体页面与预期行为。国科信案例保留了合作方 UI 评审记录；招财 Smart 则明确区分设计交付、业务口径确认与研发实现，便于逐项核对。",
+    content: "我会把任务流、组件状态和异常反馈写进交付规范，让评审意见对应具体页面与预期行为。国科信案例保留了合作方 UI 评审记录；招财 Smart 则明确区分设计交付、业务口径确认与研发实现，便于逐项核对。",
     keywords: ["开发", "研发", "产品经理", "团队", "协作", "合作", "沟通", "评审", "走查", "交付"],
     references: [project("国科信 · 交付评审与核对", "gkx", "gkx-supplier"), project("招财 Smart · 协作边界", "zhaocai-smart", "zcs-ai-strategy")],
   },
@@ -106,38 +106,38 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
     references: [project("查看可视化大屏合集", "data-visualisation"), project("招财 Smart · 结果复用", "zhaocai-smart", "zcs-markdown-system")],
   },
   {
-    id: "design-approach", title: "Leo 的设计方法",
+    id: "design-approach", title: "我的设计方法",
     content: "先明确业务任务与边界，再比较页面结构、交互状态和异常路径的取舍，用原型检查关键规则，最后沉淀为组件与规范。案例里可以看到具体判断：何时先澄清问题、何时用弹窗或独立工作区，以及失败后如何继续任务。",
     keywords: ["设计方法", "设计思路", "设计决策", "取舍", "原则", "研究", "思考", "工作方式", "难点", "挑战"],
     references: [project("招财 Smart · 关键设计", "zhaocai-smart", "zcs-clarification"), project("国科信 · 交互决策", "gkx", "nsp-rules")],
   },
   {
     id: "project-gkx", title: "国科信是什么项目",
-    content: "国科信（深圳国际科技信息中心）是多系统平台体验设计项目，范围包括智慧门户和四大主要业务系统。案例围绕跨系统操作规则、AI 原型校正、设计规范和合作方交付评审，展示 Leo 的设计与协作过程。",
+    content: "国科信（深圳国际科技信息中心）是多系统平台体验设计项目，范围包括智慧门户和四大主要业务系统。案例围绕跨系统操作规则、AI 原型校正、设计规范和合作方交付评审，展示我的设计与协作过程。",
     keywords: ["国科信", "深圳国际科技信息中心", "gkx", "平台项目", "背景"],
     references: [project("打开国科信案例", "gkx", "gkx-project-context")],
   },
   {
     id: "project-gkx-challenge", title: "国科信的设计难点",
-    content: "主要难点是**多系统要容易学，各类任务又需要不同空间**。论文管理重在查找与维护，智能阅读需要稳定阅读区，模型广场重在发现与选择。Leo 统一导航、查询、选择和反馈规则，再按任务选择列表、弹窗或独立工作区，并把这些规则用于多方交付核对。",
+    content: "主要难点是**多系统要容易学，各类任务又需要不同空间**。论文管理重在查找与维护，智能阅读需要稳定阅读区，模型广场重在发现与选择。我统一导航、查询、选择和反馈规则，再按任务选择列表、弹窗或独立工作区，并把这些规则用于多方交付核对。",
     keywords: ["国科信难点", "国科信挑战", "跨系统", "统一", "一致性", "取舍"],
     references: [project("国科信 · 跨系统策略", "gkx", "gkx-systems"), project("国科信 · 交互决策", "gkx", "nsp-rules")],
   },
   {
-    id: "project-gkx-role", title: "Leo 在国科信负责什么",
-    content: "公开职责包括交互与 UI 设计、门户样式规范、定制组件及协作审核。他借助 AI 编写和维护设计 MD，按项目规范校正原型，并参与合作方 UI 评审，将修改要求与处理状态记录下来。",
+    id: "project-gkx-role", title: "我在国科信负责什么",
+    content: "我负责交互与 UI 设计、门户样式规范、定制组件及协作审核。我借助 AI 编写和维护设计 MD，按项目规范校正原型，并参与合作方 UI 评审，将修改要求与处理状态记录下来。",
     keywords: ["国科信职责", "国科信负责", "门户规范", "协作审核"],
     references: [project("国科信 · 规范与交付", "gkx", "gkx-design-system"), project("国科信 · 署名评审记录", "gkx", "gkx-supplier")],
   },
   {
     id: "project-gkx-ai", title: "国科信中的 AI 协作",
-    content: "**AI 辅助原型与规范整理，Leo 负责设计判断与核对。**案例里有两项具体实践：\n\n- 按项目规范调整产品提供的 AI 原型，集中查询操作区，整理卡片信息层级。\n- 将论文查询要求写成 MD，用交互复现核对关键词匹配、机构筛选、空结果和重置，再切换专利记录检查规则复用。",
+    content: "**AI 辅助原型与规范整理，我负责设计判断与核对。**案例里有两项具体实践：\n\n- 按项目规范调整产品提供的 AI 原型，集中查询操作区，整理卡片信息层级。\n- 将论文查询要求写成 MD，用交互复现核对关键词匹配、机构筛选、空结果和重置，再切换专利记录检查规则复用。",
     keywords: ["国科信AI", "国科信原型", "AI工作流", "Codex", "Markdown"],
     references: [project("国科信 · AI 实践与核对", "gkx", "nsp-prototype")],
   },
   {
     id: "project-gkx-collaboration", title: "国科信如何推进协作交付",
-    content: "Leo 用共享规范对齐页面与操作规则，参与合作方 UI 评审，并在台账中保留模块、日期、修改要求和处理状态。案例提供了署名评审记录，可核对具体问题的处理；它也明确提出，后续应继续补齐修改前后页面与复核结论。",
+    content: "我用共享规范对齐页面与操作规则，参与合作方 UI 评审，并在台账中保留模块、日期、修改要求和处理状态。案例提供了署名评审记录，可核对具体问题的处理；它也明确提出，后续应继续补齐修改前后页面与复核结论。",
     keywords: ["国科信交付", "合作方", "评审", "研发", "沟通"],
     references: [project("国科信 · 交付评审与核对", "gkx", "gkx-supplier")],
   },
@@ -149,7 +149,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "project-zhaocai", title: "招财 Smart 是什么项目",
-    content: "招财 Smart 面向财务人员、经营分析人员与业务负责人，让用户用自然语言查询经营数据。Leo 的设计覆盖口径确认、查询反馈、结果依据与看板复用，重点是让用户在使用结论前核对条件和来源。",
+    content: "招财 Smart 面向财务人员、经营分析人员与业务负责人，让用户用自然语言查询经营数据。我的设计覆盖口径确认、查询反馈、结果依据与看板复用，重点是让用户在使用结论前核对条件和来源。",
     keywords: ["招财", "Smart", "智能问数", "经营分析", "背景"],
     references: [project("打开招财 Smart 案例", "zhaocai-smart", "zcs-project-overview")],
   },
@@ -160,8 +160,8 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
     references: [project("招财 Smart · 三个关键设计判断", "zhaocai-smart", "zcs-clarification")],
   },
   {
-    id: "project-zhaocai-role", title: "Leo 在招财 Smart 负责什么",
-    content: "Leo 负责招财 Smart 的 UX/UI，覆盖提问与口径确认、查询过程反馈、结果解释与依据、看板交互和回答输出规范。公开交付包含任务流、状态策略、交互与回答规范；指标口径由产品和业务确认，查询服务及权限校验由研发实现。",
+    id: "project-zhaocai-role", title: "我在招财 Smart 负责什么",
+    content: "我负责招财 Smart 的 UX/UI，覆盖提问与口径确认、查询过程反馈、结果解释与依据、看板交互和回答输出规范。公开交付包含任务流、状态策略、交互与回答规范；指标口径由产品和业务确认，查询服务及权限校验由研发实现。",
     keywords: ["招财职责", "Smart职责", "负责", "UX/UI", "交付"],
     references: [project("招财 Smart · 项目概况", "zhaocai-smart", "zcs-project-overview"), project("招财 Smart · 设计与工程分工", "zhaocai-smart", "zcs-ai-strategy")],
   },
@@ -191,7 +191,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "project-zhaocai-ai", title: "招财 Smart 的 AI 与工程边界",
-    content: "设计方案中，AI 理解问题并组织表达，用户确认业务含义，查询服务负责执行与权限校验。Leo 交付任务流、状态策略、交互和回答规范。作品集当前是前端交互演示，未连接真实 AI 或数据库，不能用演示表现证明模型准确率或线上效果。",
+    content: "设计方案中，AI 理解问题并组织表达，用户确认业务含义，查询服务负责执行与权限校验。我交付任务流、状态策略、交互和回答规范。作品集当前是前端交互演示，未连接真实 AI 或数据库，不能用演示表现证明模型准确率或线上效果。",
     keywords: ["AI协作", "AI 协作", "AI工作流", "模型", "算法", "工程", "权限", "数据边界", "AI负责"],
     references: [project("招财 Smart · AI 与工程协作边界", "zhaocai-smart", "zcs-ai-strategy")],
   },
@@ -203,33 +203,33 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "project-tax-cloud", title: "税纪云：职责与设计重点",
-    content: "Leo 主导税纪云 2.0 Web / App 体验改版，重构申报、审批、表单、筛选与税表等核心流程，并建立跨端设计系统。设计重点是面向决策、管理和执行角色，组织高密度财税任务，同时保持多页面和跨端规则一致。",
+    content: "我主导税纪云 2.0 Web / App 体验改版，重构申报、审批、表单、筛选与税表等核心流程，并建立跨端设计系统。设计重点是面向决策、管理和执行角色，组织高密度财税任务，同时保持多页面和跨端规则一致。",
     keywords: ["税纪云", "全税种", "申报", "审批", "财税 SaaS", "跨端"],
     references: [project("打开税纪云案例", "tax-cloud")],
   },
   {
     id: "project-energy-tax", title: "国能报税平台：职责与设计重点",
-    content: "Leo 独立负责国家能源集团报税平台从 0 到 1 的 UI 设计，覆盖首页、纳税申报与综合管理工作台，并建立栅格、组件和缺省状态规范。设计重点是将业务内容组织为明确的工作台和共用规则；公开材料已经脱敏。",
+    content: "我独立负责国家能源集团报税平台从 0 到 1 的 UI 设计，覆盖首页、纳税申报与综合管理工作台，并建立栅格、组件和缺省状态规范。设计重点是将业务内容组织为明确的工作台和共用规则；公开材料已经脱敏。",
     keywords: ["国家能源", "国能", "能源报税", "报税平台", "定制项目"],
     references: [project("打开国能报税平台案例", "energy-tax")],
   },
   {
     id: "project-data-visualisation", title: "可视化大屏：职责与设计重点",
-    content: "大屏合集覆盖汽车、轨道交通、新能源、电子与地产等行业的税务数智场景。Leo 负责大屏视觉、信息层级和图表编排，以地图、指标、趋势与排行组织高密度信息，并沉淀布局与视觉规范。",
+    content: "大屏合集覆盖汽车、轨道交通、新能源、电子与地产等行业的税务数智场景。我负责大屏视觉、信息层级和图表编排，以地图、指标、趋势与排行组织高密度信息，并沉淀布局与视觉规范。",
     keywords: ["可视化大屏", "大屏合集", "汽车", "轨道交通", "新能源", "电子", "地产"],
     references: [project("打开可视化大屏合集", "data-visualisation")],
   },
   {
     id: "public-evidence", title: "目前公开资料的边界",
-    content: "作品集提供了项目背景、职责、设计方案和部分过程证据，但没有公开完整的线上成效统计、模型配置或用户研究原始记录。涉及这些细节时，需要直接与 Leo 沟通；我不会补造数值或经历。",
+    content: "作品集提供了项目背景、职责、设计方案和部分过程证据，但没有公开完整的线上成效统计、模型配置或用户研究原始记录。涉及这些细节时，可以通过联系区与我沟通；这里不会补造数值或经历。",
     keywords: ["成果", "成效", "指标", "提升", "验证", "准确率", "上线", "模型", "算法", "用户研究", "测试人数"],
-    references: [section("联系 Leo 了解更多", "contact")],
+    references: [section("联系我了解更多", "contact")],
   },
   {
     id: "undisclosed-profile", title: "这项个人信息尚未公开",
-    content: "目前作品集没有提供这项信息，我无法代 Leo 确认。可以直接联系他，了解具体安排。",
+    content: "这项信息目前没有在作品集中公开，这里无法确认。可以通过联系区与我沟通具体安排。",
     keywords: ["学历", "毕业", "学校", "大学", "专业", "年龄", "几岁", "到岗", "求职", "离职", "薪资", "薪酬", "薪水", "工资", "期望", "工作地点"],
-    references: [section("联系 Leo", "contact")],
+    references: [section("联系我", "contact")],
   },
   {
     id: "navigation", title: "如何浏览作品集",
@@ -318,7 +318,7 @@ export function isChatQueryInScope(query: string, contextQuery = "") {
   if (GREETING.test(normalized) || THANKS.test(normalized)) return true;
   if (UNRELATED_PATTERNS.some(pattern => pattern.test(normalized))) return false;
   if (PORTFOLIO_SIGNAL.test(normalized) || explicitProjects(normalized).length) return true;
-  if (/你是谁|你叫什么|你能|能问什么|可以问什么|能聊什么|可以聊什么|能帮我|怎么称呼|介绍一下自己|他是谁|他做什么/.test(normalized)) return true;
+  if (/你是谁|你叫什么|你是(?:不是)?(?:本人|李家豪|Leo|AI|机器人|真人)|你能(?:做什么|帮我什么|回答什么|聊什么)|能问什么|可以问什么|能聊什么|可以聊什么|能帮我|怎么称呼|介绍一下自己|他是谁|他做什么|你是做什么的|你做什么/.test(normalized)) return true;
   const context = previousContext(normalized, contextQuery);
   return Boolean(FOLLOW_UP.test(normalized) && context && (PORTFOLIO_SIGNAL.test(context) || explicitProjects(context).length) && !PRIVATE_PATTERNS.some(pattern => pattern.test(context)));
 }
@@ -362,9 +362,9 @@ export function findChatKnowledge(query: string, limit = 5, contextQuery = "") {
   if (!normalized || limit <= 0 || !isChatQueryInScope(normalized, contextQuery)) return [];
   if (GREETING.test(normalized) || THANKS.test(normalized)) return [];
   if (/学历|毕业|学校|大学|专业是什么|年龄|几岁|到岗|求职|离职|薪资|薪酬|薪水|工资|期望|工作地点/.test(normalized)) return entriesFor(["undisclosed-profile"], limit);
-  if (/你是谁|你叫什么|你是(?:不是)?(?:本人|李家豪|Leo)|你能|能问什么|可以问什么|能聊什么|可以聊什么|能帮我/.test(normalized)) return entriesFor(["assistant-scope"], limit);
+  if (/你是谁|你叫什么|你是(?:不是)?(?:本人|李家豪|Leo|AI|机器人|真人)|你能(?:做什么|帮我什么|回答什么|聊什么)|能问什么|可以问什么|能聊什么|可以聊什么|能帮我什么/.test(normalized)) return entriesFor(["assistant-scope"], limit);
   // A project named as the reason for contacting Leo must not override the contact request.
-  if (/联系方式|怎么联系|如何联系|联系(?:一下)?\s*(?:Leo|李家豪|他)|邮箱|微信|手机号|电话|约聊/i.test(normalized)) return entriesFor(["contact"], limit);
+  if (/联系方式|怎么联系|如何联系|联系(?:一下)?\s*(?:Leo|李家豪|他|你)|邮箱|微信|手机号|电话|约聊/i.test(normalized)) return entriesFor(["contact"], limit);
 
   const topic = requestedTopic(normalized);
   const projects = queryProjects(normalized, contextQuery);
@@ -400,7 +400,7 @@ export function findChatKnowledge(query: string, limit = 5, contextQuery = "") {
   if (/复杂系统|B端|B 端|多系统|权限|业务规则|架构|角色/.test(normalized)) return entriesFor(["complex-systems"], limit);
   if (/设计方法|设计思路|方法|决策|取舍|原则|工作方式|怎么做设计|研究|难点|挑战|怎么思考/.test(normalized)) return entriesFor(["design-approach"], limit);
   if (/导航|怎么看|哪里|入口|链接|跳转|章节|首页|目录|浏览/.test(normalized)) return entriesFor(["navigation"], limit);
-  if (/介绍|李家豪|Leo|背景|个人|他是谁|他做什么|做什么/.test(normalized)) return entriesFor(["profile"], limit);
+  if (/介绍|李家豪|Leo|背景|个人|他是谁|他做什么|你是做什么的|你做什么|做什么/.test(normalized)) return entriesFor(["profile"], limit);
   const ranked = chatKnowledge.map((entry, index) => ({ entry, index, score: entry.keywords.reduce((score, keyword) => normalized.toLowerCase().includes(keyword.toLowerCase()) ? score + Math.min(8, keyword.length) : score, 0) }))
     .filter(item => item.score > 0).sort((left, right) => right.score - left.score || left.index - right.index);
   return ranked.length ? [ranked[0].entry] : entriesFor(["assistant-scope"], limit);
@@ -426,7 +426,7 @@ export function buildLocalChatReply(query: string, contextQuery = query, convers
   const inheritedEntries = TOPIC_CONTINUATION.test(normalized) && previous ? entriesFor(previous.entryIds, 2) : [];
   const emptyContext: ChatReplyContext = { entryIds: [] };
   if (!inheritedEntries.length && !isChatQueryInScope(normalized, contextQuery)) return { reply: OUT_OF_SCOPE_REPLY, entries: [] as ChatKnowledgeEntry[], context: emptyContext };
-  if (GREETING.test(normalized)) return { reply: "你好，我是 Leo 的作品集助手。可以聊他的设计能力、工作经历、项目与协作方式，也可以帮你找到联系方式。你想先了解哪一部分？", entries: [] as ChatKnowledgeEntry[], context: emptyContext };
+  if (GREETING.test(normalized)) return { reply: "你好，我是李家豪的 AI 分身。可以聊聊我的设计能力、工作经历、项目与协作方式，也可以帮你找到联系方式。你想先了解哪一部分？", entries: [] as ChatKnowledgeEntry[], context: emptyContext };
   if (THANKS.test(normalized)) return { reply: "不客气，按你的节奏浏览就好。想继续了解项目，或查找联系方式，随时问我。", entries: [] as ChatKnowledgeEntry[], context: emptyContext };
   const entries = inheritedEntries.length ? inheritedEntries : findChatKnowledge(normalized, 2, contextQuery);
   if (!entries.length) return { reply: OUT_OF_SCOPE_REPLY, entries: [] as ChatKnowledgeEntry[], context: emptyContext };
@@ -440,37 +440,37 @@ export function buildLocalChatReply(query: string, contextQuery = query, convers
   return { reply: entries.map(entry => `**${entry.title}**\n\n${entry.content}`).join("\n\n"), entries, context };
 }
 export const CHAT_QUICK_PROMPTS = [
-  "Leo 擅长解决什么设计问题？",
-  "Leo 有哪些工作经历？",
-  "国科信项目里，Leo 负责什么？",
-  "Leo 如何与产品、研发协作？",
+  "你擅长解决什么设计问题？",
+  "你有哪些工作经历？",
+  "国科信项目里，你负责什么？",
+  "你如何与产品、研发协作？",
 ] as const;
 const PROJECT_QUICK_PROMPTS: Record<ProjectSlug, readonly string[]> = {
-  gkx: ["国科信的设计难点是什么？", "Leo 在国科信具体负责什么？", "国科信如何用 AI 辅助设计？", "国科信如何审核合作方交付？"],
-  "zhaocai-smart": ["招财 Smart 的设计难点是什么？", "Leo 在招财 Smart 负责什么？", "招财 Smart 为什么先澄清口径？", "招财 Smart 如何处理查询失败？"],
-  "tax-cloud": ["税纪云主要解决什么问题？", "Leo 在税纪云负责什么？", "税纪云如何处理跨端设计？", "如何联系 Leo 聊聊这个项目？"],
-  "energy-tax": ["国能报税平台是什么项目？", "Leo 在国能报税平台负责什么？", "国能报税平台有哪些设计规范？", "如何联系 Leo 聊聊这个项目？"],
-  "data-visualisation": ["可视化大屏覆盖哪些行业？", "Leo 在可视化大屏中负责什么？", "可视化大屏如何组织信息？", "如何联系 Leo 聊聊这个项目？"],
+  gkx: ["国科信的设计难点是什么？", "你在国科信具体负责什么？", "国科信如何用 AI 辅助设计？", "国科信如何审核合作方交付？"],
+  "zhaocai-smart": ["招财 Smart 的设计难点是什么？", "你在招财 Smart 负责什么？", "招财 Smart 为什么先澄清口径？", "招财 Smart 如何处理查询失败？"],
+  "tax-cloud": ["税纪云主要解决什么问题？", "你在税纪云负责什么？", "税纪云如何处理跨端设计？", "如何联系你聊聊这个项目？"],
+  "energy-tax": ["国能报税平台是什么项目？", "你在国能报税平台负责什么？", "国能报税平台有哪些设计规范？", "如何联系你聊聊这个项目？"],
+  "data-visualisation": ["可视化大屏覆盖哪些行业？", "你在可视化大屏中负责什么？", "可视化大屏如何组织信息？", "如何联系你聊聊这个项目？"],
 };
 export function getChatQuickPrompts(projectSlug?: string): readonly string[] { return PROJECT_QUICK_PROMPTS[projectSlug as ProjectSlug] ?? CHAT_QUICK_PROMPTS; }
 
 const GENERAL_FOLLOW_UP_PROMPTS = [
-  "Leo 擅长解决什么设计问题？", "Leo 有哪些工作经历？", "Leo 如何设计 AI 产品的交互体验？",
-  "Leo 如何梳理复杂系统？", "Leo 如何与产品、研发协作？", "Leo 使用哪些 AI 协作工具？",
-  "Leo 的设计方法是什么？", "Leo 的设计规范如何落地？", "如何联系 Leo？", "如何浏览这份作品集？",
+  "你擅长解决什么设计问题？", "你有哪些工作经历？", "你如何设计 AI 产品的交互体验？",
+  "你如何梳理复杂系统？", "你如何与产品、研发协作？", "你使用哪些 AI 协作工具？",
+  "你的设计方法是什么？", "你的设计规范如何落地？", "如何联系你？", "如何浏览这份作品集？",
 ];
 const TOPIC_FOLLOW_UP_PROMPTS: Record<string, readonly string[]> = {
-  "capability-overview": ["Leo 如何设计 AI 产品的交互体验？", "Leo 如何梳理复杂系统？"],
-  "ai-experience": ["Leo 的设计方法是什么？", "Leo 如何与产品、研发协作？"],
-  "ai-workflow": ["Leo 的设计规范如何落地？", "Leo 如何与产品、研发协作？"],
-  "experience-overview": ["Leo 目前的工作内容是什么？", "Leo 以前的工作有哪些财税项目？"],
-  "experience-current": ["Leo 使用哪些 AI 协作工具？", "Leo 如何与产品、研发协作？"],
-  "experience-tax": ["Leo 如何梳理复杂系统？", "Leo 的设计规范如何落地？"],
-  "collaboration": ["Leo 的设计规范如何落地？", "Leo 使用哪些 AI 协作工具？"],
-  "complex-systems": ["Leo 的设计规范如何落地？", "Leo 的设计方法是什么？"],
-  "design-system": ["Leo 如何与产品、研发协作？", "Leo 使用哪些 AI 协作工具？"],
-  "project-overview": ["Leo 如何设计 AI 产品的交互体验？", "Leo 如何梳理复杂系统？"],
-  "contact": ["Leo 如何与产品、研发协作？", "Leo 擅长解决什么设计问题？"],
+  "capability-overview": ["你如何设计 AI 产品的交互体验？", "你如何梳理复杂系统？"],
+  "ai-experience": ["你的设计方法是什么？", "你如何与产品、研发协作？"],
+  "ai-workflow": ["你的设计规范如何落地？", "你如何与产品、研发协作？"],
+  "experience-overview": ["你目前的工作内容是什么？", "你以前的工作有哪些财税项目？"],
+  "experience-current": ["你使用哪些 AI 协作工具？", "你如何与产品、研发协作？"],
+  "experience-tax": ["你如何梳理复杂系统？", "你的设计规范如何落地？"],
+  "collaboration": ["你的设计规范如何落地？", "你使用哪些 AI 协作工具？"],
+  "complex-systems": ["你的设计规范如何落地？", "你的设计方法是什么？"],
+  "design-system": ["你如何与产品、研发协作？", "你使用哪些 AI 协作工具？"],
+  "project-overview": ["你如何设计 AI 产品的交互体验？", "你如何梳理复杂系统？"],
+  "contact": ["你如何与产品、研发协作？", "你擅长解决什么设计问题？"],
 };
 const PROJECT_FOLLOW_UP_PROMPTS: Record<ProjectSlug, readonly string[]> = {
   gkx: [...PROJECT_QUICK_PROMPTS.gkx, "国科信有哪些可核对的成果？", "国科信的设计规范如何落地？"],
@@ -492,7 +492,7 @@ export function getChatFollowUpPrompts(context: ChatReplyContext, askedQuestions
   }
   const slug = safeContext.projectSlug as ProjectSlug | undefined;
   const candidates = slug
-    ? [...PROJECT_FOLLOW_UP_PROMPTS[slug], "如何联系 Leo 聊聊这个项目？", "如何浏览这份作品集？"]
+    ? [...PROJECT_FOLLOW_UP_PROMPTS[slug], "如何联系你聊聊这个项目？", "如何浏览这份作品集？"]
     : [...safeContext.entryIds.flatMap(id => TOPIC_FOLLOW_UP_PROMPTS[id] ?? []), ...GENERAL_FOLLOW_UP_PROMPTS];
   const prompts: string[] = [];
   for (const prompt of new Set(candidates)) {

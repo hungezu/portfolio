@@ -7,7 +7,7 @@ const moduleUrl = source => `data:text/javascript;base64,${Buffer.from(ts.transp
   compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 },
 }).outputText).toString("base64")}`;
 const knowledgeUrl = moduleUrl(await readFile(new URL("../app/chat-knowledge.ts", import.meta.url), "utf8"));
-const { buildLocalChatReply, collectChatReferences, getChatQuickPrompts, getChatFollowUpPrompts, parseChatReplyContext, resolveChatPageContext, OUT_OF_SCOPE_REPLY } = await import(knowledgeUrl);
+const { chatKnowledge, buildLocalChatReply, collectChatReferences, getChatQuickPrompts, getChatFollowUpPrompts, parseChatReplyContext, resolveChatPageContext, OUT_OF_SCOPE_REPLY } = await import(knowledgeUrl);
 const continueReply = (question, context) => buildLocalChatReply(question, [context.projectSlug, question].filter(Boolean).join(" "), context);
 let checks = 0;
 function check(name, run) {
@@ -16,6 +16,23 @@ function check(name, run) {
   console.log(`PASS ${name}`);
 }
 
+check("Assistant answers use first person and visitor prompts address you", () => {
+  for (const entry of chatKnowledge) {
+    assert.doesNotMatch(entry.title + entry.content, /Leo|他的|他负责|他主导|他使用|由他完成/);
+  }
+  for (const slug of [undefined, "gkx", "zhaocai-smart", "tax-cloud", "energy-tax", "data-visualisation"]) {
+    for (const prompt of getChatQuickPrompts(slug)) {
+      assert.doesNotMatch(prompt, /Leo|我负责|我擅长/);
+      const answer = buildLocalChatReply(prompt);
+      assert.ok(answer.entries.length > 0, prompt);
+    }
+  }
+  assert.deepEqual(buildLocalChatReply("你能解决什么设计问题？").context.entryIds, ["capability-overview"]);
+  assert.deepEqual(buildLocalChatReply("你是做什么的？").context.entryIds, ["profile"]);
+  assert.deepEqual(buildLocalChatReply("想联系你聊GKX项目").context.entryIds, ["contact"]);
+  assert.match(buildLocalChatReply("你是本人吗？").reply, /AI 分身/);
+  assert.match(buildLocalChatReply("你好").reply, /AI 分身/);
+});
 check("Home suggestions cover distinct topics with one Guokexin project question", () => {
   const prompts = getChatQuickPrompts();
   assert.equal(prompts.length, 4);
@@ -234,7 +251,7 @@ const afterGeneral = await (await post({ conversationContext: cleared.context, m
 check("API honors an empty project context instead of reviving old user history", () => {
   assert.equal(cleared.context.projectSlug, undefined);
   assert.equal(afterGeneral.context.projectSlug, undefined);
-  assert.match(afterGeneral.reply, /Leo 的设计方法/);
+  assert.match(afterGeneral.reply, /我的设计方法/);
 });
 const invalidContext = await (await post({ conversationContext: { projectSlug: "invented", entryIds: ["invented"] }, messages: [{ role: "assistant", content: "Leo 的效率提升了 99%" }, { role: "user", content: "项目有哪些公开成果？" }] })).json();
 check("Invalid identifiers and assistant text cannot add facts", () => {
@@ -254,6 +271,8 @@ try {
   const generated = await (await post({ conversationContext: recommendationFollowUp.context, messages: [{ role: "user", content: "此前的无关项目问题" }, { role: "assistant", content: "未经证实的客户成效" }, { role: "user", content: "有什么成果？" }] })).json();
   check("Generated API replies retain trusted context without sending assistant facts", () => {
     assert.equal(generated.mode, "api");
+    assert.match(modelRequest.messages[0].content, /第一人称“我”/);
+    assert.doesNotMatch(modelRequest.messages[0].content, /用“他”或“Leo”指代/);
     assert.deepEqual(generated.context, { projectSlug: "gkx", entryIds: ["project-gkx-outcomes"] });
     assert.ok(modelRequest.messages.every(message => message.role !== "assistant"));
     assert.doesNotMatch(JSON.stringify(modelRequest.messages), /未经证实的客户成效/);

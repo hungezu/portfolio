@@ -468,7 +468,7 @@ const CHAT_WELCOME_MESSAGE: PortfolioChatMessage = {
   id: "welcome",
   role: "assistant",
   content:
-    "**想先了解哪一面？**\n\n我是 Leo 的作品集助手。可以帮你找案例、看经历，也聊设计思路和协作方式。",
+    "**想先了解哪一面？**\n\n我是李家豪的 AI 分身。可以聊聊我的项目经历、设计思路和协作方式。",
 };
 
 function createWelcomeMessage(project?: Project): PortfolioChatMessage {
@@ -476,7 +476,7 @@ function createWelcomeMessage(project?: Project): PortfolioChatMessage {
     ...CHAT_WELCOME_MESSAGE,
     id: createChatMessageId(),
     context: { ...(project ? { projectSlug: project.slug } : {}), entryIds: [] },
-    ...(project ? { content: `**一起看看${project.shortTitle.replace(/\n/g, "")}。**\n\n我可以帮你了解 Leo 在这个项目中的职责、关键决策和交付内容。` } : {}),
+    ...(project ? { content: `**一起看看${project.shortTitle.replace(/\n/g, "")}。**\n\n可以聊聊我在这个项目中的职责、关键决策和交付内容。` } : {}),
   };
 }
 
@@ -654,11 +654,11 @@ type PortfolioChatContext = {
 };
 
 const HOME_CHAT_CONTEXTS: PortfolioChatContext[] = [
-  { id: "home", elementId: "top", text: "想了解 Leo 的设计与经历？点我聊聊。" },
+  { id: "home", elementId: "top", text: "想了解我的设计与经历？点我聊聊。" },
   { id: "ability", elementId: "ability", text: "想看能力对应的案例？可以问我。" },
   { id: "work", elementId: "work", text: "想了解某个项目的职责与难点？可以问我。" },
-  { id: "experience", elementId: "experience", text: "想了解某段经历里 Leo 负责什么？" },
-  { id: "contact", elementId: "contact", text: "想聊合作？这里有 Leo 的联系方式。" },
+  { id: "experience", elementId: "experience", text: "想了解我在某段经历里负责什么？" },
+  { id: "contact", elementId: "contact", text: "想聊合作？这里有我的联系方式。" },
 ];
 
 const PROJECT_CHAT_CONTEXTS: Record<string, PortfolioChatContext[]> = {
@@ -667,7 +667,7 @@ const PROJECT_CHAT_CONTEXTS: Record<string, PortfolioChatContext[]> = {
     { id: "gkx-scope", elementId: "gkx-scope", text: "哪些规则统一，哪些业务差异保留？" },
     { id: "gkx-decisions", elementId: "gkx-decisions", text: "想了解这些设计取舍的依据？可以问我。" },
     { id: "gkx-system", elementId: "gkx-design-system", text: "这里可以试用设计规范和组件。" },
-    { id: "gkx-workflow", elementId: "gkx-workflow", text: "AI 做什么、Leo 判断什么，这里有实例。" },
+    { id: "gkx-workflow", elementId: "gkx-workflow", text: "AI 做什么、我判断什么，这里有实例。" },
     { id: "gkx-validation", elementId: "nsp-prototype", text: "可以操作原型，看看规则怎样落到流程里。" },
     { id: "gkx-collaboration", elementId: "gkx-collaboration", text: "想了解规范怎样用于团队协作？可以问我。" },
     { id: "gkx-outcomes", elementId: "gkx-outcomes", text: "这里收束了交付成果与项目复盘。" },

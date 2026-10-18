@@ -1,4 +1,4 @@
-import { parseChatReplyContext } from "./chat-knowledge";
+import { chatKnowledge, collectChatReferences, parseChatReplyContext } from "./chat-knowledge";
 import type { ChatReplyContext, ChatReference } from "./chat-knowledge";
 
 export type PortfolioChatMessage = {
@@ -22,7 +22,7 @@ export type PortfolioChatSession = {
 };
 
 const SESSION_KEY = "portfolio-chat-session-v1";
-const SESSION_VERSION = 1;
+const SESSION_VERSION = 3;
 const MAX_MESSAGES = 40;
 const MAX_SERIALIZED_LENGTH = 128_000;
 const MODES: readonly PortfolioChatMode[] = ["unknown", "api", "local", "local-fallback", "guardrail"];
@@ -49,7 +49,7 @@ export function parseChatReference(value: unknown): ChatReference | undefined {
   return { label: value.label.trim().slice(0, 80), href, kind: value.kind };
 }
 
-function safeMessage(value: unknown): PortfolioChatMessage | undefined {
+function safeMessage(value: unknown, refreshKnowledge = false): PortfolioChatMessage | undefined {
   if (!record(value) || typeof value.id !== "string" || !/^[a-zA-Z0-9_.:-]{1,80}$/.test(value.id)
     || (value.role !== "assistant" && value.role !== "user")
     || typeof value.content !== "string" || !value.content.trim()) return undefined;
@@ -66,16 +66,33 @@ function safeMessage(value: unknown): PortfolioChatMessage | undefined {
     }
     const context = parseChatReplyContext(value.context);
     if (context) message.context = context;
+    // Older replies can be refreshed from trusted IDs without embedding retired names in the bundle.
+    if (refreshKnowledge && value.state !== "stopped" && context?.entryIds.length) {
+      const entries = context.entryIds.map(id => chatKnowledge.find(entry => entry.id === id)).filter(entry => entry !== undefined);
+      if (entries.length) {
+        message.content = entries.map(entry => `**${entry.title}**\n\n${entry.content}`).join("\n\n").slice(0, 1800);
+        const references = collectChatReferences(entries, 3);
+        if (references.length) message.references = references;
+        else delete message.references;
+      }
+    }
+    if (refreshKnowledge && value.state !== "stopped" && !context?.entryIds.length) {
+      message.content = message.content
+        .replace("我是 Leo 的作品集助手。可以帮你找案例、看经历，也聊设计思路和协作方式。", "我是李家豪的 AI 分身。可以聊聊我的项目经历、设计思路和协作方式。")
+        .replace("我可以帮你了解 Leo 在这个项目中的职责、关键决策和交付内容。", "可以聊聊我在这个项目中的职责、关键决策和交付内容。")
+        .replace("我是 Leo 的作品集助手。可以聊他的设计能力、工作经历、项目与协作方式", "我是李家豪的 AI 分身。可以聊聊我的设计能力、工作经历、项目与协作方式")
+        .replace("我可以帮你了解 Leo 的项目、设计职责和工作方式", "可以继续聊我的项目、设计职责和工作方式");
+    }
     if (value.state === "stopped" || value.state === "fallback") message.state = value.state;
     if (typeof value.retryQuery === "string" && value.retryQuery.trim()) message.retryQuery = value.retryQuery.trim().slice(0, 600);
   }
   return message;
 }
 
-function safeSession(value: unknown): PortfolioChatSession | null {
+function safeSession(value: unknown, refreshKnowledge = false): PortfolioChatSession | null {
   if (!record(value) || !Array.isArray(value.messages) || typeof value.draft !== "string") return null;
   const seenIds = new Set<string>();
-  const valid = value.messages.map(safeMessage).filter((message): message is PortfolioChatMessage => {
+  const valid = value.messages.map(message => safeMessage(message, refreshKnowledge)).filter((message): message is PortfolioChatMessage => {
     if (!message || seenIds.has(message.id)) return false;
     seenIds.add(message.id);
     return true;
@@ -102,8 +119,8 @@ export function readChatSession(storage: Pick<Storage, "getItem">): PortfolioCha
     const raw = storage.getItem(SESSION_KEY);
     if (!raw || raw.length > MAX_SERIALIZED_LENGTH) return null;
     const saved: unknown = JSON.parse(raw);
-    if (!record(saved) || saved.version !== SESSION_VERSION) return null;
-    return safeSession(saved);
+    if (!record(saved) || ![1, 2, SESSION_VERSION].includes(saved.version as number)) return null;
+    return safeSession(saved, saved.version !== SESSION_VERSION);
   } catch {
     return null;
   }

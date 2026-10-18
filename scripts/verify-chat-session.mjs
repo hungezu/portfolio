@@ -36,6 +36,21 @@ check("One tab shares messages, references, context and draft across homepage an
   assert.deepEqual(fromHomepage, sample);
   assert.deepEqual(fromProjectPage, sample);
 });
+check("Earlier voices refresh without changing visitor text or stopped replies", () => {
+  const oldWelcome = { ...welcome, content: "**想先了解哪一面？**\n\n我是 Leo 的作品集助手。可以帮你找案例、看经历，也聊设计思路和协作方式。" };
+  const oldReply = { id: "old-reply", role: "assistant", content: "Leo 擅长解决问题。", context: { entryIds: ["capability-overview"] } };
+  const stopped = { ...oldReply, id: "stopped", state: "stopped", content: "回复已停止。", retryQuery: "继续" };
+  for (const version of [1, 2]) {
+    replaceStored(JSON.stringify({ version, ...sample, messages: [oldWelcome, sample.messages[1], oldReply, stopped] }));
+    const restored = readChatSession(storage);
+    assert.match(restored.messages[0].content, /AI 分身/);
+    assert.match(restored.messages[2].content, /我的能力/);
+    assert.doesNotMatch(restored.messages[2].content, /Leo/);
+    assert.deepEqual(restored.messages[1], sample.messages[1]);
+    assert.deepEqual(restored.messages[3], stopped);
+    assert.equal(restored.draft, sample.draft);
+  }
+});
 check("Only conversation data is persisted, without open/request/controller state", () => {
   writeChatSession(storage, { ...sample, open: true, sending: true, controller: { aborted: false } });
   assert.deepEqual(Object.keys(JSON.parse(storedRaw())).sort(), ["draft", "messages", "mode", "version"]);
