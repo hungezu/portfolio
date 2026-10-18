@@ -591,6 +591,7 @@ p {
 
 .portfolio-pet-trigger.is-revealed {
   right: var(--pet-drag-right);
+  bottom: calc(var(--pet-drag-bottom) + 32px);
 }
 
 .portfolio-pet-trigger.is-dragging {
