@@ -1,6 +1,7 @@
 "use client";
 
 import "./site-navigation.css";
+import "./resume-download.css";
 
 import {
   AnimatePresence,
@@ -13,6 +14,7 @@ import {
 import ArrowLeft from "lucide-react/dist/esm/icons/arrow-left.mjs";
 import ArrowUp from "lucide-react/dist/esm/icons/arrow-up.mjs";
 import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
+import Download from "lucide-react/dist/esm/icons/download.mjs";
 import Plus from "lucide-react/dist/esm/icons/plus.mjs";
 import RotateCcw from "lucide-react/dist/esm/icons/rotate-ccw.mjs";
 import Send from "lucide-react/dist/esm/icons/send.mjs";
@@ -353,6 +355,21 @@ function BackToTop() {
   );
 }
 
+function ResumeDownloadLink({ className = "" }: { className?: string }) {
+  return (
+    <a
+      className={`resume-download-link ${className}`.trim()}
+      href={publicAsset("/assets/portfolio/li-jiahao-ux-ui-resume.pdf")}
+      download="李家豪-UX&UI简历.pdf"
+      aria-label="下载李家豪的 UX & UI 简历，PDF，共 2 页"
+    >
+      <Download size={17} strokeWidth={1.6} aria-hidden="true" />
+      <span className="resume-download-label">下载简历</span>
+      <span className="resume-download-meta" aria-hidden="true">PDF · 2页</span>
+    </a>
+  );
+}
+
 function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const reduce = useReducedMotion();
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -460,6 +477,7 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
             ))}
           </div>
           <div className="menu-contact">
+            <ResumeDownloadLink className="menu-resume-download" />
             <a href="mailto:2146953949@qq.com">邮箱 2146953949@qq.com</a>
             <span>手机 13670115683</span>
           </div>
@@ -2338,6 +2356,9 @@ function ExperienceSection() {
               </article>
             );
           })}
+        </div>
+        <div className="experience-resume-footer">
+          <ResumeDownloadLink />
         </div>
       </div>
     </section>
