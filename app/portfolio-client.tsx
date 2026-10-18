@@ -91,26 +91,47 @@ const heroVideoAsset = "/assets/visual/hero-motion.mp4";
 const heroMobileVideoAsset = "/assets/visual/hero-motion-mobile.mp4";
 const abilityLabelById = new Map(abilities.map(ability => [ability.id, ability.axisLabel]));
 
-const homeProjectContent: Record<string, { titleLines: string[]; summary: string }> = {
+const homeProjectContent: Record<string, {
+  titleLines: string[];
+  category: string;
+  platform: string;
+  summary: string;
+  role: string;
+}> = {
   gkx: {
     titleLines: ["深圳国际", "科技信息中心"],
-    summary: "为门户内多个业务系统建立统一的页面与组件规范，并用 AI 协作维护设计 MD、验证原型与支持评审优化。",
+    category: "政企多业务平台",
+    platform: "Web",
+    summary: "面向门户内多个业务系统，统一页面与组件的设计规则。",
+    role: "制定样式与组件规范，借助 AI 编写设计文档，参与原型设计与评审。",
   },
   "zhaocai-smart": {
     titleLines: ["招财 Smart"],
-    summary: "为企业经营分析场景设计从提问、澄清到执行、解释与看板沉淀的智能问数链路，并统一多类型结果的呈现规范。",
+    category: "AI 财务智能问数",
+    platform: "Web",
+    summary: "面向企业财务与经营分析，串联提问、条件确认、执行反馈与结果核对。",
+    role: "负责对话 UX/UI、过程反馈、看板交互与回答呈现规范。",
   },
   "tax-cloud": {
-    titleLines: ["税纪云", "全税种申报平台"],
-    summary: "主导税纪云 2.0 Web 与 App 体验改版，重构申报、审批、风险预警和法规查询等高频财税任务。",
+    titleLines: ["税纪云"],
+    category: "全税种申报平台",
+    platform: "Web / App",
+    summary: "覆盖纳税申报、审批、风险预警与法规查询等日常财税任务。",
+    role: "主导 2.0 体验改版，重构关键流程并建立跨端组件规范。",
   },
   "energy-tax": {
     titleLines: ["国家能源集团", "报税平台"],
-    summary: "独立负责报税平台从 0 到 1 的 UI 设计，覆盖首页、纳税申报和综合管理工作台，并建立页面与组件规范。",
+    category: "企业税务系统",
+    platform: "Web",
+    summary: "面向集团报税业务，覆盖平台首页、纳税申报与综合管理工作台。",
+    role: "独立负责从 0 到 1 的 UI 设计，建立页面与组件规范。",
   },
   "data-visualisation": {
-    titleLines: ["可视化大屏", "项目合集"],
-    summary: "汇集汽车、轨道交通、新能源、电子及地产等行业大屏，以地图、指标、趋势和排行组织高密度业务信息。",
+    titleLines: ["可视化大屏"],
+    category: "多行业项目合集",
+    platform: "大屏",
+    summary: "汇集汽车、轨道交通、新能源等行业大屏，用地图、趋势与排行呈现税务数据。",
+    role: "负责大屏视觉、信息层级与图表编排，整理布局规范。",
   },
 };
 
@@ -1907,7 +1928,10 @@ function ProjectCard({
     : null;
   const homeContent = homeProjectContent[project.slug] ?? {
     titleLines: [project.title],
+    category: project.type,
+    platform: "",
     summary: project.summary,
+    role: project.role,
   };
 
   useEffect(() => {
@@ -2022,7 +2046,6 @@ function ProjectCard({
         ) : null}
         <div className="project-copy">
           <div className="project-info-group">
-            <p className="project-type">{project.type}</p>
             <h3 id={titleId}>
               {homeContent.titleLines.map((line, lineIndex) => (
                 <span key={line}>
@@ -2031,20 +2054,26 @@ function ProjectCard({
                 </span>
               ))}
             </h3>
+            <p className="project-type">
+              <span>{homeContent.category}</span>
+              {homeContent.platform ? <span className="project-platform">{homeContent.platform}</span> : null}
+            </p>
             <p className="project-summary" id={summaryId}>{homeContent.summary}</p>
           </div>
           <div className="project-meta">
-            <p className="project-role">
-              <span>职责</span>
-              <strong>{project.role}</strong>
-            </p>
+            <dl className="project-role">
+              <dt>我的职责</dt>
+              <dd>{homeContent.role}</dd>
+            </dl>
+          </div>
+          <div className="project-footer">
             <div className="project-ability-tags" aria-label="项目对应能力">
               {project.abilityIds.slice(0, 3).map(abilityId => (
                 <span key={abilityId}>{abilityLabelById.get(abilityId)}</span>
               ))}
             </div>
             <span className="project-link" aria-hidden="true">
-              查看项目
+              查看案例
               <ArrowUpRight size={15} strokeWidth={1.8} />
             </span>
           </div>

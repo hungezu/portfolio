@@ -2316,6 +2316,15 @@ p {
     0 16px 34px -22px rgba(17, 17, 17, 0.32);
 }
 
+.project-card:focus-within .project-copy,
+.project-card:focus-within .project-visual {
+  animation: none;
+  opacity: 1;
+  transform: none;
+  clip-path: none;
+  filter: none;
+}
+
 .project-card:focus-within {
   opacity: 1 !important;
   filter: none !important;
@@ -2389,7 +2398,8 @@ html.portfolio-transitioning body {
 .project-copy {
   display: flex;
   flex-direction: column;
-  padding: clamp(30px, 4vw, 56px);
+  min-width: 0;
+  padding: clamp(28px, 3.6vw, 56px);
 }
 
 .project-info-group {
@@ -2399,17 +2409,29 @@ html.portfolio-transitioning body {
 }
 
 .project-type {
-  color: var(--quiet);
-  font-size: var(--type-caption);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: var(--type-meta);
+  line-height: 1.5;
+}
+
+.project-platform {
+  padding-left: 12px;
+  border-left: 1px solid var(--line);
+  white-space: nowrap;
 }
 
 .project-copy h3 {
   max-width: 14ch;
-  margin-top: 14px;
-  font-size: clamp(2.25rem, 3.3vw, 3.8rem);
+  margin: 0;
+  font-size: clamp(2.25rem, 3vw, 3.25rem);
   font-weight: 400;
   letter-spacing: -0.035em;
-  line-height: 1.04;
+  line-height: 1.14;
   view-transition-name: var(--project-title-transition, none);
 }
 
@@ -2419,54 +2441,53 @@ html.portfolio-transitioning body {
 
 .project-summary {
   max-width: 40ch;
-  margin-top: 18px;
+  margin-top: 24px;
   color: var(--muted);
   font-size: var(--type-body);
-  line-height: 1.58;
+  line-height: 1.75;
 }
 
 .project-meta {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: auto;
-  padding-top: 24px;
+  margin-top: 28px;
 }
 
 .project-role {
-  display: grid;
   max-width: 44ch;
-  grid-template-columns: 36px minmax(0, 1fr);
-  gap: 10px;
   margin: 0;
   color: var(--muted);
+  font-size: var(--type-label);
+  line-height: 1.7;
+}
+
+.project-role dt {
+  margin-bottom: 6px;
+  color: var(--muted);
   font-size: var(--type-caption);
-  line-height: 1.55;
 }
 
-.project-role > span {
-  color: var(--quiet);
-}
-
-.project-role strong {
+.project-role dd {
+  margin: 0;
   color: rgba(17, 17, 17, .78);
-  font-weight: 500;
+}
+
+.project-footer {
+  margin-top: auto;
+  padding-top: 24px;
 }
 
 .project-ability-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 14px;
+  gap: 8px 14px;
 }
 
 .project-ability-tags span {
-  padding: 6px 9px;
-  border-radius: var(--pill);
-  background: rgba(17, 17, 17, .055);
-  color: rgba(17, 17, 17, .72);
+  color: var(--muted);
   font-size: var(--type-caption);
-  line-height: 1.2;
+  line-height: 1.5;
 }
 
 .project-card.is-ability-match .project-card-link {
@@ -2497,7 +2518,6 @@ html.portfolio-transitioning body {
 }
 
 .project-card.is-ability-match .project-ability-tags span {
-  background: rgba(17, 17, 17, .1);
   color: #111;
 }
 
@@ -2525,12 +2545,12 @@ html.portfolio-transitioning body {
   align-items: center;
   align-self: flex-start;
   gap: 8px;
-  margin-top: 22px;
+  margin-top: 16px;
   padding-bottom: 5px;
   border-bottom: 1px solid var(--ink);
-  font-size: var(--type-meta);
+  font-size: var(--type-label);
   font-weight: 500;
-  opacity: 0.72;
+  opacity: 1;
   transition:
     opacity 180ms ease,
     border-color 180ms ease;
@@ -4793,7 +4813,7 @@ a.contact-item:focus-visible {
   }
 
   .project-ability-tags {
-    margin-top: 14px;
+    gap: 8px 14px;
   }
 
   .project-card {
@@ -6126,7 +6146,7 @@ a.contact-item:focus-visible {
   }
 
   .portfolio-home .project-card-link {
-    grid-template-columns: minmax(320px, .88fr) minmax(0, 1.3fr);
+    grid-template-columns: minmax(280px, .88fr) minmax(0, 1.3fr);
   }
 
   .portfolio-home .contact-shell {
@@ -6228,29 +6248,33 @@ a.contact-item:focus-visible {
   }
 
   .portfolio-home .project-copy {
-    padding: 20px 20px 34px;
+    padding: 24px 20px 28px;
   }
 
   .portfolio-home .project-copy h3 {
     max-width: 14ch;
-    margin-top: 10px;
+    margin-top: 0;
     font-size: clamp(2rem, 9vw, 2.65rem);
   }
 
   .portfolio-home .project-summary {
-    margin-top: 12px;
-    font-size: var(--type-meta);
-    line-height: 1.52;
+    margin-top: 20px;
+    font-size: var(--type-label);
+    line-height: 1.7;
   }
 
   .portfolio-home .project-meta {
-    margin-top: 22px;
-    padding-top: 18px;
-    border-top: 1px solid var(--line);
+    margin-top: 20px;
   }
 
-  .portfolio-home .project-role {
-    grid-template-columns: 34px minmax(0, 1fr);
+  .portfolio-home .project-type {
+    margin-top: 12px;
+  }
+
+  .portfolio-home .project-footer {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
   }
 
   .portfolio-home .project-link {
