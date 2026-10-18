@@ -171,6 +171,7 @@ body {
     transform: scaleX(0);
     transform-origin: left center;
     animation: portfolio-reading-progress linear both;
+    animation-duration: auto;
     animation-timeline: scroll(root block);
   }
 }
@@ -3235,10 +3236,6 @@ a.contact-item:focus-visible {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #root::before { display: none; }
-}
-
 .case-gallery img,
 .case-gallery .image-fallback {
   width: 100%;
@@ -5484,6 +5481,11 @@ a.contact-item:focus-visible {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+
+  /* Reading position is useful feedback, even when decorative motion is reduced. */
+  #root::before {
+    animation-duration: auto !important;
   }
 
   .hero-poster img,
