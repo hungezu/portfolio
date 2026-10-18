@@ -7,7 +7,7 @@
 .capability-shell > .section-intro { max-width: none; gap: 16px; margin: 0 0 28px; }
 .capability-layout { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: clamp(40px, 4vw, 64px); align-items: start; }
 .capability-accordion {
-  --capability-expand-duration: 280ms;
+  --capability-expand-duration: 420ms;
   --capability-fade-duration: 200ms;
   --capability-icon-duration: 260ms;
   display: flex;
@@ -40,10 +40,11 @@
 .capability-item-heading button[aria-expanded="true"] .capability-disclosure-icon { color: #111; transform: rotate(45deg); }
 .capability-item-heading button:hover { color: #111; }
 .capability-tab-marker { position: absolute; left: 0; top: 50%; width: 2px; height: 12px; background: #111; transform: translateY(-50%); pointer-events: none; }
-.capability-disclosure { display: grid; grid-template-rows: 0fr; opacity: 0; visibility: hidden; }
-.capability-disclosure[data-open="true"] { grid-template-rows: 1fr; opacity: 1; visibility: visible; }
+.capability-disclosure { display: grid; grid-template-rows: 0fr; visibility: hidden; }
+.capability-disclosure[data-open="true"] { grid-template-rows: 1fr; visibility: visible; }
 .capability-disclosure-clip { min-height: 0; overflow: hidden; }
-.capability-disclosure-copy { padding: 15px 16px 22px; }
+.capability-disclosure-copy { padding: 15px 16px 22px; opacity: 0; transform: translateY(4px); }
+.capability-disclosure[data-open="true"] .capability-disclosure-copy { opacity: 1; transform: translateY(0); }
 .capability-disclosure-copy h4 { margin: 0; color: #222; font-size: 18px; font-weight: 500; line-height: 1.5; letter-spacing: -.025em; text-wrap: balance; }
 .capability-disclosure-copy p { margin: 10px 0 0; color: #666; font-size: 14px; font-weight: 400; line-height: 1.8; }
 .capability-panel { display: grid; min-width: 0; gap: 16px; align-items: start; }
@@ -116,9 +117,15 @@
 /* The requested click feedback is local to this accordion. Returning from a
    project keeps data-animated=false so scroll restoration stays immediate. */
 .capability-accordion[data-animated="true"] .capability-disclosure {
-  transition: grid-template-rows var(--capability-expand-duration) cubic-bezier(.22, .68, 0, 1), opacity var(--capability-fade-duration) ease, visibility 0s linear var(--capability-expand-duration) !important;
+  transition: grid-template-rows var(--capability-expand-duration) cubic-bezier(.22, .61, .36, 1), visibility 0s linear var(--capability-expand-duration) !important;
 }
 .capability-accordion[data-animated="true"] .capability-disclosure[data-open="true"] { transition-delay: 0s !important; }
+.capability-accordion[data-animated="true"] .capability-disclosure-copy {
+  transition: opacity 140ms ease-out, transform 240ms cubic-bezier(.22, .61, .36, 1) !important;
+}
+.capability-accordion[data-animated="true"] .capability-disclosure[data-open="true"] .capability-disclosure-copy {
+  transition: opacity 240ms ease-out 50ms, transform 360ms cubic-bezier(.22, .61, .36, 1) !important;
+}
 .capability-accordion[data-animated="true"] .capability-disclosure-icon {
   transition: transform var(--capability-icon-duration) ease, color var(--capability-fade-duration) ease !important;
 }
@@ -127,9 +134,14 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .capability-accordion {
-    --capability-expand-duration: 0ms;
+    --capability-expand-duration: 320ms;
     --capability-fade-duration: 0ms;
     --capability-icon-duration: 0ms;
+  }
+  .capability-accordion[data-animated="true"] .capability-disclosure .capability-disclosure-copy,
+  .capability-accordion[data-animated="true"] .capability-disclosure[data-open="true"] .capability-disclosure-copy {
+    transform: none;
+    transition: opacity 160ms ease-out !important;
   }
 }
 
