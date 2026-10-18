@@ -12,6 +12,7 @@ import { GkxStandardsApplications } from "./GkxStandardsApplications";
 import { GkxSegmentedControl } from "./GkxSegmentedControl";
 import { GkxProjectScope, type GkxProjectScopeData } from "./GkxProjectScope";
 import { useGkxReferenceNavigation } from "./use-gkx-reference-navigation";
+import { gkxThinkTankDetail } from "./gkx-image-assets";
 import publicCopy from "./gkx-public-copy.json";
 import "./gkx-case.css";
 
@@ -126,7 +127,7 @@ const assets = {
   portal: { src: `${assetRoot}/ui/portal-workspace.png`, alt: "智慧门户我的空间界面，包含资料目录与文档列表", caption: copy.captions["ui-portal"], width: 1400, height: 778 },
   reading: { src: `${assetRoot}/ui/portal-reading.png`, alt: "智慧门户智能阅读工作区，左侧目录、中间原文、右侧辅助信息", caption: copy.captions["ui-reading"], width: 1400, height: 778 },
   maas: { src: `${assetRoot}/ui/maas-model-gallery.png`, alt: "超大规模智算引擎内的 MaaS 模型广场界面，展示模型筛选与模型卡片", caption: copy.captions["ui-maas"], width: 1400, height: 778 },
-  thinkTank: { src: "/assets/projects/gkx/think-tank-home.jpg", alt: "集群服务中的高端智库详情页，呈现服务介绍、概览指标与技术、报告、人才相关入口", caption: "集群服务 · 高端智库详情页", width: 1800, height: 786 },
+  thinkTank: gkxThinkTankDetail,
   paperList: { src: `${assetRoot}/ui/paper-list-no-select-all.png?v=1`, alt: "情报管理论文管理界面，包含统一搜索、筛选与行操作", caption: copy.captions["ui-paper-list"], width: 1440, height: 800 },
   paperBefore: { src: `${assetRoot}/ui/paper-list-before.png`, alt: "情报管理论文管理调整前界面，编号与名称查询入口分开", caption: copy.captions["ui-paper-before"], width: 1440, height: 800 },
   paperDetail: { src: `${assetRoot}/ui/paper-detail-modal.png`, alt: "情报管理论文详情弹窗，背景保留当前列表上下文", caption: copy.captions["ui-paper-detail"], width: 1440, height: 800 },

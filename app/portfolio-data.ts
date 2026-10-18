@@ -1,3 +1,5 @@
+import { gkxScienceExchange, gkxThinkTankDetail } from "./case-studies/gkx-image-assets";
+
 export type AbilityId =
   | "ai-experience"
   | "ai-workflow"
@@ -97,7 +99,7 @@ export const abilities: Ability[] = [
     evidence: [
       {
         projectSlug: "gkx",
-        projectTitle: "GKX智慧门户",
+        projectTitle: "GKX 智慧门户",
         section: "可运行原型验证",
         description: "用 Codex 生成可运行网页，再由我调整流程、字段与关键状态。",
         anchor: "nsp-prototype",
@@ -121,7 +123,7 @@ export const abilities: Ability[] = [
     evidence: [
       {
         projectSlug: "gkx",
-        projectTitle: "GKX智慧门户",
+        projectTitle: "GKX 智慧门户",
         section: "多系统需求结构",
         description: "从分散材料中界定系统、角色、任务与页面边界。",
         anchor: "gkx-systems",
@@ -150,7 +152,7 @@ export const abilities: Ability[] = [
     evidence: [
       {
         projectSlug: "gkx",
-        projectTitle: "GKX智慧门户",
+        projectTitle: "GKX 智慧门户",
         section: "Markdown 设计规范",
         description: "将评审共识转化为多团队可执行、可维护的设计规则。",
         anchor: "gkx-design-system",
@@ -221,8 +223,8 @@ const projectData: Project[] = [
   {
     slug: "gkx",
     visible: true,
-    title: "GKX智慧门户",
-    shortTitle: "GKX智慧门户",
+    title: "GKX 智慧门户",
+    shortTitle: "GKX 智慧门户",
     period: "2025.11 - 2027.03",
     type: "平台级体验设计 / Web",
     summary:
@@ -234,15 +236,15 @@ const projectData: Project[] = [
     abilityIds: ["ai-workflow", "complex-systems", "design-system"],
     gallery: [
       "/assets/projects/covers/gkx-cover.webp",
-      "/assets/projects/gkx/think-tank-home.jpg",
-      "/assets/projects/gkx/topic-service.jpg",
+      gkxThinkTankDetail.src,
+      gkxScienceExchange.src,
       "/assets/projects/gkx/portal-admin-list.jpg",
       "/assets/projects/gkx/workflow-builder.jpg",
     ],
     galleryAlt: [
       "GKX项目视觉封面",
       "集群服务 · 高端智库详情页",
-      "科技专题服务页面",
+      gkxScienceExchange.alt,
       "门户后台列表页面",
       "流程设计器页面",
     ],

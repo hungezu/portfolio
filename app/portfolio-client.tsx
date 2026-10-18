@@ -98,7 +98,7 @@ const homeProjectContent: Record<string, {
   role: string;
 }> = {
   gkx: {
-    titleLines: ["GKX智慧门户"],
+    titleLines: ["GKX 智慧门户"],
     category: "政企多业务平台",
     platform: "Web",
     summary: "面向门户内多个业务系统，统一页面与组件的设计规则。",

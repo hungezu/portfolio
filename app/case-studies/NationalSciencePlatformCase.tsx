@@ -4,6 +4,7 @@ import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type Mous
 import { publicAsset } from "../portfolio-data";
 import { PortfolioImage } from "../portfolio-image";
 import { ProjectLocator } from "../project-locator";
+import { gkxReportTasks, gkxReportTemplateLibrary, gkxScienceExchange, gkxTechnologyHotspotQuery, gkxTechnologyRoute, gkxThinkTankDetail } from "./gkx-image-assets";
 import "./national-science-platform.css";
 
 const sections = [
@@ -31,14 +32,14 @@ const screens = [
   {
     label: "集群服务 · 高端智库详情页",
     title: "从高端智库服务详情进入相关内容",
-    description: "详情页集中呈现高端智库的服务介绍、概览指标与技术、报告、人才相关入口。",
-    src: "/assets/projects/gkx/think-tank-home.jpg",
+    description: "详情页按领域组织技术路线、战略咨询报告与人才分析；截图展示当前技术发展概览，数值为原型演示数据。",
+    src: gkxThinkTankDetail.src,
   },
   {
-    label: "科技专题服务",
-    title: "把产业、技术、机构、人才和报告放进同一专题上下文",
-    description: "通过专题全景和层级导航，将复杂关联信息组织成从全局到细节的连续浏览路径。",
-    src: "/assets/projects/gkx/topic-service.jpg",
+    label: "科技信息交流",
+    title: "按活动类型与状态组织参与入口",
+    description: "当前页面汇总交流活动概况，通过卡片展示赛事、讲座与沙龙的时间、状态和参与入口。",
+    src: gkxScienceExchange.src,
   },
   {
     label: "门户后台列表",
@@ -57,23 +58,23 @@ const screens = [
 const supportingScreens = [
   {
     title: "领域技术路线",
-    description: "将指标、发展趋势、里程碑与关键技术清单组织在同一分析视图中。",
-    src: "/assets/projects/gkx/technology-route.jpg",
+    description: "按领域组织发展概览、关键技术、里程碑与技术分枝树，数值为原型演示数据。",
+    ...gkxTechnologyRoute,
   },
   {
-    title: "关键技术详情",
-    description: "通过技术清单与分支树并列展示，支持从趋势判断继续查看细分方向。",
-    src: "/assets/projects/gkx/technology-detail.jpg",
+    title: "报告模板库",
+    description: "按报告类型、行业与场景筛选模板，区分官方模板与个人模板。",
+    ...gkxReportTemplateLibrary,
   },
   {
-    title: "战略咨询报告",
-    description: "以领域分类、推荐内容和权限状态组织报告浏览与检索任务。",
-    src: "/assets/projects/gkx/strategy-reports.jpg",
+    title: "报告任务",
+    description: "用列表集中呈现报告类型、生成状态与发布审核状态，支持按条件查询。",
+    ...gkxReportTasks,
   },
   {
-    title: "人才动态资讯",
-    description: "统一筛选、订阅、重点资讯和内容列表，保持高信息量下的阅读层级。",
-    src: "/assets/projects/gkx/talent-news.jpg",
+    title: "技术热点问数",
+    description: "从热点与推荐问题进入技术分析，集中组织历史对话和提问入口。",
+    ...gkxTechnologyHotspotQuery,
   },
 ] as const;
 
@@ -282,7 +283,7 @@ function SystemsDetailPage({ activeScreen, setActiveScreen }: { activeScreen: nu
     <div className="national-platform-page nsp-subpage">
       <ProjectLocator sections={systemsSections} ariaLabel="系统实景页章节定位" />
       <header className="nsp-subpage-hero" id="nsp-systems-overview"><div className="nsp-shell"><ProjectSubnav active="systems" /><h1>跨系统的界面，<br />呈现不同业务任务</h1><p>围绕信息浏览、内容维护与流程建模，展示不同任务的信息架构与交互模式。业务内容和数据已脱敏或重构，仅用于呈现设计方法。</p></div></header>
-      <section className="nsp-section" id="nsp-system-screens"><div className="nsp-shell"><SystemScreenShowcase activeScreen={activeScreen} setActiveScreen={setActiveScreen} /><div className="nsp-evidence-wall" id="nsp-supporting-screens"><header><h2>补充页面</h2><p>进一步展示技术分析、报告浏览和人才信息等不同信息密度。</p></header><div>{supportingScreens.map(screen => <figure key={screen.title}><PortfolioImage src={publicAsset(screen.src)} alt={`${screen.title}代码运行页面`} loading="lazy" decoding="async" /><figcaption><strong>{screen.title}</strong><p>{screen.description}</p></figcaption></figure>)}</div></div></div></section>
+      <section className="nsp-section" id="nsp-system-screens"><div className="nsp-shell"><SystemScreenShowcase activeScreen={activeScreen} setActiveScreen={setActiveScreen} /><div className="nsp-evidence-wall" id="nsp-supporting-screens"><header><h2>补充页面</h2><p>进一步展示技术分析、模板选择、报告任务与热点问数的界面组织。</p></header><div>{supportingScreens.map(screen => <figure key={screen.title}><PortfolioImage src={publicAsset(screen.src)} alt={screen.alt} width={screen.width} height={screen.height} loading="lazy" decoding="async" /><figcaption><strong>{screen.title}</strong><p>{screen.description}</p></figcaption></figure>)}</div></div></div></section>
     </div>
   );
 }
@@ -321,12 +322,12 @@ export function NationalSciencePlatformCase({ view = "story" }: { view?: Nationa
           <ProjectSubnav active="story" />
           <div className="nsp-hero-main">
             <header className="nsp-hero-heading">
-              <div><h1><span>GKX智慧门户</span></h1></div>
+              <div><h1><span>GKX 智慧门户</span></h1></div>
               <p>从整体风格和核心系统，到在线原型、Markdown 规范与多方评审，我同时负责产品体验和设计交付方式。</p>
             </header>
             <figure className="nsp-hero-proof">
-              <PortfolioImage src={publicAsset("/assets/projects/gkx/think-tank-home.jpg")} alt="集群服务中的高端智库详情页" loading="eager" fetchPriority="high" />
-              <figcaption><strong>集群服务 · 高端智库详情页</strong><p>页面中的业务信息、数据和流程均已脱敏或重构，仅展示设计方法和工作方式。</p></figcaption>
+              <PortfolioImage src={publicAsset(gkxThinkTankDetail.src)} alt={gkxThinkTankDetail.alt} width={gkxThinkTankDetail.width} height={gkxThinkTankDetail.height} loading="eager" fetchPriority="high" />
+              <figcaption><strong>集群服务 · 高端智库详情页</strong><p>当前页面截图已排除外围机构标识与账户导航，图中数值为原型演示数据。</p></figcaption>
             </figure>
           </div>
           <div className="nsp-hero-meta">
@@ -360,9 +361,9 @@ export function NationalSciencePlatformCase({ view = "story" }: { view?: Nationa
 
       <section className="nsp-section nsp-products" id="nsp-products" data-nsp-section>
         <div className="nsp-shell nsp-section-stack nsp-products-layout">
-          <header className="nsp-story-heading"><h2>让不同系统，<br />共享同一套体验骨架</h2><p>高端智库、科技专题服务、门户后台和流程设计器承担不同任务，但共用导航、状态、组件与信息层级规则。主页面只保留一项代表性成果，完整页面统一放在系统实景中。</p></header>
-          <div className="nsp-story-body"><ExperienceLanguageMap /><figure className="nsp-system-teaser"><PortfolioImage src={publicAsset("/assets/projects/gkx/technology-route.jpg")} alt="领域技术路线代码运行页面" loading="lazy" decoding="async" /><figcaption><strong>领域技术路线</strong><p>将指标、趋势、里程碑和关键技术清单组织在同一分析视图中。</p></figcaption></figure>
-            <a className="nsp-deep-link" href="/portfolio/project/gkx/systems/" onClick={event => openWithPortfolioContext(event, "/portfolio/project/gkx/systems/")}><strong>浏览全部8个代码运行页面</strong></a>
+          <header className="nsp-story-heading"><h2>让不同系统，<br />共享同一套体验骨架</h2><p>高端智库、科技信息交流、门户后台和流程设计器承担不同任务，但共用导航、状态、组件与信息层级规则。主页面只保留一项代表性成果，完整页面统一放在系统实景中。</p></header>
+          <div className="nsp-story-body"><ExperienceLanguageMap /><figure className="nsp-system-teaser"><PortfolioImage src={publicAsset(gkxTechnologyRoute.preview.src)} alt={gkxTechnologyRoute.preview.alt} width={gkxTechnologyRoute.preview.width} height={gkxTechnologyRoute.preview.height} loading="lazy" decoding="async" /><figcaption><strong>领域技术路线</strong><p>当前页面概览局部，完整模块包含趋势、关键技术、里程碑与分枝树；图中数值为原型演示数据。</p></figcaption></figure>
+            <a className="nsp-deep-link" href="/portfolio/project/gkx/systems/" onClick={event => openWithPortfolioContext(event, "/portfolio/project/gkx/systems/")}><strong>浏览系统与补充界面</strong></a>
           </div>
         </div>
       </section>
