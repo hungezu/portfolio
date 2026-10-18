@@ -731,31 +731,28 @@ function getNearestPortfolioChatContext(contexts: PortfolioChatContext[]) {
 
 function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peeking: boolean }) {
   const reduce = useReducedMotion();
-  const requestedAssetState = peeking ? "peek-right" : portfolioPetStateMap[state];
-  const [assetState, setAssetState] = useState(requestedAssetState);
+  const assetState = peeking ? "peek-right" : portfolioPetStateMap[state];
   const config = portfolioCharacterMap.states[assetState];
   const [frameIndex, setFrameIndex] = useState(0);
 
   useEffect(() => {
-    if (requestedAssetState === assetState) return;
-    const nextConfig = portfolioCharacterMap.states[requestedAssetState];
-    const nextSource = portfolioCharacterMap.sources[nextConfig.source];
-    const image = new Image();
-    let active = true;
-    const showNextState = () => {
-      if (active) setAssetState(requestedAssetState);
-    };
-    image.onload = showNextState;
-    image.onerror = () => undefined;
-    const originalPath = `/assets/visual/sidebar-character/${nextSource.file}`;
-    image.src = publicAsset(optimizedImage(originalPath)?.src ?? originalPath);
-    if (image.complete) showNextState();
-    return () => {
-      active = false;
-      image.onload = null;
-      image.onerror = null;
-    };
-  }, [assetState, requestedAssetState]);
+    // Warm the full-body poses while the character is still peeking. Loading must
+    // never decide whether an open conversation shows the closed character pose.
+    const sources = new Set(Object.values(portfolioPetStateMap).map(name => portfolioCharacterMap.states[name].source));
+    const images = [...sources].map(name => {
+      const path = `/assets/visual/sidebar-character/${portfolioCharacterMap.sources[name].file}`;
+      const original = publicAsset(path);
+      const image = new Image();
+      image.fetchPriority = "low";
+      image.onerror = () => {
+        image.onerror = null;
+        image.src = original;
+      };
+      image.src = publicAsset(optimizedImage(path)?.src ?? path);
+      return image;
+    });
+    return () => { images.forEach(image => { image.onerror = null; }); };
+  }, []);
 
   useEffect(() => {
     setFrameIndex(0);
@@ -797,11 +794,16 @@ function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peek
             }}
           >
             <img
+              key={config.source}
               src={publicAsset(optimizedImage(originalPath)?.src ?? originalPath)}
               alt=""
               draggable={false}
               decoding="async"
               fetchPriority="low"
+              onError={event => {
+                const original = publicAsset(originalPath);
+                if (event.currentTarget.getAttribute("src") !== original) event.currentTarget.src = original;
+              }}
               style={{
                 width: `${source.width / width * 100}%`,
                 height: `${source.height / height * 100}%`,
