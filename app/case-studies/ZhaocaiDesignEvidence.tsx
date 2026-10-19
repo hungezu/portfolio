@@ -1,4 +1,5 @@
 import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
+import { useId, useRef, useState, type KeyboardEvent } from "react";
 import { publicAsset } from "../portfolio-data";
 import "./zhaocai-design-evidence.css";
 
@@ -71,4 +72,118 @@ export function ZhaocaiAnswerEvidence() {
       </div>
     </article>
   );
+}
+
+const alternativePaths = [
+  {
+    id: "open",
+    label: "开放追问",
+    retained: "原问题、2024 年与全集团继续保留。",
+    supplement: "用户用自己的语言说明“利润”的业务含义。",
+    gate: "补充内容能对应到明确的业务指标后，再执行查询。",
+    cost: "表达自由，但用户需要组织语言，补充后仍可能留下歧义。",
+  },
+  {
+    id: "filters",
+    label: "固定筛选器",
+    retained: "原问题保留在上方，期间与组织转换为可核对的字段。",
+    supplement: "在固定字段中选择指标，并确认期间和组织。",
+    gate: "必填字段齐全，指标与统计范围相容后，再执行查询。",
+    cost: "标准任务结构明确，临时需求需要在问题与字段之间转换。",
+  },
+  {
+    id: "candidates",
+    label: "候选确认",
+    retained: "2024 年与全集团沿用，只确认有歧义的指标。",
+    supplement: "选择一种合法口径；都不符合时继续补充说明。",
+    gate: "用户确认口径且条件齐全后，再执行查询。",
+    cost: "增加一次选择；候选不足时可能诱导误选，需要保留开放补充。",
+  },
+] as const;
+
+type AlternativeId = typeof alternativePaths[number]["id"];
+
+/** Present-day design comparisons; the previews intentionally have no controls. */
+export function ZhaocaiAlternativeComparison() {
+  const panelId = `zcs-alternatives-${useId().replace(/:/g, "")}`;
+  const [activeId, setActiveId] = useState<AlternativeId>("candidates");
+  const choicesRef = useRef<HTMLDivElement>(null);
+  const active = alternativePaths.find(path => path.id === activeId)!;
+
+  const moveChoice = (event: KeyboardEvent<HTMLButtonElement>, focusedId: AlternativeId) => {
+    const current = alternativePaths.findIndex(path => path.id === focusedId);
+    let next = current;
+    if (event.key === "ArrowRight") next = (current + 1) % alternativePaths.length;
+    else if (event.key === "ArrowLeft") next = (current + alternativePaths.length - 1) % alternativePaths.length;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = alternativePaths.length - 1;
+    else return;
+    event.preventDefault();
+    setActiveId(alternativePaths[next].id);
+    choicesRef.current?.querySelectorAll<HTMLButtonElement>("button")[next]?.focus();
+  };
+
+  return <div className="zc4-alternative-comparison">
+    <div className="zc4-alternative-choices" ref={choicesRef} role="group" aria-label="切换同题方案对照">
+      {alternativePaths.map(path => <button type="button" key={path.id} aria-pressed={activeId === path.id} aria-controls={panelId} onClick={() => setActiveId(path.id)} onKeyDown={event => moveChoice(event, path.id)}>{path.label}</button>)}
+    </div>
+    <figure className="zc4-alternative-figure" id={panelId} aria-label={`${active.label}方案示意与采用条件`}>
+      <div className="zc4-alternative-preview">
+        <p className="zc4-alternative-question">查看 2024 年全集团利润变化</p>
+        <div className="zc4-alternative-response">
+          {activeId === "open" ? <>
+            <h4>“利润”具体指什么？</h4>
+            <p>请补充这次查询的业务口径，时间与组织继续沿用。</p>
+            <dl className="zc4-alternative-known"><div><dt>期间</dt><dd>2024 年</dd></div><div><dt>组织</dt><dd>全集团</dd></div></dl>
+            <div className="zc4-alternative-writing"><span>待补充的业务说明</span><p>例如：查看归属于本次统计范围的净利润。</p></div>
+          </> : activeId === "filters" ? <>
+            <h4>核对查询条件</h4>
+            <dl className="zc4-alternative-fields"><div><dt>统计期间</dt><dd>2024 年</dd></div><div><dt>组织范围</dt><dd>全集团</dd></div><div><dt>指标口径</dt><dd className="is-pending">待选择</dd></div></dl>
+            <p className="zc4-alternative-preview-note">指标、期间与组织齐全后执行查询。</p>
+          </> : <>
+            <h4>你想查看哪一种利润？</h4>
+            <p>已保留 2024 年与全集团，只需确认指标。</p>
+            <ul className="zc4-alternative-candidates" aria-label="候选口径示意"><li>营业利润</li><li>利润总额</li><li className="is-selected"><strong>净利润</strong><span>当前示例选择</span></li></ul>
+            <p className="zc4-alternative-preview-note">都不符合时，继续补充说明。</p>
+          </>}
+        </div>
+      </div>
+      <dl className="zc4-alternative-facts"><div><dt>保留条件</dt><dd>{active.retained}</dd></div><div><dt>需要补充</dt><dd>{active.supplement}</dd></div><div><dt>执行门槛</dt><dd>{active.gate}</dd></div><div><dt>代价</dt><dd>{active.cost}</dd></div></dl>
+      <figcaption>当前方案推演 · 围绕同一任务补做的只读界面对照，用于说明适用条件与取舍。</figcaption>
+    </figure>
+  </div>;
+}
+
+const ruleChecks = [
+  {
+    title: "季度明细与全年合计一致",
+    input: "2024 年集团净利润表现如何？",
+    verdict: "全年合计为 6.08 亿元，结论、图表与明细沿用相同口径。",
+    evidence: "1.32 + 1.46 + 1.59 + 1.71 = 6.08；期间为 2024 年，组织为全集团，单位为亿元。",
+  },
+  {
+    title: "同年季度比较，明确比较基准",
+    input: "四季度比一季度增长了多少？",
+    verdict: "增加 0.39 亿元，增幅为 29.55%。这是同年季度比较，不能标为同比。",
+    evidence: "（1.71 − 1.32）÷ 1.32 × 100% ≈ 29.55%；同比需要上年同期数据。",
+  },
+  {
+    title: "缺少子公司明细，保留判断边界",
+    input: "哪家子公司的净利润最高？",
+    verdict: "未取得子公司维度明细，不生成排名，也不将缺失记为 0。",
+    evidence: "当前示例仅包含 2024 年全集团季度值，集团合计不能替代子公司数据。",
+  },
+] as const;
+
+export function ZhaocaiRuleChecks() {
+  return <details className="zc4-disclosure zc4-rule-checks">
+    <summary>查阅三条回答规则的核对样例</summary>
+    <div className="zc4-disclosure-body">
+      <p className="zc4-rule-checks-intro">以本页季度示例逐项核对计算、比较基准与缺失处理，完整回答可在上方工作台查看。</p>
+      <ul className="zc4-rule-checks-list">
+        {ruleChecks.map(check => <li key={check.title}><h4>{check.title}</h4><dl><div><dt>输入</dt><dd>{check.input}</dd></div><div><dt>判定</dt><dd>{check.verdict}</dd></div><div><dt>依据</dt><dd>{check.evidence}</dd></div></dl></li>)}
+      </ul>
+      <p className="zc4-rule-checks-note">核对范围：指定示例数据下的回答规则与表达；真实业务结果仍需与业务服务及来源明细核对。</p>
+    </div>
+  </details>;
 }
