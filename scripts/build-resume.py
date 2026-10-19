@@ -1,9 +1,9 @@
 """Build the public, two-page A4 resume from its reviewed JSON content.
 
 Run ``python scripts/build-resume.py --check`` to measure and validate the entire
-layout without writing a PDF. Normal execution writes the same PDF to output/pdf
-and assets/portfolio. Microsoft YaHei is embedded; the original portrait and the
-source resume are never modified.
+layout without writing a PDF. Normal execution writes an optional draft to
+output/pdf. The user-provided public download is never overwritten. Microsoft
+YaHei is embedded; the original portrait and source resume are never modified.
 """
 
 import argparse
@@ -25,7 +25,6 @@ from reportlab.platypus import Paragraph
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "docs/resume/content.zh-CN.json"
 OUTPUT = ROOT / "output/pdf/li-jiahao-ux-ui-resume.pdf"
-ASSET = ROOT / "assets/portfolio/li-jiahao-ux-ui-resume.pdf"
 PORTRAIT = ROOT / "docs/resume/portrait.png"
 W, H = A4
 M = 40.0
@@ -347,10 +346,7 @@ def render(layout, data):
                             anchor="c", mask="auto")
         c.showPage()
     c.save()
-    ASSET.parent.mkdir(parents=True, exist_ok=True)
-    ASSET.write_bytes(OUTPUT.read_bytes())
     print(f"Created {OUTPUT} ({OUTPUT.stat().st_size:,} bytes)")
-    print(f"Copied identical public asset to {ASSET}")
 
 
 def main():

@@ -360,13 +360,13 @@ function ResumeDownloadLink({ className = "" }: { className?: string }) {
   return (
     <a
       className={`resume-download-link ${className}`.trim()}
-      href={publicAsset("/assets/portfolio/li-jiahao-ux-ui-resume.pdf")}
-      download="李家豪-UX&UI简历.pdf"
-      aria-label="下载李家豪的 UX & UI 简历，PDF，共 2 页"
+      href={`${publicAsset("/assets/portfolio/li-jiahao-ux-ui-resume.pdf")}?v=eafc3e0551ae`}
+      download="李家豪-简历.pdf"
+      aria-label="下载李家豪的简历，PDF，共 3 页"
     >
       <Download size={17} strokeWidth={1.6} aria-hidden="true" />
       <span className="resume-download-label">下载简历</span>
-      <span className="resume-download-meta" aria-hidden="true">PDF · 2页</span>
+      <span className="resume-download-meta" aria-hidden="true">PDF · 3页</span>
     </a>
   );
 }

@@ -2,10 +2,10 @@
 
 公开下载文件：`assets/portfolio/li-jiahao-ux-ui-resume.pdf`。
 
-内容源：`content.zh-CN.json`；首页工作经历直接读取同一文件中的任职信息、简介与 `details`，PDF 使用精简的 `bullets`，避免公司、时间与职责出现不同版本。头像来自用户提供的原简历，保存在 `portrait.png`。修改内容后，在仓库根目录执行 `python scripts/build-resume.py`，需要 ReportLab 和 Windows 微软雅黑字体。生成器同时写入 `output/pdf/` 与网站资源目录；发布构建已有的 `copy-static.mjs` 会复制 `assets/portfolio/`，无需额外配置。
+当前公开版本为用户提供的「李家豪-简历.pdf」，共 3 页，原文件 SHA256 为 `eafc3e0551aee24eda9f908eeb3e597cf3e1d09bcb0ab547193980512b4c8fea`。直接复制原文件，不重新排版或修改 PDF 内容。首页工作经历下方与导航菜单共用下载组件，下载文件名为「李家豪-简历.pdf」，页数说明为「PDF · 3页」。链接使用文件哈希前缀作为版本参数，替换时需同步更新，避免旧文件缓存。
 
-文案依据为用户提供的简历、2026-10-19「招聘」对话的补充与确认，以及 `DESIGN.md` 中已确认的职责。保留用户确认的“7年+”，不展示 2020 年之前实习经历；GKX 身份保持脱敏，合同周期不作为个人任职或设计交付时间。问数 AI 问答平台与招财 Smart 合并为一个项目；仅招财 Smart 展示已明确的项目日期，其余不填推测时间。结果不补写未验证的数字或客户评价。
+首页工作经历仍由 `content.zh-CN.json` 提供任职信息、简介与 `details`。文案依据为用户简历、「招聘」对话的补充与确认，以及 `DESIGN.md` 中已确认的职责。保留用户确认的“7年+”，不展示 2020 年之前实习经历；GKX 身份保持脱敏，合同周期不作为个人任职或设计交付时间。问数 AI 问答平台与招财 Smart 合并为一个项目；其余未确认项目日期不作推测。结果不补写未验证的数字或客户评价。
 
-PDF 为两页 A4：第一页为个人简介与完整工作经历，第二页重点展示招财 Smart、GKX 与税纪云，精简呈现国家能源集团与数据可视化项目，并列出教育和工具。字体已嵌入，电话、邮箱、作品集及五个项目标题带可点击链接。后续调整后需重新渲染两页，检查中文、分页、边距和链接。菜单和工作经历区域复用同一下载组件，按钮所写页数需与实际文件一致。
+`scripts/build-resume.py` 仅保留为旧版两页简历的草稿生成器，需要 ReportLab 与 Windows 微软雅黑字体，内容来自 JSON 中的 `bullets` 和 `projects`，头像保存在 `portrait.png`。执行 `python scripts/build-resume.py` 只生成 `output/pdf/` 内的草稿，不再覆盖用户提供的公共下载文件。发布构建的 `copy-static.mjs` 会复制 `assets/portfolio/`，无需额外配置。
 
-运行 `python scripts/build-resume.py --check` 可只测量排版，不写入文件。模板会检查页边界、文本框重叠、公司与日期分区，正文保持至少 9pt / 14pt，不以自动缩小字号掩盖超出页边界的内容。
+运行 `python scripts/build-resume.py --check` 可只测量旧模板排版，不写入文件。替换公共简历时，需检查实际页数、渲染与文件哈希，并同步下载组件的文件名、页数和版本参数。
