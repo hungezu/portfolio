@@ -2626,7 +2626,7 @@ html.portfolio-transitioning body {
 
 @media (prefers-reduced-motion: no-preference) {
   .case-page {
-    animation: case-page-arrive 380ms var(--ease-out-expo) both;
+    animation: case-page-arrive 380ms var(--ease-out-expo) backwards;
   }
 }
 

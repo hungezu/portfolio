@@ -86,8 +86,10 @@ function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen
       <div className="gkx-supplemental-materials__grid">
         {items.map(material => (
           <article className="gkx-supplemental-material" key={material.src}>
-            <h4>{material.title}</h4>
-            <p>{material.purpose}</p>
+            <div className="gkx-supplemental-material__copy">
+              <h4>{material.title}</h4>
+              <p>{material.purpose}</p>
+            </div>
             <button
               type="button"
               className="gkx-supplemental-material__image"
