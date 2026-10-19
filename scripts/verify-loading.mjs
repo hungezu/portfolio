@@ -72,6 +72,7 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
     failedImage: false,
     querySelector(selector) {
       if (selector === ".case-loading") return this.loading ? element() : null;
+      if (selector === '[data-case-ready="text"]') return this.textReady ? element() : null;
       if (selector === ".image-fallback") return this.failedImage ? element() : null;
       if (selector === 'img[loading="eager"], img[fetchpriority="high"]') return this.image;
       throw new Error(`Unsupported project selector in loader test: ${selector}`);
@@ -185,6 +186,33 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
 }
 
 const checks = [
+  ["text-first case reveals after its content mounts", async () => {
+    const test = scenario({ page: "project" });
+    test.project.loading = false;
+    test.project.textReady = true;
+    test.changed();
+    await test.advance(3000);
+    test.assertRevealed("A mounted text-first case must reveal without waiting for an eager image or the eight-second timeout.");
+  }],
+  ["text readiness cannot bypass case Suspense", async () => {
+    const test = scenario({ page: "project" });
+    test.project.textReady = true;
+    test.changed();
+    await test.advance(3000);
+    test.assertWaiting("A lazy fallback must remain blocked until the real case mounts.");
+  }],
+  ["text-first case still waits for fonts", async () => {
+    const fonts = deferred();
+    const test = scenario({ page: "project", fonts: fonts.promise });
+    test.project.loading = false;
+    test.project.textReady = true;
+    test.changed();
+    await test.advance(3000);
+    test.assertWaiting("Text readiness must not bypass font readiness.");
+    fonts.resolve();
+    await test.advance(1800);
+    test.assertRevealed("A text-first case must reveal after its fonts become ready.");
+  }],
   ["pending video cannot be mistaken for disabled motion", async () => {
     const test = scenario();
     test.video.readyState = 2;

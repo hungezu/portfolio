@@ -4,7 +4,6 @@ import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
 import ArrowUp from "lucide-react/dist/esm/icons/arrow-up.mjs";
 import ArrowDown from "lucide-react/dist/esm/icons/arrow-down.mjs";
 import BarChart3 from "lucide-react/dist/esm/icons/bar-chart-3.mjs";
-import BriefcaseBusiness from "lucide-react/dist/esm/icons/briefcase-business.mjs";
 import Check from "lucide-react/dist/esm/icons/check.mjs";
 import ChevronDown from "lucide-react/dist/esm/icons/chevron-down.mjs";
 import CircleHelp from "lucide-react/dist/esm/icons/circle-help.mjs";
@@ -21,16 +20,16 @@ import Save from "lucide-react/dist/esm/icons/save.mjs";
 import Sparkles from "lucide-react/dist/esm/icons/sparkles.mjs";
 import Square from "lucide-react/dist/esm/icons/square.mjs";
 import Table2 from "lucide-react/dist/esm/icons/table-2.mjs";
-import UserRound from "lucide-react/dist/esm/icons/user-round.mjs";
 import X from "lucide-react/dist/esm/icons/x.mjs";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { publicAsset } from "../portfolio-data";
 import { PortfolioImage } from "../portfolio-image";
 import { ProjectLocator } from "../project-locator";
 import { ZhaocaiBoardEvidence, ZhaocaiAnswerEvidence } from "./ZhaocaiDesignEvidence";
-import "./zhaocai-smart-complete.css";
-import "./zhaocai-smart-editorial.css";
-import "./zhaocai-smart-refinement.css";
+import { ZhaocaiAnswerWorkbench } from "./ZhaocaiAnswerWorkbench";
+import { ZhaocaiConversationContinuation } from "./ZhaocaiConversationContinuation";
+import { useZhaocaiReference } from "./use-zhaocai-reference";
+import "./zhaocai-smart.css";
 
 type DemoStage = "entry" | "clarify" | "running" | "result" | "timeout" | "empty" | "stopped" | "board";
 type Metric = "" | "营业利润" | "利润总额" | "净利润" | "其他指标";
@@ -52,7 +51,6 @@ const problemRoles = [
   {
     number: "01",
     title: "财务人员",
-    icon: UserRound,
     task: "核对指标、期间与范围",
     support: "口径准确，来源可追溯",
     focus: "先确认口径",
@@ -60,7 +58,6 @@ const problemRoles = [
   {
     number: "02",
     title: "经营分析人员",
-    icon: BarChart3,
     task: "查看趋势、整理结果",
     support: "结果可比较，内容可复用",
     focus: "保留查询上下文",
@@ -68,7 +65,6 @@ const problemRoles = [
   {
     number: "03",
     title: "业务负责人",
-    icon: BriefcaseBusiness,
     task: "理解结论、支持判断",
     support: "重点清晰，按需查看依据",
     focus: "结论与依据分层",
@@ -76,24 +72,23 @@ const problemRoles = [
 ] as const;
 
 const locatorSections = [
-  ["zcs-project-overview", "项目概况"],
-  ["zcs-business-needs", "业务问题"],
-  ["zcs-experience-journey", "核心任务"],
-  ["zcs-clarification", "关键设计"],
-  ["zcs-markdown-system", "结果复用"],
-  ["zcs-ai-governance", "异常恢复"],
-  ["zcs-ai-strategy", "协作边界"],
-  ["zcs-delivery", "交付复盘"],
+  ["zcs-project-overview", "范围与任务"],
+  ["zcs-experience-journey", "完整对话"],
+  ["zcs-clarification", "关键决策"],
+  ["zcs-markdown-system", "Markdown 规范"],
+  ["zcs-board-design", "看板复用"],
+  ["zcs-delivery", "边界与复盘"],
 ] as const;
 
 const legacyAnchors: Record<string, string> = {
   overview: "zcs-project-overview",
   strategy: "zcs-clarification",
   clarification: "zcs-clarification",
-  process: "zcs-clarification",
-  board: "zcs-markdown-system",
+  process: "zcs-process-feedback",
+  board: "zcs-board-design",
   markdown: "zcs-markdown-system",
   "zcs-trust-mechanism": "zcs-ai-strategy",
+  "zcs-ai-governance": "zcs-process-feedback",
 };
 
 function scrollToId(id: string, smooth = true) {
@@ -329,19 +324,11 @@ function ExceptionState({ stage, query, year, scope, metric, phase = 1, suppleme
 }) {
   const metricLabel = metric === "其他指标" ? supplement || "其他指标" : metric || "待确认指标";
   const title = stage === "timeout" ? "查询暂未完成" : stage === "empty" ? (metric && metric !== "净利润" ? "该指标暂无演示数据" : "该条件暂无演示数据") : "查询已停止";
-  const message = stage === "timeout" ? "本次条件已保留，你可以从当前条件重新查询。" : stage === "empty" ? `当前前端样例不支持 ${year || "待确认时间"} / ${scope || "待确认组织"} / ${metricLabel}；这不代表企业没有相应数据。` : "问题、条件与已完成阶段均已保留。";
+  const message = stage === "timeout" ? "本次条件已保留，你可以从当前条件重新查询。" : stage === "empty" ? `当前示例未提供 ${year || "待确认时间"} / ${scope || "待确认组织"} / ${metricLabel} 的数据。可以修改条件，或查看已有的集团示例。` : "问题、条件与已完成阶段均已保留。";
   const primaryLabel = preview ? (stage === "timeout" ? "体验超时重试" : stage === "empty" ? "体验无匹配与恢复" : "体验停止与继续") : (stage === "timeout" ? "重新查询" : stage === "empty" ? "使用 2024 年全集团净利润示例" : "继续执行");
   return <div className="zc4-exception-state">
     <div className="zc4-exception-context"><div className="zc4-exception-question"><span>你的问题</span><p>{query}</p></div><div className="zc4-exception-conditions"><span>本次查询条件</span><div className="zc4-condition-chips"><span>{year ? `${year} 年` : "待确认时间"}</span><span>{scope || "待确认组织"}</span><span>{metricLabel}</span></div></div>{stage !== "empty" ? <p className="zc4-exception-phase">{stage === "stopped" ? "停止位置" : "未完成阶段"}：{["理解问题", "查询数据", "生成结果"][Math.min(2, Math.max(0, phase))]}</p> : null}</div>
     <section className="zc4-exception"><span>{stage === "timeout" ? <Clock3 size={24}/> : stage === "empty" ? <Database size={24}/> : <Square size={22}/>}</span><div><h3>{title}</h3><p>{message}</p><div><button className="zc4-primary" type="button" onClick={onPrimary}>{!preview && stage === "timeout" ? <RotateCcw size={15}/> : null}{primaryLabel}{preview ? <ArrowUpRight size={15}/> : null}</button><button type="button" onClick={onEdit}>{preview ? "体验" : ""}{stage === "stopped" ? "修改问题" : "修改条件"}</button></div></div></section>
-  </div>;
-}
-
-function RecoveryPreview({ onOpen }: { onOpen: (stage: RecoveryStage, edit?: boolean) => void }) {
-  const renderState = (stage: RecoveryStage) => <ExceptionState stage={stage} query={`查看 ${stage === "empty" ? "2025" : "2024"} 年全集团净利润变化`} year={stage === "empty" ? "2025" : "2024"} scope="全集团" metric="净利润" preview onPrimary={() => onOpen(stage)} onEdit={() => onOpen(stage, true)}/>;
-  return <div className="zc4-recovery-states">
-    <div className="zc4-recovery-main"><div className="zc4-recovery-window"><header><div><span>智能问数</span><i>/</i><strong>集团年度利润分析</strong></div><span>交互演示界面</span></header>{renderState("timeout")}</div><aside className="zc4-recovery-strategy"><h3>超时后，从原条件继续。</h3><p>保留原问题、已确认口径和执行上下文，让重试沿用本次条件。</p><p>反馈说明尚未取得结果，恢复入口直接回到完整任务。</p></aside></div>
-    <div className="zc4-recovery-secondary"><div><div className="zc4-recovery-window is-compact"><header><strong>无匹配数据</strong><span>交互演示局部</span></header>{renderState("empty")}</div><p className="zc4-recovery-note">未取得数据时说明查询范围，提供修改条件和恢复支持示例的入口，不将缺失解释为 0。</p></div><div><div className="zc4-recovery-window is-compact"><header><strong>用户停止</strong><span>交互演示局部</span></header>{renderState("stopped")}</div><p className="zc4-recovery-note">停止是任务中的暂停点。保留问题与条件，允许继续执行，也允许修改问题。</p></div></div>
   </div>;
 }
 
@@ -356,6 +343,7 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
   const [saveOpen, setSaveOpen] = useState(false);
   const [saveName, setSaveName] = useState("2024 年集团净利润分析");
   const [conditionEdit, setConditionEdit] = useState(false);
+  const [missingRangeOpen, setMissingRangeOpen] = useState(false);
   const [versions, setVersions] = useState<{ id: number; year: string; scope: string }[]>([]);
   const [viewedVersion, setViewedVersion] = useState(0);
   const pendingVersion = useRef<number | null>(null);
@@ -366,11 +354,15 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
   const saveDialogRef = useDialogFocus<HTMLElement>(saveOpen, () => setSaveOpen(false));
   const tableDialogRef = useDialogFocus<HTMLElement>(tableOpen, () => setTableOpen(false));
   useEffect(() => {
+    if (stage === "clarify" && (!year || !scope)) setMissingRangeOpen(true);
+    if (stage !== "clarify") setMissingRangeOpen(false);
+  }, [stage, year, scope]);
+  useEffect(() => {
     setSupplementOpen(false);
     setSupplement("");
     setSupplementReview(false);
     setConditionEdit(false);
-    setEvidence(false);
+    setEvidence(stage === "result");
     setShowProcess(false);
     setTableOpen(false);
     setSaveOpen(false);
@@ -384,7 +376,7 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
   const displayedVersion = viewedVersion || Math.max(1, executionId);
 
   const confirmMetric = () => {
-    if (!metric) return;
+    if (!metric || !year || !scope) return;
     if (metric === "其他指标" && !supplementReview) { setSupplementReview(true); return; }
     if (metric !== "净利润" || year !== "2024" || scope !== "全集团") { setStage("empty"); return; }
     beginExecution();
@@ -421,28 +413,21 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
   };
   const openBoard = () => { if (stage !== "board") previousTaskStage.current = stage; setStage("board"); };
   const closeEvidence = () => { setEvidence(false); requestAnimationFrame(() => evidenceButton.current?.focus()); };
+  const newQuery = () => { setEvidence(false); setShowProcess(false); setSupplementOpen(false); setSupplement(""); setSupplementReview(false); setConditionEdit(false); setView("chart"); setQuery(""); setMetric(""); setYear(""); setScope(""); setStage("entry"); };
 
   return (
     <div className="zc4-product">
-      <aside className="zc4-product-nav" aria-label="招财 Smart 工作区">
-        <strong className="zc4-product-brand"><span className="zc4-assistant-avatar"><Sparkles aria-hidden="true" size={18}/></span>招财 Smart</strong>
-        <nav aria-label="工作区视图">
-          <button type="button" className={stage !== "board" ? "active" : ""} aria-pressed={stage !== "board"} onClick={() => { if (stage === "board") setStage(previousTaskStage.current === "running" ? "stopped" : previousTaskStage.current); }}><Search aria-hidden="true" size={17}/>智能问数</button>
-          <button type="button" className="new" onClick={() => { setEvidence(false); setShowProcess(false); setSupplementOpen(false); setSupplement(""); setSupplementReview(false); setConditionEdit(false); setView("chart"); setQuery(""); setMetric(""); setYear(""); setScope(""); setStage("entry"); }}><Plus aria-hidden="true" size={17}/>新建查询</button>
-          <button type="button" className={stage === "board" ? "active" : ""} aria-pressed={stage === "board"} onClick={openBoard}><LayoutDashboard aria-hidden="true" size={17}/>我的看板</button>
-        </nav>
-        <div className="zc4-product-nav-context"><span>当前统计范围</span><strong>{year ? `${year} 年` : "时间待确认"}</strong><p>{scope || "组织待确认"}</p><span>经营数据 · 脱敏演示</span></div>
-      </aside>
       <div className="zc4-product-main">
-        <header className="zc4-topbar"><div><span>智能问数</span><i>/</i><strong>{stage === "board" ? "我的看板" : "集团年度利润分析"}</strong></div><span className={`zc4-topbar-status is-${stage}`}>{stage === "running" ? "查询中" : stage === "result" ? "已完成" : stage === "clarify" ? "待确认" : stage === "stopped" ? "已停止" : stage === "timeout" ? "待重试" : stage === "empty" ? "无匹配数据" : stage === "board" ? "结果复用" : "新建任务"}</span></header>
-        {stage==="entry" ? <section className="zc4-entry"><div className="brand"><Sparkles size={20}/>招财 Smart</div><h3>想了解哪些经营数据？</h3><p>请尽量包含时间、组织范围和分析指标。</p><label>输入问题<textarea aria-label="输入问题" name="finance-question" autoComplete="off" value={query} onChange={event=>setQuery(event.target.value)} placeholder="例如：查看 2024 年全集团利润变化…"/></label><button className="zc4-primary" type="button" disabled={!query.trim()} onClick={runFromEntry}><Search aria-hidden="true" size={16}/>发起查询</button></section>:null}
+        <header className="zc4-topbar"><div><span>智能问数</span><i>/</i><strong>{stage === "board" ? "我的看板" : stage === "entry" ? "新建查询" : "集团年度利润分析"}</strong></div><div className="zc4-topbar-actions"><span className={`zc4-topbar-status is-${stage}`}>{stage === "running" ? "查询中" : stage === "result" ? "已完成" : stage === "clarify" ? "待确认" : stage === "stopped" ? "已停止" : stage === "timeout" ? "待重试" : stage === "empty" ? "无匹配数据" : stage === "board" ? "结果复用" : "新建任务"}</span><button className="zc4-new-query" type="button" onClick={newQuery}><Plus aria-hidden="true" size={15}/>新建查询</button></div></header>
+        {stage==="entry" ? <section className="zc4-entry"><div className="brand"><Sparkles size={20}/>招财 Smart</div><h3>想了解哪些经营数据？</h3><p>说出想看的指标，时间与组织也可以在下一步补齐。</p><label>输入问题<textarea aria-label="输入问题" name="finance-question" autoComplete="off" value={query} onChange={event=>setQuery(event.target.value)} placeholder="例如：查看 2024 年全集团利润变化…"/></label><button className="zc4-primary" type="button" disabled={!query.trim()} onClick={runFromEntry}><Search aria-hidden="true" size={16}/>发起查询</button><div className="zc4-entry-examples" role="group" aria-label="示例问题">{["查看 2024 年全集团利润变化", "查看全集团净利润", "查看 2025 年全集团净利润"].map(text => <button type="button" key={text} onClick={() => setQuery(text)}>{text}</button>)}</div></section>:null}
         {stage === "clarify" ? (
           <section className="zc4-clarify">
             <div className="main">
               <div className="question"><span>你的问题</span><p>{query}</p></div>
               <div className="brand"><Sparkles size={19}/>招财 Smart</div>
-              <h3>你想查看哪一种利润？</h3>
-              <p>“利润”可能对应多个指标，请选择本次统计口径。</p>
+              <h3>{!year || !scope ? "补齐统计范围，再继续查询" : metric ? "确认本次查询条件" : "你想查看哪一种利润？"}</h3>
+              <p>{!year || !scope ? "时间和组织会影响结果，请先补充缺少的条件。" : "“利润”可能对应多个指标，请选择本次统计口径。"}</p>
+              {missingRangeOpen ? <div className="zc4-missing-conditions"><label>统计时间<select aria-label="补充统计时间" value={year} onChange={event => setYear(event.target.value)}><option value="">选择统计时间</option>{["2023", "2024", "2025"].map(value => <option key={value} value={value}>{value} 年</option>)}</select></label><label>组织范围<select aria-label="补充组织范围" value={scope} onChange={event => setScope(event.target.value)}><option value="">选择组织范围</option>{["全集团", "华南分公司", "华东分公司", "华北分公司"].map(value => <option key={value}>{value}</option>)}</select></label></div> : null}
               {!supplementOpen ? <fieldset>
                 <legend className="zc4-sr-only">选择利润口径</legend>
                 {(["营业利润", "利润总额", "净利润"] as Metric[]).map((option, index) => {
@@ -457,11 +442,11 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
               </fieldset> : <div className="zc4-supplement">
                 <label htmlFor="zc4-supplement-input">补充指标或业务含义</label>
                 <textarea ref={supplementInput} id="zc4-supplement-input" value={supplement} onChange={event => { setSupplement(event.target.value); setSupplementReview(false); }} placeholder="例如：扣除非经常性损益后的利润" />
-                {supplementReview ? <div className="zc4-supplement-review" role="status"><strong>拟采用的条件</strong><span>{year || "时间待确认"} / {scope || "组织待确认"} / {supplement || "指标待补充"}</span><p>当前前端样例没有该指标数据，提交后将展示演示范围说明。</p></div> : null}
+                {supplementReview ? <div className="zc4-supplement-review" role="status"><strong>拟采用的条件</strong><span>{year || "时间待确认"} / {scope || "组织待确认"} / {supplement || "指标待补充"}</span><p>本示例尚未提供该指标数据，提交后保留条件，并提供其他查询入口。</p></div> : null}
                 <button type="button" onClick={returnToCandidates}>返回候选</button>
               </div>}
               <p className="footnote">原问题、时间和组织会持续保留，只补充本次指标口径。</p>
-              <div className="actions"><button className="zc4-primary" type="button" disabled={!metric || (metric === "其他指标" && !supplement.trim())} onClick={confirmMetric}>{metric === "其他指标" ? (supplementReview ? "提交补充说明" : "确认补充条件") : metric ? `按${metric}查询` : "选择口径后继续"}</button></div>
+              <div className="actions"><button className="zc4-primary" type="button" disabled={!year || !scope || !metric || (metric === "其他指标" && !supplement.trim())} onClick={confirmMetric}>{!year || !scope ? "补齐条件后继续" : metric === "其他指标" ? (supplementReview ? "提交补充说明" : "确认补充条件") : metric ? `按${metric}查询` : "选择口径后继续"}</button></div>
             </div>
             <aside className="conditions"><h4>已识别条件</h4><ConditionFields year={year} scope={scope} metric={metric} supplement={supplement}/><button type="button" aria-expanded={conditionEdit} onClick={() => setConditionEdit(!conditionEdit)}><Pencil size={15}/>{conditionEdit ? "收起条件编辑" : "修改已识别条件"}</button>{conditionEdit ? <div className="editor"><label>统计时间<select aria-label="统计时间" value={year} onChange={event => setYear(event.target.value)}><option value="">选择统计时间</option>{["2023", "2024", "2025"].map(value => <option key={value} value={value}>{value} 年</option>)}</select></label><label>组织范围<select aria-label="组织范围" value={scope} onChange={event => setScope(event.target.value)}><option value="">选择组织范围</option>{["全集团", "华南分公司", "华东分公司", "华北分公司"].map(value => <option key={value}>{value}</option>)}</select></label><button type="button" onClick={() => { setConditionEdit(false); setQuery(`查看 ${year ? `${year} 年` : "待确认时间"} ${scope || "待确认组织"}利润变化`); }}>应用条件</button></div> : null}<div className="source"><Database size={15}/><span>查询数据<strong>集团经营指标表（示例）</strong></span></div></aside>
           </section>
@@ -482,6 +467,7 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
                 <div>{view === "chart" ? <ProfitChart/> : <DataTable/>}</div>
                 <footer><span><FileText size={15}/>集团经营指标表（示例）</span><button ref={evidenceButton} type="button" onClick={()=>setEvidence(true)}>查看口径与数据依据<ArrowUpRight size={14}/></button></footer>
               </article>
+              <ZhaocaiConversationContinuation key={executionId} onSource={() => setEvidence(true)}/>
               {savedSnapshot?<div className="zc4-saved-note"><Check size={16}/>已保存到“集团经营分析”<button type="button" onClick={openBoard}>查看看板</button></div>:null}
             </section>
             {evidence?<aside className="zc4-evidence" aria-label="本次查询依据"><header><h3>本次查询依据</h3><button type="button" aria-label="关闭查询依据" onClick={closeEvidence}><X size={18}/></button></header><label>执行版本<select aria-label="执行版本" value={displayedVersion} onChange={event => setViewedVersion(Number(event.target.value))}>{versions.length ? versions.map(version => <option key={version.id} value={version.id}>第 {version.id} 次执行 · 已完成</option>) : <option value={displayedVersion}>第 {displayedVersion} 次执行 · 已完成</option>}</select></label><QuerySourceFields/><button type="button" onClick={()=>setTableOpen(true)}><Table2 aria-hidden="true" size={16}/>查看本次原始表格</button><p>完成版本保留查询快照；修改条件后重新执行。本例的可查询范围为 2024 年全集团净利润。</p></aside>:null}
@@ -509,74 +495,8 @@ function DataTable({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function DecisionEvidence({ kind }: { kind: "clarify" | "running" | "result" }) {
-  return <div className={`zc4-decision-evidence-ui is-${kind}`}>
-    <div className="zc4-evidence-window">
-      <header><div><span>智能问数</span><i>/</i><strong>集团年度利润分析</strong></div><span>设计界面 · 静态示例</span></header>
-      <div className="zc4-evidence-content">
-        {kind === "clarify" ? <>
-          <p className="zc4-evidence-question">{defaultQuery}</p>
-          <div className="zc4-evidence-clarify"><section>
-            <div className="zc4-evidence-brand"><Sparkles size={19}/>招财 Smart</div>
-            <h4>你想查看哪一种利润？</h4><p>“利润”可能对应多个指标，请选择本次统计口径。</p>
-            <ul>{["营业利润", "利润总额", "净利润"].map(label => <li key={label}><i/><span>{label}</span></li>)}</ul>
-            <p className="zc4-evidence-supplement">都不是，补充说明</p>
-            <p>原问题、时间和组织会持续保留，只补充本次指标口径。</p>
-            <span className="zc4-evidence-action">选择口径后继续</span>
-          </section><aside><h4>已识别条件</h4><ConditionFields year="2024" scope="全集团"/><p className="zc4-evidence-source"><Database size={15}/>集团经营指标表（示例）</p></aside></div>
-        </> : kind === "running" ? <section className="zc4-evidence-progress">
-          <div className="zc4-evidence-brand"><span className="zc4-assistant-avatar"><Sparkles aria-hidden="true" size={16}/></span>招财 Smart</div><span>查询中 · 查询数据</span><h4>2024 年全集团净利润分析</h4><p>已确认统计条件，正在处理第 2 / 3 个阶段。</p>
-          <div className="zc4-condition-chips"><span>2024 年</span><span>全集团</span><span>净利润 · 用户已确认</span></div>
-          <ExecutionStages phase={1}/>
-          <footer><p>点击继续查看结果，或停止本次查询。</p><div><span className="zc4-evidence-action">继续查看结果</span><span><Square size={14}/>停止查询</span></div></footer>
-        </section> : <div className="zc4-evidence-result"><section>
-          <h4>2024 年集团净利润分析</h4><div className="zc4-condition-chips"><span>2024 年</span><span>全集团</span><span>净利润 · 用户已确认</span></div>
-          <p>全年净利润 <strong>{totalProfit.toFixed(2)}</strong> 亿元</p><p>四个季度净利润逐季上升，四季度为 1.71 亿元。</p><ProfitChart compact/>
-          <p className="zc4-evidence-source"><FileText size={15}/>集团经营指标表（示例）</p>
-        </section><aside><h4>本次查询依据</h4><span className="zc4-evidence-version">第 1 次执行 · 已完成</span><QuerySourceFields/><span className="zc4-evidence-table-label"><Table2 size={15}/>查看本次原始表格</span></aside></div>}
-      </div>
-    </div>
-  </div>;
-}
-
-function OwnershipFlow() {
-  const steps = [["AI", "识别条件"], ["用户", "确认口径"], ["确定性服务", "权限校验"], ["确定性服务", "执行查询"], ["确定性服务", "结果校验"], ["AI", "解释呈现"], ["用户", "核对结果"]];
-  return <ol className="zc4-ownership-flow" aria-label="人机协作与执行顺序">{steps.map((step, index) => <li key={step[1]} className={step[0] === "AI" ? "is-ai" : step[0] === "用户" ? "is-human" : "is-service"}><span>{step[0]}</span><strong>{step[1]}</strong>{index < steps.length - 1 ? <ArrowUpRight aria-hidden="true" size={18}/> : null}</li>)}</ol>;
-}
-
-const aiMetricPlans = [
-  ["意图结构化完全正确率", "时间、组织、指标、维度、聚合与比较关系全部匹配金标的问题数", "有效评测问题数", "每个模型 / 语义层版本；线上滚动 28 天", "保存结构化查询计划，与金标自动比对"],
-  ["应澄清召回率", "正确触发确认的歧义问题数", "金标中的全部歧义问题数", "每版本离线评测", "金标标注“应确认 / 可直查”"],
-  ["无效澄清率", "被错误要求确认的明确问题数", "全部明确问题数", "每版本 + 滚动 28 天", "离线金标与线上澄清事件"],
-  ["数值与来源通过率", "数值、计算和引用全部通过核对的回答数", "抽检回答数", "每版本 + 每周分层抽样，滚动 28 天", "自动数值校验 + 财务 / 数据人工审查"],
-  ["一次可用率", "首次结果后 10 分钟内未改条件或重查，且被保存、导出或明确采纳的会话数", "成功展示结果的会话数", "滚动 28 天", "会话事件；显式采纳与行为代理分开统计"],
-  ["人工接管率", "转固定筛选、人工报表或人工支持的会话数", "发起 AI 查询的会话数", "滚动 28 天", "入口切换、重新查询与工单事件"],
-  ["降级完成率", "模型不可用时通过结构化入口完成任务的会话数", "可降级会话数", "按事故统计，季度汇总", "故障标记与后续任务完成事件"],
-  ["安全逃逸率", "返回越权数据或执行禁用动作的攻击请求数", "全部越权与红队请求数", "每版本；生产持续监控", "红队集、权限日志与事故记录"],
-] as const;
-
-const recoveryCases = [
-  ["查询超时", "显示当前步骤、已保留条件和未返回结果", "从失败步骤重试", "page"],
-  ["无匹配数据", "显示查询范围和“无匹配记录”，不显示伪零值", "修改时间、组织或指标", "page"],
-  ["用户停止", "保留已完成步骤和确认条件", "继续执行或修改问题", "page"],
-  ["结果校验异常", "暂不生成确定性结论，显示异常项和原始表格", "核对来源后重新生成", "spec"],
-  ["模型不可用", "说明智能解析暂不可用", "切换指标树、模板或固定筛选器", "spec"],
-  ["数据服务不可用", "说明数据暂未返回，不推测为无记录", "保留查询并稍后重试", "spec"],
-  ["权限不足", "明确说明无权访问，不伪装成空数据", "申请权限或缩小范围", "spec"],
-  ["预算或限流耗尽", "复杂自然语言任务暂不可用", "结构化任务继续走确定性查询", "spec"],
-] as const;
-
-const evaluationChecks = [
-  "用户有权访问对应数据",
-  "时间、组织、指标、维度、聚合和比较关系与问题一致",
-  "查询计划只使用已批准的指标与数据范围",
-  "返回数据与基准查询一致",
-  "所有数值、计算和引用都能回到原始数据",
-  "单位、期间、分母、精度和缺失值处理正确",
-  "没有把推测写成事实，也没有把相关性写成因果",
-] as const;
-
 export function ZhaocaiSmartCompleteCase() {
+  const reference = useZhaocaiReference();
   const [stage, setStage] = useState<DemoStage>("clarify");
   const [query, setQuery] = useState(defaultQuery);
   const [metric, setMetric] = useState<Metric>("");
@@ -597,6 +517,7 @@ export function ZhaocaiSmartCompleteCase() {
     setYear(parsedYear);
     setScope(parsedScope);
     setMetric(parsedMetric);
+    if (!query.includes("利润")) { setMetric("其他指标"); setStage("empty"); return; }
     if (!parsedYear || !parsedScope || (!parsedMetric && !query.includes("利润"))) { setStage("clarify"); return; }
     if (parsedMetric) {
       if (parsedYear === "2024" && parsedScope === "全集团" && parsedMetric === "净利润") beginExecution();
@@ -620,10 +541,15 @@ export function ZhaocaiSmartCompleteCase() {
     } else {
       setYear("2024"); setScope("全集团"); setMetric("净利润"); setExecutionMode("normal"); setExecutionId(current=>Math.max(1,current)); setStage("timeout");
     }
-    requestAnimationFrame(()=>scrollToId("zcs-core-interaction"));
+  };
+
+  const openDemo = (next: DemoScene, source: HTMLElement, preserveContext = false) => {
+    setDemo(next, preserveContext);
+    reference.openReference(source, "zcs-core-interaction");
   };
 
   const openRecovery = (next: RecoveryStage, edit = false) => {
+    const source = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     setDemo("exception");
     if (next === "empty") {
       setQuery("查看 2025 年全集团净利润变化");
@@ -631,6 +557,7 @@ export function ZhaocaiSmartCompleteCase() {
     }
     setPhase(1);
     setStage(edit ? "entry" : next);
+    if (source && !demoRef.current?.contains(source)) reference.openReference(source, "zcs-core-interaction");
   };
 
   useEffect(()=>{
@@ -670,145 +597,89 @@ export function ZhaocaiSmartCompleteCase() {
 
   const demoProps: DemoProps = { resetToken, stage, setStage, query, setQuery, metric, setMetric, year, setYear, scope, setScope, phase, executionId, executionMode, setExecutionMode, beginExecution, runFromEntry };
   return (
-    <article className="zc4" id="zcs-case-top" aria-label="招财 Smart 完整项目案例">
+    <article className="zc4" id="zcs-case-top" data-case-ready="text" aria-label="招财 Smart 完整项目案例">
       <a className="zc4-skip-link" href="#zcs-project-overview">跳到项目正文</a>
-      <ProjectLocator sections={locatorSections} legacyAnchors={legacyAnchors} ariaLabel="招财 Smart 项目章节定位" />
+      <ProjectLocator sections={locatorSections} legacyAnchors={legacyAnchors} onNavigate={reference.clearReference} ariaLabel="招财 Smart 项目章节定位" />
 
-      <header className="zc4-hero" id="zcs-project-overview" tabIndex={-1}>
-        <div className="zc4-opening">
-          <div className="zc4-opening-copy"><p className="zc4-chapter-label">01 / 项目概况</p><h1>招财 <span>Smart</span></h1><h2>财务智能问数的<br/>核心交互设计</h2><p>用户用自然语言查询经营数据。我负责口径确认、查询反馈、结果依据与看板复用，让用户在使用结果前核对统计范围和来源。</p><a className="zc4-opening-link" href="#zcs-core-interaction">体验完整任务<ArrowUpRight size={18}/></a></div>
-          <figure className="zc4-opening-ui"><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png")} target="_blank" rel="noreferrer" aria-label="在新标签页查看招财 Smart 产品首页原图"><PortfolioImage src={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png")} width="1445" height="800" loading="eager" fetchPriority="high" decoding="async" alt="招财 Smart 产品首页：财务智能体导航、自然语言提问框与财务问数入口。"/></a><figcaption>产品首页 · 原始脱敏界面 · 可查看原图</figcaption></figure>
+      <header className="zc4-hero zc4-opening-editorial" id="zcs-project-overview" tabIndex={-1}>
+        <div className="zc4-opening-masthead">
+          <div className="zc4-opening-identity"><h1>招财 <span className="zc4-project-accent">Smart</span></h1><p>企业财务智能问数</p></div>
+          <dl className="zc4-opening-facts"><div><dt>我的角色</dt><dd>UX/UI 设计</dd></div><div><dt>项目时间</dt><dd>2025.07—2025.11</dd></div><div><dt>产品平台</dt><dd>企业级 Web</dd></div></dl>
         </div>
-        <dl className="zc4-opening-meta"><div><dt>我的角色</dt><dd>UX/UI 设计</dd></div><div><dt>项目时间</dt><dd>2025.07—2025.11</dd></div><div><dt>项目类型</dt><dd>AI 财务智能问数 / Web</dd></div><div><dt>设计范围</dt><dd>核心交互、结果呈现与回答规范</dd></div></dl>
-        <p className="zc4-opening-scope">口径确认 · 过程反馈 · 结果追溯 · 看板复用</p>
-        <p className="zc4-opening-note">本页为前端交互演示，经营数字为脱敏示例。</p>
+        <div className="zc4-opening-thesis"><h2>让财务问数有来有回，<span className="zc4-keep-phrase">有据可查</span></h2><p>我负责从提问到结果的对话体验，以及 Markdown 回答规范：把含糊的问题拆成可确认的条件，让过程可控，让结论和依据一起交付。</p></div>
+        <div className="zc4-task-analysis zc4-opening-task" aria-label="从业务提问到查询条件的设计拆解">
+          <header><span>从一句业务提问开始</span><a href="#zcs-core-interaction" onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); openDemo("clarify", event.currentTarget); }}>体验完整对话<ArrowUpRight aria-hidden="true" size={17}/></a></header>
+          <div className="zc4-opening-question"><p>查看 <strong>2024 年</strong><strong>全集团</strong><em>利润</em>变化</p></div>
+          <div className="zc4-opening-condition-flow">
+            <div className="zc4-opening-known"><span>已识别，继续沿用</span><dl><div><dt>统计时间</dt><dd>2024 年<Check aria-hidden="true" size={16}/></dd></div><div><dt>组织范围</dt><dd>全集团<Check aria-hidden="true" size={16}/></dd></div></dl></div>
+            <div className="zc4-opening-unknown"><span>只确认影响结果的歧义</span><h3>“利润”指的是哪一种口径？</h3><ul aria-label="可确认的指标口径"><li>营业利润</li><li>利润总额</li><li>净利润</li></ul></div>
+          </div>
+          <footer><p>已知条件不重填，业务口径由用户确认。</p><a href="#zcs-markdown-system" onClick={event => { if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return; event.preventDefault(); reference.openReference(event.currentTarget, "zcs-markdown-system"); }}>查看回答规范<ArrowUpRight aria-hidden="true" size={17}/></a></footer>
+        </div>
+        <section className="zc4-context" id="zcs-business-needs">
+          <div className="zc4-business-content">
+            <span className="zc4-anchor" id="zcs-design-goals"/>
+            <header className="zc4-business-heading"><h2>同一份经营数据，支持不同深度的阅读</h2><p>面向财务人员、经营分析人员与业务负责人，设计范围覆盖条件确认、执行反馈、回答规范和分析复用。</p></header>
+            <section className="zc4-task-matrix" aria-labelledby="zc4-problem-roles-title">
+              <h3 id="zc4-problem-roles-title">围绕任务，确定信息的先后</h3>
+              <table><caption className="zc4-sr-only">三类用户的任务、信息需求与设计重点</caption><thead><tr><th scope="col">使用角色</th><th scope="col">主要任务</th><th scope="col">需要看清</th><th scope="col">设计重点</th></tr></thead><tbody>{problemRoles.map(role => <tr key={role.number}><th scope="row">{role.title}</th><td data-label="主要任务">{role.task}</td><td data-label="需要看清">{role.support}</td><td data-label="设计重点"><strong>{role.focus}</strong></td></tr>)}</tbody></table>
+            </section>
+            <details className="zc4-original-homepage"><summary><span><strong>查看原始产品首页</strong><small>财务问数入口与工作区</small></span><ChevronDown aria-hidden="true" size={20}/></summary><figure><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png")} target="_blank" rel="noreferrer" aria-label="在新标签页查看招财 Smart 原始脱敏产品首页"><PortfolioImage src={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/homepage-original.png")} width="1445" height="800" loading="lazy" decoding="async" alt="招财 Smart 原始脱敏产品首页，包含财务智能体导航、自然语言提问框与问数入口。"/></a><figcaption>原始脱敏界面 · 点击查看完整图</figcaption></figure></details>
+          </div>
+        </section>
       </header>
 
       <div className="zc4-content">
-        <section className="zc4-section" id="zcs-business-needs">
-          <article className="zc4-problem-evidence" aria-labelledby="zc4-problem-evidence-title">
-            <header className="zc4-problem-evidence-header">
-              <div>
-                <p className="zc4-chapter-label">02 / 业务问题</p>
-                <h2 id="zc4-problem-evidence-title">同一句“利润”，<br />可能对应不同口径</h2>
-              </div>
-              <p>“利润”可能指营业利润、利润总额或净利润。直接猜测会得到不同答案；每次都重填时间和组织，又增加操作成本。设计重点是只确认影响结果的歧义。</p>
-            </header>
-
-            <section className="zc4-problem-roles" aria-labelledby="zc4-problem-roles-title">
-              <h3 id="zc4-problem-roles-title">三类角色，三种阅读重点</h3>
-              <div className="zc4-problem-role-grid">
-                {problemRoles.map(role => {
-                  const Icon = role.icon;
-                  return (
-                    <article className="zc4-problem-role" key={role.number}>
-                      <div className="zc4-problem-role-heading">
-                        <div><h4>{role.title}</h4></div>
-                        <Icon aria-hidden="true" strokeWidth={1.8} />
-                      </div>
-                      <dl>
-                        <div><dt>主要任务</dt><dd>{role.task}</dd></div>
-                        <div><dt>需要的信息与支持</dt><dd>{role.support}</dd></div>
-                      </dl>
-                      <div className="zc4-problem-role-focus"><span>设计重点</span><strong>{role.focus}</strong></div>
-                    </article>
-                  );
-                })}
-              </div>
-            </section>
-
-            <div className="zc4-task-analysis"><div className="zc4-task-input"><span>业务提问</span><p>查看 <strong>2024 年</strong><strong>全集团</strong>利润变化</p></div><div className="zc4-task-conditions"><div><span>已识别 · 时间</span><strong>2024 年<Check size={16}/></strong></div><div><span>已识别 · 组织</span><strong>全集团<Check size={16}/></strong></div><div className="needs-confirmation"><span>待确认 · 指标</span><strong>哪一种利润？<CircleHelp size={16}/></strong></div></div><p className="zc4-design-question">如何只确认影响结果的歧义，同时保留查询上下文？</p></div>
-            <p className="zc4-material-note">依据现有任务与界面材料梳理。</p>
-          </article>
-          <span className="zc4-anchor" id="zcs-design-goals"/>
-          <dl className="zc4-design-goals" aria-label="三项设计目标">
-            <div><dt>确认成本</dt><dd>只补充影响结果的条件，保留已识别信息。</dd></div>
-            <div><dt>等待控制</dt><dd>当前阶段可见，查询可以停止并继续。</dd></div>
-            <div><dt>结果核对</dt><dd>结论关联统计条件、数据来源与原始表。</dd></div>
-          </dl>
-        </section>
-
         <section className="zc4-section" id="zcs-experience-journey">
-          <Heading number="03 / 核心任务" title="从业务提问，到可复用结果" intro="在同一次任务中，保留问题、条件、过程与结果依据。"/>
+          <Heading title="走完一次有来有回的问数" intro="从确认口径到核对结果，再继续追问或保存分析。关键步骤都保留在同一段对话里。"/>
           <ol className="zc4-flow zc4-flow-five">{[["提问","自然语言描述需求"],["对齐","识别条件，只确认歧义项"],["执行","数据服务查询，界面展示阶段"],["核对","查看结论、条件、来源与原始表"],["复用","保存结果和查询上下文"]].map((item,index)=><li key={item[0]}><span>{String(index+1).padStart(2,"0")}</span><strong>{item[0]}</strong><p>{item[1]}</p></li>)}</ol>
-          <div className="zc4-demo" id="zcs-core-interaction" ref={demoRef}><span className="zc4-anchor" id="clarification"/><header><div><span>交互演示 · 示例数据</span><strong>完整任务</strong></div><div role="group" aria-label="切换演示场景">{([['clarify','口径确认'],['running','慢查询演示'],['result','顺利完成查询'],['exception','异常恢复']] as [DemoScene,string][]).map(([id,label])=><button type="button" className={scene===id?"active":""} aria-pressed={scene===id} onClick={()=>setDemo(id)} key={id}>{label}</button>)}</div></header>{scene==="exception"?<div className="zc4-exception-tabs"><button type="button" onClick={()=>openRecovery("timeout")}>查询超时与重试</button><button type="button" onClick={()=>openRecovery("empty")}>模拟无匹配记录</button><button type="button" onClick={()=>openRecovery("stopped")}>停止并保留条件</button></div>:null}<ProductDemo {...demoProps}/></div>
+          <div className="zc4-demo" id="zcs-core-interaction" ref={demoRef}><span className="zc4-anchor" id="clarification"/>{reference.returnAvailable && reference.targetId === "zcs-core-interaction" ? <div className="zc4-reference-return"><span>对话体验</span><button type="button" onClick={reference.returnToSource}>返回刚才位置<RotateCcw size={15}/></button></div> : null}<header><div><span>交互演示 · 示例数据</span><strong>完整任务</strong></div><div role="group" aria-label="切换演示场景">{([['clarify','口径确认'],['running','慢查询演示'],['result','顺利完成查询'],['exception','异常恢复']] as [DemoScene,string][]).map(([id,label])=><button type="button" className={scene===id?"active":""} aria-pressed={scene===id} onClick={()=>setDemo(id)} key={id}>{label}</button>)}</div></header>{scene==="exception"?<div className="zc4-exception-tabs"><button type="button" onClick={()=>openRecovery("timeout")}>查询超时与重试</button><button type="button" onClick={()=>openRecovery("empty")}>模拟无匹配记录</button><button type="button" onClick={()=>openRecovery("stopped")}>停止并保留条件</button></div>:null}<ProductDemo {...demoProps}/></div>
         </section>
 
         <section className="zc4-section" id="zcs-clarification">
           <span className="zc4-anchor" id="strategy"/>
-          <Heading number="04 / 关键设计" title="三个问题，三个设计判断" intro="指标有歧义时先确认，等待时提供控制，结果出现后允许核对。每项设计用一幅界面说明具体落点。"/>
-          <div className="zc4-decision-stories">
-            <article className="zc4-decision-story"><DecisionEvidence kind="clarify"/><div className="zc4-story-note"><h3>已识别的条件不必重填</h3><dl><div><dt>问题</dt><dd>重复输入时间与组织，会让一次确认变成重新提问。</dd></div><div><dt>取舍</dt><dd>用候选承接明确歧义，开放说明承接候选不足。</dd></div><div><dt>界面落点</dt><dd>保留条件摘要，只补充指标，并提供“都不是”入口。</dd></div></dl><button type="button" onClick={()=>setDemo("clarify", true)}>体验候选确认<ArrowUpRight size={16}/></button></div></article>
-            <article className="zc4-decision-story is-reversed" id="zcs-process-feedback"><span className="zc4-anchor" id="process"/><DecisionEvidence kind="running"/><div className="zc4-story-note"><h3>等待有反馈，也保留停止入口</h3><dl><div><dt>问题</dt><dd>持续加载无法说明任务停在哪一步。</dd></div><div><dt>取舍</dt><dd>展示可理解的业务阶段，处理细节按需查看。</dd></div><div><dt>界面落点</dt><dd>阶段、条件与停止操作同屏，停止后保留继续入口。</dd></div></dl><button type="button" onClick={()=>setDemo("running")}>体验慢查询演示<ArrowUpRight size={16}/></button></div></article>
-            <article className="zc4-decision-story"><DecisionEvidence kind="result"/><div className="zc4-story-note"><h3>结论先读，依据按需核对</h3><dl><div><dt>问题</dt><dd>把全部明细铺在回答里，会掩盖结论的阅读重点。</dd></div><div><dt>取舍</dt><dd>结论与趋势先读，统计依据按需展开。</dd></div><div><dt>界面落点</dt><dd>依据侧栏关联口径、期间、组织、来源与本次原始表。</dd></div></dl><button type="button" onClick={()=>setDemo("result")}>查看结果与依据<ArrowUpRight size={16}/></button></div></article>
+          <Heading title="三个关键决策，连接确认、控制与核对" intro="围绕影响结果的歧义、等待中的控制，以及答案的阅读顺序，明确采用方案的条件与代价。"/>
+          <div className="zc4-decision-list" id="zc4-decision-panel">
+            <article className="zc4-decision" id="zcs-condition-decision">
+              <header className="zc4-decision-heading"><h3>有合法候选时，只确认口径</h3><p>“利润”有多种业务含义，已识别的时间和组织不应因此重填。</p></header>
+              <div className="zc4-decision-layout"><div className="zc4-decision-copy"><dl><div><dt>采用方案</dt><dd>保留已知条件，用候选项确认指标，并提供“都不是，补充说明”。</dd></div><div><dt>适用条件</dt><dd>系统能给出有限、明确的合法候选，用户只需确认其中一个业务含义。</dd></div><div><dt>代价与边界</dt><dd>不完整的候选可能误导选择；候选不足时转开放补充，条件未齐前不执行。</dd></div></dl><button className="zc4-decision-action" type="button" onClick={event=>openDemo("clarify",event.currentTarget,true)}>体验候选确认<ArrowUpRight aria-hidden="true" size={16}/></button></div>
+                <aside className="zc4-decision-support"><h4>其他路径如何配合</h4><p>无法形成候选时，开放追问更合适；高频、标准任务仍可使用筛选器、指标树或常用模板。</p><details className="zc4-disclosure"><summary>查阅语义澄清原稿</summary><div className="zc4-disclosure-body"><figure className="zc4-original-material"><a href={publicAsset("/assets/projects/zhaocai-smart/13-semantic-clarification.webp")} target="_blank" rel="noreferrer" aria-label="在新标签页查看语义澄清原稿"><PortfolioImage src={publicAsset("/assets/projects/zhaocai-smart/13-semantic-clarification.webp")} width="1920" height="1080" alt="语义澄清原稿：自然语言提问、歧义确认与条件补充的设计说明。" loading="lazy"/></a><figcaption>原始设计稿 · 点击查看完整图</figcaption></figure></div></details></aside>
+              </div>
+            </article>
+            <article className="zc4-decision" id="zcs-process-feedback">
+              <span className="zc4-anchor" id="process"/><span className="zc4-anchor" id="zcs-ai-governance"/>
+              <header className="zc4-decision-heading"><h3>等待有阶段，中断有下一步</h3><p>持续加载无法说明任务停在哪里。反馈需要同时回答“正在做什么”和“接下来能做什么”。</p></header>
+              <div className="zc4-decision-layout"><div className="zc4-decision-copy"><dl><div><dt>采用方案</dt><dd>展示理解问题、查询数据、生成结果三个业务阶段，保留当前条件与停止入口。</dd></div><div><dt>适用条件</dt><dd>查询需要等待，或用户希望在结果返回前调整任务。</dd></div><div><dt>代价与边界</dt><dd>阶段提示不等于耗时进度；停止不代表取得部分结果，重试仍需服务重新执行。</dd></div></dl><button className="zc4-decision-action" type="button" onClick={event=>openDemo("running",event.currentTarget)}>体验等待与停止<ArrowUpRight aria-hidden="true" size={16}/></button></div>
+                <aside className="zc4-decision-support"><h4>恢复沿用本次上下文</h4><dl className="zc4-recovery-options"><div><dt>查询超时</dt><dd>说明尚未取得结果，保留条件后重试。<button type="button" onClick={()=>openRecovery("timeout")}>体验超时重试<ArrowUpRight aria-hidden="true" size={15}/></button></dd></div><div><dt>无匹配数据</dt><dd>显示查询范围，允许修改条件；缺失不写成零。<button type="button" onClick={()=>openRecovery("empty")}>体验无匹配与恢复<ArrowUpRight aria-hidden="true" size={15}/></button></dd></div><div><dt>用户停止</dt><dd>保留问题、条件和阶段，可继续，也可修改问题。<button type="button" onClick={()=>openRecovery("stopped")}>体验停止与继续<ArrowUpRight aria-hidden="true" size={15}/></button></dd></div></dl><details className="zc4-disclosure"><summary>查阅过程可视化原稿</summary><div className="zc4-disclosure-body"><figure className="zc4-original-material"><a href={publicAsset("/assets/projects/zhaocai-smart/14-process-visualization.webp")} target="_blank" rel="noreferrer" aria-label="在新标签页查看过程可视化原稿"><PortfolioImage src={publicAsset("/assets/projects/zhaocai-smart/14-process-visualization.webp")} width="1920" height="1080" alt="过程可视化原稿：查询处理阶段、等待反馈、空数据与完成状态的设计说明。" loading="lazy"/></a><figcaption>原始设计稿 · 点击查看完整图</figcaption></figure></div></details></aside>
+              </div>
+            </article>
+            <article className="zc4-decision" id="zcs-result-decision">
+              <header className="zc4-decision-heading"><h3>结论先读，依据按需核对</h3><p>完整明细不必一次铺开，但统计条件和来源不能离开结论。</p></header>
+              <div className="zc4-decision-layout"><div className="zc4-decision-copy"><dl><div><dt>采用方案</dt><dd>先展示结论与趋势，再按需展开口径、期间、组织、来源及本次原始表。</dd></div><div><dt>适用条件</dt><dd>同一结果需要兼顾快速阅读与进一步核对，明细较多且有明确的数据来源。</dd></div><div><dt>代价与边界</dt><dd>展开依据增加一次操作，因此入口紧邻结果；不同执行版本分别保留查询快照。</dd></div></dl><button className="zc4-decision-action" type="button" onClick={event=>openDemo("result",event.currentTarget)}>体验结果与依据<ArrowUpRight aria-hidden="true" size={16}/></button></div><aside className="zc4-decision-support"><h4>解释也要有边界</h4><p>当前数据能说明季度变化，不能据此推断增长原因。继续追问时，先沿用已确认条件，再明确新增或改变的范围。</p><a className="zc4-decision-action" href="#zcs-markdown-system" onClick={event=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();reference.openReference(event.currentTarget,"zcs-markdown-system");}}>对照回答规范<ArrowUpRight aria-hidden="true" size={16}/></a></aside></div>
+            </article>
           </div>
-          <details className="zc4-disclosure"><summary>口径确认的三条互补路径</summary><div className="zc4-disclosure-body">
-          <div className="zc4-option-compare is-three"><article><span>方案 A · 开放追问</span><h3>让用户重新描述</h3><div className="zc4-static-input">请输入补充说明。</div><p>适合系统无法形成可靠候选时继续收集信息。</p><strong>代价：候选已经明确时，增加一次表达成本。</strong></article><article className="adopted"><span>方案 B · 候选确认（采用）</span><h3>只确认歧义口径</h3><div className="zc4-choice-preview"><div className="zc4-choice-options"><span>2024 年</span><span>集团</span><label className="selected"><i/>净利润</label><label><i/>利润总额</label></div><button type="button" onClick={()=>setDemo("clarify", true)}>体验候选确认</button></div><p>保留已识别的时间和范围，让用户决定业务含义。</p><strong>代价：候选集错误或不完整时可能误导，必须保留“都不是”。</strong></article><article><span>方案 C · 固定筛选器 / 指标树</span><h3>用确定性 GUI 完成</h3><div className="zc4-filter-preview"><span>时间</span><span>组织</span><span>指标</span></div><p>适合高频、标准且范围明确的任务，也作为模型不可用时的降级入口。</p><strong>结论：不作为复杂问数的主入口，但必须保留。</strong></article></div>
-          <p className="zc4-comparison-conclusion">方案 B 为主路径；方案 A 承接候选不足，方案 C 承接标准任务与故障降级。</p></div></details>
-          <details className="zc4-disclosure"><summary>过程反馈节奏与等待规格</summary><div className="zc4-disclosure-body"><p className="zc4-material-note">以下时间段为交互设计规格，并非项目性能测量。</p><div className="zc4-waits">{[["0—3 秒","及时响应","立即显示当前阶段，已返回的内容先呈现。"],["3—10 秒","保留进行状态","突出当前执行步骤，用骨架屏预留数据位置。"],["10 秒以上","说明等待情况","允许停止，保留已确认条件。"]].map(item=><article key={item[0]}><span>{item[0]}</span><h3>{item[1]}</h3><p>{item[2]}</p></article>)}</div></div></details>
         </section>
 
         <section className="zc4-section" id="zcs-markdown-system">
-          <Heading number="05 / 结果复用" title="把一次回答，沉淀为可复用的分析" intro="看板延续业务主题，回答规范延续阅读结构，让结果在查询之后继续使用。"/>
-          <div className="zc4-reuse-steps" aria-label="结果复用步骤"><span>查看结果</span><i/> <span>确认条件</span><i/> <span>保存到看板</span></div>
+          {reference.returnAvailable && reference.targetId === "zcs-markdown-system" ? <div className="zc4-reference-return is-section"><span>回答规范</span><button type="button" onClick={reference.returnToSource}>返回刚才位置<RotateCcw size={15}/></button></div> : null}
+          <Heading title="Markdown 规范，让内容与阅读有据可循" intro="把结论、数值、表格和来源落实为同一套规则；在样例中切换渲染结果、Markdown 源文与规则标注，逐项对照。"/>
+          <ZhaocaiAnswerWorkbench/>
+          <details className="zc4-disclosure" id="zcs-original-output"><summary>查阅原始 Markdown 与回答设计稿</summary><div className="zc4-disclosure-body"><ZhaocaiAnswerEvidence/><div className="zc4-history-evidence"><figure className="zc4-history-viewport"><PortfolioImage src={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/completed-output-original-cropped.png")} width="1164" height="1944" alt="历史脱敏回答稿局部：业务明细与查看原始表格入口。" loading="lazy"/></figure><aside><h3>原始表入口，留在结论之后</h3><p>历史稿中的业务明细与原始表入口，提供进一步核对结果的路径。</p><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/completed-output-original.png")} target="_blank" rel="noreferrer">查看完整回答稿<ArrowUpRight aria-hidden="true" size={16}/><span className="zc4-sr-only">（新标签页）</span></a></aside></div></div></details>
+          <details className="zc4-disclosure"><summary>继续查阅八类场景与完整组件规则</summary><div className="zc4-disclosure-body"><SpecWorkbench/><p className="zc4-spec-open"><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/spec-workbench.html")} target="_blank" rel="noreferrer">独立打开回答规范<ArrowUpRight aria-hidden="true" size={15}/><span className="zc4-sr-only">（新标签页）</span></a></p></div></details>
+        </section>
+
+        <section className="zc4-section" id="zcs-board-design">
           <span className="zc4-anchor" id="board"/>
-          <div id="zcs-board-design">
-            <ZhaocaiBoardEvidence/>
-            <details className="zc4-disclosure"><summary>体验看板：添加、排序、合并与撤销</summary><div className="zc4-disclosure-body"><BoardDesignDemo/></div></details>
-          </div>
-          <div className="zc4-substory">
-            <ZhaocaiAnswerEvidence/>
-            <details className="zc4-disclosure"><summary>体验完整回答规范与八类场景</summary><div className="zc4-disclosure-body"><SpecWorkbench/><p className="zc4-spec-open"><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/spec-workbench.html")} target="_blank" rel="noreferrer">在独立页面打开完整回答规范<ArrowUpRight aria-hidden="true" size={15}/><span className="zc4-sr-only">（新标签页）</span></a></p></div></details>
-          </div>
-          <details className="zc4-disclosure" id="zcs-original-output"><summary>查看历史设计稿与原始表入口</summary><div className="zc4-disclosure-body"><div className="zc4-history-evidence"><figure className="zc4-history-viewport"><PortfolioImage src={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/completed-output-original-cropped.png")} width="1164" height="1944" alt="历史脱敏设计稿局部：业务明细表和查看原始表格入口，完整稿可通过旁边链接打开。" loading="lazy"/></figure><aside><h3>原始表，保留在结论之后。</h3><p>历史稿中的明细表与原始表入口，为结果核对提供进一步查看的路径。</p><p className="zc4-material-note">历史脱敏设计稿</p><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/completed-output-original.png")} target="_blank" rel="noreferrer">查看完整设计稿<ArrowUpRight size={16}/><span className="zc4-sr-only">（新标签页）</span></a></aside></div></div></details>
-        </section>
-
-        <section className="zc4-section" id="zcs-ai-governance">
-          <Heading number="06 / 异常恢复" title="失败之后，任务仍然可以继续" intro="超时、无匹配与主动停止分别提供恢复入口，已确认的条件继续保留。"/>
-          <RecoveryPreview onOpen={openRecovery}/>
-          <details className="zc4-disclosure"><summary>查看完整 8 类异常与恢复策略</summary><div className="zc4-disclosure-body"><div className="zc4-matrix-wrap" role="region" aria-label="失败与降级方案表，可横向滚动" tabIndex={0}><table className="zc4-matrix"><caption>失败与降级方案</caption><thead><tr><th scope="col">状态</th><th scope="col">用户看到什么</th><th scope="col">恢复方式</th><th scope="col">承载方式</th></tr></thead><tbody>{recoveryCases.map(item=><tr key={item[0]}><th scope="row">{item[0]}</th><td>{item[1]}</td><td>{item[2]}</td><td>{item[3] === "page" ? "交互原型" : "降级规范"}</td></tr>)}</tbody></table></div></div></details>
-        </section>
-
-        <section className="zc4-section" id="zcs-ai-strategy">
-          <Heading number="07 / 协作边界" title="AI 负责理解，查询服务负责执行" intro="用户确认业务含义，AI 组织表达，查询服务守住权限与数据边界。"/>
-          <div className="zc4-boundary-grid"><article><h3>用户</h3><p>确认业务含义与高影响操作，决定最终采用的口径。</p></article><article><h3>AI</h3><p>识别时间、组织与指标，提供候选，并组织结果解释。</p></article><article><h3>确定性服务</h3><p>校验权限、执行查询，并核对数值、单位与来源。</p></article></div>
-          <div id="zcs-trust-mechanism"><OwnershipFlow/></div>
-          <p className="zc4-boundary-summary">指标、时间和组织都明确时，固定筛选器、指标树或常用模板应继续可用，并承接模型不可用状态。</p>
-          <div className="zc4-matrix-wrap zc4-ownership-table" role="region" aria-label="设计、产品与工程职责表，可横向滚动" tabIndex={0}><table className="zc4-matrix"><thead><tr><th scope="col">设计交付</th><th scope="col">产品与业务确认</th><th scope="col">研发实现</th></tr></thead><tbody><tr><td>任务流、状态策略、交互与回答规范</td><td>指标口径、组织范围与权限规则</td><td>查询服务、权限校验与结果校验能力</td></tr></tbody></table></div>
-          <p className="zc4-material-note">以下为设计协作约束，权限与查询能力由产品及研发落实。</p>
-          <details className="zc4-disclosure"><summary>查看确认规则与 7 项正确性检查</summary><div className="zc4-disclosure-body">
-            <div className="zc4-confirmation-rules"><h3>什么时候必须让用户确认</h3>{[["唯一映射且权限通过","展示条件摘要后直接查询，保留修改入口","默认路径"],["关键指标有多个合法候选","暂停查询，请用户选择业务口径","确认路径"],["无法形成有效候选","提供“都不是，补充说明”或切换筛选器","兜底路径"],["导出、分享、发布或写回","二次确认，不自动执行","高风险路径"]].map(item=><article key={item[0]}><strong>{item[0]}</strong><p>{item[1]}</p><span>{item[2]}</span></article>)}</div>
-            <div className="zc4-evaluation"><div><span>一次回答怎样算正确</span><h3>七项检查全部通过，才算一次通过。</h3><p>文案流畅不能替代财务正确性；LLM-as-judge 只能辅助检查表达。</p></div><ol>{evaluationChecks.map(item=><li key={item}>{item}</li>)}</ol></div>
-          </div></details>
-          <details className="zc4-disclosure"><summary>查看权限、数据使用与风险治理约束</summary><div className="zc4-disclosure-body"><div className="zc4-governance-grid">{[["权限层","模型调用前和数据返回后都校验权限，模型不拥有独立数据权限。"],["工具层","只允许白名单查询工具或查询 DSL，不执行任意 SQL。"],["数据层","使用只读账号，限制组织、字段、行数、耗时和成本。"],["输入层","把用户输入和检索内容当作数据，不能覆盖系统与工具规则。"],["输出层","校验数值、来源与敏感字段；未知来源不伪装成引用。"],["运营与评测","记录条件、工具调用、权限、版本与输出，覆盖注入、越狱、跨组织访问和数据外泄。"]].map(item=><article key={item[0]}><strong>{item[0]}</strong><p>{item[1]}</p></article>)}</div></div></details>
+          <Heading title="把有用的分析，留给下一次使用" intro="保存结果时保留查询条件和数据来源，同一主题的分析再整理成看板。"/>
+          <ZhaocaiBoardEvidence/>
+          <details className="zc4-disclosure"><summary>体验看板：添加、排序、合并与撤销</summary><div className="zc4-disclosure-body"><BoardDesignDemo/></div></details>
         </section>
 
         <section className="zc4-section zc4-delivery" id="zcs-delivery">
-          <Heading number="08 / 交付复盘" title="把设计判断，落实为可检查的交付" intro="从状态流程、看板交互到回答规范，原始设计稿保留了具体的设计落点。"/>
-          <div className="zc4-delivery-artifacts">
-            {[
-              { source: "/assets/projects/zhaocai-smart/14-process-visualization.webp", title: "任务与状态", description: "梳理处理阶段、等待反馈与异常路径。", alt: "历史过程可视化设计稿：完整状态图、等待与空数据策略，以及完成输出界面。", action: "查看完整任务", href: "#zcs-core-interaction" },
-              { source: "/assets/projects/zhaocai-smart/15-board-interaction.webp", title: "看板与合集", description: "明确卡片移动、位置反馈与合并确认。", alt: "历史看板交互设计稿：合集归组、卡片拖动与落点反馈方案。", action: "查看协作与验收边界", href: "#zcs-ai-strategy" },
-              { source: "/assets/projects/zhaocai-smart/16-markdown-specification.webp", title: "回答与规范", description: "将输出类型对应到组件层级和阅读规则。", alt: "历史Markdown规范稿：标题、列表、引用、段落、公式与代码的分类和界面实例。", action: "查看回答规范", href: publicAsset("/assets/projects/zhaocai-smart/long-image/spec-workbench.html"), external: true },
-            ].map(item=><article key={item.source}>
-              <figure className="zc4-artifact-image"><a href={publicAsset(item.source)} target="_blank" rel="noopener noreferrer" aria-label={`在新标签页查看${item.title}原稿`}><PortfolioImage src={publicAsset(item.source)} width="1920" height="1080" alt={item.alt} loading="lazy" decoding="async"/></a></figure>
-              <h3>{item.title}</h3><p>{item.description}</p>
-              <a className="zc4-delivery-link" href={publicAsset(item.source)} target="_blank" rel="noopener noreferrer">查看原稿<ArrowUpRight aria-hidden="true" size={16}/><span className="zc4-sr-only">（新标签页）</span></a>
-              <a className="zc4-delivery-link" href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noreferrer" : undefined}>{item.action}<ArrowUpRight aria-hidden="true" size={16}/>{item.external ? <span className="zc4-sr-only">（新标签页）</span> : null}</a>
-            </article>)}
-          </div>
-          <p className="zc4-delivery-coverage">交付覆盖：5 个任务阶段 · 3 条互补路径 · 8 类状态策略 · 1 套回答规范</p>
-          <div className="zc4-review-next">
-            <h3>下一轮，验证任务是否真正完成</h3>
-            <p>同步建立评测集、埋点与降级门槛，围绕完成、正确与恢复检查设计。当前公开材料未提供实测改善指标。</p>
-            <dl className="zc4-review-checks">
-              <div><dt>任务完成</dt><dd>观察首轮结果能否被采纳，以及何时需要修改条件或人工接管。</dd></div>
-              <div><dt>结果正确</dt><dd>对照基准查询，核对业务口径、数值、单位与来源。</dd></div>
-              <div><dt>失败恢复</dt><dd>验证重试与结构化降级入口能否让任务继续完成。</dd></div>
-            </dl>
-          </div>
-          <details className="zc4-disclosure"><summary>后续验证计划：指标定义与采集方式</summary><div className="zc4-disclosure-body"><div className="zc4-matrix-wrap" role="region" aria-label="AI 指标定义表，可横向滚动" tabIndex={0}><table className="zc4-matrix is-wide"><caption>后续验证计划 · AI 指标定义与采集方式</caption><thead><tr><th scope="col">指标</th><th scope="col">分子</th><th scope="col">分母</th><th scope="col">时间窗</th><th scope="col">采集方式</th></tr></thead><tbody>{aiMetricPlans.map(item=><tr key={item[0]}><th scope="row">{item[0]}</th><td>{item[1]}</td><td>{item[2]}</td><td>{item[3]}</td><td>{item[4]}</td></tr>)}</tbody></table></div></div></details>
-          <blockquote>用户的每一次确认，都应留在后续结果中。</blockquote>
+          <Heading title="交付明确的规则，保留验证的边界" intro="本案聚焦对话、状态策略、回答规范与分析复用。设计规则需要与业务口径和查询实现共同落地。"/>
+          <div className="zc4-delivery-boundary" id="zcs-ai-strategy"><span className="zc4-anchor" id="zcs-trust-mechanism"/><h3>协作中的责任边界</h3><dl className="zc4-ownership-summary"><div><dt>设计交付</dt><dd>任务流程、条件确认、等待与恢复、结果阅读及 Markdown 规则。</dd></div><div><dt>产品与业务确认</dt><dd>指标定义、统计范围与权限规则，明确哪些条件需要用户决定。</dd></div><div><dt>研发实现</dt><dd>权限校验、查询服务、结果校验与版本记录；界面提示不能代替服务能力。</dd></div></dl></div>
+          <div className="zc4-case-reflection"><h3>回到具体设计判断</h3><ol><li><strong>确认的信息要留在后续结果里</strong><p>时间、组织与口径持续随任务保存，避免用户在等待、追问和复用时重新理解上下文。</p></li><li><strong>过程反馈要连接可执行的下一步</strong><p>不只说明任务尚未完成，还要区分继续、重试与修改条件，保留每次选择的退路。</p></li><li><strong>用同一份样例核对规则与表达</strong><p>结论、图表、明细和来源应能相互对应；缺失与推测分别说明，格式完整不能替代内容正确。</p></li></ol></div>
+          <p className="zc4-evidence-boundary">现有材料以设计稿与交互示例为主。真实业务中的任务完成、数据正确性与权限校验仍需结合业务服务验证，本页不据此推算效率或收益。</p>
           <footer className="zc4-page-footer"><a href="#zcs-project-overview" onClick={event=>{event.preventDefault();scrollToId("zcs-project-overview")}}>返回项目摘要</a><a href="/portfolio/#work">返回作品</a></footer>
         </section>
       </div>

@@ -4,14 +4,13 @@ import "./zhaocai-design-evidence.css";
 
 type EvidenceFigureProps = {
   source: string;
-  crop: "board" | "answer";
   alt: string;
 };
 
-function EvidenceFigure({ source, crop, alt }: EvidenceFigureProps) {
+function EvidenceFigure({ source, alt }: EvidenceFigureProps) {
   return (
     <figure className="zc4-design-evidence-figure">
-      <div className={`zc4-design-evidence-window is-${crop}`}>
+      <a className="zc4-design-evidence-window" href={publicAsset(source)} target="_blank" rel="noopener noreferrer" aria-label="在新标签页放大查看完整原始设计稿">
         <img
           src={publicAsset(source)}
           width="1920"
@@ -20,11 +19,11 @@ function EvidenceFigure({ source, crop, alt }: EvidenceFigureProps) {
           decoding="async"
           alt={alt}
         />
-      </div>
+      </a>
       <figcaption>
-        <span>历史设计稿 · 界面局部</span>
+        <span>原始设计稿 · 完整展示</span>
         <a href={publicAsset(source)} target="_blank" rel="noopener noreferrer">
-          查看完整原稿
+          放大查看原稿
           <ArrowUpRight aria-hidden="true" size={15} />
           <span className="zc4-design-evidence-sr-only">（新标签页）</span>
         </a>
@@ -39,8 +38,7 @@ export function ZhaocaiBoardEvidence() {
     <article className="zc4-design-evidence">
       <EvidenceFigure
         source="/assets/projects/zhaocai-smart/15-board-interaction.png"
-        crop="board"
-        alt="招财历史看板设计稿局部：图表卡片、合集及拖动时浮起的分析卡片，呈现拖放重排方案。"
+        alt="招财看板交互原始设计稿：合集归组、拖放重排、卡片位置反馈与合并确认规则。"
       />
       <div className="zc4-design-evidence-copy">
         <h3>从单次结果，转向持续看板</h3>
@@ -61,8 +59,7 @@ export function ZhaocaiAnswerEvidence() {
     <article className="zc4-design-evidence is-reversed">
       <EvidenceFigure
         source="/assets/projects/zhaocai-smart/16-markdown-specification.png"
-        crop="answer"
-        alt="招财历史回答规范中的产品界面局部：金融行业趋势汇总，以标题、分栏表格和条目组织内容。"
+        alt="招财 Markdown 规范原始设计稿：标题、列表、引用、段落、公式和代码的分类总览，以及完整表格与排版标注。"
       />
       <div className="zc4-design-evidence-copy">
         <h3>把输出类型，变成阅读规则</h3>

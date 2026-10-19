@@ -136,7 +136,7 @@
     <script>
       window.__PORTFOLIO_BASE__ = "/portfolio";
     </script>
-    <script type="module" crossorigin src="/portfolio/assets/index-Cjyw7eUC.js"></script>
+    <script type="module" crossorigin src="/portfolio/assets/index-z2_SP17B.js"></script>
     <link rel="stylesheet" crossorigin href="/portfolio/assets/index-Bqoe5KT9.css">
   </head>
   <body>
@@ -209,7 +209,7 @@
             // image instead of treating the initial Suspense fallback as ready.
             const imageReady = image
               ? imageIsReady(image, Boolean(hero))
-              : Boolean(notFound || (project && !project.querySelector(".case-loading") && project.querySelector(".image-fallback")));
+              : Boolean(notFound || (project && !project.querySelector(".case-loading") && (project.querySelector(".image-fallback") || project.querySelector('[data-case-ready="text"]'))));
             const video = hero?.querySelector("video");
             const videoState = video?.dataset.preloadState;
             const videoReady = hero

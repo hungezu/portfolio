@@ -213,7 +213,7 @@
             // image instead of treating the initial Suspense fallback as ready.
             const imageReady = image
               ? imageIsReady(image, Boolean(hero))
-              : Boolean(notFound || (project && !project.querySelector(".case-loading") && project.querySelector(".image-fallback")));
+              : Boolean(notFound || (project && !project.querySelector(".case-loading") && (project.querySelector(".image-fallback") || project.querySelector('[data-case-ready="text"]'))));
             const video = hero?.querySelector("video");
             const videoState = video?.dataset.preloadState;
             const videoReady = hero

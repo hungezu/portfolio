@@ -52,6 +52,9 @@
     if (!/^https?:\/\//i.test(href) || /[\u0000-\u0020<>"']/.test(href)) return null;
     try { const u = new URL(href); return ['https:', 'http:'].includes(u.protocol) ? u.href : null; } catch (_) { return null; }
   }
+  function registeredSource(sources, id) {
+    return Object.prototype.hasOwnProperty.call(sources, id) ? sources[id] : null;
+  }
   function validateDocument(markdown, sources = DATA.sources) {
     const checks = [], headings = [], tables = [], charts = [], missing = new Set();
     let rawHTML = false, imageCount = 0, unsafeLinks = 0;
@@ -65,7 +68,7 @@
       if (token.type === 'html') rawHTML = true;
       if (token.type === 'image') imageCount++;
       if (token.type === 'link') {
-        if (token.href.startsWith('#source-')) { const id = token.href.slice(8); if (!sources[id]) missing.add(id); }
+        if (token.href.startsWith('#source-')) { const id = token.href.slice(8); if (!registeredSource(sources, id)) missing.add(id); }
         else if (!safeURL(token.href)) unsafeLinks++;
       }
     });
@@ -122,7 +125,7 @@
       link(token) {
         const label = this.parser.parseInline(token.tokens), href = token.href || '';
         if (href.startsWith('#source-')) {
-          const id = href.slice(8), source = sources[id];
+          const id = href.slice(8), source = registeredSource(sources, id);
           if (!source) return '<span class="zmd-unavailable-link" title="来源尚未登记">' + label + '</span>';
           const citationClass = /^\d+$/.test(token.text) ? 'zmd-cite' : 'zmd-source-link';
           return '<a class="' + citationClass + '" href="' + escape(href) + '" data-zmd-cite="' + escape(id) + '" aria-label="查看引用：' + escape(source.title) + '">' + label + '</a>';
@@ -198,26 +201,12 @@
     const state = createState(DATA), rendered = $('[data-zmd-render]');
     const scroll = $('[data-zmd-reading-scroll]'), dialog = $('[data-zmd-dialog]');
     const dialogs = createDialogController(dialog, document);
-    function compactComparisonTables(container) {
-      container.querySelectorAll('table').forEach(table => {
-        const headers = [...table.querySelectorAll('thead th')];
-        const columnIndex = headers.findIndex(header => header.textContent.trim() === '上年净利润（亿元）');
-        if (columnIndex < 0) return;
-        table.querySelectorAll('tr').forEach(row => row.children[columnIndex]?.remove());
-        table.classList.add('zmd-table--compact');
-        const wrapper = table.closest('.zmd-table-wrap');
-        wrapper?.classList.add('zmd-table-wrap--compact');
-        wrapper?.removeAttribute('tabindex');
-        wrapper?.setAttribute('aria-label', '业务对比表');
-      });
-    }
     function renderReading() {
       const outline = $('[data-zmd-outline]');
       outline.replaceChildren();
       try {
         const result = compileMarkdown(state.text());
         rendered.innerHTML = result.html;
-        compactComparisonTables(rendered);
         $('[data-zmd-reading-meta]').textContent = result.validation.headingCount + ' 个标题 · ' + result.validation.tableCount + ' 张数据表';
         const headings = result.headings.filter(item => item.depth === 2);
         outline.hidden = headings.length < 4;
@@ -252,7 +241,7 @@
       renderReading();
     }
     function openSource(id) {
-      const source = DATA.sources[id]; if (!source) return;
+      const source = registeredSource(DATA.sources, id); if (!source) return;
       $('[data-zmd-source-title]').textContent = source.title;
       const fields = [['统计期间', source.period], ['组织范围', source.scope], ['指标口径', source.metric], ['金额单位', source.unit]];
       $('[data-zmd-source-body]').innerHTML = '<dl>' + fields.map(([label, value]) => '<div><dt>' + escape(label) + '</dt><dd>' + escape(value) + '</dd></div>').join('') + '</dl><div class="zmd-table-wrap" tabindex="0" role="region" aria-label="来源明细，可横向滚动"><table class="zmd-source-table"><thead><tr>' + source.headers.map(h => '<th scope="col">' + escape(h) + '</th>').join('') + '</tr></thead><tbody>' + source.rows.map(row => '<tr>' + row.map(value => '<td' + (/^[−\-+]?\d[\d,.]*%?$/.test(value) ? ' style="text-align:right"' : '') + '>' + escape(value) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div><p>' + escape(source.description) + '</p>';
