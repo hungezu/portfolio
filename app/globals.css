@@ -2906,7 +2906,7 @@ html.portfolio-transitioning body {
 
 .experience-panel li {
   display: grid;
-  grid-template-columns: minmax(104px, max-content) minmax(0, 1fr);
+  grid-template-columns: 104px minmax(0, 1fr);
   gap: 16px;
   color: rgba(17, 17, 17, 0.78);
   font-size: var(--type-label);

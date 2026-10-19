@@ -1,4 +1,5 @@
 import { gkxScienceExchange, gkxThinkTankDetail } from "./case-studies/gkx-image-assets";
+import resumeContent from "../docs/resume/content.zh-CN.json";
 
 export type AbilityId =
   | "ai-experience"
@@ -446,53 +447,15 @@ export const projects: Project[] = projectData
     gallery: project.gallery.map(publicAsset),
   }));
 
-export const experiences: Experience[] = [
-  {
-    company: "上海荣宇智能信息技术有限公司（外派至智谱 AI）",
-    role: "UED & UI 设计师",
-    period: "2025.07 - 至今",
-    summary:
-      "参与 AI 产品与政企平台设计，重点负责智能问数体验、多系统设计规范与原型验证。",
-    details: [
-      "AI 产品体验｜负责招财 Smart 的 UX/UI，覆盖提问、语义澄清、过程反馈、结果解释与看板交互。",
-      "平台规范与验证｜负责GKX多业务系统的页面样式与组件规范，借助 AI 维护 Markdown 设计规范，并参与原型设计与评审优化。",
-      "其他 AI 场景｜参与中行澳门 AI 系统、火火兔 AI 陪伴硬件及单证识别项目，承担相关流程、界面与状态设计。",
-    ],
-  },
-  {
-    company: "答税科技（深圳）有限公司",
-    role: "UI & UX 设计师",
-    period: "2024.05 - 2025.02",
-    summary:
-      "围绕企业报税场景，独立推进新功能设计与复杂申报流程优化。",
-    details: [
-      "新功能设计｜独立负责「智汇算（企业版）」新功能的 UX/UI，完成需求梳理、交互原型与高保真界面交付。",
-      "申报流程优化｜将复杂操作组织为分步引导，明确操作顺序、系统状态与异常反馈。",
-      "设计交付｜建立组件与页面规范，配合研发交付，并支持商业演示与运营视觉设计。",
-    ],
-  },
-  {
-    company: "华盟财税科技（深圳）有限公司",
-    role: "UI & UX 设计师",
-    period: "2021.07 - 2024.05",
-    summary:
-      "负责财税产品改版与定制平台设计，覆盖 Web、App 和数据可视化场景。",
-    details: [
-      "核心产品改版｜主导税纪云 2.0 Web / App 体验改版，重构申报、审批、表单与筛选等核心流程。",
-      "平台从 0 到 1｜独立负责国家能源集团报税平台的 UI 设计，完成首页、申报及管理工作台，并建立配套组件规范。",
-      "规范与协作｜建立栅格、组件与状态规范，通过开发走查核对页面一致性；参与全电发票、法规库及税务大屏等项目。",
-    ],
-  },
-  {
-    company: "深圳喆云科技有限公司",
-    role: "UI 设计师",
-    period: "2020.07 - 2021.07",
-    summary:
-      "负责小程序、盘点工具与企业官网的多端界面设计。",
-    details: [
-      "小程序设计｜独立完成 CRM 客户资源互换小程序的界面与关键流程设计。",
-      "工具体验｜优化 RFID 盘点工具的操作路径与状态反馈。",
-      "官网设计｜完成企业官网 Web 与移动端界面设计及适配。",
-    ],
-  },
-];
+export const experienceIntro = resumeContent.experienceIntro;
+
+// Career dates and responsibilities share one source with the downloadable resume.
+export const experiences: Experience[] = resumeContent.experiences.map((experience) => ({
+  company: experience.assignment
+    ? `${experience.company}（${experience.assignment}）`
+    : experience.company,
+  role: experience.role,
+  period: experience.period,
+  summary: experience.summary,
+  details: experience.details,
+}));

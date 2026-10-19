@@ -53,8 +53,8 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "experience-current", title: "近期工作",
-    content: "作品集公开的近期经历是：自 2025 年 7 月起，在上海荣宇智能信息技术有限公司（外派至智谱 AI）担任 UED & UI 设计师，参与 AI 产品、金融智能与政企平台设计，负责业务梳理、交互、界面和规范交付。",
-    keywords: ["现在", "目前", "最近", "智谱", "荣宇", "当前工作", "工作内容"],
+    content: "自 2025 年 7 月起，我在上海荣宇智能信息技术有限公司（外派至智谱 AI）担任 UED & UI 设计师。负责招财 Smart 的 AI 问数与智能体体验；参与火火兔 AI 陪伴硬件的界面、交互流程与状态设计；主导 GKX 智慧门户设计，独立完成设计规范与 Markdown 文档，并结合 Codex 验证原型。此外，负责单证识别的核对、修正流程优化，参与中行澳门系统定制的界面与流程设计。问数 AI 问答平台与招财 Smart 是同一项目。",
+    keywords: ["现在", "目前", "最近", "智谱", "荣宇", "火火兔", "AI 陪伴", "当前工作", "工作内容"],
     references: [section("查看工作经历", "experience")],
   },
   {
@@ -65,8 +65,8 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "experience-tax", title: "财税产品经历",
-    content: "在答税科技，我独立推进智汇算企业版新功能的 UX/UI 设计；在华盟财税科技，我主导税纪云 2.0 Web / App 改版，并独立负责国家能源集团报税平台从 0 到 1 的 UI 与组件体系设计。",
-    keywords: ["答税", "华盟", "智汇算", "财税经历", "以前", "过去"],
+    content: "在答税科技，我独立负责智汇算企业版新功能的 UX/UI，将复杂单页操作重构为分步引导，支撑企业报税新业务上线，并建立组件及商业演示模板。在华盟财税科技，我主导税纪云 2.0 Web / App 改版，独立负责国家能源集团报税平台从 0 到 1 的 UI 与组件规范、全电发票 2.0 多端 UI，以及企业税务可视化大屏；同时参与法规库检索与 ChaTaxera AI 税务问答设计。",
+    keywords: ["答税", "华盟", "智汇算", "全电发票", "法规库", "ChaTaxera", "财税经历", "以前", "过去"],
     references: [section("查看工作经历", "experience"), project("查看税纪云案例", "tax-cloud")],
   },
   {
@@ -263,7 +263,7 @@ const UNRELATED_PATTERNS = [
   /天气|气温|新闻|热搜|股票|股市|彩票|汇率|航班|酒店|旅行|旅游|攻略|食谱|菜谱|做饭|电影|音乐|星座|笑话|写诗|作文|小说|数学|物理|化学|医学|症状|药物|法律咨询|考试|作业|购物|优惠|快递/i,
   /翻译|帮我(?:写|做|生成).{0,8}(?:诗|代码|程序|论文)|(?:修复|解决).{0,6}(?:报错|bug)/i,
 ];
-const PORTFOLIO_SIGNAL = /李家豪|leo|作品|项目|案例|经历|经验|工作|职业|公司|职位|能力|优势|擅长|设计|体验|交互|系统|规范|原型|流程|看板|问数|招财|smart|税纪云|国能|GKX|可视化|数据|指标|背景|目标|职责|角色|权限|业务|需求|研究|洞察|意图|澄清|反馈|解释|依据|引用|异常|上线|复盘|AI|智能|Codex|Gemini|联系|邮箱|微信|手机|电话|导航|章节|负责|参与|主导|难点|挑战|痛点|决策|方法|思路|原则|取舍|协作|合作|开发|研发|沟通|评审|走查|交付|学历|毕业|学校|年龄|到岗|薪资|薪酬|薪水|工资/i;
+const PORTFOLIO_SIGNAL = /李家豪|leo|作品|项目|案例|经历|经验|工作|职业|公司|职位|能力|优势|擅长|设计|体验|交互|系统|规范|原型|流程|看板|问数|招财|smart|火火兔|税纪云|国能|GKX|可视化|数据|指标|背景|目标|职责|角色|权限|业务|需求|研究|洞察|意图|澄清|反馈|解释|依据|引用|异常|上线|复盘|AI|智能|Codex|Gemini|智汇算|全电发票|法规库|ChaTaxera|联系|邮箱|微信|手机|电话|导航|章节|负责|参与|主导|难点|挑战|痛点|决策|方法|思路|原则|取舍|协作|合作|开发|研发|沟通|评审|走查|交付|学历|毕业|学校|年龄|到岗|薪资|薪酬|薪水|工资/i;
 const FOLLOW_UP = /^(?:那|它|这个|该项目|该案例|上面|刚才|前面|具体|还有|然后|除此之外|详细|能展开|展开|继续)|^(?:为什么|怎么做|如何做|难点|挑战|职责|负责什么|怎么协作|效果如何|有什么成果)/i;
 const GREETING = /^(?:你好|您好|嗨|哈[喽啰罗]|hello|hi|在吗|早上好|下午好|晚上好)[!！。,.，?？\s]*$/i;
 const THANKS = /^(?:谢谢(?:你|啦|了)?|多谢|感谢|好的|好哒|明白了|了解了|收到|ok|thanks|thank you)[!！。,.，\s]*$/i;
@@ -386,8 +386,8 @@ export function findChatKnowledge(query: string, limit = 5, contextQuery = "") {
     if (/可视化|大屏|图表/.test(normalized)) return entriesFor(["project-data-visualisation"], limit);
   }
   if (/擅长|能力|优势|技能|长处|强项|会什么|能解决/.test(normalized)) return entriesFor(["capability-overview"], limit);
-  if (/现在|目前|最近|当前工作|智谱|荣宇/.test(normalized)) return entriesFor(["experience-current"], limit);
-  if (/答税|华盟|智汇算|财税经历|以前的工作|过去的工作/.test(normalized)) return entriesFor(["experience-tax"], limit);
+  if (/现在|目前|最近|当前工作|智谱|荣宇|火火兔/.test(normalized)) return entriesFor(["experience-current"], limit);
+  if (/答税|华盟|智汇算|全电发票|法规库|chataxera|财税经历|以前的工作|过去的工作/i.test(normalized)) return entriesFor(["experience-tax"], limit);
   if (/经历|履历|公司|职位|任职|职业|年限|工作过|做过什么|负责过|参与过/.test(normalized)) return entriesFor(["experience-overview"], limit);
   if (/推荐|先看|哪个项目|代表项目|代表作|只看一个/.test(normalized) && topic === "overview") return entriesFor(["project-recommendation"], limit);
   if (/项目|作品|案例|做过哪些/.test(normalized) && topic === "overview") return entriesFor(["project-overview"], limit);

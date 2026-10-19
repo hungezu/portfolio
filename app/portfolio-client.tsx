@@ -36,6 +36,7 @@ import {
 } from "react";
 import {
   abilities,
+  experienceIntro,
   experiences,
   projects,
   publicAsset,
@@ -2283,7 +2284,7 @@ function ExperienceSection() {
         <div className="experience-heading">
           <SectionIntro
             title="工作经历"
-            description="从财税系统到 AI 产品与政企平台，围绕复杂业务开展交互设计、界面设计与设计规范建设。"
+            description={experienceIntro}
           />
           <motion.dl
             className="experience-stats"
