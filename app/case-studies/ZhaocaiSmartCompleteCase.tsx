@@ -623,17 +623,17 @@ export function ZhaocaiSmartCompleteCase() {
     const previousDescription = description?.content;
     const previousOgTitle = ogTitle?.content;
     const previousOgDescription = ogDescription?.content;
-    document.title = "招财 Smart｜对话体验与回答规范｜李家豪";
-    if (description) description.content = "招财 Smart 设计案例，聚焦财务问数中的口径确认、任务控制与 Markdown 回答规范，以原始设计稿和示例交互说明设计取舍。";
-    if (ogTitle) ogTitle.content = "招财 Smart｜对话体验与回答规范";
-    if (ogDescription) ogDescription.content = "从口径确认到来源核对，展示财务问数的对话流程、关键取舍与 Markdown 回答规则。";
+    document.title = t("招财 Smart｜对话体验与回答规范｜李家豪");
+    if (description) description.content = t("招财 Smart 设计案例，聚焦财务问数中的口径确认、任务控制与 Markdown 回答规范，以原始设计稿和示例交互说明设计取舍。");
+    if (ogTitle) ogTitle.content = t("招财 Smart｜对话体验与回答规范");
+    if (ogDescription) ogDescription.content = t("从口径确认到来源核对，展示财务问数的对话流程、关键取舍与 Markdown 回答规则。");
     return () => {
       document.title = previousTitle;
       if (description && previousDescription) description.content = previousDescription;
       if (ogTitle && previousOgTitle) ogTitle.content = previousOgTitle;
       if (ogDescription && previousOgDescription) ogDescription.content = previousOgDescription;
     };
-  }, []);
+  }, [t]);
 
   const demoProps: DemoProps = { resetToken, stage, setStage, query, setQuery, metric, setMetric, year, setYear, scope, setScope, phase, executionId, executionMode, setExecutionMode, beginExecution, runFromEntry };
   return (
