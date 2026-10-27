@@ -1,4 +1,6 @@
 "use client";
+import { useI18n } from "./i18n";
+
 
 import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
 import Plus from "lucide-react/dist/esm/icons/plus.mjs";
@@ -60,6 +62,7 @@ type CapabilitySectionProps = {
 export function CapabilitySection({
   highlightedAbilityId, onShowProjects, onOpenEvidence,
 }: CapabilitySectionProps) {
+  const { t } = useI18n();
   const reduce = useReducedMotion();
   const [activeId, setActiveId] = useState<AbilityId>("ai-experience");
   const [expandedId, setExpandedId] = useState<AbilityId | null>("ai-experience");
@@ -184,15 +187,15 @@ export function CapabilitySection({
     setPointerReading(true);
   };
 
-  return <section className="section capability-section" id="ability" aria-label="核心能力">
+  return <section className="section capability-section" id="ability" aria-label={t("核心能力")}>
     <div className="section-shell capability-shell">
       <motion.header className="section-intro capability-section-heading"
         initial={reduce ? false : "hidden"} whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
         variants={{ hidden: { opacity: 0.85, y: 12 }, visible: { opacity: 1, y: 0 } }}
         transition={{ duration: reduce ? 0 : 0.42, ease: [0.16, 1, 0.3, 1] }}>
-        <h2>核心能力</h2>
-        <p>从方法，到项目实践。</p>
+        <h2>{t("核心能力")}</h2>
+        <p>{t("从方法，到项目实践。")}</p>
         <motion.span className="section-intro-rule" aria-hidden="true"
           variants={{ hidden: { scaleX: 0.6, opacity: 0.85 }, visible: { scaleX: 1, opacity: 1 } }}
           transition={{ duration: reduce ? 0 : 0.36, delay: reduce ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }} />
@@ -205,7 +208,7 @@ export function CapabilitySection({
       }} onBlurCapture={event => {
         if (!event.currentTarget.contains(event.relatedTarget)) setKeyboardReading(false);
       }} onKeyDownCapture={() => { cycleRunningRef.current = false; setKeyboardReading(true); }}>
-        <aside className="capability-index" ref={indexRef} aria-label="选择能力分类"
+        <aside className="capability-index" ref={indexRef} aria-label={t("选择能力分类")}
           onPointerEnter={pauseForPointer} onPointerLeave={() => setPointerReading(false)}>
           <div className="capability-accordion" data-animated={animateDisclosure}
             data-cycle-state={cycleState} data-cooldown-until={cooldownUntil || undefined}
@@ -232,14 +235,14 @@ export function CapabilitySection({
                       triggerRefs.current[next]?.focus();
                     }}
                   >
-                    <span>{presentations[id].label}</span>
+                    <span>{t(presentations[id].label)}</span>
                     <Plus className="capability-disclosure-icon" size={18} strokeWidth={1.5} aria-hidden="true" />
-                    {activeId === id && <span
+                    {t(activeId === id && <span
                       key={cycleGeneration}
                       className="capability-tab-marker"
                       onAnimationEnd={advanceAbility}
                       aria-hidden="true"
-                    />}
+                    />)}
                   </button>
                 </h3>
                 <div
@@ -252,8 +255,8 @@ export function CapabilitySection({
                 >
                   <div className="capability-disclosure-clip">
                     <div className="capability-disclosure-copy">
-                      <h4>{presentations[id].statement}</h4>
-                      <p>{presentations[id].description}</p>
+                      <h4>{t(presentations[id].statement)}</h4>
+                      <p>{t(presentations[id].description)}</p>
                     </div>
                   </div>
                 </div>
@@ -262,7 +265,7 @@ export function CapabilitySection({
           </div>
         </aside>
 
-        <div id="capability-panel" className="capability-panel" role="region" aria-label={`${presentations[activeId].label}的能力展示与相关项目`}
+        <div id="capability-panel" className="capability-panel" role="region" aria-label={t(`${presentations[activeId].label}的能力展示与相关项目`)}
           onPointerEnter={pauseForPointer} onPointerLeave={() => setPointerReading(false)}>
           <div className="capability-stage">
             <CapabilityVisual abilityId={activeId} />
@@ -270,12 +273,12 @@ export function CapabilitySection({
 
           <div className="capability-projects">
             <div className="capability-project-heading">
-              <h3>相关项目 <span>{String(matchedProjects.length).padStart(2, "0")}</span></h3>
+              <h3>{t("相关项目 ")}<span>{t(String(matchedProjects.length).padStart(2, "0"))}</span></h3>
             </div>
             <div
               key={activeId}
               className="capability-project-links"
-              aria-label={`${current.name}对应项目`}
+              aria-label={t(`${current.name}对应项目`)}
             >
               {matchedProjects.map(project => {
                 const evidence = current.evidence.filter(item => item.projectSlug === project.slug);
@@ -285,18 +288,18 @@ export function CapabilitySection({
                     className="capability-proof-link"
                     href={`/portfolio/project/${project.slug}/${primary?.anchor ? `#${primary.anchor}` : ""}`}
                     onClick={event => { holdForReading(); onOpenEvidence(event, project.slug, primary?.anchor); }}
-                    aria-label={`查看${project.shortTitle}${primary ? `：${primary.section}` : ""}`}
+                    aria-label={t(`查看${project.shortTitle}${primary ? `：${primary.section}` : ""}`)}
                   >
-                    <div className="capability-proof-title"><h4>{project.shortTitle}</h4></div>
-                    <span className="capability-proof-section">{primary?.section ?? "项目实践"}</span>
-                    <p>{primary?.description ?? project.summary}</p>
+                    <div className="capability-proof-title"><h4>{t(project.shortTitle)}</h4></div>
+                    <span className="capability-proof-section">{t(primary?.section ?? "项目实践")}</span>
+                    <p>{t(primary?.description ?? project.summary)}</p>
                   </a>
                   {evidence.slice(1).map(item => <a
                     className="capability-extra-evidence"
                     key={item.anchor ?? item.section}
                     href={`/portfolio/project/${project.slug}/${item.anchor ? `#${item.anchor}` : ""}`}
                     onClick={event => { holdForReading(); onOpenEvidence(event, project.slug, item.anchor); }}
-                  >继续查看：{item.section}<ArrowUpRight size={15} aria-hidden="true" /></a>)}
+                  >{t("继续查看：")}{t(item.section)}<ArrowUpRight size={15} aria-hidden="true" /></a>)}
                 </article>;
               })}
             </div>
@@ -306,7 +309,7 @@ export function CapabilitySection({
               aria-controls="work"
               onClick={event => { holdForReading(); onShowProjects(activeId, event.detail === 0); }}
             >
-              <span>在作品区查看 {matchedProjects.length} 个项目</span>
+              <span>{t("在作品区查看 ")}{t(matchedProjects.length)} {t(" 个项目")}</span>
               <ArrowUpRight size={18} strokeWidth={1.5} aria-hidden="true" />
             </button>
           </div>
@@ -314,9 +317,9 @@ export function CapabilitySection({
       </div>
 
       <p className="capability-link-status" role="status">
-        {highlightedAbilityId
+        {t(highlightedAbilityId
           ? `作品区已突出“${presentations[highlightedAbilityId].label}”对应项目`
-          : "点击在作品区查看，突出对应项目"}
+          : "点击在作品区查看，突出对应项目")}
       </p>
     </div>
   </section>;

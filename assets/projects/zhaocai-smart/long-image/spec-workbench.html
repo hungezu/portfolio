@@ -10,10 +10,10 @@
   <section class="zmd" data-zmd aria-label="招财 Smart 完整回答规范">
     <article class="zmd-lab" aria-label="Markdown 回答规范与场景演示">
       <header class="zmd-lab-header">
-        <span class="zmd-brand">招财 <strong>Smart</strong><span class="zmd-brand-rule">回答规范</span></span>
+        <span class="zmd-brand"><span data-zmd-i18n="招财 ">招财 </span><strong>Smart</strong><span class="zmd-brand-rule"><span data-zmd-i18n="回答规范">回答规范</span></span></span>
         <div class="zmd-main-tabs" role="tablist" aria-label="展示内容">
-          <button type="button" role="tab" id="zmd-scenes-tab" aria-controls="zmd-workspace" aria-selected="true" data-zmd-mode="scenes">场景示例</button>
-          <button type="button" role="tab" id="zmd-rules-tab" aria-controls="zmd-workspace" aria-selected="false" tabindex="-1" data-zmd-mode="rules">组件规则</button>
+          <button type="button" role="tab" id="zmd-scenes-tab" aria-controls="zmd-workspace" aria-selected="true" data-zmd-mode="scenes"><span data-zmd-i18n="场景示例">场景示例</span></button>
+          <button type="button" role="tab" id="zmd-rules-tab" aria-controls="zmd-workspace" aria-selected="false" tabindex="-1" data-zmd-mode="rules"><span data-zmd-i18n="组件规则">组件规则</span></button>
         </div>
       </header>
       <div class="zmd-workspace" id="zmd-workspace" role="tabpanel" aria-labelledby="zmd-scenes-tab">
@@ -27,7 +27,7 @@
             <dl class="zmd-rule-spec" data-zmd-rule-spec hidden aria-label="本组件的固定规格"></dl>
           </header>
           <div class="zmd-read-panel" id="zmd-read-panel" role="region" aria-label="回答内容">
-            <div class="zmd-read-options"><label><input type="checkbox" data-zmd-annotations>显示规范标注</label><span data-zmd-reading-meta></span></div>
+            <div class="zmd-read-options"><label><input type="checkbox" data-zmd-annotations><span data-zmd-i18n="显示规范标注">显示规范标注</span></label><span data-zmd-reading-meta></span></div>
             <nav class="zmd-outline" aria-label="回答章节" data-zmd-outline hidden></nav>
             <div class="zmd-reading-scroll"><div class="zmd-markdown" data-zmd-render></div></div>
           </div>
@@ -35,11 +35,12 @@
       </div>
     </article>
     <dialog class="zmd-dialog" data-zmd-dialog aria-labelledby="zmd-source-title">
-      <header><div><p class="zmd-small-label">引用依据 · 示例</p><h3 id="zmd-source-title" data-zmd-source-title></h3></div><button type="button" class="zmd-dialog-close" data-zmd-close aria-label="关闭引用详情">×</button></header>
+      <header><div><p class="zmd-small-label"><span data-zmd-i18n="引用依据 · 示例">引用依据 · 示例</span></p><h3 id="zmd-source-title" data-zmd-source-title></h3></div><button type="button" class="zmd-dialog-close" data-zmd-close aria-label="关闭引用详情">×</button></header>
       <div class="zmd-source-body" data-zmd-source-body></div>
-      <footer><button type="button" class="zmd-btn" data-zmd-close>返回回答</button></footer>
+      <footer><button type="button" class="zmd-btn" data-zmd-close><span data-zmd-i18n="返回回答">返回回答</span></button></footer>
     </dialog>
   </section>
+  <script src="./spec-i18n.js"></script>
   <script src="./vendor/marked.umd.js"></script>
   <script src="./zhaocai-smart-04-data.js"></script>
   <script src="./zhaocai-smart-04.js"></script>

@@ -109,10 +109,10 @@ function faceTexture(box: CapabilityBox): THREE.CanvasTexture {
   ctx.fillStyle = ink;
   ctx.textBaseline = "top";
   ctx.font = `600 ${fontSize}px ${typeface}`;
-  if (box.label && w < 50 && h > 80) {
+  if (box.label && /[\u3400-\u9fff]/.test(box.label) && w < 50 && h > 80) {
     ctx.font = `500 14px ${typeface}`;
     [...box.label].forEach((letter, index) => ctx.fillText(letter, (w - 14) / 2, 17 + index * 17));
-  } else if (box.label) ctx.fillText(box.label, pad, Math.min(17, h * 0.19));
+  } else if (box.label) ctx.fillText(box.label, pad, Math.min(17, h * 0.19), w - pad * 2);
   ctx.strokeStyle = fine;
   ctx.lineWidth = 0.65;
   ctx.lineCap = "round";

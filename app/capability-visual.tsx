@@ -1,7 +1,9 @@
 "use client";
+import { useI18n } from "./i18n";
+
 
 import { useReducedMotion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { AbilityId } from "./portfolio-data";
 import { capabilitySceneDescriptions, capabilitySceneSpecs } from "./capability-models";
 import "./capability-visual.css";
@@ -19,13 +21,15 @@ function loadSceneModule() {
 }
 
 export function CapabilityVisual({ abilityId }: { abilityId: AbilityId }) {
+  const { locale, t, localize } = useI18n();
+  const localizedFamily = useMemo(() => localize(sceneFamily), [localize]);
   const hostRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<SceneController | undefined>(undefined);
   const transitionRef = useRef<Animation | null>(null);
   const previousAbilityRef = useRef(abilityId);
   const reducedMotion = useReducedMotion();
   const presentationRef = useRef(capabilitySceneSpecs[abilityId]);
-  presentationRef.current = { ...capabilitySceneSpecs[abilityId], reducedMotion: Boolean(reducedMotion) };
+  presentationRef.current = { ...localize(capabilitySceneSpecs[abilityId]), reducedMotion: Boolean(reducedMotion) };
   const [state, setState] = useState<"loading" | "ready" | "unavailable">("loading");
 
   useEffect(() => {
@@ -37,7 +41,7 @@ export function CapabilityVisual({ abilityId }: { abilityId: AbilityId }) {
     // Start behind the existing page loader, before the first downward scroll.
     loadSceneModule().then(async module => {
       if (cancelled) return;
-      controller = module.createCapabilityScene(host, presentationRef.current, sceneFamily);
+      controller = module.createCapabilityScene(host, presentationRef.current, localizedFamily);
       sceneRef.current = controller;
       await controller.ready;
       if (!cancelled) setState("ready");
@@ -54,7 +58,7 @@ export function CapabilityVisual({ abilityId }: { abilityId: AbilityId }) {
       controller?.dispose();
       if (sceneRef.current === controller) sceneRef.current = undefined;
     };
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     const changed = previousAbilityRef.current !== abilityId;
@@ -74,9 +78,9 @@ export function CapabilityVisual({ abilityId }: { abilityId: AbilityId }) {
   }, [abilityId, reducedMotion, state]);
 
   return <div className="capability-visual" ref={hostRef} role="img"
-    aria-label={capabilitySceneDescriptions[abilityId]} aria-busy={state === "loading"}
+    aria-label={t(capabilitySceneDescriptions[abilityId])} aria-busy={state === "loading"}
     data-renderer={state} data-ability-visual={abilityId}>
-    {state === "loading" && <span className="cv-render-loading" aria-hidden="true">正在准备展示…</span>}
-    {state === "unavailable" && <p className="cv-render-fallback">{capabilitySceneDescriptions[abilityId]}</p>}
+    {t(state === "loading" && <span className="cv-render-loading" aria-hidden="true">{t("正在准备展示…")}</span>)}
+    {t(state === "unavailable" && <p className="cv-render-fallback">{t(capabilitySceneDescriptions[abilityId])}</p>)}
   </div>;
 }

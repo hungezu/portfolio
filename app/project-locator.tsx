@@ -1,4 +1,6 @@
 "use client";
+import { useI18n } from "./i18n";
+
 
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
 
@@ -19,6 +21,7 @@ export function ProjectLocator({
   legacyAnchors = emptyLegacyAnchors,
   onNavigate,
 }: ProjectLocatorProps) {
+  const { t } = useI18n();
   const [activeSection, setActiveSection] = useState(sections[0]?.[0] ?? "");
   const navRef = useRef<HTMLElement>(null);
   const sectionKey = sections.map(([id]) => id).join("|");
@@ -110,7 +113,7 @@ export function ProjectLocator({
   };
 
   return (
-    <nav ref={navRef} className="zhaocai-locator" aria-label={ariaLabel}>
+    <nav ref={navRef} className="zhaocai-locator" aria-label={t(ariaLabel)}>
       {sections.map(([id, label]) => (
         <a
           className={activeSection === id ? "active" : ""}
@@ -119,7 +122,7 @@ export function ProjectLocator({
           onClick={event => navigateTo(event, id)}
           key={id}
         >
-          <em>{label}</em>
+          <em>{t(label)}</em>
         </a>
       ))}
     </nav>

@@ -1,4 +1,6 @@
 "use client";
+import { useI18n, LocaleProvider, LanguageSwitch } from "./i18n";
+
 
 import "./site-navigation.css";
 import "./resume-download.css";
@@ -82,12 +84,14 @@ class ProjectContentBoundary extends Component<{ children: ReactNode }, { failed
   }
 
   render() {
-    if (this.state.failed) return <div className="case-loading image-fallback" role="alert">
-      <p>项目内容暂时未能加载</p>
-      <button type="button" onClick={() => window.location.reload()}>重新加载</button>
-    </div>;
+    if (this.state.failed) return <ProjectFailure />;
     return this.props.children;
   }
+}
+
+function ProjectFailure() {
+  const { t } = useI18n();
+  return <div className="case-loading image-fallback" role="alert"><p>{t("项目内容暂时未能加载")}</p><button type="button" onClick={() => window.location.reload()}>{t("重新加载")}</button></div>;
 }
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -222,8 +226,9 @@ function returnToProjectLocation(
 }
 
 function BrandMark() {
+  const { t } = useI18n();
   return (
-    <span className="brand-lockup" aria-label="李家豪作品集">
+    <span className="brand-lockup" aria-label={t("李家豪作品集")}>
       <img
         className="brand-logo"
         src={publicAsset("/assets/visual/hj-logo-112.png")}
@@ -246,9 +251,10 @@ function NavPill({
   children: ReactNode;
   className?: string;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  const { t } = useI18n();
   return (
     <button className={`nav-pill ${className}`} type="button" {...props}>
-      {children}
+      {t(children)}
     </button>
   );
 }
@@ -264,13 +270,14 @@ function SiteNav({
   projectView?: boolean;
   openingPhase?: HomeOpeningPhase;
 }) {
+  const { t } = useI18n();
   const reduce = useReducedMotion();
   const { navigationDelay } = homeEntranceTiming(reduce);
   const [navigationReady, setNavigationReady] = useState(!openingPhase || openingPhase === "settled");
   const projectBack = projectView ? (
     <a className="nav-pill nav-back" href="/portfolio/#work" onClick={onProjectBack}>
       <span className="nav-circle nav-circle-dark"><ArrowLeft size={12} strokeWidth={2.6} /></span>
-      <span>返回作品</span>
+      <span>{t("返回作品")}</span>
     </a>
   ) : null;
 
@@ -293,14 +300,15 @@ function SiteNav({
         <a className="brand-link" href="/portfolio/#top">
           <BrandMark />
         </a>
-        {projectBack}
+        {t(projectBack)}
       </div>
       <div className="nav-right">
-        <NavPill className="nav-pill-dark" onClick={onMenu} aria-label="打开导航菜单">
+        <LanguageSwitch />
+        <NavPill className="nav-pill-dark" onClick={onMenu} aria-label={t("打开导航菜单")}>
           <span className="nav-circle nav-circle-light">
             <Plus size={12} strokeWidth={3} />
           </span>
-          <span>菜单</span>
+          <span>{t("菜单")}</span>
         </NavPill>
       </div>
     </motion.nav>
@@ -308,6 +316,7 @@ function SiteNav({
 }
 
 function BackToTop() {
+  const { t } = useI18n();
   const [visible, setVisible] = useState(false);
   const reduce = useReducedMotion();
 
@@ -332,12 +341,12 @@ function BackToTop() {
 
   return (
     <AnimatePresence>
-      {visible ? (
+      {t(visible ? (
         <motion.button
           className="back-to-top"
           type="button"
-          aria-label="返回页面顶部"
-          title="返回顶部"
+          aria-label={t("返回页面顶部")}
+          title={t("返回顶部")}
           initial={reduce ? false : { opacity: 0, y: 12, scale: 0.92 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={reduce ? undefined : { opacity: 0, y: 8, scale: 0.94 }}
@@ -351,27 +360,29 @@ function BackToTop() {
         >
           <ArrowUp size={18} strokeWidth={2} />
         </motion.button>
-      ) : null}
+      ) : null)}
     </AnimatePresence>
   );
 }
 
 function ResumeDownloadLink({ className = "" }: { className?: string }) {
+  const { t } = useI18n();
   return (
     <a
       className={`resume-download-link ${className}`.trim()}
       href={`${publicAsset("/assets/portfolio/li-jiahao-ux-ui-resume.pdf")}?v=eafc3e0551ae`}
       download="李家豪-简历.pdf"
-      aria-label="下载李家豪的简历，PDF，共 3 页"
+      aria-label={t("下载李家豪的简历，PDF，共 3 页")}
     >
       <Download size={17} strokeWidth={1.6} aria-hidden="true" />
-      <span className="resume-download-label">下载简历</span>
-      <span className="resume-download-meta" aria-hidden="true">PDF · 3页</span>
+      <span className="resume-download-label">{t("下载简历")}</span>
+      <span className="resume-download-meta" aria-hidden="true">{t("PDF · 3页")}</span>
     </a>
   );
 }
 
 function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { t } = useI18n();
   const reduce = useReducedMotion();
   const overlayRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -431,7 +442,7 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
 
   return (
     <AnimatePresence>
-      {open ? (
+      {t(open ? (
         <motion.div
           ref={overlayRef}
           className="menu-overlay"
@@ -441,13 +452,13 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
           transition={{ duration: reduce ? 0 : 0.42, ease }}
           role="dialog"
           aria-modal="true"
-          aria-label="导航菜单"
+          aria-label={t("导航菜单")}
         >
           <motion.button
             ref={closeButtonRef}
             className="menu-close nav-pill nav-pill-dark"
             type="button"
-            aria-label="关闭导航菜单"
+            aria-label={t("关闭导航菜单")}
             onClick={onClose}
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -461,7 +472,7 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
             >
               <Plus size={12} strokeWidth={3} />
             </motion.span>
-            <span>关闭</span>
+            <span>{t("关闭")}</span>
           </motion.button>
           <div className="menu-content">
             {links.map(([label, href], index) => (
@@ -473,17 +484,17 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: reduce ? 0 : 0.04 + index * 0.045, duration: reduce ? 0 : 0.36, ease }}
               >
-                {label}
+                {t(label)}
               </motion.a>
             ))}
           </div>
           <div className="menu-contact">
             <ResumeDownloadLink className="menu-resume-download" />
-            <a href="mailto:2146953949@qq.com">邮箱 2146953949@qq.com</a>
-            <span>手机 13670115683</span>
+            <a href="mailto:2146953949@qq.com">{t("邮箱 2146953949@qq.com")}</a>
+            <span>{t("手机 13670115683")}</span>
           </div>
         </motion.div>
-      ) : null}
+      ) : null)}
     </AnimatePresence>
   );
 }
@@ -885,6 +896,7 @@ function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peek
 }
 
 function PortfolioChat({ project, openingPhase }: { project?: Project; openingPhase?: HomeOpeningPhase }) {
+  const { t } = useI18n();
   const reduce = useReducedMotion();
   const { assistantDelay } = homeEntranceTiming(reduce);
   const [entranceComplete, setEntranceComplete] = useState(!openingPhase || openingPhase === "settled");
@@ -1491,7 +1503,7 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
       data-pet-state={visiblePetState}
     >
       <AnimatePresence initial={false}>
-        {!open && contextVisible ? (
+        {t(!open && contextVisible ? (
           <motion.div
             className="portfolio-pet-context"
             id="portfolio-pet-hint"
@@ -1503,20 +1515,20 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
             exit={reduce ? undefined : { opacity: 0, x: 8, y: 3 }}
             transition={{ duration: reduce ? 0 : 0.22, ease }}
           >
-            {context.text}
+            {t(context.text)}
           </motion.div>
-        ) : null}
+        ) : null)}
       </AnimatePresence>
       <motion.button
         ref={launcherRef}
         className={`portfolio-pet-trigger${open ? " is-revealed" : ""}${petDragging ? " is-dragging" : ""}`}
         type="button"
         data-pet-drag-react="true"
-        aria-label={open ? "关闭作品集助手" : "打开作品集助手"}
+        aria-label={t(open ? "关闭作品集助手" : "打开作品集助手")}
         aria-controls={open ? "portfolio-chat-panel" : undefined}
         aria-describedby={!open && contextVisible ? "portfolio-pet-hint" : undefined}
         aria-expanded={open}
-        title={open ? "关闭作品集助手" : "打开作品集助手"}
+        title={t(open ? "关闭作品集助手" : "打开作品集助手")}
         onClick={handlePetClick}
         onPointerEnter={event => { if (event.pointerType === "mouse") showPetHint(); }}
         onPointerLeave={() => { if (hintMode === "intent") setContextVisible(false); }}
@@ -1534,7 +1546,7 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
       </motion.button>
 
       <AnimatePresence>
-        {open ? (
+        {t(open ? (
           <motion.section
             id="portfolio-chat-panel"
             className={`portfolio-chat-panel${messages.length === 1 ? " is-empty" : ""}`}
@@ -1553,8 +1565,8 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
                   <PortfolioChatLogo />
                 </span>
                 <div>
-                  <h2 id="portfolio-chat-title">作品集助手</h2>
-                  <p>{chatModeLabel(mode)}</p>
+                  <h2 id="portfolio-chat-title">{t("作品集助手")}</h2>
+                  <p>{t(chatModeLabel(mode))}</p>
                 </div>
               </div>
               <div className="portfolio-chat-actions">
@@ -1562,26 +1574,26 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
                 <button
                   className="portfolio-chat-new"
                   type="button"
-                  aria-label="重置对话"
+                  aria-label={t("重置对话")}
                   aria-describedby="portfolio-chat-reset-hint"
                   onClick={startNewConversation}
                   disabled={messages.length === 1 && !draft.trim()}
                 >
                   <RotateCcw size={16} strokeWidth={2} />
                 </button>
-                <span id="portfolio-chat-reset-hint" className="portfolio-chat-action-tooltip" role="tooltip">重置对话</span>
+                <span id="portfolio-chat-reset-hint" className="portfolio-chat-action-tooltip" role="tooltip">{t("重置对话")}</span>
                 </span>
                 <span className="portfolio-chat-action-wrap">
                 <button
                   className="portfolio-chat-close"
                   type="button"
-                  aria-label="关闭作品集助手"
+                  aria-label={t("关闭作品集助手")}
                   aria-describedby="portfolio-chat-close-hint"
                   onClick={() => closeChat()}
                 >
                   <X size={16} strokeWidth={2} />
                 </button>
-                <span id="portfolio-chat-close-hint" className="portfolio-chat-action-tooltip" role="tooltip">关闭对话（Esc）</span>
+                <span id="portfolio-chat-close-hint" className="portfolio-chat-action-tooltip" role="tooltip">{t("关闭对话（Esc）")}</span>
                 </span>
               </div>
             </header>
@@ -1592,7 +1604,7 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
               role="log"
               aria-live="polite"
               aria-busy={sending}
-              aria-label="对话内容"
+              aria-label={t("对话内容")}
             >
               <AnimatePresence initial={false} mode="popLayout">
                 {messages.map((message, messageIndex) => (
@@ -1606,17 +1618,17 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
                     exit={reduce ? undefined : { opacity: 0, y: -5, scale: 0.99 }}
                     transition={{ duration: reduce ? 0 : 0.24, ease }}
                   >
-                    {message.role === "assistant" && messageIndex !== 0 ? (
+                    {t(message.role === "assistant" && messageIndex !== 0 ? (
                       <span className="portfolio-chat-avatar" aria-hidden="true"><PortfolioChatLogo /></span>
-                    ) : null}
+                    ) : null)}
                     <div className="portfolio-chat-bubble-wrap">
                       <div className="portfolio-chat-bubble">
-                        {message.role === "assistant"
-                          ? <PortfolioChatMessageContent content={message.content} />
-                          : message.content}
+                        {t(message.role === "assistant"
+                          ? <PortfolioChatMessageContent content={messageIndex === 0 ? t(message.content) : message.content} />
+                          : message.content)}
                       </div>
-                      {message.state === "fallback" ? <p className="portfolio-chat-reply-note">本次根据作品集资料整理</p> : null}
-                      {message.retryQuery ? (
+                      {t(message.state === "fallback" ? <p className="portfolio-chat-reply-note">{t("本次根据作品集资料整理")}</p> : null)}
+                      {t(message.retryQuery ? (
                         <button
                           className="portfolio-chat-retry"
                           type="button"
@@ -1624,12 +1636,11 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
                           onClick={() => { if (message.retryQuery) void sendMessage(message.retryQuery, true); }}
                         >
                           <RotateCcw size={13} aria-hidden="true" />
-                          重新发送
-                        </button>
-                      ) : null}
-                      {message.references?.length ? (
+                          {t("重新发送")}</button>
+                      ) : null)}
+                      {t(message.references?.length ? (
                         <div className="portfolio-chat-references">
-                          <span>{message.references.every(reference => reference.kind === "project") ? "相关案例" : "相关内容"}</span>
+                          <span>{t(message.references.every(reference => reference.kind === "project") ? "相关案例" : "相关内容")}</span>
                           <div>
                             {message.references.map(reference => (
                               <a
@@ -1637,20 +1648,20 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
                                 href={getPortfolioRoute(reference.href)}
                                 onClick={() => { persistChatSession(); closeChat(false); }}
                               >
-                                <span>{reference.label}</span>
+                                <span>{t(reference.label)}</span>
                                 <ArrowUpRight size={12} strokeWidth={1.9} aria-hidden="true" />
                               </a>
                             ))}
                           </div>
                         </div>
-                      ) : null}
+                      ) : null)}
                     </div>
                   </motion.div>
                 ))}
-                {!sending && quickPrompts.length ? (
+                {t(!sending && quickPrompts.length ? (
                   <motion.div
                     className="portfolio-chat-quick-prompts"
-                    aria-label="常用问题"
+                    aria-label={t("常用问题")}
                     key="quick-prompts"
                     layout="position"
                     initial={reduce ? false : { opacity: 0, y: 8 }}
@@ -1658,24 +1669,24 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
                     exit={reduce ? undefined : { opacity: 0, y: -6 }}
                     transition={{ duration: reduce ? 0 : 0.22, ease }}
                   >
-                    <p>{messages.length === 1 ? "可以从这里开始" : "也可以继续了解"}</p>
+                    <p>{t(messages.length === 1 ? "可以从这里开始" : "也可以继续了解")}</p>
                     {quickPrompts.map(prompt => (
                       <button
                         key={prompt}
                         type="button"
                         disabled={sending}
-                        aria-label={`提问：${prompt}`}
+                        aria-label={t(`提问：${prompt}`)}
                         onClick={() => void sendMessage(prompt, true)}
                       >
-                        <span>{prompt}</span>
+                        <span>{t(prompt)}</span>
                       </button>
                     ))}
                   </motion.div>
-                ) : null}
-                {sending ? (
+                ) : null)}
+                {t(sending ? (
                   <motion.div
                     className="portfolio-chat-message is-assistant is-loading"
-                    aria-label="助手正在回复"
+                    aria-label={t("助手正在回复")}
                     key="loading"
                     layout="position"
                     initial={reduce ? false : { opacity: 0, y: 8 }}
@@ -1686,10 +1697,10 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
                     <span className="portfolio-chat-avatar" aria-hidden="true"><PortfolioChatLogo /></span>
                     <div className="portfolio-chat-bubble portfolio-chat-loading-bubble">
                       <span /><span /><span />
-                      <p>正在整理相关内容</p>
+                      <p>{t("正在整理相关内容")}</p>
                     </div>
                   </motion.div>
-                ) : null}
+                ) : null)}
               </AnimatePresence>
             </div>
 
@@ -1707,8 +1718,8 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
                 onChange={event => setDraft(event.target.value)}
                 rows={2}
                 maxLength={600}
-                placeholder={project ? "问问这个项目的职责、难点…" : "问问项目、经历或设计思路…"}
-                aria-label="输入关于李家豪及其设计作品的问题"
+                placeholder={t(project ? "问问这个项目的职责、难点…" : "问问项目、经历或设计思路…")}
+                aria-label={t("输入关于李家豪及其设计作品的问题")}
                 autoComplete="off"
                 enterKeyHint="send"
                 onKeyDown={event => {
@@ -1720,30 +1731,31 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
               />
               <button
                 type={sending ? "button" : "submit"}
-                aria-label={sending ? "停止本次回复" : "发送问题"}
-                title={sending ? "停止本次回复" : "发送问题"}
+                aria-label={t(sending ? "停止本次回复" : "发送问题")}
+                title={t(sending ? "停止本次回复" : "发送问题")}
                 onClick={sending ? event => {
                   event.preventDefault();
                   stopReply();
                 } : undefined}
                 disabled={!sessionReady || (!sending && !draft.trim())}
               >
-                {sending ? <Square size={13} fill="currentColor" strokeWidth={0} /> : <Send size={16} strokeWidth={2.1} />}
+                {t(sending ? <Square size={13} fill="currentColor" strokeWidth={0} /> : <Send size={16} strokeWidth={2.1} />)}
               </button>
               </div>
               <div className="portfolio-chat-composer-note">
-                <span>{sending ? "可点击方块停止，聊天记录会保留" : "根据作品集公开内容回答"}</span>
-                <span className="portfolio-chat-key-hint">{sending ? "可点击方块停止，聊天记录会保留" : "Enter 发送 · Shift + Enter 换行"}</span>
+                <span>{t(sending ? "可点击方块停止，聊天记录会保留" : "根据作品集公开内容回答")}</span>
+                <span className="portfolio-chat-key-hint">{t(sending ? "可点击方块停止，聊天记录会保留" : "Enter 发送 · Shift + Enter 换行")}</span>
               </div>
             </form>
           </motion.section>
-        ) : null}
+        ) : null)}
       </AnimatePresence>
     </motion.div>
   );
 }
 
 function Hero() {
+  const { t } = useI18n();
   const reduce = useReducedMotion();
   const { copyDelay, copyDuration: copyEntranceDuration, actionDelay: actionEntranceDelay, actionDuration } = homeEntranceTiming(reduce);
   const [copyEntranceOffset, setCopyEntranceOffset] = useState(() =>
@@ -1930,14 +1942,14 @@ function Hero() {
             if (shouldLoadVideo) setVideoPreloadState("error");
           }}
         >
-          {shouldLoadVideo ? <>
+          {t(shouldLoadVideo ? <>
             <source
               media="(max-width: 767px)"
               src={publicAsset(heroMobileVideoAsset)}
               type="video/mp4"
             />
             <source src={publicAsset(heroVideoAsset)} type="video/mp4" onError={() => setVideoPreloadState("error")} />
-          </> : null}
+          </> : null)}
         </video>
       </motion.div>
       <div className="hero-video-wash" aria-hidden="true" />
@@ -1957,12 +1969,10 @@ function Hero() {
               } },
               settled: { transform: "translate3d(0px, 0px, 0px)", opacity: 1, transition: { duration: 0 } },
             }}>
-              <span className="hero-name">我是李家豪</span>
+              <span className="hero-name">{t("我是李家豪")}</span>
               <span className="hero-statement">
-                <span className="hero-role-en">AI</span> 体验产品设计师，
-                <br />
-                让复杂业务更清晰，让智能体验更可控。
-              </span>
+                <span className="hero-role-en">AI</span> {t(" 体验产品设计师，")}<br />
+                {t("让复杂业务更清晰，让智能体验更可控。")}</span>
             </motion.span>
           </h1>
           <motion.div
@@ -1976,7 +1986,7 @@ function Hero() {
             }}
           >
             <a className="hero-contact-button" href="#work">
-              <span>查看精选作品</span>
+              <span>{t("查看精选作品")}</span>
               <span className="hero-action-icon" aria-hidden="true">
                 <ArrowUpRight size={16} strokeWidth={2} />
               </span>
@@ -1995,6 +2005,7 @@ function SectionIntro({
   title: string;
   description?: string;
 }) {
+  const { t } = useI18n();
   const reduce = useReducedMotion();
 
   return (
@@ -2008,8 +2019,8 @@ function SectionIntro({
         visible: { opacity: 1, y: 0, transition: { duration: reduce ? 0 : 0.42, ease, delayChildren: reduce ? 0 : 0.08 } },
       }}
     >
-      <h2>{title}</h2>
-      {description ? <p>{description}</p> : null}
+      <h2>{t(title)}</h2>
+      {t(description ? <p>{t(description)}</p> : null)}
       <motion.span
         className="section-intro-rule"
         aria-hidden="true"
@@ -2028,10 +2039,11 @@ function ImageWithFallback({
   decoding = "async",
   ...props
 }: ImgHTMLAttributes<HTMLImageElement>) {
+  const { t } = useI18n();
   return (
     <picture className="optimized-picture">
       <PortfolioImage
-        alt={alt}
+        alt={t(alt)}
         className={className}
         decoding={decoding}
         {...props}
@@ -2049,6 +2061,7 @@ function ProjectCard({
   index: number;
   highlightedAbilityId: AbilityId | null;
 }) {
+  const { t } = useI18n();
   const cardRef = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
   const fadeProgress = useMotionValue(0);
@@ -2179,49 +2192,48 @@ function ProjectCard({
         aria-labelledby={titleId}
         aria-describedby={summaryId}
       >
-        {abilityMatch && highlightedAbilityLabel ? (
+        {t(abilityMatch && highlightedAbilityLabel ? (
           <span className="project-match-indicator" aria-hidden="true">
-            匹配 · {highlightedAbilityLabel}
+            {t("匹配 · ")}{t(highlightedAbilityLabel)}
           </span>
-        ) : null}
+        ) : null)}
         <div className="project-copy">
           <div className="project-info-group">
             <h3 id={titleId}>
               {homeContent.titleLines.map((line, lineIndex) => (
                 <span key={line}>
-                  {line}
-                  {lineIndex < homeContent.titleLines.length - 1 ? <br /> : null}
+                  {t(line)}
+                  {t(lineIndex < homeContent.titleLines.length - 1 ? <br /> : null)}
                 </span>
               ))}
             </h3>
             <p className="project-type">
-              <span>{homeContent.category}</span>
-              {homeContent.platform ? <span className="project-platform">{homeContent.platform}</span> : null}
+              <span>{t(homeContent.category)}</span>
+              {t(homeContent.platform ? <span className="project-platform">{t(homeContent.platform)}</span> : null)}
             </p>
-            <p className="project-summary" id={summaryId}>{homeContent.summary}</p>
+            <p className="project-summary" id={summaryId}>{t(homeContent.summary)}</p>
           </div>
           <div className="project-meta">
             <dl className="project-role">
-              <dt>我的职责</dt>
-              <dd>{homeContent.role}</dd>
+              <dt>{t("我的职责")}</dt>
+              <dd>{t(homeContent.role)}</dd>
             </dl>
           </div>
           <div className="project-footer">
-            <div className="project-ability-tags" aria-label="项目对应能力">
+            <div className="project-ability-tags" aria-label={t("项目对应能力")}>
               {project.abilityIds.slice(0, 3).map(abilityId => (
-                <span key={abilityId}>{abilityLabelById.get(abilityId)}</span>
+                <span key={abilityId}>{t(abilityLabelById.get(abilityId))}</span>
               ))}
             </div>
             <span className="project-link" aria-hidden="true">
-              查看案例
-              <ArrowUpRight size={15} strokeWidth={1.8} />
+              {t("查看案例")}<ArrowUpRight size={15} strokeWidth={1.8} />
             </span>
           </div>
         </div>
         <div className="project-visual">
           <ImageWithFallback
             src={project.cardCover ?? project.cover}
-            alt={`${project.title}项目封面`}
+            alt={t(`${project.title}项目封面`)}
             width={1672}
             height={941}
             loading="lazy"
@@ -2241,6 +2253,7 @@ function WorkSection({
   highlightedAbilityId: AbilityId | null;
   onClearHighlight: () => void;
 }) {
+  const { t } = useI18n();
   const highlightedAbility = abilities.find(ability => ability.id === highlightedAbilityId);
   const matchedCount = highlightedAbilityId
     ? projects.filter(project => project.abilityIds.includes(highlightedAbilityId)).length
@@ -2250,15 +2263,15 @@ function WorkSection({
     <section className={`section work-section${highlightedAbility ? " has-ability-highlight" : ""}`} id="work">
       <div className="section-shell">
         <SectionIntro
-          title="精选作品"
-          description="构建 AI 增强的设计工作流，贯穿需求拆解、原型验证与规范沉淀，支持复杂项目持续验证与交付。"
+          title={t("精选作品")}
+          description={t("构建 AI 增强的设计工作流，贯穿需求拆解、原型验证与规范沉淀，支持复杂项目持续验证与交付。")}
         />
-        {highlightedAbility ? (
+        {t(highlightedAbility ? (
           <div className="project-highlight-status" aria-live="polite">
-            <span>正在突出“{highlightedAbility.name}”对应的 {matchedCount} 个项目</span>
-            <button type="button" onClick={onClearHighlight}>显示全部项目</button>
+            <span>{t("正在突出“")}{t(highlightedAbility.name)}{t("”对应的 ")}{t(matchedCount)} {t(" 个项目")}</span>
+            <button type="button" onClick={onClearHighlight}>{t("显示全部项目")}</button>
           </div>
-        ) : null}
+        ) : null)}
         <div className="project-stack">
           {projects.map((project, index) => (
             <ProjectCard
@@ -2275,6 +2288,7 @@ function WorkSection({
 }
 
 function ExperienceSection() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(0);
   const reduce = useReducedMotion();
 
@@ -2283,23 +2297,23 @@ function ExperienceSection() {
       <div className="section-shell">
         <div className="experience-heading">
           <SectionIntro
-            title="工作经历"
-            description={experienceIntro}
+            title={t("工作经历")}
+            description={t(experienceIntro)}
           />
           <motion.dl
             className="experience-stats"
-            aria-label="职业经验概览"
+            aria-label={t("职业经验概览")}
             initial={reduce ? false : { opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.7 }}
             transition={{ duration: 0.52, delay: 0.08, ease }}
           >
             <div>
-              <dt>项目经历</dt>
+              <dt>{t("项目经历")}</dt>
               <dd>15<sup>+</sup></dd>
             </div>
             <div>
-              <dt>工作年限</dt>
+              <dt>{t("工作年限")}</dt>
               <dd>7<sup>+</sup></dd>
             </div>
           </motion.dl>
@@ -2316,9 +2330,9 @@ function ExperienceSection() {
                   aria-controls={`experience-panel-${index}`}
                   onClick={() => setOpen(expanded ? -1 : index)}
                 >
-                  <span className="experience-company">{experience.company}</span>
-                  <span className="experience-role">{experience.role}</span>
-                  <span className="experience-period">{experience.period}</span>
+                  <span className="experience-company">{t(experience.company)}</span>
+                  <span className="experience-role">{t(experience.role)}</span>
+                  <span className="experience-period">{t(experience.period)}</span>
                   <span className="experience-toggle">
                     <Plus size={20} strokeWidth={1.3} aria-hidden="true" />
                   </span>
@@ -2333,21 +2347,21 @@ function ExperienceSection() {
                 >
                   <div className="experience-panel-clip">
                       <div className="experience-panel-content">
-                        <p>{experience.summary}</p>
+                        <p>{t(experience.summary)}</p>
                         <ul>
                           {experience.details.map((detail) => {
                             const [label, ...contentParts] = detail.split("｜");
                             const content = contentParts.join("｜");
                             return (
                               <li key={detail}>
-                                {content ? (
+                                {t(content ? (
                                   <>
-                                    <strong>{label}</strong>
-                                    <span>{content}</span>
+                                    <strong>{t(label)}</strong>
+                                    <span>{t(content)}</span>
                                   </>
                                 ) : (
-                                  <span>{detail}</span>
-                                )}
+                                  <span>{t(detail)}</span>
+                                ))}
                               </li>
                             );
                           })}
@@ -2368,6 +2382,7 @@ function ExperienceSection() {
 }
 
 function ContactSection() {
+  const { t } = useI18n();
   const [copied, setCopied] = useState<"wechat" | "email" | null>(null);
   const feedbackTimer = useRef<number | null>(null);
 
@@ -2398,38 +2413,38 @@ function ContactSection() {
     <section className="section contact-section" id="contact">
       <div className="section-shell contact-shell">
         <div className="contact-copy">
-          <h2>聊聊新的合作机会</h2>
-          <p>如果你在寻找一位能理解复杂业务、并把 AI 能力转化为清晰产品体验的设计师，欢迎联系我。</p>
+          <h2>{t("聊聊新的合作机会")}</h2>
+          <p>{t("如果你在寻找一位能理解复杂业务、并把 AI 能力转化为清晰产品体验的设计师，欢迎联系我。")}</p>
         </div>
 
-        <aside className="contact-panel" aria-label="联系方式">
+        <aside className="contact-panel" aria-label={t("联系方式")}>
           <div className="contact-list">
             <a className="contact-item" href="tel:13670115683">
-              <span className="contact-label">手机</span>
+              <span className="contact-label">{t("手机")}</span>
               <span className="contact-value">13670115683</span>
             </a>
             <div className="contact-item">
-              <span className="contact-label">微信号</span>
+              <span className="contact-label">{t("微信号")}</span>
               <span className="contact-value">Hungezu</span>
               <button
                 className="contact-copy-button"
                 type="button"
                 onClick={() => void copyContact("wechat", "Hungezu")}
-                aria-label="复制微信号 Hungezu"
+                aria-label={t("复制微信号 Hungezu")}
               >
-                <span aria-live="polite">{copied === "wechat" ? "已复制" : "复制"}</span>
+                <span aria-live="polite">{t(copied === "wechat" ? "已复制" : "复制")}</span>
               </button>
             </div>
             <div className="contact-item">
-              <span className="contact-label">邮箱</span>
+              <span className="contact-label">{t("邮箱")}</span>
               <a className="contact-value contact-value-link" href="mailto:2146953949@qq.com">2146953949@qq.com</a>
               <button
                 className="contact-copy-button"
                 type="button"
                 onClick={() => void copyContact("email", "2146953949@qq.com")}
-                aria-label="复制邮箱 2146953949@qq.com"
+                aria-label={t("复制邮箱 2146953949@qq.com")}
               >
-                <span aria-live="polite">{copied === "email" ? "已复制" : "复制"}</span>
+                <span aria-live="polite">{t(copied === "email" ? "已复制" : "复制")}</span>
               </button>
             </div>
           </div>
@@ -2437,16 +2452,16 @@ function ContactSection() {
           <figure className="contact-qr">
             <img
               src={publicAsset("/assets/visual/wechat-qr-hungezu.jpg")}
-              alt="李家豪的微信二维码"
+              alt={t("李家豪的微信二维码")}
               loading="lazy"
               decoding="async"
             />
-            <figcaption>微信扫码联系</figcaption>
+            <figcaption>{t("微信扫码联系")}</figcaption>
           </figure>
         </aside>
 
         <div className="contact-copyright">
-          <span>© 2026 李家豪 portfolio</span>
+          <span>{t("© 2026 李家豪 portfolio")}</span>
         </div>
       </div>
     </section>
@@ -2577,6 +2592,7 @@ function ProjectImageGallery({
   project: Project;
   reduce: boolean | null;
 }) {
+  const { t } = useI18n();
   const isEnergyProject = project.slug === "energy-tax";
   const locatorSections: ProjectLocatorSection[] = [
     ["project-overview", "项目介绍"],
@@ -2591,8 +2607,8 @@ function ProjectImageGallery({
 
   return (
     <>
-      <ProjectLocator sections={locatorSections} ariaLabel={`${project.shortTitle}项目章节定位`} />
-      <section className={`case-gallery${isEnergyProject ? " case-gallery-energy" : ""}`} aria-label={`${project.title}项目图片`}>
+      <ProjectLocator sections={locatorSections} ariaLabel={t(`${project.shortTitle}项目章节定位`)} />
+      <section className={`case-gallery${isEnergyProject ? " case-gallery-energy" : ""}`} aria-label={t(`${project.title}项目图片`)}>
         {project.gallery.map((image, index) => (
           <motion.figure
             id={`case-gallery-${index}`}
@@ -2604,7 +2620,7 @@ function ProjectImageGallery({
           >
             <ImageWithFallback
               src={image}
-              alt={project.galleryAlt?.[index] ?? `${project.title}项目展示 ${index + 1}`}
+              alt={t(project.galleryAlt?.[index] ?? `${project.title}项目展示 ${index + 1}`)}
               loading={index === 0 ? "eager" : "lazy"}
               fetchPriority={index === 0 ? "high" : "auto"}
             />
@@ -2616,6 +2632,7 @@ function ProjectImageGallery({
 }
 
 function ProjectPage({ project, projectView }: { project: Project; projectView?: NationalPlatformView }) {
+  const { t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const reduce = useReducedMotion();
   const isZhaocaiCase = project.slug === "zhaocai-smart";
@@ -2637,30 +2654,30 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
         className={`case-page${isZhaocaiCase ? " case-page-zhaocai" : ""}${isNationalPlatformCase ? " case-page-gkx" : ""}`}
         data-project={project.slug}
       >
-        {!isCustomCase ? <header className="case-hero" id="project-overview">
+        {t(!isCustomCase ? <header className="case-hero" id="project-overview">
           <motion.div
             className="case-heading"
             initial={reduce ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease }}
           >
-            <p>{project.type}</p>
-            <h1>{project.title}</h1>
+            <p>{t(project.type)}</p>
+            <h1>{t(project.title)}</h1>
             <div className="case-summary">
-              <p>{project.summary}</p>
-              <span>{project.period}</span>
+              <p>{t(project.summary)}</p>
+              <span>{t(project.period)}</span>
             </div>
           </motion.div>
-        </header> : null}
+        </header> : null)}
         <ProjectContentBoundary>
-        <Suspense fallback={<p className="case-loading" role="status">正在加载项目内容…</p>}>
-        {isZhaocaiCase ? (
+        <Suspense fallback={<p className="case-loading" role="status">{t("正在加载项目内容…")}</p>}>
+        {t(isZhaocaiCase ? (
           <ZhaocaiSmartCase />
         ) : isNationalPlatformCase ? (
           <GkxCase project={project} legacyView={projectView} />
         ) : (
           <ProjectImageGallery project={project} reduce={reduce} />
-        )}
+        ))}
         </Suspense>
         </ProjectContentBoundary>
       </main>
@@ -2670,18 +2687,22 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
   );
 }
 
-export default function PortfolioClient({ projectSlug, projectView }: { projectSlug?: string; projectView?: NationalPlatformView }) {
+function PortfolioContent({ projectSlug, projectView }: { projectSlug?: string; projectView?: NationalPlatformView }) {
+  const { t } = useI18n();
   if (!projectSlug) return <HomePage />;
   const project = projects.find((item) => item.slug === projectSlug);
   if (!project) {
     return (
       <main className="not-found">
-        <h1>该项目暂时无法访问</h1>
+        <h1>{t("该项目暂时无法访问")}</h1>
         <a className="button button-primary" href="/portfolio/#work">
-          返回作品列表
-        </a>
+          {t("返回作品列表")}</a>
       </main>
     );
   }
   return <ProjectPage project={project} projectView={projectView} />;
+}
+
+export default function PortfolioClient(props: { projectSlug?: string; projectView?: NationalPlatformView }) {
+  return <LocaleProvider projectSlug={props.projectSlug}><PortfolioContent {...props} /></LocaleProvider>;
 }

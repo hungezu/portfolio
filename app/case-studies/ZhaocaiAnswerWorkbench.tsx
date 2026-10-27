@@ -1,4 +1,6 @@
 "use client";
+import { useI18n } from "../i18n";
+
 
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import Check from "lucide-react/dist/esm/icons/check.mjs";
@@ -71,13 +73,13 @@ const scenes: Scene[] = [
   ] },
 ];
 
-function toMarkdown(blocks: Block[], sourceAnchor: string) {
+function toMarkdown(blocks: Block[], sourceAnchor: string, sourceLabel: string) {
   return blocks.map(block => {
     if (block.type === "heading") return `${"#".repeat(block.level)} ${block.text}`;
     if (block.type === "paragraph") return block.text;
     if (block.type === "note") return `> ${block.text}`;
     if (block.type === "list") return block.items.map(item => `- ${item}`).join("\n");
-    if (block.type === "source") return `来源：[${block.text}](#${sourceAnchor})`;
+    if (block.type === "source") return `${sourceLabel}: [${block.text}](#${sourceAnchor})`;
     return `${block.caption}\n\n| ${block.headers.join(" | ")} |\n| ${block.headers.map((_, index) => block.numericColumns.includes(index) ? "---:" : "---").join(" | ")} |\n${block.rows.map(row => `| ${row.join(" | ")} |`).join("\n")}`;
   }).join("\n\n");
 }
@@ -87,6 +89,7 @@ function inline(text: string): ReactNode {
 }
 
 export function ZhaocaiAnswerWorkbench() {
+  const { t, localize, locale } = useI18n();
   const instanceId = useId().replace(/:/g, "");
   const prefix = `zaw-${instanceId}`;
   const [sceneId, setSceneId] = useState<SceneId>("overview");
@@ -96,9 +99,9 @@ export function ZhaocaiAnswerWorkbench() {
   const [copyStatus, setCopyStatus] = useState("");
   const dialog = useRef<HTMLDialogElement>(null);
   const sourceOpener = useRef<HTMLButtonElement | null>(null);
-  const scene = scenes.find(item => item.id === sceneId)!;
-  const rule = rules.find(item => item.id === activeRule)!;
-  const markdown = toMarkdown(scene.blocks, `${prefix}-source-detail`);
+  const scene = localize(scenes.find(item => item.id === sceneId)!);
+  const rule = localize(rules.find(item => item.id === activeRule)!);
+  const markdown = toMarkdown(scene.blocks, `${prefix}-source-detail`, t("来源"));
   const highlightedCount = scene.blocks.filter(block => block.rules.includes(activeRule)).length;
 
   const changeScene = (id: SceneId) => {
@@ -140,32 +143,32 @@ export function ZhaocaiAnswerWorkbench() {
     const isHighlighted = annotations && block.rules.includes(activeRule);
     const className = `zaw-answer-block zaw-answer-block-${block.type}${isHighlighted ? " zaw-answer-block-highlighted" : ""}`;
     let content: ReactNode;
-    if (block.type === "heading") content = block.level === 2 ? <h2>{block.text}</h2> : <h3>{block.text}</h3>;
-    else if (block.type === "paragraph") content = <p>{inline(block.text)}</p>;
-    else if (block.type === "note") content = <blockquote>{inline(block.text)}</blockquote>;
-    else if (block.type === "list") content = <ul>{block.items.map(item => <li key={item}>{inline(item)}</li>)}</ul>;
-    else if (block.type === "source") content = <p className="zaw-source-line"><span>来源：</span><button type="button" onClick={event => openSource(event.currentTarget)} aria-haspopup="dialog" aria-controls={`${prefix}-source-detail`}><Database size={14} aria-hidden="true"/>{block.text}</button></p>;
-    else content = <div className="zaw-table-wrap"><table><caption>{block.caption}</caption><thead><tr>{block.headers.map((header, index) => <th key={header} scope="col" className={block.numericColumns.includes(index) ? "zaw-numeric" : undefined}>{header}</th>)}</tr></thead><tbody>{block.rows.map((row, rowIndex) => <tr key={rowIndex}>{row.map((value, index) => index === 0 ? <th key={index} scope="row">{value}</th> : <td key={index} className={block.numericColumns.includes(index) ? "zaw-numeric" : undefined}>{value}</td>)}</tr>)}</tbody></table></div>;
-    return <div className={className} key={block.id}>{content}{isHighlighted ? <span className="zaw-rule-marker" aria-label={`当前规范：${rule.title}`}>{rule.title}</span> : null}</div>;
+    if (block.type === "heading") content = block.level === 2 ? <h2>{t(block.text)}</h2> : <h3>{t(block.text)}</h3>;
+    else if (block.type === "paragraph") content = <p>{t(inline(block.text))}</p>;
+    else if (block.type === "note") content = <blockquote>{t(inline(block.text))}</blockquote>;
+    else if (block.type === "list") content = <ul>{block.items.map(item => <li key={item}>{t(inline(item))}</li>)}</ul>;
+    else if (block.type === "source") content = <p className="zaw-source-line"><span>{t("来源：")}</span><button type="button" onClick={event => openSource(event.currentTarget)} aria-haspopup="dialog" aria-controls={`${prefix}-source-detail`}><Database size={14} aria-hidden="true"/>{t(block.text)}</button></p>;
+    else content = <div className="zaw-table-wrap"><table><caption>{t(block.caption)}</caption><thead><tr>{block.headers.map((header, index) => <th key={header} scope="col" className={block.numericColumns.includes(index) ? "zaw-numeric" : undefined}>{t(header)}</th>)}</tr></thead><tbody>{block.rows.map((row, rowIndex) => <tr key={rowIndex}>{row.map((value, index) => index === 0 ? <th key={index} scope="row">{t(value)}</th> : <td key={index} className={block.numericColumns.includes(index) ? "zaw-numeric" : undefined}>{t(value)}</td>)}</tr>)}</tbody></table></div>;
+    return <div className={className} key={block.id}>{t(content)}{t(isHighlighted ? <span className="zaw-rule-marker" aria-label={t(`当前规范：${rule.title}`)}>{t(rule.title)}</span> : null)}</div>;
   };
 
-  return <div className="zaw-workbench" aria-label="Markdown 回答规范工作台">
-    <header className="zaw-topbar"><div className="zaw-brand"><span className="zaw-brand-icon"><FileText size={18} aria-hidden="true"/></span><strong>招财 Smart</strong><span className="zaw-topbar-divider"/><span>回答规范</span></div><span className="zaw-sample-label">示例数据</span><div className="zaw-scenarios" role="tablist" aria-label="回答场景">{scenes.map(item => <button type="button" role="tab" id={`${prefix}-scene-${item.id}`} aria-selected={item.id === sceneId} aria-controls={`${prefix}-scene-panel`} tabIndex={item.id === sceneId ? 0 : -1} key={item.id} onClick={() => changeScene(item.id)} onKeyDown={event => tabKey(event, scenes.map(current => current.id), sceneId, value => changeScene(value as SceneId), "scene")}>{item.label}</button>)}</div></header>
+  return <div className="zaw-workbench" aria-label={t("Markdown 回答规范工作台")}>
+    <header className="zaw-topbar"><div className="zaw-brand"><span className="zaw-brand-icon"><FileText size={18} aria-hidden="true"/></span><strong>{t("招财 Smart")}</strong><span className="zaw-topbar-divider"/><span>{t("回答规范")}</span></div><span className="zaw-sample-label">{t("示例数据")}</span><div className="zaw-scenarios" role="tablist" aria-label={t("回答场景")}>{scenes.map(item => <button type="button" role="tab" id={`${prefix}-scene-${item.id}`} aria-selected={item.id === sceneId} aria-controls={`${prefix}-scene-panel`} tabIndex={item.id === sceneId ? 0 : -1} key={item.id} onClick={() => changeScene(item.id)} onKeyDown={event => tabKey(event, scenes.map(current => current.id), sceneId, value => changeScene(value as SceneId), "scene")}>{t(item.label)}</button>)}</div></header>
     <div className="zaw-scene-panel" id={`${prefix}-scene-panel`} role="tabpanel" aria-labelledby={`${prefix}-scene-${sceneId}`}>
-      <aside className="zaw-rules"><p className="zaw-nav-label">查看规则</p><nav aria-label="回答规范规则">{rules.map(item => <button type="button" key={item.id} aria-pressed={item.id === activeRule} disabled={!scene.rules.includes(item.id)} onClick={() => { setActiveRule(item.id); setAnnotations(true); }} aria-controls={`${prefix}-rule-detail`}><span>{item.id === "reasoning" ? "结论与依据" : item.title}</span></button>)}</nav><p className="zaw-nav-note">选择规则，对照说明与回答中的标注。</p></aside>
+      <aside className="zaw-rules"><p className="zaw-nav-label">{t("查看规则")}</p><nav aria-label={t("回答规范规则")}>{rules.map(item => <button type="button" key={item.id} aria-pressed={item.id === activeRule} disabled={!scene.rules.includes(item.id)} onClick={() => { setActiveRule(item.id); setAnnotations(true); }} aria-controls={`${prefix}-rule-detail`}><span>{t(item.id === "reasoning" ? "结论与依据" : item.title)}</span></button>)}</nav><p className="zaw-nav-note">{t("选择规则，对照说明与回答中的标注。")}</p></aside>
       <div className="zaw-main">
-        <div className="zaw-question"><span>用户提问</span><p>{scene.question}</p></div>
-        <div className="zaw-toolbar"><div className="zaw-view-tabs" role="tablist" aria-label="回答查看方式">{[{ id: "rendered", label: "渲染结果", icon: Eye }, { id: "source", label: "Markdown 源文", icon: Code }].map(item => <button type="button" role="tab" id={`${prefix}-view-${item.id}`} aria-selected={view === item.id} aria-controls={`${prefix}-answer`} tabIndex={view === item.id ? 0 : -1} key={item.id} onClick={() => setView(item.id)} onKeyDown={event => tabKey(event, ["rendered", "source"], view, setView, "view")}><item.icon size={15} aria-hidden="true"/>{item.label}</button>)}</div><label className="zaw-annotation-toggle"><input type="checkbox" role="switch" checked={annotations} onChange={event => setAnnotations(event.target.checked)}/><span>规则标注</span></label></div>
-        <section className="zaw-rule-detail" id={`${prefix}-rule-detail`} aria-labelledby={`${prefix}-rule-title`}><div className="zaw-rule-detail-title"><h4 id={`${prefix}-rule-title`}>{rule.title}</h4><span className="zaw-rule-state" aria-live="polite">{view === "source" ? "切回渲染结果查看标注" : annotations ? `已标注 ${highlightedCount} 处` : "标注已隐藏"}</span></div><dl><div><dt>规则</dt><dd>{rule.rule}</dd></div><div><dt>适用</dt><dd>{rule.applies}</dd></div><div><dt>检查</dt><dd>{rule.check}</dd></div></dl></section>
-        <div className="zaw-answer-panel" role="tabpanel" id={`${prefix}-answer`} aria-labelledby={`${prefix}-view-${view}`} tabIndex={0}>{view === "rendered" ? <div className="zaw-answer">{scene.blocks.map(renderBlock)}</div> : <pre className="zaw-markdown" aria-label="可选择复制的 Markdown 源文"><code>{markdown}</code></pre>}</div>
-        <div className="zaw-answer-footer"><span>正文 14 px / 行高 24 px</span><button type="button" onClick={copy}>{copyStatus === "Markdown 已复制" ? <Check size={15} aria-hidden="true"/> : <Copy size={15} aria-hidden="true"/>}{copyStatus === "Markdown 已复制" ? "已复制" : "复制 Markdown"}</button></div>
-        <p className="zaw-copy-status" role="status" aria-live="polite">{copyStatus}</p>
+        <div className="zaw-question"><span>{t("用户提问")}</span><p>{t(scene.question)}</p></div>
+        <div className="zaw-toolbar"><div className="zaw-view-tabs" role="tablist" aria-label={t("回答查看方式")}>{[{ id: "rendered", label: "渲染结果", icon: Eye }, { id: "source", label: "Markdown 源文", icon: Code }].map(item => <button type="button" role="tab" id={`${prefix}-view-${item.id}`} aria-selected={view === item.id} aria-controls={`${prefix}-answer`} tabIndex={view === item.id ? 0 : -1} key={item.id} onClick={() => setView(item.id)} onKeyDown={event => tabKey(event, ["rendered", "source"], view, setView, "view")}><item.icon size={15} aria-hidden="true"/>{t(item.label)}</button>)}</div><label className="zaw-annotation-toggle"><input type="checkbox" role="switch" checked={annotations} onChange={event => setAnnotations(event.target.checked)}/><span>{t("规则标注")}</span></label></div>
+        <section className="zaw-rule-detail" id={`${prefix}-rule-detail`} aria-labelledby={`${prefix}-rule-title`}><div className="zaw-rule-detail-title"><h4 id={`${prefix}-rule-title`}>{t(rule.title)}</h4><span className="zaw-rule-state" aria-live="polite">{t(view === "source" ? "切回渲染结果查看标注" : annotations ? `已标注 ${highlightedCount} 处` : "标注已隐藏")}</span></div><dl><div><dt>{t("规则")}</dt><dd>{t(rule.rule)}</dd></div><div><dt>{t("适用")}</dt><dd>{t(rule.applies)}</dd></div><div><dt>{t("检查")}</dt><dd>{t(rule.check)}</dd></div></dl></section>
+        <div className="zaw-answer-panel" role="tabpanel" id={`${prefix}-answer`} aria-labelledby={`${prefix}-view-${view}`} tabIndex={0}>{t(view === "rendered" ? <div className="zaw-answer">{scene.blocks.map(renderBlock)}</div> : <pre className="zaw-markdown" aria-label={t("可选择复制的 Markdown 源文")}><code>{t(markdown)}</code></pre>)}</div>
+        <div className="zaw-answer-footer"><span>{t("正文 14 px / 行高 24 px")}</span><button type="button" onClick={copy}>{t(copyStatus === "Markdown 已复制" ? <Check size={15} aria-hidden="true"/> : <Copy size={15} aria-hidden="true"/>)}{t(copyStatus === "Markdown 已复制" ? "已复制" : "复制 Markdown")}</button></div>
+        <p className="zaw-copy-status" role="status" aria-live="polite">{t(copyStatus)}</p>
       </div>
     </div>
     <dialog ref={dialog} className="zaw-source-dialog" id={`${prefix}-source-detail`} aria-labelledby={`${prefix}-source-title`} onClose={() => sourceOpener.current?.focus({ preventScroll: true })} onClick={event => { if (event.target === event.currentTarget) dialog.current?.close(); }}>
-      <header><div><p>来源详情 · 示例数据</p><h3 id={`${prefix}-source-title`}>2024 年全集团季度净利润明细</h3></div><button type="button" autoFocus onClick={() => dialog.current?.close()} aria-label="关闭来源详情"><X size={20} aria-hidden="true"/></button></header>
-      <div className="zaw-source-body"><p>这份示例用于查看回答结构、数值口径与引用方式。</p><dl className="zaw-source-meta"><div><dt>查询期间</dt><dd>2024 年 1 月 1 日—12 月 31 日</dd></div><div><dt>组织范围</dt><dd>全集团</dd></div><div><dt>指标口径</dt><dd>净利润，按季度列示</dd></div><div><dt>金额单位</dt><dd>亿元，保留两位小数</dd></div><div><dt>可用维度</dt><dd>季度；未提供子公司明细</dd></div></dl><div className="zaw-table-wrap"><table><caption>季度样例数据</caption><thead><tr><th scope="col">统计期间</th><th scope="col" className="zaw-numeric">净利润（亿元）</th></tr></thead><tbody>{quarterRows.map(row => <tr key={row[0]}><th scope="row">{row[0]}</th><td className="zaw-numeric">{row[1]}</td></tr>)}</tbody></table></div><p className="zaw-source-calculation">合计：1.32 + 1.46 + 1.59 + 1.71 = 6.08 亿元</p></div>
-      <footer><button type="button" onClick={() => dialog.current?.close()}>返回回答</button></footer>
+      <header><div><p>{t("来源详情 · 示例数据")}</p><h3 id={`${prefix}-source-title`}>{t("2024 年全集团季度净利润明细")}</h3></div><button type="button" autoFocus onClick={() => dialog.current?.close()} aria-label={t("关闭来源详情")}><X size={20} aria-hidden="true"/></button></header>
+      <div className="zaw-source-body"><p>{t("这份示例用于查看回答结构、数值口径与引用方式。")}</p><dl className="zaw-source-meta"><div><dt>{t("查询期间")}</dt><dd>{t("2024 年 1 月 1 日—12 月 31 日")}</dd></div><div><dt>{t("组织范围")}</dt><dd>{t("全集团")}</dd></div><div><dt>{t("指标口径")}</dt><dd>{t("净利润，按季度列示")}</dd></div><div><dt>{t("金额单位")}</dt><dd>{t("亿元，保留两位小数")}</dd></div><div><dt>{t("可用维度")}</dt><dd>{t("季度；未提供子公司明细")}</dd></div></dl><div className="zaw-table-wrap"><table><caption>{t("季度样例数据")}</caption><thead><tr><th scope="col">{t("统计期间")}</th><th scope="col" className="zaw-numeric">{t("净利润（亿元）")}</th></tr></thead><tbody>{quarterRows.map(row => <tr key={row[0]}><th scope="row">{t(row[0])}</th><td className="zaw-numeric">{t(row[1])}</td></tr>)}</tbody></table></div><p className="zaw-source-calculation">{t("合计：1.32 + 1.46 + 1.59 + 1.71 = 6.08 亿元")}</p></div>
+      <footer><button type="button" onClick={() => dialog.current?.close()}>{t("返回回答")}</button></footer>
     </dialog>
   </div>;
 }

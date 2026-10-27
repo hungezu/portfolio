@@ -1,4 +1,6 @@
 "use client";
+import { useI18n } from "../i18n";
+
 
 import { Button, Table } from "@arco-design/web-react";
 import { IconArrowLeft, IconArrowRight, IconImage } from "@arco-design/web-react/icon";
@@ -54,23 +56,24 @@ export function GkxStandardsApplications({ assets, onOpen, onReturn }: {
   onOpen: (asset: GkxStandardsApplicationAsset, trigger: HTMLButtonElement) => void;
   onReturn?: () => void;
 }) {
+  const { t, localize } = useI18n();
   return <article id="gkx-standards-applications" className="gkx-standards-applications" aria-labelledby="gkx-standards-applications-title" tabIndex={-1}>
-    {onReturn && <div className="gkx-standards-applications__return-context"><span>来自 AI 实践 · 复用规则</span><Button type="outline" icon={<IconArrowLeft aria-hidden="true" />} className="gkx-standards-applications__return" onClick={onReturn}>返回刚才位置</Button></div>}
+    {t(onReturn && <div className="gkx-standards-applications__return-context"><span>{t("来自 AI 实践 · 复用规则")}</span><Button type="outline" icon={<IconArrowLeft aria-hidden="true" />} className="gkx-standards-applications__return" onClick={onReturn}>{t("返回刚才位置")}</Button></div>)}
     <header>
-      <h4 id="gkx-standards-applications-title">这些规范如何用于GKX</h4>
-      <p>以论文管理的三个任务为例，将公开目录中的规范主题与核对重点对应到具体界面。</p>
+      <h4 id="gkx-standards-applications-title">{t("这些规范如何用于GKX")}</h4>
+      <p>{t("以论文管理的三个任务为例，将公开目录中的规范主题与核对重点对应到具体界面。")}</p>
     </header>
     <Table<StandardsApplication>
-      aria-label="GKX页面与设计规范的对应示例"
+      aria-label={t("GKX页面与设计规范的对应示例")}
       rowKey="key"
-      data={applications}
+      data={localize(applications)}
       pagination={false}
       hover={false}
       size="default"
       tableLayoutFixed
       border={{ wrapper: false, headerCell: false, bodyCell: false }}
       scroll={{ x: 1080 }}
-      columns={[
+      columns={localize([
         { title: "实际页面", dataIndex: "page", width: 180 },
         { title: "规范主题", dataIndex: "topic", width: 250 },
         { title: "核对重点", dataIndex: "check", width: 370 },
@@ -84,17 +87,17 @@ export function GkxStandardsApplications({ assets, onOpen, onReturn }: {
               type="outline"
               className="gkx-standards-applications__open"
               icon={<IconImage aria-hidden="true" />}
-              aria-label={`查看${record.page}的${example.label.replace(/^查看/, "")}界面示例`}
+              aria-label={t(`查看${record.page}的${example.label.replace(/^查看/, "")}界面示例`)}
               onClick={event => {
                 if (event.currentTarget instanceof HTMLButtonElement) onOpen(assets[example.assetKey], event.currentTarget);
               }}
             >
-              <span>{example.label}</span>
+              <span>{t(example.label)}</span>
               <IconArrowRight aria-hidden="true" />
             </Button>)}
           </div>,
         },
-      ]}
+      ])}
     />
   </article>;
 }

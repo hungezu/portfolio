@@ -1,4 +1,6 @@
 "use client";
+import { useI18n } from "../i18n";
+
 
 import { publicAsset } from "../portfolio-data";
 import { PortfolioImage } from "../portfolio-image";
@@ -82,24 +84,25 @@ const materials: SupplementalMaterial[] = [
 ];
 
 function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen: OpenMaterial }) {
+  const { t } = useI18n();
   return (
       <div className="gkx-supplemental-materials__grid">
         {items.map(material => (
           <article className="gkx-supplemental-material" key={material.src}>
             <div className="gkx-supplemental-material__copy">
-              <h4>{material.title}</h4>
-              <p>{material.purpose}</p>
+              <h4>{t(material.title)}</h4>
+              <p>{t(material.purpose)}</p>
             </div>
             <button
               type="button"
               className="gkx-supplemental-material__image"
-              aria-label={`${material.actionLabel ?? (material.preview ? "查看完整模块" : "查看原图")}：${material.title}`}
+              aria-label={t(`${material.actionLabel ?? (material.preview ? "查看完整模块" : "查看原图")}：${material.title}`)}
               onClick={event => onOpen(material, event.currentTarget)}
             >
               <span className="gkx-supplemental-material__preview">
                 <PortfolioImage
                   src={publicAsset(material.preview?.src ?? material.src)}
-                  alt={material.preview?.alt ?? material.alt}
+                  alt={t(material.preview?.alt ?? material.alt)}
                   width={material.preview?.width ?? material.width}
                   height={material.preview?.height ?? material.height}
                   loading="lazy"
@@ -107,7 +110,7 @@ function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen
                 />
               </span>
               <span className="gkx-supplemental-material__action">
-                {material.actionLabel ?? (material.preview ? "查看完整模块" : "查看原图")}
+                {t(material.actionLabel ?? (material.preview ? "查看完整模块" : "查看原图"))}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5" />
                 </svg>
@@ -120,19 +123,20 @@ function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen
 }
 
 export function GkxSupplementalMaterials({ onOpen, compact = false }: { onOpen: OpenMaterial; compact?: boolean }) {
+  const { t } = useI18n();
   if (compact) return <details id="gkx-materials" className="gkx-supplemental-materials gkx-supplemental-materials__disclosure is-compact">
-    <summary>更多业务图稿：流程建模、科技交流与内容管理</summary>
+    <summary>{t("更多业务图稿：流程建模、科技交流与内容管理")}</summary>
     <MaterialGrid items={materials.filter(material => material.src !== gkxThinkTankDetail.src)} onOpen={onOpen} />
   </details>;
   return (
     <section className="gkx-supplemental-materials" aria-labelledby="gkx-supplemental-title">
       <header className="gkx-supplemental-materials__intro">
-        <h3 id="gkx-supplemental-title">更多业务任务，沿用共同规则</h3>
-        <p>高端智库详情页承接集群服务浏览，流程设计器承接流程建模。以下内容包含页面截图与脱敏图稿，可打开查看各自的界面细节。</p>
+        <h3 id="gkx-supplemental-title">{t("更多业务任务，沿用共同规则")}</h3>
+        <p>{t("高端智库详情页承接集群服务浏览，流程设计器承接流程建模。以下内容包含页面截图与脱敏图稿，可打开查看各自的界面细节。")}</p>
       </header>
       <MaterialGrid items={materials.filter(material => material.featured)} onOpen={onOpen} />
       <details id="gkx-materials" className="gkx-supplemental-materials__disclosure">
-        <summary>查看补充图稿：科技交流、技术路线与内容管理</summary>
+        <summary>{t("查看补充图稿：科技交流、技术路线与内容管理")}</summary>
         <MaterialGrid items={materials.filter(material => !material.featured)} onOpen={onOpen} />
       </details>
     </section>

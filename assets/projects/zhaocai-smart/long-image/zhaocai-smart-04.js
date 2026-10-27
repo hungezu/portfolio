@@ -1,9 +1,10 @@
 (function (root) {
   'use strict';
+  const I18N = root.ZMD_I18N || { t: value => value, locale: 'zh-CN', onChange: () => {} };
   const Markdown = root.marked || (typeof require === 'function' ? require('./vendor/marked.umd.js') : null);
   const DATA = root.ZMD_DATA || (typeof require === 'function' ? require('./zhaocai-smart-04-data.js') : null);
-  const escape = value => String(value).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
-  const number = value => new Intl.NumberFormat('zh-CN', { maximumFractionDigits: 2 }).format(value);
+  const escape = value => String(I18N.t(value)).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+  const number = value => new Intl.NumberFormat(I18N.locale, { maximumFractionDigits: 2 }).format(value);
   function chartData(raw) {
     let c;
     try { c = JSON.parse(raw); } catch (_) { throw new Error('图表内容不是有效的 JSON。'); }
@@ -106,7 +107,7 @@
       },
       paragraph(token) { return '<p data-rule="正文 · 14 / 24px">' + this.parser.parseInline(token.tokens) + '</p>\n'; },
       blockquote(token) {
-        const warn = /^(?:>\s*)?\s*(?:\*\*)?(注意|数据缺口|暂无数据|限制)/.test(token.text);
+        const warn = /^(?:>\s*)?\s*(?:\*\*)?(注意|数据缺口|暂无数据|限制|Note|Data gap|No data available|Limitations)/.test(token.text);
         return '<blockquote data-rule="引文 / 口径提示"' + (warn ? ' data-tone="warning"' : '') + '>' + this.parser.parse(token.tokens) + '</blockquote>\n';
       },
       code(token) {
@@ -205,21 +206,21 @@
       const outline = $('[data-zmd-outline]');
       outline.replaceChildren();
       try {
-        const result = compileMarkdown(state.text());
-        rendered.innerHTML = result.html;
-        $('[data-zmd-reading-meta]').textContent = result.validation.headingCount + ' 个标题 · ' + result.validation.tableCount + ' 张数据表';
+        const result = compileMarkdown(I18N.t(state.text()));
+        rendered.innerHTML = I18N.t(result.html);
+        $('[data-zmd-reading-meta]').textContent = I18N.t(result.validation.headingCount + ' 个标题 · ' + result.validation.tableCount + ' 张数据表');
         const headings = result.headings.filter(item => item.depth === 2);
         outline.hidden = headings.length < 4;
         if (!outline.hidden) headings.forEach(item => {
           const node = rendered.querySelector('#' + item.id), button = document.createElement('button');
-          button.type = 'button'; button.textContent = node.textContent; button.dataset.zmdHeading = item.id;
+          button.type = 'button'; button.textContent = I18N.t(node.textContent); button.dataset.zmdHeading = item.id;
           outline.append(button);
         });
       } catch (_) {
         rendered.replaceChildren();
-        const message = document.createElement('p'); message.className = 'zmd-chart-error'; message.textContent = '此内容暂时无法完成排版，原文已保留。';
-        const pre = document.createElement('pre'); pre.textContent = state.text(); rendered.append(message, pre);
-        outline.hidden = true; $('[data-zmd-reading-meta]').textContent = '原文保留';
+        const message = document.createElement('p'); message.className = 'zmd-chart-error'; message.textContent = I18N.t('此内容暂时无法完成排版，原文已保留。');
+        const pre = document.createElement('pre'); pre.textContent = I18N.t(state.text()); rendered.append(message, pre);
+        outline.hidden = true; $('[data-zmd-reading-meta]').textContent = I18N.t('原文保留');
       }
       scroll.scrollTop = 0;
     }
@@ -227,24 +228,26 @@
       const mode = state.mode(), item = state.current();
       $$('[data-zmd-mode]').forEach(button => { const selected = button.dataset.zmdMode === mode; button.setAttribute('aria-selected', String(selected)); button.tabIndex = selected ? 0 : -1; });
       $('#zmd-workspace').setAttribute('aria-labelledby', mode === 'scenes' ? 'zmd-scenes-tab' : 'zmd-rules-tab');
-      $('[data-zmd-nav-title]').textContent = mode === 'scenes' ? '按业务任务选择' : '按内容组件选择';
-      $('[data-zmd-nav]').innerHTML = DATA[mode].map(entry => '<button type="button" data-zmd-item="' + escape(entry.id) + '" aria-current="' + (entry.id === item.id) + '">' + escape(entry.label) + '</button>').join('');
-      $('[data-zmd-example-label]').textContent = (mode === 'scenes' ? '场景 / ' : item.code + ' / ') + item.label;
-      $('[data-zmd-question]').textContent = item.question;
-      $('[data-zmd-description]').textContent = item.description;
+      $('[data-zmd-nav-title]').textContent = I18N.t(mode === 'scenes' ? '按业务任务选择' : '按内容组件选择');
+      $('[data-zmd-nav]').innerHTML = I18N.t(DATA[mode].map(entry => '<button type="button" data-zmd-item="' + escape(entry.id) + '" aria-current="' + (entry.id === item.id) + '">' + escape(entry.label) + '</button>').join(''));
+      $('[data-zmd-example-label]').textContent = I18N.t((mode === 'scenes' ? '场景 / ' : item.code + ' / ') + item.label);
+      $('[data-zmd-question]').textContent = I18N.t(item.question);
+      $('[data-zmd-description]').textContent = I18N.t(item.description);
       const tags = $('[data-zmd-rule-tags]');
-      tags.innerHTML = item.tags.map(id => { const rule = DATA.rules.find(r => r.id === id); return rule ? '<button type="button" data-zmd-rule="' + escape(id) + '" aria-label="查看' + escape(rule.label) + '规则">' + escape(rule.label) + ' ↗</button>' : ''; }).join('');
+      tags.innerHTML = I18N.t(item.tags.map(id => { const rule = DATA.rules.find(r => r.id === id); return rule ? '<button type="button" data-zmd-rule="' + escape(id) + '" aria-label="查看' + escape(rule.label) + '规则">' + escape(rule.label) + ' ↗</button>' : ''; }).join(''));
       tags.hidden = !item.tags.length;
       const specList = $('[data-zmd-rule-spec]');
       specList.hidden = !item.specs;
-      specList.innerHTML = item.specs ? item.specs.map(([label,value]) => '<div><dt>' + escape(label) + '</dt><dd>' + escape(value) + '</dd></div>').join('') : '';
+      specList.innerHTML = I18N.t(item.specs ? item.specs.map(([label,value]) => '<div><dt>' + escape(label) + '</dt><dd>' + escape(value) + '</dd></div>').join('') : '');
       renderReading();
     }
+    let currentSourceId = null;
     function openSource(id) {
+      currentSourceId = id;
       const source = registeredSource(DATA.sources, id); if (!source) return;
-      $('[data-zmd-source-title]').textContent = source.title;
+      $('[data-zmd-source-title]').textContent = I18N.t(source.title);
       const fields = [['统计期间', source.period], ['组织范围', source.scope], ['指标口径', source.metric], ['金额单位', source.unit]];
-      $('[data-zmd-source-body]').innerHTML = '<dl>' + fields.map(([label, value]) => '<div><dt>' + escape(label) + '</dt><dd>' + escape(value) + '</dd></div>').join('') + '</dl><div class="zmd-table-wrap" tabindex="0" role="region" aria-label="来源明细，可横向滚动"><table class="zmd-source-table"><thead><tr>' + source.headers.map(h => '<th scope="col">' + escape(h) + '</th>').join('') + '</tr></thead><tbody>' + source.rows.map(row => '<tr>' + row.map(value => '<td' + (/^[−\-+]?\d[\d,.]*%?$/.test(value) ? ' style="text-align:right"' : '') + '>' + escape(value) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div><p>' + escape(source.description) + '</p>';
+      $('[data-zmd-source-body]').innerHTML = I18N.t('<dl>' + fields.map(([label, value]) => '<div><dt>' + escape(label) + '</dt><dd>' + escape(value) + '</dd></div>').join('') + '</dl><div class="zmd-table-wrap" tabindex="0" role="region" aria-label="来源明细，可横向滚动"><table class="zmd-source-table"><thead><tr>' + source.headers.map(h => '<th scope="col">' + escape(h) + '</th>').join('') + '</tr></thead><tbody>' + source.rows.map(row => '<tr>' + row.map(value => '<td' + (/^[−\-+]?\d[\d,.]*%?$/.test(value) ? ' style="text-align:right"' : '') + '>' + escape(value) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div><p>' + escape(source.description) + '</p>');
       dialogs.open(); dialog.scrollTop = 0;
     }
     section.addEventListener('click', event => {
@@ -272,7 +275,20 @@
       const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
       tabs[next].click(); tabs[next].focus({ preventScroll: true });
     }));
-    showCurrent();
+    const staticLabels = [...section.querySelectorAll('[data-zmd-i18n]')];
+    const staticAttributes = [...section.querySelectorAll('[aria-label]')].map(node => [node, node.getAttribute('aria-label')]);
+    const title = document.title;
+    function renderLanguage() {
+      const scrollTop = scroll.scrollTop;
+      staticLabels.forEach(node => { node.textContent = I18N.t(node.dataset.zmdI18n); });
+      staticAttributes.forEach(([node, label]) => { node.setAttribute('aria-label', I18N.t(label)); });
+      document.title = I18N.t(title);
+      showCurrent();
+      scroll.scrollTop = scrollTop;
+      if (dialog.open && currentSourceId) openSource(currentSourceId);
+    }
+    I18N.onChange(renderLanguage);
+    renderLanguage();
   }
   function initialize() { document.querySelectorAll('[data-zmd]').forEach(mount); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initialize, { once: true });

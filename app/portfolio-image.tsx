@@ -1,4 +1,6 @@
 "use client";
+import { useI18n } from "./i18n";
+
 
 import { useState, type ImgHTMLAttributes } from "react";
 import manifest from "../assets/optimized/manifest.json";
@@ -37,6 +39,7 @@ function ImageRequest({
   onError,
   ...props
 }: PortfolioImageProps) {
+  const { t } = useI18n();
   const asset = typeof src === "string" && !original ? optimizedImage(src) : undefined;
   const [stage, setStage] = useState<"optimized" | "original" | "failed">(asset ? "optimized" : "original");
   const [attempt, setAttempt] = useState(0);
@@ -48,14 +51,14 @@ function ImageRequest({
     return <div className={`image-fallback ${props.className ?? ""}`} style={{
       ...props.style,
       aspectRatio: imageWidth && imageHeight ? `${imageWidth} / ${imageHeight}` : undefined,
-    }} role="group" aria-label={alt}>
-      <span>图片暂时未能加载</span>
+    }} role="group" aria-label={t(alt)}>
+      <span>{t("图片暂时未能加载")}</span>
       <button type="button" onClick={event => {
         event.preventDefault();
         event.stopPropagation();
         setAttempt(value => value + 1);
         setStage(asset ? "optimized" : "original");
-      }}>重试加载图片</button>
+      }}>{t("重试加载图片")}</button>
     </div>;
   }
 
@@ -72,7 +75,7 @@ function ImageRequest({
       return [withRetry(useOptimized ? publicAsset(url) : url), descriptor].filter(Boolean).join(" ");
     }).join(", ")}
     sizes={requestSet ? sizes : undefined}
-    alt={alt}
+    alt={t(alt)}
     width={imageWidth}
     height={imageHeight}
     loading={loading}

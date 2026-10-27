@@ -1,9 +1,11 @@
-import { cp, mkdir, rm } from "node:fs/promises";
+import { copyFile, cp, mkdir, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 
 const root = process.cwd();
 const publicDirectory = resolve(root, "public");
 
+// Native specification views share the exact same translation source as React.
+await copyFile(resolve(root, "app/i18n/messages.en.json"), resolve(root, "assets/projects/zhaocai-smart/long-image/messages.en.json"));
 await mkdir(publicDirectory, { recursive: true });
 await rm(resolve(publicDirectory, "portfolio.html"), { force: true });
 await rm(resolve(publicDirectory, "assets"), { recursive: true, force: true });

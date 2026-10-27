@@ -1,4 +1,6 @@
 "use client";
+import { useI18n, OriginalLanguage } from "../i18n";
+
 
 import { useEffect, useRef, useState, type ReactNode, type RefObject, type MouseEvent as ReactMouseEvent } from "react";
 import { Button, Steps, Table, Tag } from "@arco-design/web-react";
@@ -167,16 +169,18 @@ function ProjectFigure({ asset, onOpen, className = "", priority = false, descri
   viewBox?: string;
   caption?: string;
 }) {
+  const { t, localize } = useI18n();
   return <figure className={`gkx-project-figure ${className}`.trim()}>
-    <button type="button" className="gkx-image-button" aria-label={`放大查看：${asset.caption}`} aria-description={description} onClick={event => onOpen(asset, event.currentTarget)}>
-      {viewBox ? <svg className="gkx-project-figure__detail" viewBox={viewBox} role="img" aria-label={asset.alt}><image href={publicAsset(asset.src)} width={asset.width} height={asset.height} /></svg> : <PortfolioImage src={publicAsset(asset.src)} alt={asset.alt} width={asset.width} height={asset.height} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />}
-      <span aria-hidden="true">放大查看</span>
+    <button type="button" className="gkx-image-button" aria-label={t(`放大查看：${asset.caption}`)} aria-description={t(description)} onClick={event => onOpen(asset, event.currentTarget)}>
+      {t(viewBox ? <svg className="gkx-project-figure__detail" viewBox={viewBox} role="img" aria-label={t(asset.alt)}><image href={publicAsset(asset.src)} width={asset.width} height={asset.height} /></svg> : <PortfolioImage src={publicAsset(asset.src)} alt={t(asset.alt)} width={asset.width} height={asset.height} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />)}
+      <span aria-hidden="true">{t("放大查看")}</span>
     </button>
-    <figcaption><strong>{caption ?? asset.caption}</strong></figcaption>
+    <figcaption><strong>{t(caption ?? asset.caption)}</strong></figcaption>
   </figure>;
 }
 
 function AiCollaborationEvidence({ onOpen }: { onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void }) {
+  const { t, localize } = useI18n();
   const [version, setVersion] = useState<"original" | "designer">("designer");
   const evidence = prototypeCopy.collaborationEvidence;
   const versions = {
@@ -186,20 +190,20 @@ function AiCollaborationEvidence({ onOpen }: { onOpen: (asset: ImageAsset, trigg
   const selected = versions[version];
 
   return <article id="gkx-ai-collaboration-evidence" className="gkx-ai-case gkx-ai-collaboration-evidence" aria-labelledby="gkx-ai-evidence-title">
-    <header><h3 id="gkx-ai-evidence-title">{evidence.title}</h3><p>{evidence.lead}</p></header>
-    <p className="gkx-ai-evidence-requirement"><strong>本轮要求</strong><span>{evidence.requirement}</span></p>
+    <header><h3 id="gkx-ai-evidence-title">{t(evidence.title)}</h3><p>{t(evidence.lead)}</p></header>
+    <p className="gkx-ai-evidence-requirement"><strong>{t("本轮要求")}</strong><span>{t(evidence.requirement)}</span></p>
     <div className="gkx-ai-evidence-layout">
       <div className="gkx-ai-evidence-toolbar">
-        <GkxSegmentedControl<keyof typeof versions> label="切换真实协作证据版本" value={version} onChange={setVersion} options={[{ value: "original", label: versions.original.label }, { value: "designer", label: versions.designer.label }]} />
-        <span className="gkx-ai-evidence-zoom-hint">点击图片放大查看细节</span>
+        <GkxSegmentedControl<keyof typeof versions> label={t("切换真实协作证据版本")} value={version} onChange={setVersion} options={localize([{ value: "original", label: versions.original.label }, { value: "designer", label: versions.designer.label }])} />
+        <span className="gkx-ai-evidence-zoom-hint">{t("点击图片放大查看细节")}</span>
       </div>
       <ProjectFigure asset={selected.asset} onOpen={onOpen} className="gkx-ai-version-figure" />
-      <h4 id="gkx-ai-adjustments-title" className="gkx-ai-evidence-heading">从具体问题到人工调整</h4>
+      <h4 id="gkx-ai-adjustments-title" className="gkx-ai-evidence-heading">{t("从具体问题到人工调整")}</h4>
       <section className="gkx-ai-evidence-comparisons" aria-labelledby="gkx-ai-adjustments-title">
-        <dl>{evidence.comparisons.map(item => <div key={item.title}><dt>{item.title}</dt><dd className="is-before"><span>AI 原型</span><p>{item.before}</p></dd><dd className="is-after"><span>人工调整</span><p>{item.after}</p></dd></div>)}</dl>
+        <dl>{evidence.comparisons.map(item => <div key={item.title}><dt>{t(item.title)}</dt><dd className="is-before"><span>{t("AI 原型")}</span><p>{t(item.before)}</p></dd><dd className="is-after"><span>{t("人工调整")}</span><p>{t(item.after)}</p></dd></div>)}</dl>
       </section>
     </div>
-    <section className="gkx-ai-evidence-check" aria-labelledby="gkx-ai-current-check-title"><h4 id="gkx-ai-current-check-title">当前核对结果</h4><p>{evidence.check}</p><p className="gkx-ai-evidence-status">{evidence.status}</p><p className="gkx-ai-evidence-source">仅保留主体面板，外围菜单与导航已裁去。</p></section>
+    <section className="gkx-ai-evidence-check" aria-labelledby="gkx-ai-current-check-title"><h4 id="gkx-ai-current-check-title">{t("当前核对结果")}</h4><p>{t(evidence.check)}</p><p className="gkx-ai-evidence-status">{t(evidence.status)}</p><p className="gkx-ai-evidence-source">{t("仅保留主体面板，外围菜单与导航已裁去。")}</p></section>
   </article>;
 }
 
@@ -211,20 +215,21 @@ function ImageViewer({ asset, originalSize, setOriginalSize, onClose, dialogRef,
   dialogRef: RefObject<HTMLDivElement | null>;
   closeButtonRef: RefObject<HTMLButtonElement | null>;
 }) {
+  const { t, localize } = useI18n();
   return <div className="gkx-lightbox" role="dialog" aria-modal="true" aria-labelledby="gkx-viewer-title" onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}>
     <div className={`gkx-lightbox__panel${originalSize ? " is-original" : ""}`} ref={dialogRef}>
       <header>
-        <div><strong id="gkx-viewer-title">{asset.caption}</strong><span>{asset.highlights ? "蓝框为本页添加的定位标记；截图敏感信息已模糊" : originalSize ? "原始尺寸" : "适合窗口"}</span></div>
+        <div><strong id="gkx-viewer-title">{t(asset.caption)}</strong><span>{t(asset.highlights ? "蓝框为本页添加的定位标记；截图敏感信息已模糊" : originalSize ? "原始尺寸" : "适合窗口")}</span></div>
         <div className="gkx-lightbox__actions">
-          <button type="button" aria-pressed={originalSize} onClick={() => setOriginalSize(!originalSize)}>{originalSize ? "适合窗口" : "原始尺寸"}</button>
-          <button ref={closeButtonRef} type="button" onClick={onClose}>关闭</button>
+          <button type="button" aria-pressed={originalSize} onClick={() => setOriginalSize(!originalSize)}>{t(originalSize ? "适合窗口" : "原始尺寸")}</button>
+          <button ref={closeButtonRef} type="button" onClick={onClose}>{t("关闭")}</button>
         </div>
       </header>
       <div className="gkx-lightbox__canvas">
-        {asset.highlights ? <svg className="gkx-lightbox__evidence" viewBox={`0 0 ${asset.width} ${asset.height}`} width={asset.width} height={asset.height} role="img" aria-label={`${asset.alt}，蓝框定位原表第${asset.highlights.map(item => item.sourceRow).join("、")}行`}>
+        {t(asset.highlights ? <svg className="gkx-lightbox__evidence" viewBox={`0 0 ${asset.width} ${asset.height}`} width={asset.width} height={asset.height} role="img" aria-label={t(`${asset.alt}，蓝框定位原表第${asset.highlights.map(item => item.sourceRow).join("、")}行`)}>
           <image href={publicAsset(asset.src)} width={asset.width} height={asset.height} />
           {asset.highlights.map(highlight => <rect key={highlight.sourceRow} data-source-row={highlight.sourceRow} x={highlight.x} y={highlight.y} width={highlight.width} height={highlight.height} fill="#165dff" fillOpacity=".09" stroke="#165dff" strokeWidth="2.5" vectorEffect="non-scaling-stroke" />)}
-        </svg> : <PortfolioImage src={publicAsset(asset.src)} alt={asset.alt} width={asset.width} height={asset.height} original={originalSize} loading="eager" />}
+        </svg> : <PortfolioImage src={publicAsset(asset.src)} alt={t(asset.alt)} width={asset.width} height={asset.height} original={originalSize} loading="eager" />)}
       </div>
     </div>
   </div>;
@@ -233,9 +238,10 @@ function ImageViewer({ asset, originalSize, setOriginalSize, onClose, dialogRef,
 function SectionHeading({ section, titleId, number, label, leadSegments }: {
   section: { title: string; lead: string }; titleId: string; number: string; label: string; leadSegments?: string[];
 }) {
+  const { t, localize } = useI18n();
   return <header className="gkx-section-heading">
-    <div className="gkx-section-heading__top"><p className="gkx-chapter-index">{number}<span>{label}</span></p><h2 id={titleId}>{section.title}</h2></div>
-    <p className={`gkx-section-lead${leadSegments ? " gkx-workflow-subtitle" : ""}`}>{leadSegments ? leadSegments.flatMap((segment, index) => [index > 0 ? <IconArrowRight key={`separator-${index}`} aria-hidden="true" /> : null, <span key={segment}>{segment}</span>]) : section.lead}</p>
+    <div className="gkx-section-heading__top"><p className="gkx-chapter-index">{t(number)}<span>{t(label)}</span></p><h2 id={titleId}>{t(section.title)}</h2></div>
+    <p className={`gkx-section-lead${leadSegments ? " gkx-workflow-subtitle" : ""}`}>{t(leadSegments ? leadSegments.flatMap((segment, index) => [index > 0 ? <IconArrowRight key={`separator-${index}`} aria-hidden="true" /> : null, <span key={segment}>{t(segment)}</span>]) : section.lead)}</p>
   </header>;
 }
 
@@ -243,12 +249,13 @@ function FigureDetail({ asset, viewBox, compactViewBox, compactLabel, label, sta
   asset: ImageAsset; viewBox: string; compactViewBox?: string; compactLabel?: string; label: string; status?: string;
   onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void; className?: string;
 }) {
+  const { t, localize } = useI18n();
   return <figure className={`gkx-figure-detail ${className}`.trim()}>
-    <figcaption>{status && <span className="gkx-figure-detail__status">{status}</span>}<span>{label}</span></figcaption>
-    <button type="button" className="gkx-image-button" aria-label={`查看完整界面：${label}`} onClick={event => onOpen(asset, event.currentTarget)}>
-      <svg className={compactViewBox ? "gkx-figure-detail__wide" : undefined} viewBox={viewBox} role="img" aria-label={label}><image href={publicAsset(asset.src)} width={asset.width} height={asset.height} /></svg>
-      {compactViewBox && <svg className="gkx-figure-detail__compact" viewBox={compactViewBox} role="img" aria-label={compactLabel ?? `${label}，聚焦查询与重置`}><image href={publicAsset(asset.src)} width={asset.width} height={asset.height} /></svg>}
-      <span aria-hidden="true">查看完整界面</span>
+    <figcaption>{t(status && <span className="gkx-figure-detail__status">{t(status)}</span>)}<span>{t(label)}</span></figcaption>
+    <button type="button" className="gkx-image-button" aria-label={t(`查看完整界面：${label}`)} onClick={event => onOpen(asset, event.currentTarget)}>
+      <svg className={compactViewBox ? "gkx-figure-detail__wide" : undefined} viewBox={viewBox} role="img" aria-label={t(label)}><image href={publicAsset(asset.src)} width={asset.width} height={asset.height} /></svg>
+      {t(compactViewBox && <svg className="gkx-figure-detail__compact" viewBox={compactViewBox} role="img" aria-label={t(compactLabel ?? `${label}，聚焦查询与重置`)}><image href={publicAsset(asset.src)} width={asset.width} height={asset.height} /></svg>)}
+      <span aria-hidden="true">{t("查看完整界面")}</span>
     </button>
   </figure>;
 }
@@ -263,32 +270,35 @@ const taskFlow = [
 function BusinessTaskNavigation({ onSelect }: {
   onSelect: (index: number) => void;
 }) {
-  return <nav className="gkx-decision-path" aria-label="论文管理任务路径">
-    <span>任务路径</span>
+  const { t, localize } = useI18n();
+  return <nav className="gkx-decision-path" aria-label={t("论文管理任务路径")}>
+    <span>{t("任务路径")}</span>
     <ol>{taskFlow.map((step, index) => <li className={index === 3 ? "is-branch" : undefined} key={step.label}>
-      {index > 0 && index < 3 && <IconArrowRight aria-hidden="true" />}
-      <a href={`#${step.target}`} onClick={() => onSelect(index)}>{index === 3 && <span>异常分支</span>}{step.label}</a>
+      {t(index > 0 && index < 3 && <IconArrowRight aria-hidden="true" />)}
+      <a href={`#${step.target}`} onClick={() => onSelect(index)}>{t(index === 3 && <span>{t("异常分支")}</span>)}{t(step.label)}</a>
     </li>)}</ol>
   </nav>;
 }
 
 function SharedQueryEvidence({ onOpen }: { onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void }) {
+  const { t, localize } = useI18n();
   const rule = strategyCopy.sharedRule;
   return <section id="gkx-decisions" className="gkx-shared-query" aria-labelledby="gkx-shared-query-title">
-    <header className="gkx-content-heading"><h3 id="gkx-shared-query-title">{rule.title}</h3><p>{rule.lead}</p></header>
+    <header className="gkx-content-heading"><h3 id="gkx-shared-query-title">{t(rule.title)}</h3><p>{t(rule.lead)}</p></header>
     <div className="gkx-shared-query__examples">{rule.examples.map(example => <article key={example.figureId}>
-      <header><p className="gkx-evidence-label">{example.system}</p><h4>{example.title}</h4></header>
-      <FigureDetail asset={figureById[example.figureId]} viewBox={example.viewBox} compactViewBox={example.compactViewBox} compactLabel={`${example.title} · 搜索标签与关键词输入框局部`} label={`${example.title} · 查询工具区局部`} onOpen={onOpen} />
-      <dl><div><dt>业务适配</dt><dd>{example.adaptation}</dd></div><div className={`gkx-shared-query__role${example.roleLabel === "本人调整" || example.roleLabel === "本人主导" ? " is-contribution" : ""}`}><dt>{example.roleLabel}</dt><dd>{example.role}</dd></div></dl>
+      <header><p className="gkx-evidence-label">{t(example.system)}</p><h4>{t(example.title)}</h4></header>
+      <FigureDetail asset={figureById[example.figureId]} viewBox={example.viewBox} compactViewBox={example.compactViewBox} compactLabel={`${example.title} · 搜索标签与关键词输入框局部`} label={t(`${example.title} · 查询工具区局部`)} onOpen={onOpen} />
+      <dl><div><dt>{t("业务适配")}</dt><dd>{t(example.adaptation)}</dd></div><div className={`gkx-shared-query__role${example.roleLabel === "本人调整" || example.roleLabel === "本人主导" ? " is-contribution" : ""}`}><dt>{t(example.roleLabel)}</dt><dd>{t(example.role)}</dd></div></dl>
     </article>)}</div>
-    <p className="gkx-shared-query__reason"><strong>选择依据</strong><span>{rule.reason}</span></p>
+    <p className="gkx-shared-query__reason"><strong>{t("选择依据")}</strong><span>{t(rule.reason)}</span></p>
   </section>;
 }
 
 function TaskComparison({ onOpen, onReadingReturn }: { onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void; onReadingReturn?: () => void }) {
+  const { t, localize } = useI18n();
   return <div className="gkx-task-studies">{strategyCopy.taskComparisons.map(item => <article id={item.figureId === "ui-reading" ? "gkx-reading-workspace" : undefined} tabIndex={item.figureId === "ui-reading" ? -1 : undefined} className="gkx-task-study gkx-topic-group" key={item.figureId}>
-    {item.figureId === "ui-reading" && onReadingReturn && <div className="gkx-standards-applications__return-context"><span>来自交互决策 · 页面承载</span><Button type="outline" icon={<IconArrowLeft aria-hidden="true" />} className="gkx-standards-applications__return" onClick={onReadingReturn}>返回刚才位置</Button></div>}
-    <div className="gkx-task-study__copy"><p className="gkx-evidence-label">{figureById[item.figureId].caption}</p><h3>{item.task}</h3><p className="gkx-task-study__decision">{item.decision}</p></div>
+    {t(item.figureId === "ui-reading" && onReadingReturn && <div className="gkx-standards-applications__return-context"><span>{t("来自交互决策 · 页面承载")}</span><Button type="outline" icon={<IconArrowLeft aria-hidden="true" />} className="gkx-standards-applications__return" onClick={onReadingReturn}>{t("返回刚才位置")}</Button></div>)}
+    <div className="gkx-task-study__copy"><p className="gkx-evidence-label">{t(figureById[item.figureId].caption)}</p><h3>{t(item.task)}</h3><p className="gkx-task-study__decision">{t(item.decision)}</p></div>
     <ProjectFigure asset={figureById[item.figureId]} onOpen={onOpen} />
   </article>)}</div>;
 }
@@ -300,6 +310,7 @@ function DecisionComparison({ comparison, reason, titleId, children, activeScena
   children: ReactNode;
   activeScenario?: string;
 }) {
+  const { t, localize } = useI18n();
   const [scenarioKey, setScenarioKey] = useState(comparison?.scenarios?.[0]?.key ?? "");
   const scenario = comparison?.scenarios?.find(item => item.key === (activeScenario ?? scenarioKey)) ?? comparison?.scenarios?.[0];
   const options = [...(scenario?.options ?? comparison?.options ?? [])].sort((a, b) => Number(b.selected) - Number(a.selected));
@@ -308,24 +319,24 @@ function DecisionComparison({ comparison, reason, titleId, children, activeScena
   const alternatives = options.filter(option => !option.selected);
   return <section className="gkx-decision-comparison" aria-labelledby={titleId}>
     <div className="gkx-decision-layout">
-      <div className="gkx-decision-evidence">{children}</div>
+      <div className="gkx-decision-evidence">{t(children)}</div>
       <div className="gkx-decision-choices">
-        <h4 id={titleId}>方案取舍</h4>
-        {comparison.scenarios && scenario && !activeScenario && <GkxSegmentedControl label="切换方案比较的任务场景" value={scenario.key} onChange={setScenarioKey} options={comparison.scenarios.map(item => ({ value: item.key, label: item.label }))} />}
-        {selected && <article className="gkx-decision-adopted" key={`${scenario?.key ?? "search"}-${selected.name}`}>
-          <span className="gkx-decision-status">{scenario ? "本场景采用" : "本案采用"}</span>
-          <h5>{selected.name}</h5>{selected.usage && <p className="gkx-decision-usage">{selected.usage}</p>}
-          <dl><div><dt>适用条件</dt><dd>{selected.condition}</dd></div><div><dt>代价与边界</dt><dd>{selected.cost}</dd></div></dl>
+        <h4 id={titleId}>{t("方案取舍")}</h4>
+        {t(comparison.scenarios && scenario && !activeScenario && <GkxSegmentedControl label={t("切换方案比较的任务场景")} value={scenario.key} onChange={setScenarioKey} options={localize(comparison.scenarios.map(item => ({ value: item.key, label: item.label })))} />)}
+        {t(selected && <article className="gkx-decision-adopted" key={`${scenario?.key ?? "search"}-${selected.name}`}>
+          <span className="gkx-decision-status">{t(scenario ? "本场景采用" : "本案采用")}</span>
+          <h5>{t(selected.name)}</h5>{t(selected.usage && <p className="gkx-decision-usage">{t(selected.usage)}</p>)}
+          <dl><div><dt>{t("适用条件")}</dt><dd>{t(selected.condition)}</dd></div><div><dt>{t("代价与边界")}</dt><dd>{t(selected.cost)}</dd></div></dl>
           {alternatives.map(option => <details className="gkx-decision-alternative" key={option.name}>
-          <summary><span><small>备选方案</small><strong>{option.name}</strong></span><IconArrowDown aria-hidden="true" /></summary>
-          <div>{option.usage && <p className="gkx-decision-usage">{option.usage}</p>}<dl><div><dt>适用条件</dt><dd>{option.condition}</dd></div><div><dt>代价与边界</dt><dd>{option.cost}</dd></div></dl></div>
+          <summary><span><small>{t("备选方案")}</small><strong>{t(option.name)}</strong></span><IconArrowDown aria-hidden="true" /></summary>
+          <div>{t(option.usage && <p className="gkx-decision-usage">{t(option.usage)}</p>)}<dl><div><dt>{t("适用条件")}</dt><dd>{t(option.condition)}</dd></div><div><dt>{t("代价与边界")}</dt><dd>{t(option.cost)}</dd></div></dl></div>
           </details>)}
-        </article>}
+        </article>)}
       </div>
     </div>
     <div className="gkx-decision-notes">
-      <p><strong>选择依据</strong>{scenario?.reason ?? reason}</p>
-      <p><strong>后续核对</strong>{comparison.pendingCheck}</p>
+      <p><strong>{t("选择依据")}</strong>{t(scenario?.reason ?? reason)}</p>
+      <p><strong>{t("后续核对")}</strong>{t(comparison.pendingCheck)}</p>
     </div>
   </section>;
 }
@@ -334,6 +345,7 @@ function PaperWorkflowExample({ onOpen, onReferenceClick }: {
   onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void;
   onReferenceClick: (event: ReactMouseEvent<HTMLAnchorElement>) => void;
 }) {
+  const { t, localize } = useI18n();
   const [compactSteps, setCompactSteps] = useState(false);
   useEffect(() => {
     const media = window.matchMedia("(max-width: 820px)");
@@ -344,60 +356,62 @@ function PaperWorkflowExample({ onOpen, onReferenceClick }: {
   }, []);
 
   return <article id="gkx-workflow" className="gkx-ai-case" aria-labelledby="gkx-ai-case-title">
-    <header><h3 id="gkx-ai-case-title">以论文管理为例，把设计判断写成可复用规范</h3><p>从情报管理系统中“找到并核对一条论文记录”的任务出发，将查询要求写进 MD，再用可操作原型核对规则。下方为依据现有图稿完成的本次复现。</p></header>
+    <header><h3 id="gkx-ai-case-title">{t("以论文管理为例，把设计判断写成可复用规范")}</h3><p>{t("从情报管理系统中“找到并核对一条论文记录”的任务出发，将查询要求写进 MD，再用可操作原型核对规则。下方为依据现有图稿完成的本次复现。")}</p></header>
     <section className="gkx-ai-input gkx-topic-group" aria-labelledby="gkx-ai-input-title">
-      <header className="gkx-ai-block-heading"><h4 id="gkx-ai-input-title">将业务任务写成可执行的 MD</h4></header>
+      <header className="gkx-ai-block-heading"><h4 id="gkx-ai-input-title">{t("将业务任务写成可执行的 MD")}</h4></header>
       <div className="gkx-ai-materials">
-        <div className="gkx-ai-spec"><h5>本次复现的查询规则</h5><pre><code>{"# 论文管理 / 查询\n任务：查找论文，核对记录\n\n## 查询约束\n搜索匹配标题、关键词\n机构筛选限定结果范围\n查询与筛选共同生效\n\n## 反馈与恢复\n显示匹配数量\n无结果可清除条件\n重置后恢复全部记录"}</code></pre></div>
-        <div className="gkx-ai-interface"><FigureDetail asset={assets.paperList} viewBox="224 117 1176 110" label="界面依据 · 统一搜索与筛选" onOpen={onOpen} /><FigureDetail asset={assets.paperList} viewBox="232 228 1160 284" label="对象对应 · 论文标题、关键词与作者机构" onOpen={onOpen} /></div>
+        <div className="gkx-ai-spec"><h5>{t("本次复现的查询规则")}</h5><pre><code>{t("# 论文管理 / 查询\n任务：查找论文，核对记录\n\n## 查询约束\n搜索匹配标题、关键词\n机构筛选限定结果范围\n查询与筛选共同生效\n\n## 反馈与恢复\n显示匹配数量\n无结果可清除条件\n重置后恢复全部记录")}</code></pre></div>
+        <div className="gkx-ai-interface"><FigureDetail asset={assets.paperList} viewBox="224 117 1176 110" label={t("界面依据 · 统一搜索与筛选")} onOpen={onOpen} /><FigureDetail asset={assets.paperList} viewBox="232 228 1160 284" label={t("对象对应 · 论文标题、关键词与作者机构")} onOpen={onOpen} /></div>
       </div>
     </section>
     <section id="gkx-ai-query-validation" className="gkx-ai-practice-block gkx-topic-group" aria-labelledby="gkx-ai-validation-title">
-      <header className="gkx-ai-block-heading"><h4 id="gkx-ai-validation-title">把查询方案放进原型，检查规则是否成立</h4><p>现有图稿中的查询，从“编号与名称分别输入”调整为“统一搜索与筛选”。下面复现两种布局，具体核对匹配范围、组合条件与恢复行为。</p></header>
-      <GkxPaperQueryDemo />
-      <div className="gkx-ai-checks" role="group" aria-label="查询规则验证流程"><Steps current={0} size="default" direction={compactSteps ? "vertical" : "horizontal"} labelPlacement="horizontal">{[
+      <header className="gkx-ai-block-heading"><h4 id="gkx-ai-validation-title">{t("把查询方案放进原型，检查规则是否成立")}</h4><p>{t("现有图稿中的查询，从“编号与名称分别输入”调整为“统一搜索与筛选”。下面复现两种布局，具体核对匹配范围、组合条件与恢复行为。")}</p></header>
+      <OriginalLanguage><GkxPaperQueryDemo /></OriginalLanguage>
+      <div className="gkx-ai-checks" role="group" aria-label={t("查询规则验证流程")}><Steps current={0} size="default" direction={compactSteps ? "vertical" : "horizontal"} labelPlacement="horizontal">{[
         { title: "输入“深度学习”", text: "核对标题与关键词匹配" },
         { title: "再限定“清华大学”", text: "验证组合筛选与输入保留" },
         { title: "查询未命中内容，再重置", text: "检查空结果与重置恢复" },
-      ].map(step => <Steps.Step key={step.title} title={step.title} description={step.text} />)}</Steps></div>
+      ].map(step => <Steps.Step key={step.title} title={t(step.title)} description={t(step.text)} />)}</Steps></div>
     </section>
     <section className="gkx-ai-practice-block gkx-ai-reuse gkx-topic-group" aria-labelledby="gkx-ai-reuse-title">
-      <header className="gkx-ai-block-heading"><h4 id="gkx-ai-reuse-title">将校正结果沉淀为<span className="gkx-ai-reuse-accent">复用规则</span></h4><p>将查询规则与业务数据分开。切换上方的专利记录，沿用同一套查询与恢复逻辑，验证规则能否用于另一种对象。</p></header>
-      <dl className="gkx-ai-rule-ledger"><div><dt>查询规则 MD</dt><dd>明确搜索字段、条件组合、结果反馈与恢复方式，供生成和核对共同使用。</dd></div><div><dt>共用查询逻辑</dt><dd>论文与专利记录调用同一套匹配逻辑，查询行为的调整集中维护。</dd></div><div><dt>业务对象配置</dt><dd>分开组织对象名称、标题、关键词与机构数据，更换业务对象时保留查询体验。</dd></div></dl>
-      <p className="gkx-ai-reuse-reference"><span>本次沉淀：查询规则 MD、可操作复现与两类对象的复用验证。</span><a id="gkx-ai-rules-reference" className="gkx-section-reference" href="#gkx-standards-applications" onClick={onReferenceClick}><span>对照管理列表的规范与交付</span><IconArrowDown aria-hidden="true" /></a></p>
+      <header className="gkx-ai-block-heading"><h4 id="gkx-ai-reuse-title">{t("将校正结果沉淀为")}<span className="gkx-ai-reuse-accent">{t("复用规则")}</span></h4><p>{t("将查询规则与业务数据分开。切换上方的专利记录，沿用同一套查询与恢复逻辑，验证规则能否用于另一种对象。")}</p></header>
+      <dl className="gkx-ai-rule-ledger"><div><dt>{t("查询规则 MD")}</dt><dd>{t("明确搜索字段、条件组合、结果反馈与恢复方式，供生成和核对共同使用。")}</dd></div><div><dt>{t("共用查询逻辑")}</dt><dd>{t("论文与专利记录调用同一套匹配逻辑，查询行为的调整集中维护。")}</dd></div><div><dt>{t("业务对象配置")}</dt><dd>{t("分开组织对象名称、标题、关键词与机构数据，更换业务对象时保留查询体验。")}</dd></div></dl>
+      <p className="gkx-ai-reuse-reference"><span>{t("本次沉淀：查询规则 MD、可操作复现与两类对象的复用验证。")}</span><a id="gkx-ai-rules-reference" className="gkx-section-reference" href="#gkx-standards-applications" onClick={onReferenceClick}><span>{t("对照管理列表的规范与交付")}</span><IconArrowDown aria-hidden="true" /></a></p>
     </section>
   </article>;
 }
 
 function DeliveryReview({ onOpen }: { onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void }) {
-  const statusTag = (value: string) => <Tag color={value === "需修改" ? "gold" : "blue"} size="medium">{value}</Tag>;
+  const { t, localize } = useI18n();
+  const statusTag = (value: string) => <Tag color={value === "需修改" ? "gold" : "blue"} size="medium">{t(value)}</Tag>;
   return <section id="gkx-supplier" className="gkx-delivery-review" aria-labelledby="gkx-supplier-title">
-    <header className="gkx-delivery-part-heading"><h3 id="gkx-supplier-title">{supplierCopy.title}</h3><p>{supplierCopy.lead}</p></header>
+    <header className="gkx-delivery-part-heading"><h3 id="gkx-supplier-title">{t(supplierCopy.title)}</h3><p>{t(supplierCopy.lead)}</p></header>
     <article className="gkx-review-records" aria-labelledby="gkx-review-records-title">
-      <header><div><h4 id="gkx-review-records-title">署名评审记录节选</h4><p>右侧行号对应真实台账中的位置，点击即可核对。</p></div><aside className="gkx-review-records-example"><p>举例说明</p><span>选取科技专题服务系统的 {supplierCopy.reviewRecords.length} 条评审记录。</span></aside></header>
-      <p className="gkx-review-scroll-hint">左右滑动查看完整评审记录</p>
-      <Table aria-label="本人署名的UI评审记录脱敏摘录" rowKey="module" data={supplierCopy.reviewRecords} pagination={false} hover={false} size="default" tableLayoutFixed border={{ wrapper: false, headerCell: false, bodyCell: false }} scroll={{ x: 960 }} columns={[
+      <header><div><h4 id="gkx-review-records-title">{t("署名评审记录节选")}</h4><p>{t("右侧行号对应真实台账中的位置，点击即可核对。")}</p></div><aside className="gkx-review-records-example"><p>{t("举例说明")}</p><span>{t("选取科技专题服务系统的 ")}{t(supplierCopy.reviewRecords.length)} {t(" 条评审记录。")}</span></aside></header>
+      <p className="gkx-review-scroll-hint">{t("左右滑动查看完整评审记录")}</p>
+      <Table aria-label={t("本人署名的UI评审记录脱敏摘录")} rowKey="module" data={localize(supplierCopy.reviewRecords)} pagination={false} hover={false} size="default" tableLayoutFixed border={{ wrapper: false, headerCell: false, bodyCell: false }} scroll={{ x: 960 }} columns={localize([
         { title: "评审日期", dataIndex: "date", width: 140 },
         { title: "模块", dataIndex: "module", width: 260 },
         { title: "评审结论", dataIndex: "conclusion", width: 150, render: statusTag },
         { title: "原表最终状态", dataIndex: "finalStatus", width: 180, render: statusTag },
-        { title: "原表对应", dataIndex: "sourceRow", width: 220, render: (sourceRow: number, record: SupplierSection["reviewRecords"][number]) => <Button type="text" className="gkx-review-row-source" aria-label={`查看${record.module}对应的台账第${sourceRow}行`} onClick={event => { if (event.currentTarget instanceof HTMLButtonElement) onOpen(reviewRecordImage(record), event.currentTarget); }}><span>原表第 {sourceRow} 行</span><IconArrowRight aria-hidden="true" /></Button> },
-      ]} />
-      <footer className="gkx-review-source-footer"><div><p>{supplierCopy.recordNote}</p><p>完整状态字段见原表截图；原表未填写二次评审日期。</p></div><Button type="outline" className="gkx-review-evidence-button" icon={<IconImage aria-hidden="true" />} aria-label="查看整张评审台账截图，蓝框标出三条节选记录" onClick={event => { if (event.currentTarget instanceof HTMLButtonElement) onOpen(reviewRecordImage(), event.currentTarget); }}>查看整张截图</Button></footer>
+        { title: "原表对应", dataIndex: "sourceRow", width: 220, render: (sourceRow: number, record: SupplierSection["reviewRecords"][number]) => <Button type="text" className="gkx-review-row-source" aria-label={t(`查看${record.module}对应的台账第${sourceRow}行`)} onClick={event => { if (event.currentTarget instanceof HTMLButtonElement) onOpen(reviewRecordImage(record), event.currentTarget); }}><span>{t("原表第 ")}{t(sourceRow)} {t(" 行")}</span><IconArrowRight aria-hidden="true" /></Button> },
+      ])} />
+      <footer className="gkx-review-source-footer"><div><p>{t(supplierCopy.recordNote)}</p><p>{t("完整状态字段见原表截图；原表未填写二次评审日期。")}</p></div><Button type="outline" className="gkx-review-evidence-button" icon={<IconImage aria-hidden="true" />} aria-label={t("查看整张评审台账截图，蓝框标出三条节选记录")} onClick={event => { if (event.currentTarget instanceof HTMLButtonElement) onOpen(reviewRecordImage(), event.currentTarget); }}>{t("查看整张截图")}</Button></footer>
     </article>
     <article className="gkx-review-finding" aria-labelledby="gkx-review-finding-title">
-      <header><h4 id="gkx-review-finding-title">{supplierCopy.teamFinding.title}</h4><p>团队评审意见<span>{supplierCopy.teamFinding.date}</span></p></header>
-      <dl><div><dt>审核对象</dt><dd>{supplierCopy.teamFinding.object}</dd></div><div><dt>发现的问题</dt><dd>{supplierCopy.teamFinding.issue}</dd></div><div><dt>评审要求</dt><dd>{supplierCopy.teamFinding.decision}</dd></div></dl>
-      <footer className="gkx-review-source-footer"><p>对应《评审记录与待办清单》原表第 5 行</p><Button type="outline" className="gkx-review-evidence-button" icon={<IconImage aria-hidden="true" />} aria-label="查看团队审核意见对应的原表第5行" onClick={event => { if (event.currentTarget instanceof HTMLButtonElement) onOpen({ ...assets.teamReviewEvidence, caption: "团队审核意见 · 原表第 5 行（脱敏截图）", highlights: [{ x: 2, y: 270, width: 1513, height: 194, sourceRow: 5 }] }, event.currentTarget); }}>查看对应截图</Button></footer>
+      <header><h4 id="gkx-review-finding-title">{t(supplierCopy.teamFinding.title)}</h4><p>{t("团队评审意见")}<span>{t(supplierCopy.teamFinding.date)}</span></p></header>
+      <dl><div><dt>{t("审核对象")}</dt><dd>{t(supplierCopy.teamFinding.object)}</dd></div><div><dt>{t("发现的问题")}</dt><dd>{t(supplierCopy.teamFinding.issue)}</dd></div><div><dt>{t("评审要求")}</dt><dd>{t(supplierCopy.teamFinding.decision)}</dd></div></dl>
+      <footer className="gkx-review-source-footer"><p>{t("对应《评审记录与待办清单》原表第 5 行")}</p><Button type="outline" className="gkx-review-evidence-button" icon={<IconImage aria-hidden="true" />} aria-label={t("查看团队审核意见对应的原表第5行")} onClick={event => { if (event.currentTarget instanceof HTMLButtonElement) onOpen({ ...assets.teamReviewEvidence, caption: "团队审核意见 · 原表第 5 行（脱敏截图）", highlights: [{ x: 2, y: 270, width: 1513, height: 194, sourceRow: 5 }] }, event.currentTarget); }}>{t("查看对应截图")}</Button></footer>
     </article>
     <section className="gkx-review-method gkx-topic-group" aria-labelledby="gkx-review-method-title">
-        <header><h4 id="gkx-review-method-title" className="gkx-review-method-title">通用审核维度</h4><p>需求、交互、视觉与接口</p></header>
-        <dl>{supplierCopy.auditDimensions.map(dimension => <div key={dimension.number}><dt>{dimension.title}</dt><dd>{dimension.points.join(" ")}</dd></div>)}</dl>
+        <header><h4 id="gkx-review-method-title" className="gkx-review-method-title">{t("通用审核维度")}</h4><p>{t("需求、交互、视觉与接口")}</p></header>
+        <dl>{supplierCopy.auditDimensions.map(dimension => <div key={dimension.number}><dt>{t(dimension.title)}</dt><dd>{t(dimension.points.join(" "))}</dd></div>)}</dl>
     </section>
   </section>;
 }
 
 export function GkxCase({ project, legacyView }: GkxCaseProps) {
+  const { t, localize } = useI18n();
   const [containerView, setContainerView] = useState<"detail" | "edit" | "reading">("detail");
   const { openReference, returnToSource, clearReference, returnAvailable } = useGkxReferenceNavigation("gkx-ai-rules-reference", "gkx-standards-applications");
   const readingReference = useGkxReferenceNavigation("gkx-reading-reference", "gkx-reading-workspace");
@@ -449,93 +463,93 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
   const [searchModule, operationsModule, containersModule, recoveryModule] = rulesCopy.modules;
   const heroAccentStart = copy.hero.title.indexOf(copy.hero.titleAccent);
 
-  return <article className="gkx-case" aria-label="GKX门户与多系统体验设计项目">
-    <ProjectLocator sections={sections} legacyAnchors={legacyAnchors} ariaLabel="GKX项目章节定位" onNavigate={() => { clearReference(); readingReference.clearReference(); }} />
+  return <article className="gkx-case" aria-label={t("GKX门户与多系统体验设计项目")}>
+    <ProjectLocator sections={sections} legacyAnchors={legacyAnchors} ariaLabel={t("GKX项目章节定位")} onNavigate={() => { clearReference(); readingReference.clearReference(); }} />
 
     <header id="gkx-overview" className="gkx-hero">
       <div className="gkx-hero__copy">
-        <h1>{heroAccentStart < 0 ? copy.hero.title : <>
-          {copy.hero.title.slice(0, heroAccentStart)}<span className="gkx-hero__accent">{copy.hero.titleAccent}</span>{copy.hero.title.slice(heroAccentStart + copy.hero.titleAccent.length)}
-        </>}</h1>
-        <p className="gkx-hero__subtitle">{copy.hero.subtitle}</p>
-        <p className="gkx-project-period">{copy.hero.periodLabel}：{project.period}</p>
+        <h1>{t(heroAccentStart < 0 ? copy.hero.title : <>
+          {t(copy.hero.title.slice(0, heroAccentStart))}<span className="gkx-hero__accent">{t(copy.hero.titleAccent)}</span>{t(copy.hero.title.slice(heroAccentStart + copy.hero.titleAccent.length))}
+        </>)}</h1>
+        <p className="gkx-hero__subtitle">{t(copy.hero.subtitle)}</p>
+        <p className="gkx-project-period">{t(copy.hero.periodLabel)}：{t(project.period)}</p>
         <dl id="gkx-scope" className="gkx-hero__meta">
-          <div><dt>{copy.hero.roleLabel}</dt><dd>{copy.hero.role}</dd></div>
-          <div><dt>{copy.hero.scopeLabel}</dt><dd>{copy.hero.scope}</dd></div>
+          <div><dt>{t(copy.hero.roleLabel)}</dt><dd>{t(copy.hero.role)}</dd></div>
+          <div><dt>{t(copy.hero.scopeLabel)}</dt><dd>{t(copy.hero.scope)}</dd></div>
         </dl>
       </div>
-      <div className="gkx-hero__visuals" aria-label="GKX主要界面">
+      <div className="gkx-hero__visuals" aria-label={t("GKX主要界面")}>
         <ProjectFigure asset={assets.portal} onOpen={openImage} className="is-primary" priority />
       </div>
-      <p className="gkx-disclosure">页面中的业务内容与数据已脱敏或重构，仅用于展示设计方法和交互方式。</p>
+      <p className="gkx-disclosure">{t("页面中的业务内容与数据已脱敏或重构，仅用于展示设计方法和交互方式。")}</p>
     </header>
 
     <section id="gkx-project-context" className="gkx-chapter gkx-overview" aria-labelledby="gkx-overview-title">
-      <SectionHeading section={overviewCopy} titleId="gkx-overview-title" number="01" label="范围与目标" />
+      <SectionHeading section={overviewCopy} titleId="gkx-overview-title" number="01" label={t("范围与目标")} />
       <GkxProjectScope scope={overviewCopy.scope} />
-      <div className="gkx-context-goals" aria-label="两项设计目标">{overviewCopy.goals.map(goal => <article key={goal.title}>
-        <p className="gkx-context-goal-label">{goal.label}</p><h3>{goal.title}</h3><p>{goal.text}</p>
+      <div className="gkx-context-goals" aria-label={t("两项设计目标")}>{overviewCopy.goals.map(goal => <article key={goal.title}>
+        <p className="gkx-context-goal-label">{t(goal.label)}</p><h3>{t(goal.title)}</h3><p>{t(goal.text)}</p>
       </article>)}</div>
       <section id="gkx-role-scope" className="gkx-role-scope" aria-labelledby="gkx-role-scope-title">
-        <header className="gkx-content-heading"><h3 id="gkx-role-scope-title">{overviewCopy.responsibilities.title}</h3><p>{overviewCopy.responsibilities.lead}</p></header>
+        <header className="gkx-content-heading"><h3 id="gkx-role-scope-title">{t(overviewCopy.responsibilities.title)}</h3><p>{t(overviewCopy.responsibilities.lead)}</p></header>
         <div className="gkx-role-scope__items">{overviewCopy.responsibilities.items.map(item => <article className={`is-${item.kind}`} key={item.kind}>
-          <span className="gkx-role-scope__tag">{item.role}</span><h4>{item.stage}</h4><p>{item.text}</p>
+          <span className="gkx-role-scope__tag">{t(item.role)}</span><h4>{t(item.stage)}</h4><p>{t(item.text)}</p>
         </article>)}</div>
       </section>
     </section>
 
     <section id="gkx-systems" className="gkx-chapter gkx-strategy" aria-labelledby="gkx-strategy-title">
-      <SectionHeading section={strategyCopy} titleId="gkx-strategy-title" number="02" label="跨系统策略" />
+      <SectionHeading section={strategyCopy} titleId="gkx-strategy-title" number="02" label={t("跨系统策略")} />
       <SharedQueryEvidence onOpen={openImage} />
       <TaskComparison onOpen={openImage} onReadingReturn={readingReference.returnAvailable ? readingReference.returnToSource : undefined} />
       <GkxSupplementalMaterials onOpen={openImage} compact />
     </section>
 
     <section id="nsp-prototype" className="gkx-chapter gkx-prototype" aria-labelledby="gkx-prototype-title">
-      <SectionHeading section={prototypeCopy} titleId="gkx-prototype-title" number="03" label="AI 实践" />
+      <SectionHeading section={prototypeCopy} titleId="gkx-prototype-title" number="03" label={t("AI 实践")} />
       <ProjectFigure asset={assets.aiWorkflow} onOpen={openImage} className="gkx-ai-workflow-figure" />
       <AiCollaborationEvidence onOpen={openImage} />
       <PaperWorkflowExample onOpen={openImage} onReferenceClick={openReference} />
     </section>
 
     <section id="nsp-rules" className="gkx-chapter gkx-rules" aria-labelledby="gkx-rules-title">
-      <SectionHeading section={rulesCopy} titleId="gkx-rules-title" number="04" label="交互决策" />
+      <SectionHeading section={rulesCopy} titleId="gkx-rules-title" number="04" label={t("交互决策")} />
       <div id="gkx-business"><BusinessTaskNavigation onSelect={index => { if (index === 1) setContainerView("detail"); if (index === 2) setContainerView("edit"); }} /></div>
 
       <article id="gkx-rule-search" className="gkx-rule-module gkx-rule-search">
-        <header className="gkx-content-heading"><h3>{searchModule.title}</h3><p>{searchModule.decision}</p></header>
+        <header className="gkx-content-heading"><h3>{t(searchModule.title)}</h3><p>{t(searchModule.decision)}</p></header>
         <DecisionComparison comparison={searchModule.comparison} reason={searchModule.reason} titleId="gkx-search-comparison-title">
-          <h4 className="gkx-decision-evidence-title">查询布局对照</h4>
+          <h4 className="gkx-decision-evidence-title">{t("查询布局对照")}</h4>
           <div className="gkx-query-comparison">
-            <FigureDetail asset={assets.paperList} viewBox="224 123 875 52" compactViewBox="232 123 348 52" compactLabel="统一查询输入框局部，标题与关键词共用入口" label={searchModule.afterLabel ?? assets.paperList.caption} status="本案采用" onOpen={openImage} className="is-adopted" />
-            <FigureDetail asset={assets.paperBefore} viewBox="224 123 875 52" compactViewBox="224 123 336 52" compactLabel="原查询输入框局部，编号独立输入" label={searchModule.beforeLabel ?? assets.paperBefore.caption} onOpen={openImage} className="is-prior" />
-            <p className="gkx-decision-image-note">点击局部图，查看完整查询区。</p>
+            <FigureDetail asset={assets.paperList} viewBox="224 123 875 52" compactViewBox="232 123 348 52" compactLabel="统一查询输入框局部，标题与关键词共用入口" label={t(searchModule.afterLabel ?? assets.paperList.caption)} status="本案采用" onOpen={openImage} className="is-adopted" />
+            <FigureDetail asset={assets.paperBefore} viewBox="224 123 875 52" compactViewBox="224 123 336 52" compactLabel="原查询输入框局部，编号独立输入" label={t(searchModule.beforeLabel ?? assets.paperBefore.caption)} onOpen={openImage} className="is-prior" />
+            <p className="gkx-decision-image-note">{t("点击局部图，查看完整查询区。")}</p>
           </div>
         </DecisionComparison>
       </article>
 
       <article id="gkx-rule-operations" className="gkx-rule-module gkx-rule-operations">
-        <header className="gkx-content-heading"><h3>{operationsModule.title}</h3><p>{operationsModule.decision}</p></header>
+        <header className="gkx-content-heading"><h3>{t(operationsModule.title)}</h3><p>{t(operationsModule.decision)}</p></header>
         <div className="gkx-decision-layout">
-          <FigureDetail asset={assets.paperList} viewBox="232 228 1160 282" compactViewBox="1040 228 352 124" compactLabel="列表局部，聚焦记录右侧的详情、编辑、删除" label="记录与右侧行操作" onOpen={openImage} className="is-operations" />
-          <div className="gkx-decision-explanation"><h4>让操作位置可预期</h4><dl><div><dt>界面依据</dt><dd>行操作位于记录右侧，按详情、编辑、删除排列，便于逐条核对和处理。</dd></div><div><dt>扩展规则</dt><dd>超过 3 项时，从第 4 项起收纳至更多操作。当前图稿未展示折叠菜单，扩展状态仍需另行核对。</dd></div></dl></div>
+          <FigureDetail asset={assets.paperList} viewBox="232 228 1160 282" compactViewBox="1040 228 352 124" compactLabel="列表局部，聚焦记录右侧的详情、编辑、删除" label={t("记录与右侧行操作")} onOpen={openImage} className="is-operations" />
+          <div className="gkx-decision-explanation"><h4>{t("让操作位置可预期")}</h4><dl><div><dt>{t("界面依据")}</dt><dd>{t("行操作位于记录右侧，按详情、编辑、删除排列，便于逐条核对和处理。")}</dd></div><div><dt>{t("扩展规则")}</dt><dd>{t("超过 3 项时，从第 4 项起收纳至更多操作。当前图稿未展示折叠菜单，扩展状态仍需另行核对。")}</dd></div></dl></div>
         </div>
       </article>
 
       <article id="gkx-rule-containers" className="gkx-rule-module gkx-rule-containers">
-        <header className="gkx-content-heading"><h3>{containersModule.title}</h3><p>{containersModule.decision}</p></header>
+        <header className="gkx-content-heading"><h3>{t(containersModule.title)}</h3><p>{t(containersModule.decision)}</p></header>
         <DecisionComparison comparison={containersModule.comparison} reason={containersModule.reason} titleId="gkx-containers-comparison-title" activeScenario={containerView === "reading" ? "reading" : "record"}>
-          <GkxSegmentedControl label="切换承载方式的界面证据" value={containerView} onChange={setContainerView} options={[{ value: "detail", label: "论文详情" }, { value: "edit", label: "单条编辑" }, { value: "reading", label: "智能阅读" }]} />
-          <div id="gkx-business-flow-detail" aria-live="polite"><ProjectFigure asset={containerView === "reading" ? assets.reading : containerView === "edit" ? assets.paperEdit : assets.paperDetail} onOpen={openImage} viewBox={containerView === "reading" ? "28 128 1344 584" : undefined} caption={containerView === "reading" ? "阅读工作区局部 · 目录、原文与辅助信息" : undefined} /></div>
-          <a id="gkx-reading-reference" className="gkx-section-reference" href="#gkx-reading-workspace" onClick={readingReference.openReference}>对照智能阅读的任务结构<IconArrowRight aria-hidden="true" /></a>
+          <GkxSegmentedControl<"reading" | "detail" | "edit"> label={t("切换承载方式的界面证据")} value={containerView} onChange={setContainerView} options={localize([{ value: "detail", label: "论文详情" }, { value: "edit", label: "单条编辑" }, { value: "reading", label: "智能阅读" }])} />
+          <div id="gkx-business-flow-detail" aria-live="polite"><ProjectFigure asset={containerView === "reading" ? assets.reading : containerView === "edit" ? assets.paperEdit : assets.paperDetail} onOpen={openImage} viewBox={containerView === "reading" ? "28 128 1344 584" : undefined} caption={t(containerView === "reading" ? "阅读工作区局部 · 目录、原文与辅助信息" : undefined)} /></div>
+          <a id="gkx-reading-reference" className="gkx-section-reference" href="#gkx-reading-workspace" onClick={readingReference.openReference}>{t("对照智能阅读的任务结构")}<IconArrowRight aria-hidden="true" /></a>
         </DecisionComparison>
       </article>
 
       <article id="gkx-rule-recovery" className="gkx-rule-module gkx-rule-recovery-summary">
-        <header className="gkx-content-heading"><h3>{recoveryModule.title}</h3><p>{recoveryModule.decision}</p></header>
+        <header className="gkx-content-heading"><h3>{t(recoveryModule.title)}</h3><p>{t(recoveryModule.decision)}</p></header>
         <div className="gkx-decision-layout">
           <ProjectFigure asset={assets.importError} onOpen={openImage} />
-          <div className="gkx-decision-explanation"><h4>让失败反馈指向下一步</h4><ol className="gkx-recovery-steps">{recoveryModule.details.map((text, index) => <li key={text}><span aria-hidden="true">{index + 1}</span><p>{text}</p></li>)}</ol><p className="gkx-decision-boundary">界面图稿用于核对错误定位与重新上传入口，实际上传与恢复过程仍需结合实现验证。</p></div>
+          <div className="gkx-decision-explanation"><h4>{t("让失败反馈指向下一步")}</h4><ol className="gkx-recovery-steps">{recoveryModule.details.map((text, index) => <li key={text}><span aria-hidden="true">{t(index + 1)}</span><p>{t(text)}</p></li>)}</ol><p className="gkx-decision-boundary">{t("界面图稿用于核对错误定位与重新上传入口，实际上传与恢复过程仍需结合实现验证。")}</p></div>
         </div>
       </article>
 
@@ -543,30 +557,30 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
     </section>
 
     <section id="gkx-design-system" className="gkx-chapter gkx-design-system" aria-labelledby="gkx-design-system-title" tabIndex={-1}>
-      <SectionHeading section={{ title: "让共用规则进入页面，也进入交付", lead: "将页面类型、组件和状态说明整理为设计规范，供合作方与研发查阅；审核时再对应到具体需求、页面和操作。" }} titleId="gkx-design-system-title" number="05" label="规范与交付" />
-      <section className="gkx-delivery-standards" aria-label="设计规范">
+      <SectionHeading section={{ title: "让共用规则进入页面，也进入交付", lead: "将页面类型、组件和状态说明整理为设计规范，供合作方与研发查阅；审核时再对应到具体需求、页面和操作。" }} titleId="gkx-design-system-title" number="05" label={t("规范与交付")} />
+      <section className="gkx-delivery-standards" aria-label={t("设计规范")}>
         <div className="gkx-delivery-visuals">
           <article className="gkx-standard-mapping gkx-topic-group" aria-labelledby="gkx-standard-mapping-title">
-            <header className="gkx-figure-heading"><h4 id="gkx-standard-mapping-title">从基础规则到业务页面，组织可复用的设计规范</h4><p>将样式、组件、页面与交付核对分层组织，为不同业务系统提供共同的设计与核对依据。</p></header>
+            <header className="gkx-figure-heading"><h4 id="gkx-standard-mapping-title">{t("从基础规则到业务页面，组织可复用的设计规范")}</h4><p>{t("将样式、组件、页面与交付核对分层组织，为不同业务系统提供共同的设计与核对依据。")}</p></header>
             <ProjectFigure asset={assets.designSystemArchitecture} onOpen={openImage} />
           </article>
           <article className="gkx-standard-page-types gkx-topic-group" aria-labelledby="gkx-standard-page-types-title">
-            <header className="gkx-figure-heading"><h4 id="gkx-standard-page-types-title">从页面结构归纳可复用的页面类型</h4><p>在统一规则与组件的基础上，按业务任务组织页面结构，形成可复用的页面类型。</p></header>
+            <header className="gkx-figure-heading"><h4 id="gkx-standard-page-types-title">{t("从页面结构归纳可复用的页面类型")}</h4><p>{t("在统一规则与组件的基础上，按业务任务组织页面结构，形成可复用的页面类型。")}</p></header>
             <ProjectFigure asset={assets.designSystemPageTypes} onOpen={openImage} />
           </article>
         </div>
         <GkxStandardsApplications assets={assets} onOpen={openImage} onReturn={returnAvailable ? returnToSource : undefined} />
-        <article id="gkx-collaboration" className="gkx-workbench-block gkx-topic-group"><header><h4>{rulesCopy.workbench.title}</h4><div>{rulesCopy.workbench.text}</div></header><div className="gkx-md-interactive"><iframe src={publicAsset("/assets/projects/gkx/design-preview/index.html?id=page-index&embed=1")} title="GKX可交互设计规范" loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms"/></div></article>
+        <article id="gkx-collaboration" className="gkx-workbench-block gkx-topic-group"><header><h4>{t(rulesCopy.workbench.title)}</h4><div>{t(rulesCopy.workbench.text)}</div></header><div className="gkx-md-interactive"><iframe src={publicAsset("/assets/projects/gkx/design-preview/index.html?id=page-index&embed=1")} title={t("GKX可交互设计规范")} loading="lazy" sandbox="allow-scripts allow-same-origin allow-forms"/></div></article>
       </section>
       <DeliveryReview onOpen={openImage} />
     </section>
 
     <section id="gkx-outcomes" className="gkx-chapter gkx-outcomes" aria-labelledby="gkx-outcomes-title">
-      <SectionHeading section={outcomesCopy} titleId="gkx-outcomes-title" number="06" label="成果复盘" />
-      <section className="gkx-reflection" aria-labelledby="gkx-reflection-title"><h3 id="gkx-reflection-title">我的成长与方法沉淀</h3><ol>{outcomesCopy.reflections.map(item => <li key={item.number}><strong>{item.title}</strong><p>{item.text}</p></li>)}</ol></section>
-      <details className="gkx-reflection-method"><summary>查看工作方法梳理图</summary><ProjectFigure asset={assets.outcomeWorkflow} onOpen={openImage} className="gkx-outcome-workflow" /></details>
+      <SectionHeading section={outcomesCopy} titleId="gkx-outcomes-title" number="06" label={t("成果复盘")} />
+      <section className="gkx-reflection" aria-labelledby="gkx-reflection-title"><h3 id="gkx-reflection-title">{t("我的成长与方法沉淀")}</h3><ol>{outcomesCopy.reflections.map(item => <li key={item.number}><strong>{t(item.title)}</strong><p>{t(item.text)}</p></li>)}</ol></section>
+      <details className="gkx-reflection-method"><summary>{t("查看工作方法梳理图")}</summary><ProjectFigure asset={assets.outcomeWorkflow} onOpen={openImage} className="gkx-outcome-workflow" /></details>
     </section>
 
-    {viewer ? <ImageViewer asset={viewer} originalSize={originalSize} setOriginalSize={setOriginalSize} onClose={() => setViewer(null)} dialogRef={dialogRef} closeButtonRef={closeButtonRef} /> : null}
+    {t(viewer ? <ImageViewer asset={viewer} originalSize={originalSize} setOriginalSize={setOriginalSize} onClose={() => setViewer(null)} dialogRef={dialogRef} closeButtonRef={closeButtonRef} /> : null)}
   </article>;
 }
