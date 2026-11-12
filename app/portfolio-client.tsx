@@ -111,36 +111,36 @@ const homeProjectContent: Record<string, {
     titleLines: ["GKX 智慧门户"],
     category: "政企多业务平台",
     platform: "Web",
-    summary: "面向门户内多个业务系统，统一页面与组件的设计规则。",
-    role: "制定样式与组件规范，借助 AI 编写设计文档，参与原型设计与评审。",
+    summary: "统一多系统的查询与反馈规则，保留各业务的任务差异，让设计与交付有据核对。",
+    role: "主导项目 UI 与交互设计，独立完成规范与设计 MD，并参与交付评审。",
   },
   "zhaocai-smart": {
     titleLines: ["招财 Smart"],
     category: "AI 财务智能问数",
     platform: "Web",
-    summary: "面向企业财务与经营分析，串联提问、条件确认、执行反馈与结果核对。",
-    role: "负责对话 UX/UI、过程反馈、看板交互与回答呈现规范。",
+    summary: "将模糊的财务提问转为可确认条件，串联执行反馈、结果核对与看板留存。",
+    role: "负责对话 UX/UI、异常恢复、看板交互及 Markdown 回答规范。",
   },
   "tax-cloud": {
-    titleLines: ["税纪云"],
+    titleLines: ["税纪云 2.0"],
     category: "全税种申报平台",
     platform: "Web / App",
-    summary: "覆盖纳税申报、审批、风险预警与法规查询等日常财税任务。",
-    role: "主导 2.0 体验改版，重构关键流程并建立跨端组件规范。",
+    summary: "围绕申报、审批与复杂表单重组操作路径，统一 Web / App 的页面层级和状态反馈。",
+    role: "主导跨端体验改版，完成核心流程原型、界面与组件规范。",
   },
   "energy-tax": {
     titleLines: ["国家能源集团", "报税平台"],
     category: "企业税务系统",
     platform: "Web",
-    summary: "面向集团报税业务，覆盖平台首页、纳税申报与综合管理工作台。",
-    role: "独立负责从 0 到 1 的 UI 设计，建立页面与组件规范。",
+    summary: "面向集团报税任务，组织首页、纳税申报与管理工作台，明确数据层级和操作入口。",
+    role: "独立负责从 0 到 1 的 UI 设计，完成页面、组件与缺省状态规范。",
   },
   "data-visualisation": {
     titleLines: ["可视化大屏"],
     category: "多行业项目合集",
     platform: "大屏",
-    summary: "汇集汽车、轨道交通、新能源等行业大屏，用地图、趋势与排行呈现税务数据。",
-    role: "负责大屏视觉、信息层级与图表编排，整理布局规范。",
+    summary: "面向多行业税务数据，组织地图、趋势与排行，明确总览与关键明细的阅读顺序。",
+    role: "独立负责大屏视觉、交互与动效设计，完成信息层级、图表编排和布局规范。",
   },
 };
 
@@ -388,8 +388,8 @@ function MenuOverlay({ open, onClose }: { open: boolean; onClose: () => void }) 
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const links = [
     ["首页", "/portfolio/#top"],
-    ["核心能力", "/portfolio/#ability"],
     ["精选作品", "/portfolio/#work"],
+    ["核心能力", "/portfolio/#ability"],
     ["工作经历", "/portfolio/#experience"],
     ["联系", "/portfolio/#contact"],
   ];
@@ -711,8 +711,8 @@ type PortfolioChatContext = {
 
 const HOME_CHAT_CONTEXTS: PortfolioChatContext[] = [
   { id: "home", elementId: "top", text: "想了解我的设计与经历？点我聊聊。" },
-  { id: "ability", elementId: "ability", text: "想看能力对应的案例？可以问我。" },
   { id: "work", elementId: "work", text: "想了解某个项目的职责与难点？可以问我。" },
+  { id: "ability", elementId: "ability", text: "想看能力对应的案例？可以问我。" },
   { id: "experience", elementId: "experience", text: "想了解我在某段经历里负责什么？" },
   { id: "contact", elementId: "contact", text: "想聊合作？这里有我的联系方式。" },
 ];
@@ -2264,7 +2264,7 @@ function WorkSection({
       <div className="section-shell">
         <SectionIntro
           title={t("精选作品")}
-          description={t("构建 AI 增强的设计工作流，贯穿需求拆解、原型验证与规范沉淀，支持复杂项目持续验证与交付。")}
+          description={t("覆盖 AI 问数、复杂业务平台与数据可视化，围绕关键任务说明设计取舍与交付内容。")}
         />
         {t(highlightedAbility ? (
           <div className="project-highlight-status" aria-live="polite">
@@ -2567,14 +2567,14 @@ function HomePage() {
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
       <main className="portfolio-home">
         <Hero />
+        <WorkSection
+          highlightedAbilityId={highlightedAbilityId}
+          onClearHighlight={clearProjectHighlight}
+        />
         <CapabilitySection
           highlightedAbilityId={highlightedAbilityId}
           onShowProjects={showRelatedProjects}
           onOpenEvidence={openProjectEvidence}
-        />
-        <WorkSection
-          highlightedAbilityId={highlightedAbilityId}
-          onClearHighlight={clearProjectHighlight}
         />
         <ExperienceSection />
         <ContactSection />

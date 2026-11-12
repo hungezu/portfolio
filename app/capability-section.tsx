@@ -86,7 +86,7 @@ export function CapabilitySection({
   useLayoutEffect(() => { cycleRunningRef.current = cycleState === "running"; }, [cycleState]);
 
   // Narrow screens stack the evidence cards. Restore the same selection before
-  // HomePage restores returnY so the preceding section retains its height.
+  // HomePage restores returnY so the capability section retains its height.
   useLayoutEffect(() => {
     try {
       const params = new URLSearchParams(window.location.search);
