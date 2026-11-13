@@ -7,10 +7,23 @@ export function initialHomeOpeningPhase(): HomeOpeningPhase {
   const params = new URLSearchParams(window.location.search);
   const returningToWork = params.has("returnProject") || params.get("returnSection") === "work";
   const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
-  return returningToWork || navigation?.type === "back_forward" ? "settled" : "waiting";
+  return returningToWork || navigation?.type === "reload" || navigation?.type === "back_forward" ? "settled" : "waiting";
 }
 
 export function homeEntranceTiming(reduce: boolean | null) {
+  const followsIntro = typeof document !== "undefined" &&
+    document.documentElement.classList.contains("portfolio-lj-intro-complete");
+  if (followsIntro) {
+    return {
+      copyDelay: reduce ? 0 : 0.06,
+      copyDuration: reduce ? 0.25 : 0.7,
+      actionDelay: reduce ? 0 : 0.08,
+      actionDuration: reduce ? 0.16 : 0.24,
+      navigationDelay: 0,
+      assistantDelay: reduce ? 0.3 : 0.85,
+      mediaDuration: reduce ? 0.3 : 0.65,
+    };
+  }
   const copyDelay = reduce ? 0.28 : 0.42;
   const copyDuration = reduce ? 1.05 : 1.2;
   const actionDelay = copyDelay + copyDuration + 0.08;
@@ -22,6 +35,7 @@ export function homeEntranceTiming(reduce: boolean | null) {
     actionDuration,
     navigationDelay: reduce ? 0.18 : 0.28,
     assistantDelay: actionDelay + actionDuration + 0.04,
+    mediaDuration: reduce ? 0.7 : 1.1,
   };
 }
 

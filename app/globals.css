@@ -431,7 +431,7 @@ p {
   width: 28px;
   height: 28px;
   object-fit: contain;
-  filter: invert(1) grayscale(1) contrast(1.4);
+  filter: none;
 }
 
 .brand-name {

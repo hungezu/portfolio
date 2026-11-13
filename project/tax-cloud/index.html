@@ -6,6 +6,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/portfolio/favicon-32.png?v=20260908b" />
     <link rel="shortcut icon" href="/portfolio/favicon-32.png?v=20260908b" />
     <link rel="apple-touch-icon" sizes="180x180" href="/portfolio/apple-touch-icon.png?v=20260908b" />
+    <link rel="preload" as="image" href="/portfolio/assets/visual/lj-mark.svg" fetchpriority="high" />
     <meta name="theme-color" content="#ffffff" />
     <meta
       name="description"
@@ -23,294 +24,364 @@
     <title>李家豪｜AI 体验产品设计师</title>
     <script>
       (() => {
-        try {
-          const seen = sessionStorage.getItem("leo-portfolio-loader-seen") === "1";
-          document.documentElement.classList.add(
-            seen ? "portfolio-loader-seen" : "portfolio-loading",
-          );
-        } catch {
-          document.documentElement.classList.add("portfolio-loading");
+        const params = new URLSearchParams(window.location.search);
+        const replay = params.get("intro") === "replay";
+        const navigationType = performance.getEntriesByType("navigation")[0]?.type;
+        const sameVisit = navigationType === "reload" || navigationType === "back_forward";
+        const returning = params.has("returnProject") || params.has("returnSection") || params.get("from") === "portfolio";
+        let seen = returning || sameVisit;
+        try { seen = seen || sessionStorage.getItem("leo-portfolio-lj-loader-seen") === "1"; } catch {}
+        const showIntro = !seen;
+        // Record the visit before playback, so refreshing mid-intro also skips.
+        try { sessionStorage.setItem("leo-portfolio-lj-loader-seen", "1"); } catch {}
+        document.documentElement.dataset.portfolioEntry = showIntro ? "intro" : "skip";
+        document.documentElement.classList.add(showIntro ? "portfolio-loading" : "portfolio-loader-seen");
+        if (replay) {
+          const url = new URL(window.location.href);
+          url.searchParams.delete("intro");
+          window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+        }
+        if (showIntro) {
+          window.history.scrollRestoration = "manual";
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+        } else {
+          window.history.scrollRestoration = "auto";
         }
       })();
     </script>
     <style>
       html.portfolio-loading { overflow: hidden; }
       html.portfolio-loader-seen .portfolio-boot { display: none; }
-      .portfolio-boot {
-        position: fixed;
-        z-index: 100000;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-        background: #fff;
-        color: #111;
-        font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
-        opacity: 1;
-        transition: opacity 560ms cubic-bezier(.16, 1, .3, 1);
-      }
-      .portfolio-boot.is-complete {
-        opacity: 0;
-        pointer-events: none;
-      }
-      .portfolio-boot__content {
-        display: grid;
-        width: min(160px, 100%);
-        min-height: 70px;
-        place-items: center;
-        justify-items: center;
-      }
-      .portfolio-boot__progress {
-        display: grid;
-        grid-area: 1 / 1;
-        justify-items: center;
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        transition:
-          opacity 340ms cubic-bezier(.16, 1, .3, 1),
-          transform 420ms cubic-bezier(.16, 1, .3, 1);
-      }
-      .portfolio-boot__progress[hidden] { display: none; }
-      .portfolio-boot__progress.is-leaving {
-        opacity: 0;
-        transform: translateY(-6px) scale(.98);
-      }
-      .portfolio-boot__progress.is-ready .portfolio-boot__value {
-        animation: portfolio-boot-ready 420ms cubic-bezier(.16, 1, .3, 1) both;
-      }
-      .portfolio-boot__value {
-        display: flex;
-        align-items: flex-start;
-        justify-content: center;
-        font-size: clamp(38px, 5vw, 46px);
-        font-variant-numeric: tabular-nums;
-        font-weight: 400;
-        letter-spacing: -.035em;
-        line-height: .9;
-      }
-      .portfolio-boot__value small {
-        margin: .04em 0 0 .1em;
-        font-size: .28em;
-        font-weight: 500;
-        letter-spacing: 0;
-      }
-      .portfolio-boot__welcome {
-        grid-area: 1 / 1;
-        color: #111;
-        font-size: clamp(20px, 3vw, 26px);
-        font-weight: 500;
-        letter-spacing: .16em;
-        line-height: 1;
-        opacity: 0;
-        transform: translateY(7px);
-        transition:
-          opacity 420ms cubic-bezier(.16, 1, .3, 1),
-          transform 500ms cubic-bezier(.16, 1, .3, 1);
-      }
-      .portfolio-boot__welcome.is-visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      @keyframes portfolio-boot-ready {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        42% { opacity: .34; transform: scale(.975); }
-        72% { opacity: 1; transform: scale(1.025); }
-      }
-      #root {
-        opacity: 1;
-        transition:
-          opacity 620ms cubic-bezier(.16, 1, .3, 1),
-          transform 760ms cubic-bezier(.16, 1, .3, 1);
-      }
-      html.portfolio-loading #root {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      @media (max-width: 560px) {
-        .portfolio-boot { padding: 20px; }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .portfolio-boot.is-complete { transition-duration: 80ms; }
-        .portfolio-boot__progress { transition: none; }
-        .portfolio-boot__value { animation: none !important; }
-        .portfolio-boot__welcome { transition: none; }
-        #root { transition: none; transform: none; }
-      }
+      .portfolio-boot { position: fixed; z-index: 100000; inset: 0; background: #fff; }
+      .portfolio-boot__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #fff; opacity: 0; transition: opacity 120ms linear; }
+      .portfolio-boot__video.is-playing { opacity: 1; }
+      .portfolio-boot__mark { position: fixed; z-index: 100001; display: block; width: 200px; height: 200px; object-fit: contain; transform-origin: 0 0; opacity: 0; pointer-events: none; transition: transform 520ms cubic-bezier(.64, 0, .2, 1), opacity 120ms linear; }
+      .portfolio-boot__mark.is-visible { opacity: 1; }
+      html.portfolio-logo-handoff .brand-logo { opacity: 0 !important; }
+      #root { opacity: 1; transition: opacity 400ms cubic-bezier(.16, 1, .3, 1); }
+      html.portfolio-loading #root { opacity: 0; pointer-events: none; }
+      @media (prefers-reduced-motion: reduce) { .portfolio-boot__video { display: none; } .portfolio-boot__mark, #root { transition: none; } }
     </style>
     <script>
       window.__PORTFOLIO_BASE__ = "/portfolio";
     </script>
-    <script type="module" crossorigin src="/portfolio/assets/index-DUksnZye.js"></script>
-    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-adB0zfaZ.css">
+    <script type="module" crossorigin src="/portfolio/assets/index-u0GnvACR.js"></script>
+    <link rel="stylesheet" crossorigin href="/portfolio/assets/index-BhDN-75k.css">
   </head>
   <body>
-    <div class="portfolio-boot" id="portfolio-boot" role="status" aria-live="polite" aria-label="作品集加载中">
-      <div class="portfolio-boot__content">
-        <div class="portfolio-boot__progress" id="portfolio-boot-progress">
-          <div class="portfolio-boot__value" aria-hidden="true"><span id="portfolio-boot-value">00</span><small>%</small></div>
-        </div>
-        <div class="portfolio-boot__welcome" id="portfolio-boot-welcome" hidden>WELCOME</div>
-      </div>
+    <div class="portfolio-boot" id="portfolio-boot" role="status" aria-live="polite" aria-label="正在打开作品集">
+      <video class="portfolio-boot__video" id="portfolio-boot-video" src="/portfolio/assets/visual/lj-loader-preview.mp4?v=ed3ca381" autoplay muted playsinline preload="auto" disablepictureinpicture aria-hidden="true"></video>
+      <img class="portfolio-boot__mark" id="portfolio-boot-mark" src="/portfolio/assets/visual/lj-mark.svg" width="112" height="112" alt="" aria-hidden="true" />
     </div>
     <script>
-      (() => {
-        const loader = document.getElementById("portfolio-boot");
-        if (!loader || document.documentElement.classList.contains("portfolio-loader-seen")) {
-          loader?.remove();
-          return;
+(() => {
+  const page = document.documentElement;
+  const loader = document.getElementById("portfolio-boot");
+  if (!loader || page.classList.contains("portfolio-loader-seen")) {
+    loader?.remove();
+    return;
+  }
+
+  const video = document.getElementById("portfolio-boot-video");
+  const mark = document.getElementById("portfolio-boot-mark");
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let criticalContentReady = false;
+  let introReady = reducedMotion || video.ended;
+  let finished = false;
+  let released = false;
+  let rootObserver;
+  let releaseTimer;
+  let startDockTimer;
+  let dockingAnimation;
+  let stopWaitingForContent = () => {};
+
+  const markLoaded = () => {
+    criticalContentReady = true;
+    stopWaitingForContent();
+    tryFinish();
+  };
+  const contentTimeout = window.setTimeout(markLoaded, 8000);
+
+  const waitForCriticalContent = (root) => {
+    let fontsReady = false;
+    let completing = false;
+    const decodedSources = new WeakMap();
+    const decodingSources = new WeakMap();
+    const resourceEvents = ["load", "error", "loadeddata", "canplay"];
+    const scheduleCheck = () => requestAnimationFrame(check);
+    const observer = new MutationObserver(scheduleCheck);
+
+    const imageIsReady = (image, allowFailure) => {
+      if (!image.complete) return false;
+      if (image.naturalWidth === 0) return allowFailure;
+      const source = image.currentSrc || image.src;
+      if (typeof image.decode !== "function" || decodedSources.get(image) === source) return true;
+      if (decodingSources.get(image) !== source) {
+        decodingSources.set(image, source);
+        image.decode().catch(() => {}).then(() => {
+          if ((image.currentSrc || image.src) === source) decodedSources.set(image, source);
+          scheduleCheck();
+        });
+      }
+      return false;
+    };
+
+    function check() {
+      if (finished || criticalContentReady || completing) return;
+      const hero = root.querySelector(".hero");
+      const project = root.querySelector("main[data-project]");
+      const notFound = root.querySelector(".not-found");
+      const image = hero
+        ? hero.querySelector(".hero-poster img")
+        : project?.querySelector('img[loading="eager"], img[fetchpriority="high"]');
+      // A lazy case module may still be mounting; wait for its first eager
+      // image instead of treating the initial Suspense fallback as ready.
+      const imageReady = image
+        ? imageIsReady(image, Boolean(hero))
+        : Boolean(notFound || (project && !project.querySelector(".case-loading") && (project.querySelector(".image-fallback") || project.querySelector('[data-case-ready="text"]'))));
+      const video = hero?.querySelector("video");
+      const videoState = video?.dataset.preloadState;
+      const videoReady = hero
+        ? Boolean(video && (["disabled", "ready", "error"].includes(videoState) || (videoState === "loading" && video.readyState >= 2)))
+        : Boolean(project || notFound);
+      // "pending" keeps the loader up until Hero has decided whether it
+      // should load motion, even before React attaches its video sources.
+      // Capability now follows the projects below the fold. Its 3D renderer
+      // should not extend the opening wait after the first-screen media is ready.
+      if (!fontsReady || !imageReady || !videoReady) return;
+      completing = true;
+      requestAnimationFrame(() => requestAnimationFrame(markLoaded));
+    }
+
+    stopWaitingForContent = () => {
+      observer.disconnect();
+      resourceEvents.forEach(event => root.removeEventListener(event, scheduleCheck, true));
+    };
+    observer.observe(root, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["data-preload-state", "data-renderer", "src", "srcset", "loading", "fetchpriority"],
+    });
+    resourceEvents.forEach(event => root.addEventListener(event, scheduleCheck, true));
+    (document.fonts?.ready?.catch(() => {}) ?? Promise.resolve()).then(() => {
+      fontsReady = true;
+      check();
+    });
+    check();
+  };
+
+  const watchApp = () => {
+    if (finished) return;
+    const root = document.getElementById("root");
+    if (!root) {
+      requestAnimationFrame(watchApp);
+      return;
+    }
+    root.inert = true;
+    if (root.childElementCount > 0) {
+      waitForCriticalContent(root);
+      return;
+    }
+    rootObserver = new MutationObserver(() => {
+      if (root.childElementCount === 0) return;
+      rootObserver.disconnect();
+      waitForCriticalContent(root);
+    });
+    rootObserver.observe(root, { childList: true });
+  };
+
+  // The supplied film is 1280 × 720 and its original mark is 200 × 200.
+  // Keep the overlay SVG at that exact object-fit:cover scale before docking.
+  const centerMark = () => {
+    const scale = Math.max(window.innerWidth / 1280, window.innerHeight / 720);
+    const size = 200 * scale;
+    // The supplied recording places its 200px mark 5px left of the canvas
+    // centre. Preserve that measured export offset for a seamless SVG swap.
+    const left = (window.innerWidth - size) / 2 - 5 * scale;
+    const top = (window.innerHeight - size) / 2;
+    mark.style.width = `${size}px`;
+    mark.style.height = `${size}px`;
+    mark.style.left = `${left}px`;
+    mark.style.top = `${top}px`;
+    return { size, left, top };
+  };
+
+  const logoTarget = () => {
+    const image = document.querySelector(".site-nav .brand-logo");
+    const nav = image?.closest(".site-nav");
+    if (image && nav) {
+      const imageRect = image.getBoundingClientRect();
+      const navRect = nav.getBoundingClientRect();
+      const style = getComputedStyle(nav);
+      if (imageRect.width > 0 && imageRect.height > 0) {
+        // Remove the nav's waiting transform so the end point is its settled
+        // position, even while the React entrance is still hidden underneath.
+        return {
+          left: imageRect.left - navRect.left + (parseFloat(style.left) || 0),
+          top: imageRect.top - navRect.top + (parseFloat(style.top) || 0),
+          width: imageRect.width,
+          height: imageRect.height,
+        };
+      }
+    }
+    const compact = window.innerWidth <= 767;
+    return { left: compact ? 26 : 32, top: compact ? 20 : 22, width: compact ? 24 : 28, height: compact ? 24 : 28 };
+  };
+
+  const releasePage = () => {
+    if (released) return;
+    released = true;
+    dockingAnimation?.cancel();
+    clearTimeout(contentTimeout);
+    clearTimeout(mediaTimeout);
+    clearTimeout(startDockTimer);
+    clearTimeout(releaseTimer);
+    rootObserver?.disconnect();
+    stopWaitingForContent();
+    window.removeEventListener("resize", onResize);
+    window.removeEventListener("keydown", onKeyDown);
+    document.removeEventListener("visibilitychange", syncPlayback);
+    video.pause();
+
+    // Keep the same SVG above the header until its existing entrance settles.
+    // Removing the blocking loader first lets Hero keep its own choreography.
+    document.body.appendChild(mark);
+    page.classList.add("portfolio-logo-handoff");
+    const root = document.getElementById("root");
+    if (root) root.inert = false;
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    page.classList.add("portfolio-lj-intro-complete");
+    page.classList.remove("portfolio-loading");
+    page.classList.add("portfolio-loader-seen");
+    loader.remove();
+    try { sessionStorage.setItem("leo-portfolio-lj-loader-seen", "1"); } catch {}
+    window.dispatchEvent(new Event("portfolio-loader-exit"));
+    window.setTimeout(() => {
+      page.classList.remove("portfolio-logo-handoff");
+      mark.remove();
+      if (window.history) window.history.scrollRestoration = "auto";
+    }, 520);
+  };
+
+  const dockMark = () => {
+    const target = logoTarget();
+    const { size, left, top } = centerMark();
+    mark.classList.add("is-visible");
+    video.classList.remove("is-playing");
+    video.pause();
+    if (reducedMotion) {
+      mark.style.width = `${target.width}px`;
+      mark.style.height = `${target.height}px`;
+      mark.style.left = `${target.left}px`;
+      mark.style.top = `${target.top}px`;
+      mark.style.transform = "none";
+      releaseTimer = window.setTimeout(releasePage, 80);
+      return;
+    }
+    // Finish the aligned video → SVG swap before moving, so there is never a
+    // second, fading logo left behind in the middle of the white canvas.
+    startDockTimer = window.setTimeout(() => {
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const dx = target.left - left;
+        const dy = target.top - top;
+        const sx = target.width / size;
+        const sy = target.height / size;
+        const transform = (x, y, shrink) => `translate3d(${dx * x}px, ${dy * y}px, 0) scale(${1 + (sx - 1) * shrink}, ${1 + (sy - 1) * shrink})`;
+        const finalTransform = `translate3d(${dx}px, ${dy}px, 0) scale(${sx}, ${sy})`;
+        if (typeof mark.animate === "function") {
+          mark.style.transition = "opacity 120ms linear";
+          mark.style.transform = finalTransform;
+          // Ease in, carry speed through the middle, then arrive softly. The
+          // vertical path and shrink trail the initial horizontal movement.
+          dockingAnimation = mark.animate([
+            { offset: 0, transform: transform(0, 0, 0) },
+            { offset: .22, transform: transform(.22, .15, .08) },
+            { offset: .64, transform: transform(.64, .58, .55) },
+            { offset: .9, transform: transform(.9, .88, .94) },
+            { offset: 1, transform: finalTransform },
+          ], { duration: 520, easing: "cubic-bezier(.64, 0, .2, 1)", fill: "forwards" });
+          dockingAnimation?.finished?.catch(() => {});
+        } else {
+          mark.style.transform = finalTransform;
         }
+        releaseTimer = window.setTimeout(releasePage, 560);
+      }));
+    }, 120);
+  };
 
-        const valueNode = document.getElementById("portfolio-boot-value");
-        const progressNode = document.getElementById("portfolio-boot-progress");
-        const welcomeNode = document.getElementById("portfolio-boot-welcome");
-        const startedAt = performance.now();
-        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-        let criticalContentReady = false;
-        let value = 0;
-        let finished = false;
-        let rootObserver;
-        let stopWaitingForContent = () => {};
+  const tryFinish = () => {
+    if (finished || !criticalContentReady || !introReady) return;
+    finished = true;
+    rootObserver?.disconnect();
+    stopWaitingForContent();
+    dockMark();
+  };
 
-        const markLoaded = () => {
-          criticalContentReady = true;
-          stopWaitingForContent();
-        };
-        window.setTimeout(markLoaded, 8000);
+  const completeIntro = () => {
+    introReady = true;
+    tryFinish();
+  };
+  const useStaticMark = () => {
+    if (finished) return;
+    video.classList.remove("is-playing");
+    centerMark();
+    mark.classList.add("is-visible");
+    completeIntro();
+  };
+  const mediaTimeout = window.setTimeout(useStaticMark, 8000);
+  const startVideo = () => {
+    if (finished || introReady || document.visibilityState === "hidden") return;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.defaultPlaybackRate = 1;
+    video.playbackRate = 1;
+    const play = video.play();
+    play?.catch(useStaticMark);
+  };
+  const syncPlayback = () => {
+    if (document.visibilityState === "hidden") video.pause();
+    else startVideo();
+  };
+  const onResize = () => {
+    if (!finished) { centerMark(); return; }
+    if (released) return;
+    const target = logoTarget();
+    dockingAnimation?.cancel();
+    clearTimeout(startDockTimer);
+    clearTimeout(releaseTimer);
+    mark.style.transition = "none";
+    mark.style.transform = "none";
+    mark.style.width = `${target.width}px`;
+    mark.style.height = `${target.height}px`;
+    mark.style.left = `${target.left}px`;
+    mark.style.top = `${target.top}px`;
+    releasePage();
+  };
+  const onKeyDown = event => {
+    if (event.key === "Escape") useStaticMark();
+  };
 
-        const waitForCriticalContent = (root) => {
-          let fontsReady = false;
-          let completing = false;
-          const decodedSources = new WeakMap();
-          const decodingSources = new WeakMap();
-          const resourceEvents = ["load", "error", "loadeddata", "canplay"];
-          const scheduleCheck = () => requestAnimationFrame(check);
-          const observer = new MutationObserver(scheduleCheck);
-
-          const imageIsReady = (image, allowFailure) => {
-            if (!image.complete) return false;
-            if (image.naturalWidth === 0) return allowFailure;
-            const source = image.currentSrc || image.src;
-            if (typeof image.decode !== "function" || decodedSources.get(image) === source) return true;
-            if (decodingSources.get(image) !== source) {
-              decodingSources.set(image, source);
-              image.decode().catch(() => {}).then(() => {
-                if ((image.currentSrc || image.src) === source) decodedSources.set(image, source);
-                scheduleCheck();
-              });
-            }
-            return false;
-          };
-
-          function check() {
-            if (finished || criticalContentReady || completing) return;
-            const hero = root.querySelector(".hero");
-            const project = root.querySelector("main[data-project]");
-            const notFound = root.querySelector(".not-found");
-            const image = hero
-              ? hero.querySelector(".hero-poster img")
-              : project?.querySelector('img[loading="eager"], img[fetchpriority="high"]');
-            // A lazy case module may still be mounting; wait for its first eager
-            // image instead of treating the initial Suspense fallback as ready.
-            const imageReady = image
-              ? imageIsReady(image, Boolean(hero))
-              : Boolean(notFound || (project && !project.querySelector(".case-loading") && (project.querySelector(".image-fallback") || project.querySelector('[data-case-ready="text"]'))));
-            const video = hero?.querySelector("video");
-            const videoState = video?.dataset.preloadState;
-            const videoReady = hero
-              ? Boolean(video && (["disabled", "ready", "error"].includes(videoState) || (videoState === "loading" && video.readyState >= 2)))
-              : Boolean(project || notFound);
-            const capabilityState = hero ? root.querySelector("[data-ability-visual]")?.dataset.renderer : undefined;
-            const capabilityReady = !hero || ["ready", "unavailable"].includes(capabilityState);
-
-            // "pending" keeps the loader up until Hero has decided whether it
-            // should load motion, even before React attaches its video sources.
-            if (!fontsReady || !imageReady || !videoReady || !capabilityReady) return;
-            completing = true;
-            requestAnimationFrame(() => requestAnimationFrame(markLoaded));
-          }
-
-          stopWaitingForContent = () => {
-            observer.disconnect();
-            resourceEvents.forEach(event => root.removeEventListener(event, scheduleCheck, true));
-          };
-          observer.observe(root, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ["data-preload-state", "data-renderer", "src", "srcset", "loading", "fetchpriority"],
-          });
-          resourceEvents.forEach(event => root.addEventListener(event, scheduleCheck, true));
-          (document.fonts?.ready?.catch(() => {}) ?? Promise.resolve()).then(() => {
-            fontsReady = true;
-            check();
-          });
-          check();
-        };
-
-        const watchApp = () => {
-          const root = document.getElementById("root");
-          if (!root) {
-            requestAnimationFrame(watchApp);
-            return;
-          }
-          if (root.childElementCount > 0) {
-            waitForCriticalContent(root);
-            return;
-          }
-          rootObserver = new MutationObserver(() => {
-            if (root.childElementCount === 0) return;
-            rootObserver.disconnect();
-            waitForCriticalContent(root);
-          });
-          rootObserver.observe(root, { childList: true });
-        };
-        requestAnimationFrame(watchApp);
-
-        const finish = () => {
-          if (finished) return;
-          finished = true;
-          rootObserver?.disconnect();
-          stopWaitingForContent();
-          try { sessionStorage.setItem("leo-portfolio-loader-seen", "1"); } catch {}
-          window.setTimeout(() => {
-            progressNode.classList.remove("is-ready");
-            progressNode.classList.add("is-leaving");
-            welcomeNode.hidden = false;
-            requestAnimationFrame(() => welcomeNode.classList.add("is-visible"));
-            window.setTimeout(() => { progressNode.hidden = true; }, reducedMotion ? 0 : 320);
-            window.setTimeout(() => {
-              document.documentElement.classList.remove("portfolio-loading");
-              loader.classList.add("is-complete");
-              window.setTimeout(() => {
-                document.documentElement.classList.add("portfolio-loader-seen");
-                loader.remove();
-                window.dispatchEvent(new Event("portfolio-loader-exit"));
-              }, reducedMotion ? 90 : 450);
-            }, reducedMotion ? 100 : 500);
-          }, reducedMotion ? 80 : 440);
-          progressNode.classList.add("is-ready");
-        };
-
-        const render = (now) => {
-          const elapsed = now - startedAt;
-          const waitingTarget = Math.min(99, Math.floor(99 * (1 - Math.exp(-elapsed / 1450))));
-          const target = criticalContentReady && elapsed >= (reducedMotion ? 120 : 1350)
-            ? 100
-            : waitingTarget;
-          const step = target === 100
-            ? Math.max(1, Math.ceil((target - value) * .14))
-            : Math.max(1, Math.ceil((target - value) * .08));
-          value = Math.min(target, value + step);
-          valueNode.textContent = String(value).padStart(2, "0");
-
-          if (value >= 100) finish();
-          else requestAnimationFrame(render);
-        };
-
-        requestAnimationFrame(render);
-      })();
+  video.addEventListener("ended", completeIntro, { once: true });
+  video.addEventListener("error", useStaticMark, { once: true });
+  video.addEventListener("loadeddata", () => {
+    if (!finished && !introReady) video.classList.add("is-playing");
+    startVideo();
+  }, { once: true });
+  video.addEventListener("playing", () => {
+    if (!finished) video.classList.add("is-playing");
+  });
+  window.addEventListener("resize", onResize);
+  window.addEventListener("keydown", onKeyDown);
+  document.addEventListener("visibilitychange", syncPlayback);
+  centerMark();
+  if (reducedMotion || !video.canPlayType("video/mp4")) useStaticMark();
+  else if (video.ended) completeIntro();
+  else startVideo();
+  requestAnimationFrame(watchApp);
+})();
     </script>
     <div id="root"></div>
-    <script defer src="/portfolio/pet-drag-fallback.js"></script>
+    <script defer src="/pet-drag-fallback.js"></script>
   </body>
 </html>

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import vm from "node:vm";
 
-// Exercise the shipped inline loader, including its reveal animation, without
+// Exercise the shipped video loader and logo handoff, without
 // depending on a browser or waiting eight real seconds for the timeout case.
 const html = await readFile(new URL("../github-pages/index.html", import.meta.url), "utf8");
 const loaderScripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
@@ -10,6 +10,9 @@ const loaderScripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
   .filter(source => source.includes("const waitForCriticalContent"));
 assert.equal(loaderScripts.length, 1, "Expected exactly one actual inline loader script.");
 const loaderSource = loaderScripts[0];
+const preludeSource = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+  .map(match => match[1]).find(source => source.includes('const replay = params.get("intro")'));
+assert.ok(preludeSource, "Expected the actual entry/replay policy.");
 
 function deferred() {
   let resolve;
@@ -27,16 +30,24 @@ function classList() {
 }
 
 function element() {
+  const listeners = new Map();
   return {
     classList: classList(),
     hidden: false,
     textContent: "",
     removed: false,
+    style: {},
+    addEventListener(event, listener) {
+      if (!listeners.has(event)) listeners.set(event, new Set());
+      listeners.get(event).add(listener);
+    },
+    removeEventListener(event, listener) { listeners.get(event)?.delete(listener); },
+    emit(event) { for (const listener of listeners.get(event) ?? []) listener({ type: event }); },
     remove() { this.removed = true; },
   };
 }
 
-function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = {}) {
+function scenario({ page = "hero", decode, fonts, capabilityState = "ready", introFinished = true, rejectPlay = false, reducedMotion = false, width = 1280, height = 720, seen = false, animated = false } = {}) {
   let now = 0;
   let nextId = 0;
   const jobs = [];
@@ -44,11 +55,22 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
   const resourceListeners = new Map();
   const dispatched = [];
   const loader = element();
-  const value = element();
-  const progress = element();
-  const welcome = element();
+  const mark = element();
+  const animation = { frames: [], options: null, canceled: false };
+  if (animated) mark.animate = (frames, options) => {
+    animation.frames = frames;
+    animation.options = options;
+    return { finished: Promise.resolve(), cancel() { animation.canceled = true; } };
+  };
+  const windowListeners = new Map();
+  const introVideo = {
+    ...element(), ended: introFinished, readyState: 4, paused: false,
+    canPlayType: () => "probably",
+    play() { this.paused = false; return rejectPlay ? Promise.reject(new Error("Autoplay denied")) : Promise.resolve(); },
+    pause() { this.paused = true; },
+  };
   const documentClasses = classList();
-  documentClasses.add("portfolio-loading");
+  documentClasses.add(seen ? "portfolio-loader-seen" : "portfolio-loading");
 
   const image = {
     complete: true,
@@ -97,9 +119,8 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
   };
   const nodes = {
     "portfolio-boot": loader,
-    "portfolio-boot-value": value,
-    "portfolio-boot-progress": progress,
-    "portfolio-boot-welcome": welcome,
+    "portfolio-boot-video": introVideo,
+    "portfolio-boot-mark": mark,
     root,
   };
   const schedule = (callback, delay) => {
@@ -114,11 +135,30 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
   const context = {
     document: {
       documentElement: { classList: documentClasses },
+      body: { appendChild(node) { node.parent = "body"; } },
+      visibilityState: "visible",
+      addEventListener() {},
+      removeEventListener() {},
       fonts: { ready: fonts ?? Promise.resolve() },
       getElementById: id => nodes[id] ?? null,
+      querySelector(selector) {
+        if (selector !== ".site-nav .brand-logo") return null;
+        const compact = width <= 767;
+        return {
+          getBoundingClientRect: () => ({ left: compact ? 26 : 32, top: compact ? 10 : 12, width: compact ? 24 : 28, height: compact ? 24 : 28 }),
+          closest: () => ({ getBoundingClientRect: () => ({ left: 0, top: -10 }) }),
+        };
+      },
     },
+    innerWidth: width,
+    innerHeight: height,
+    history: { scrollRestoration: "auto" },
+    scrollTo() {},
+    addEventListener(name, listener) { windowListeners.set(name, listener); },
+    removeEventListener(name) { windowListeners.delete(name); },
+    getComputedStyle: () => ({ left: "0px", top: "0px" }),
     performance: { now: () => now },
-    matchMedia: () => ({ matches: false }),
+    matchMedia: () => ({ matches: reducedMotion }),
     requestAnimationFrame: callback => schedule(() => callback(now), 16),
     cancelAnimationFrame: cancel,
     setTimeout: (callback, delay) => schedule(callback, delay),
@@ -128,6 +168,7 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
     dispatchEvent(event) {
       assert.equal(loader.removed, true, "The hero reveal signal must wait until the loader has left.");
       assert.equal(documentClasses.contains("portfolio-loading"), false, "The hero reveal signal must follow page unlock.");
+      assert.equal(documentClasses.contains("portfolio-lj-intro-complete"), true, "Hero must see the fast parallel handoff timing before its entrance starts.");
       dispatched.push(event.type);
     },
     MutationObserver: class {
@@ -140,6 +181,18 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
   vm.runInNewContext(loaderSource, context, { filename: "github-pages/index.html:inline-loader" });
 
   return {
+    introVideo,
+    mark,
+    animation,
+    resizeTo(nextWidth, nextHeight) {
+      width = nextWidth;
+      height = nextHeight;
+      context.innerWidth = width;
+      context.innerHeight = height;
+      windowListeners.get("resize")?.();
+    },
+    classes: documentClasses,
+    dispatched,
     image,
     video,
     capability,
@@ -166,6 +219,9 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
       for (const listener of resourceListeners.get(event) ?? []) listener();
     },
     async advance(milliseconds) {
+      // Native promise callbacks run at the current time even when the new
+      // video loader is idle and has no progress-counter RAF loop scheduled.
+      for (let turn = 0; turn < 4; turn += 1) await Promise.resolve();
       const until = now + milliseconds;
       while (true) {
         jobs.sort((a, b) => a.at - b.at || a.id - b.id);
@@ -186,6 +242,134 @@ function scenario({ page = "hero", decode, fonts, capabilityState = "ready" } = 
 }
 
 const checks = [
+  ["staged motion preserves its destination and releases the animation layer", async () => {
+    const test = scenario({ animated: true });
+    test.video.dataset.preloadState = "disabled";
+    test.changed();
+    await test.advance(3000);
+    test.assertRevealed("Detailed motion must still release the loader.");
+    assert.ok(test.animation.frames.length >= 4);
+    assert.equal(test.animation.frames[0].offset, 0);
+    assert.equal(test.animation.frames.at(-1).offset, 1);
+    assert.equal(test.animation.frames.at(-1).transform, test.mark.style.transform);
+    assert.ok(test.animation.options.duration <= 600, "Extra detail must retain a short docking budget.");
+    assert.equal(test.animation.canceled, true, "The finished fill layer must not outlive the handoff.");
+  }],
+  ["resize interrupts staged motion and aligns to the new navigation", async () => {
+    const test = scenario({ animated: true });
+    test.video.dataset.preloadState = "disabled";
+    test.changed();
+    await test.advance(350);
+    assert.ok(test.animation.options, "Docking must have started.");
+    test.resizeTo(390, 844);
+    await test.advance(1000);
+    test.assertRevealed("A resize must not leave the loading page locked.");
+    assert.equal(test.animation.canceled, true);
+    assert.equal(test.mark.style.left, "26px");
+    assert.equal(test.mark.style.top, "20px");
+    assert.equal(test.mark.style.width, "24px");
+    assert.equal(test.mark.style.transform, "none");
+  }],
+  ...[
+    ["normal revisits skip the intro", "", true, false, "portfolio-loader-seen"],
+    ["returning to work skips even when storage is unavailable", "?returnProject=gkx&returnY=600", false, true, "portfolio-loader-seen"],
+    ["legacy review URL cannot replay a seen intro", "?intro=replay", true, false, "portfolio-loader-seen"],
+    ["refresh skips even when the previous review URL remains", "?intro=replay", true, false, "portfolio-loader-seen", "reload"],
+    ["refreshing during an unfinished first intro still skips", "", false, false, "portfolio-loader-seen", "reload"],
+    ["back-forward never starts another intro", "", false, true, "portfolio-loader-seen", "back_forward"],
+    ["fresh entry plays and marks the visit immediately", "", false, false, "portfolio-loading", "navigate"],
+  ].map(([name, search, stored, storageFails, expected, navigationType = "navigate"]) => [name, async () => {
+    const classes = classList();
+    let written;
+    let replacedUrl;
+    const scrolls = [];
+    const history = { state: null, scrollRestoration: navigationType === "reload" ? "manual" : "auto", replaceState(_state, _title, url) { replacedUrl = url; } };
+    const context = { document: { documentElement: { classList: classes, dataset: {} } }, URLSearchParams, URL,
+      performance: { getEntriesByType: () => [{ type: navigationType }] },
+      sessionStorage: {
+        getItem() { if (storageFails) throw new Error("Storage unavailable"); return stored ? "1" : null; },
+        setItem(_key, value) { if (storageFails) throw new Error("Storage unavailable"); written = value; },
+      } };
+    context.window = { location: { search, href: `http://localhost/portfolio/${search}` }, history, scrollTo(position) { scrolls.push(position); } };
+    vm.runInNewContext(preludeSource, context);
+    assert.ok(classes.contains(expected));
+    assert.equal(classes.contains(expected === "portfolio-loading" ? "portfolio-loader-seen" : "portfolio-loading"), false);
+    if (!storageFails) assert.equal(written, "1", "Visit state must be recorded before the film completes.");
+    assert.equal(history.scrollRestoration, expected === "portfolio-loading" ? "manual" : "auto");
+    assert.equal(scrolls.length, expected === "portfolio-loading" ? 1 : 0, "Only a real intro may reset the reading position.");
+    if (search.includes("intro=")) assert.equal(replacedUrl.includes("intro="), false, "A review parameter cannot survive into a refresh.");
+  }]),
+  ["ready content waits for the supplied intro to finish", async () => {
+    const test = scenario({ introFinished: false });
+    test.video.dataset.preloadState = "disabled";
+    test.changed();
+    await test.advance(5000);
+    test.assertWaiting("Ready content must not bypass the supplied intro's ended event.");
+    test.introVideo.ended = true;
+    test.introVideo.emit("ended");
+    await test.advance(1800);
+    test.assertRevealed("Video ending must dock the mark and then reveal ready content.");
+  }],
+  ["logo docks to the settled header before Hero starts", async () => {
+    const test = scenario();
+    test.video.dataset.preloadState = "disabled";
+    test.changed();
+    await test.advance(3000);
+    test.assertRevealed("The completed intro must release the page.");
+    assert.equal(test.mark.style.left, "535px");
+    assert.equal(test.mark.style.top, "260px");
+    assert.equal(test.mark.style.transform, "translate3d(-503px, -238px, 0) scale(0.14, 0.14)");
+    assert.equal(test.mark.parent, "body", "The docking mark must survive removal of the white loader.");
+    assert.equal(test.mark.removed, true, "The duplicate mark must be removed after the nav settles.");
+    assert.equal(test.classes.contains("portfolio-logo-handoff"), false);
+  }],
+  ["mobile docking uses the 24px navigation target", async () => {
+    const test = scenario({ width: 390, height: 844 });
+    test.video.dataset.preloadState = "disabled";
+    test.changed();
+    await test.advance(3000);
+    test.assertRevealed("Mobile intro must release after the same handoff.");
+    const match = test.mark.style.transform.match(/translate3d\(([-.\d]+)px, ([-.\d]+)px, 0\) scale\(([-.\d]+), ([-.\d]+)\)/);
+    assert.ok(match);
+    assert.ok(Math.abs(Number.parseFloat(test.mark.style.left) + Number(match[1]) - 26) < .001);
+    assert.ok(Math.abs(Number.parseFloat(test.mark.style.top) + Number(match[2]) - 20) < .001);
+    assert.ok(Math.abs(Number.parseFloat(test.mark.style.width) * Number(match[3]) - 24) < .001);
+  }],
+  ["autoplay rejection falls back to the same static mark", async () => {
+    const test = scenario({ introFinished: false, rejectPlay: true });
+    test.video.dataset.preloadState = "disabled";
+    test.changed();
+    await test.advance(3000);
+    test.assertRevealed("Blocked autoplay cannot trap the site behind the loader.");
+  }],
+  ["intro error and a late ended event reveal only once", async () => {
+    const test = scenario({ introFinished: false });
+    test.video.dataset.preloadState = "disabled";
+    test.changed();
+    test.introVideo.emit("error");
+    await test.advance(3000);
+    test.assertRevealed("A failed intro must fall back instead of blocking the page.");
+    test.introVideo.emit("ended");
+    await test.advance(2000);
+    assert.deepEqual(test.dispatched, ["portfolio-loader-exit"]);
+  }],
+  ["reduced motion uses the static header mark", async () => {
+    const test = scenario({ introFinished: false, reducedMotion: true });
+    test.video.dataset.preloadState = "disabled";
+    test.changed();
+    await test.advance(1000);
+    test.assertRevealed("Reduced motion must not wait through the supplied film.");
+    assert.equal(test.mark.style.left, "32px");
+    assert.equal(test.mark.style.top, "22px");
+    assert.equal(test.mark.style.transform, "none");
+  }],
+  ["seen intro is removed without replaying or emitting a second entrance", async () => {
+    const test = scenario({ seen: true, introFinished: false });
+    await test.advance(3000);
+    assert.equal(test.loader.removed, true);
+    assert.deepEqual(test.dispatched, []);
+    assert.equal(test.classes.contains("portfolio-loading"), false);
+  }],
   ["text-first case reveals after its content mounts", async () => {
     const test = scenario({ page: "project" });
     test.project.loading = false;
@@ -242,22 +426,26 @@ const checks = [
     await test.advance(3000);
     test.assertRevealed(`${state} motion must not prevent a decoded poster from appearing.`);
   }]),
-  ["homepage waits for the first capability frame", async () => {
+  ["below-fold capability does not delay ready first-screen media", async () => {
     const test = scenario({ capabilityState: "loading" });
     test.video.dataset.preloadState = "ready";
     test.video.readyState = 2;
     await test.advance(3000);
-    test.assertWaiting("Ready Hero media must not reveal the homepage before its first capability frame.");
+    test.assertRevealed("Ready Hero media must not wait for the capability renderer below the projects.");
   }],
-  ["first capability frame releases the loader", async () => {
-    const test = scenario({ capabilityState: "loading" });
+  ["capability readiness cannot shorten an unfinished intro", async () => {
+    const test = scenario({ capabilityState: "loading", introFinished: false });
     test.video.dataset.preloadState = "ready";
     test.video.readyState = 2;
     await test.advance(3000);
     test.capability.dataset.renderer = "ready";
     test.changed("data-renderer");
     await test.advance(1800);
-    test.assertRevealed("The first rendered capability frame must reveal an otherwise ready homepage.");
+    test.assertWaiting("The below-fold renderer completing must not bypass the intro movie.");
+    test.introVideo.ended = true;
+    test.introVideo.emit("ended");
+    await test.advance(1000);
+    test.assertRevealed("Ending the intro must reveal ready Hero content without a second renderer wait.");
   }],
   ["unavailable capability renderer does not block the homepage", async () => {
     const test = scenario({ capabilityState: "loading" });
@@ -299,14 +487,12 @@ const checks = [
     await test.advance(3000);
     test.assertRevealed("A ready project page must not wait for the homepage capability renderer.");
   }],
-  ["eight-second timeout releases a stalled capability renderer", async () => {
+  ["stalled offscreen renderer does not invoke the eight-second fallback", async () => {
     const test = scenario({ capabilityState: "loading" });
     test.video.dataset.preloadState = "ready";
     test.video.readyState = 2;
-    await test.advance(7900);
-    test.assertWaiting("A stalled capability renderer must not trigger the fallback before eight seconds.");
-    await test.advance(2100);
-    test.assertRevealed("The eight-second fallback must release the homepage when model loading stalls.");
+    await test.advance(1800);
+    test.assertRevealed("A stalled offscreen renderer must not extend the entry animation.");
   }],
   ["eight-second timeout releases stalled content", async () => {
     const test = scenario();

@@ -231,7 +231,7 @@ function BrandMark() {
     <span className="brand-lockup" aria-label={t("李家豪作品集")}>
       <img
         className="brand-logo"
-        src={publicAsset("/assets/visual/hj-logo-112.png")}
+        src={publicAsset("/assets/visual/lj-mark.svg")}
         alt=""
         width="112"
         height="112"
@@ -1757,7 +1757,7 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
 function Hero() {
   const { t } = useI18n();
   const reduce = useReducedMotion();
-  const { copyDelay, copyDuration: copyEntranceDuration, actionDelay: actionEntranceDelay, actionDuration } = homeEntranceTiming(reduce);
+  const { copyDelay, copyDuration: copyEntranceDuration, actionDelay: actionEntranceDelay, actionDuration, mediaDuration } = homeEntranceTiming(reduce);
   const [copyEntranceOffset, setCopyEntranceOffset] = useState(() =>
     typeof window === "undefined" ? 2000 : window.innerHeight + 32);
   const [entrancePhase, setEntrancePhase] = useState(initialHomeOpeningPhase);
@@ -1892,7 +1892,7 @@ function Hero() {
         animate={entrancePhase}
         variants={{
           waiting: { opacity: 0, transform: reduce ? "none" : "translate3d(0px, 20px, 0px) scale(1.035)", transition: { duration: 0 } },
-          visible: { opacity: 1, transform: "translate3d(0px, 0px, 0px) scale(1)", transition: { duration: reduce ? 0.7 : 1.1, ease: [0.25, 0.1, 0.25, 1] } },
+          visible: { opacity: 1, transform: "translate3d(0px, 0px, 0px) scale(1)", transition: { duration: mediaDuration, ease: [0.25, 0.1, 0.25, 1] } },
           settled: { opacity: 1, transform: "none", transition: { duration: 0 } },
         }}
       >
