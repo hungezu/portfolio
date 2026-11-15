@@ -14,6 +14,7 @@ import {
   useTransform,
 } from "motion/react";
 import ArrowLeft from "lucide-react/dist/esm/icons/arrow-left.mjs";
+import ArrowDown from "lucide-react/dist/esm/icons/arrow-down.mjs";
 import ArrowUp from "lucide-react/dist/esm/icons/arrow-up.mjs";
 import ArrowUpRight from "lucide-react/dist/esm/icons/arrow-up-right.mjs";
 import Download from "lucide-react/dist/esm/icons/download.mjs";
@@ -72,9 +73,31 @@ import type { NationalPlatformView } from "./case-studies/NationalSciencePlatfor
 import { ProjectLocator, type ProjectLocatorSection } from "./project-locator";
 import { homeEntranceTiming, initialHomeOpeningPhase, useHomeOpeningPhase, type HomeOpeningPhase } from "./home-entrance";
 import { scrollToHomeSection, useHomeAnchorNavigation } from "./home-scroll";
+import { requestProjectNavigation, useProjectNavigation } from "./project-transition";
 
-const ZhaocaiSmartCase = lazy(() => import("./case-studies/ZhaocaiSmartCase").then(module => ({ default: module.ZhaocaiSmartCase })));
-const GkxCase = lazy(() => import("./case-studies/GkxCase").then(module => ({ default: module.GkxCase })));
+let zhaocaiModule: Promise<{ default: typeof import("./case-studies/ZhaocaiSmartCase").ZhaocaiSmartCase }> | undefined;
+let gkxModule: Promise<{ default: typeof import("./case-studies/GkxCase").GkxCase }> | undefined;
+const loadZhaocai = () => zhaocaiModule ??= import("./case-studies/ZhaocaiSmartCase").then(module => ({ default: module.ZhaocaiSmartCase }));
+const loadGkx = () => gkxModule ??= import("./case-studies/GkxCase").then(module => ({ default: module.GkxCase }));
+const ZhaocaiSmartCase = lazy(loadZhaocai);
+const GkxCase = lazy(loadGkx);
+const preparedProjects = new Map<string, Promise<unknown>>();
+function prepareProject(slug: string) {
+  const existing = preparedProjects.get(slug);
+  if (existing) return existing;
+  const project = projects.find(project => project.slug === slug);
+  if (!project) return Promise.resolve();
+  const source = slug === "gkx" ? publicAsset("/assets/projects/gkx/case-study/ui/portal-entry-prototype-20261114.webp") : project.gallery[0];
+  if (source) {
+    const image = new Image();
+    image.src = optimizedImage(source)?.src ? publicAsset(optimizedImage(source)!.src) : source;
+    void image.decode().catch(() => undefined);
+  }
+  const ready = slug === "gkx" ? loadGkx() : slug === "zhaocai-smart" ? loadZhaocai() : Promise.resolve();
+  preparedProjects.set(slug, ready);
+  void ready.catch(() => preparedProjects.delete(slug));
+  return ready;
+}
 
 class ProjectContentBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
   state = { failed: false };
@@ -111,8 +134,8 @@ const homeProjectContent: Record<string, {
     titleLines: ["GKX 智慧门户"],
     category: "政企多业务平台",
     platform: "Web",
-    summary: "统一多系统的查询与反馈规则，保留各业务的任务差异，让设计与交付有据核对。",
-    role: "主导项目 UI 与交互设计，独立完成规范与设计 MD，并参与交付评审。",
+    summary: "围绕对象维护、流程建模与异常恢复设计任务空间，以共用规范衔接多系统和交付评审。",
+    role: "主导主要业务页面的 UI 与交互，独立完成规范与设计 MD，并参与交付评审。",
   },
   "zhaocai-smart": {
     titleLines: ["招财 Smart"],
@@ -152,50 +175,7 @@ function openProjectFromPortfolio(
   event.preventDefault();
   const returnY = Math.max(0, Math.round(window.scrollY));
   const destination = `/portfolio/project/${slug}/?from=portfolio&returnProject=${encodeURIComponent(slug)}&returnY=${returnY}`;
-  const card = event.currentTarget.closest<HTMLElement>(".project-card");
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (!card || reduceMotion) {
-    window.location.assign(destination);
-    return;
-  }
-  if (card.classList.contains("is-opening")) return;
-
-  const rect = card.getBoundingClientRect();
-  const overlay = document.createElement("div");
-  overlay.className = "project-transition-shell";
-  overlay.setAttribute("aria-hidden", "true");
-  overlay.style.setProperty("--project-transition-x", `${rect.left}px`);
-  overlay.style.setProperty("--project-transition-y", `${rect.top}px`);
-  overlay.style.setProperty("--project-transition-scale-x", `${rect.width / window.innerWidth}`);
-  overlay.style.setProperty("--project-transition-scale-y", `${rect.height / window.innerHeight}`);
-  const source = card.querySelector<HTMLElement>(".project-card-link");
-  if (source) {
-    const preview = source.cloneNode(true) as HTMLElement;
-    preview.classList.add("project-transition-preview");
-    preview.removeAttribute("href");
-    preview.querySelectorAll("[id]").forEach(element => element.removeAttribute("id"));
-    overlay.appendChild(preview);
-  }
-  document.body.appendChild(overlay);
-  card.classList.add("is-opening");
-  card.setAttribute("aria-busy", "true");
-  document.documentElement.classList.add("portfolio-transitioning");
-
-  let navigated = false;
-  const navigate = () => {
-    if (navigated) return;
-    navigated = true;
-    window.location.assign(destination);
-  };
-
-  overlay.addEventListener("transitionend", event => {
-    if (event.target === overlay && event.propertyName === "transform") navigate();
-  }, { once: true });
-  window.requestAnimationFrame(() => {
-    window.requestAnimationFrame(() => overlay.classList.add("is-expanded"));
-  });
-  window.setTimeout(navigate, 560);
+  requestProjectNavigation({ url: destination, slug, direction: "forward", trigger: event.currentTarget, keyboard: event.detail === 0 });
 }
 
 function openProjectEvidence(
@@ -214,15 +194,16 @@ function returnToProjectLocation(
   event: ReactMouseEvent<HTMLAnchorElement>,
   projectSlug: string,
 ) {
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
   event.preventDefault();
   const params = new URLSearchParams(window.location.search);
   const returnY = Number.parseInt(params.get("returnY") ?? "", 10);
   const returnProject = params.get("returnProject");
   if (Number.isFinite(returnY) && returnProject === projectSlug) {
-    window.location.assign(`/portfolio/?returnProject=${encodeURIComponent(projectSlug)}&returnY=${returnY}`);
+    requestProjectNavigation({ url: `/portfolio/?returnProject=${encodeURIComponent(projectSlug)}&returnY=${returnY}`, slug: projectSlug, direction: "back", trigger: event.currentTarget, keyboard: event.detail === 0 });
     return;
   }
-  window.location.assign("/portfolio/?returnSection=work");
+  requestProjectNavigation({ url: `/portfolio/?returnSection=work&returnProject=${encodeURIComponent(projectSlug)}`, slug: projectSlug, direction: "back", trigger: event.currentTarget, keyboard: event.detail === 0 });
 }
 
 function BrandMark() {
@@ -916,6 +897,7 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
   const [petDrag, setPetDrag] = useState<PortfolioPetDrag>({ x: 0, y: 0 });
   const [petDragging, setPetDragging] = useState(false);
   const launcherRef = useRef<HTMLButtonElement>(null);
+  const readingLauncherRef = useRef<HTMLButtonElement>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messageListRef = useRef<HTMLDivElement>(null);
@@ -1247,7 +1229,11 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
           previouslyFocused !== document.body &&
           document.contains(previouslyFocused)
         ) previouslyFocused.focus({ preventScroll: true });
-        else launcherRef.current?.focus({ preventScroll: true });
+        else {
+          const readingLauncher = readingLauncherRef.current;
+          const launcher = readingLauncher?.getClientRects().length ? readingLauncher : launcherRef.current;
+          launcher?.focus({ preventScroll: true });
+        }
       });
     };
   }, [open]);
@@ -1500,8 +1486,10 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
       inert={!entranceComplete}
       data-chat-mode={mode}
       data-chat-open={open}
+      data-reading-project={project?.slug}
       data-pet-state={visiblePetState}
     >
+      {project?.slug === "gkx" && <button ref={readingLauncherRef} hidden={open} type="button" className="portfolio-reading-assistant" aria-label={t("打开作品集助手")} onClick={handlePetClick}>{t("作品集助手")}</button>}
       <AnimatePresence initial={false}>
         {t(!open && contextVisible ? (
           <motion.div
@@ -1755,7 +1743,7 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
 }
 
 function Hero() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const reduce = useReducedMotion();
   const { copyDelay, copyDuration: copyEntranceDuration, actionDelay: actionEntranceDelay, actionDuration, mediaDuration } = homeEntranceTiming(reduce);
   const [copyEntranceOffset, setCopyEntranceOffset] = useState(() =>
@@ -1962,17 +1950,23 @@ function Hero() {
         <div className="hero-copy">
           <h1 ref={heroHeadingRef}>
             <motion.span style={{ display: "block" }} variants={{
-              waiting: { transform: `translate3d(0px, ${copyEntranceOffset}px, 0px)`, opacity: 0, transition: { duration: 0 } },
-              visible: { transform: "translate3d(0px, 0px, 0px)", opacity: 1, transition: {
-                transform: { duration: copyEntranceDuration, delay: copyDelay, ease: [0.25, 0.1, 0.25, 1] },
+              waiting: { transform: reduce ? "none" : `translate3d(0px, ${copyEntranceOffset}px, 0px)`, opacity: 0, transition: { duration: 0 } },
+              visible: { transform: reduce ? "none" : "translate3d(0px, 0px, 0px)", opacity: 1, transition: {
+                transform: { duration: reduce ? 0 : copyEntranceDuration, delay: copyDelay, ease: [0.25, 0.1, 0.25, 1] },
                 opacity: { duration: copyEntranceDuration, delay: copyDelay, ease: "linear" },
               } },
-              settled: { transform: "translate3d(0px, 0px, 0px)", opacity: 1, transition: { duration: 0 } },
+              settled: { transform: "none", opacity: 1, transition: { duration: 0 } },
             }}>
-              <span className="hero-name">{t("我是李家豪")}</span>
+              <span className="hero-name">
+                {locale === "en" ? <>
+                  <span className="hero-name-prefix">I'm </span>
+                  <span className="hero-name-handwritten">Leo Li</span>
+                </> : t("我是李家豪")}
+              </span>
               <span className="hero-statement">
-                <span className="hero-role-en">AI</span> {t(" 体验产品设计师，")}<br />
-                {t("让复杂业务更清晰，让智能体验更可控。")}</span>
+                <span className="hero-role">{t("AI 产品体验设计师")}</span>
+                <span className="hero-description">{t("从交互流程到设计系统，打磨清晰、好用的产品")}</span>
+              </span>
             </motion.span>
           </h1>
           <motion.div
@@ -1988,9 +1982,10 @@ function Hero() {
             <a className="hero-contact-button" href="#work">
               <span>{t("查看精选作品")}</span>
               <span className="hero-action-icon" aria-hidden="true">
-                <ArrowUpRight size={16} strokeWidth={2} />
+                <ArrowDown size={16} strokeWidth={2} />
               </span>
             </a>
+            <ResumeDownloadLink className="hero-resume-download" />
           </motion.div>
         </div>
       </motion.div>
@@ -2188,6 +2183,9 @@ function ProjectCard({
       <a
         className="project-card-link"
         href={`/portfolio/project/${project.slug}/`}
+        onPointerEnter={() => { void prepareProject(project.slug).catch(() => undefined); }}
+        onFocus={() => { void prepareProject(project.slug).catch(() => undefined); }}
+        onTouchStart={() => { void prepareProject(project.slug).catch(() => undefined); }}
         onClick={event => openProjectFromPortfolio(event, project.slug)}
         aria-labelledby={titleId}
         aria-describedby={summaryId}
@@ -2230,7 +2228,7 @@ function ProjectCard({
             </span>
           </div>
         </div>
-        <div className="project-visual">
+        <div className="project-visual" data-project-motion-media={project.cardCover ?? project.cover}>
           <ImageWithFallback
             src={project.cardCover ?? project.cover}
             alt={t(`${project.title}项目封面`)}
@@ -2468,7 +2466,7 @@ function ContactSection() {
   );
 }
 
-function HomePage() {
+function HomePage({ restoration }: { restoration?: { slug: string; y: number } }) {
   const openingPhase = useHomeOpeningPhase();
   useHomeAnchorNavigation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -2494,9 +2492,9 @@ function HomePage() {
 
   useLayoutEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const returnProject = params.get("returnProject");
-    const returnY = Number.parseInt(params.get("returnY") ?? "", 10);
-    const shouldRestoreWork = params.get("returnSection") === "work";
+    const returnProject = restoration?.slug ?? params.get("returnProject");
+    const returnY = restoration?.y ?? Number.parseInt(params.get("returnY") ?? "", 10);
+    const shouldRestoreWork = Boolean(restoration) || params.get("returnSection") === "work";
     if (!returnProject && !shouldRestoreWork) {
       try {
         window.sessionStorage.removeItem("portfolio-work-highlight");
@@ -2526,9 +2524,11 @@ function HomePage() {
             .find(element => element.dataset.project === returnProject) ?? null
         : null;
       const workSection = document.getElementById("work");
+      const landing = projectCard ?? workSection;
+      const offset = projectCard ? Number.parseFloat(getComputedStyle(projectCard).top) || 88 : 88;
       const targetY = Number.isFinite(returnY)
         ? returnY
-        : Math.max(0, (projectCard ?? workSection)?.offsetTop ?? 0);
+        : Math.max(0, landing ? landing.getBoundingClientRect().top + window.scrollY - offset : 0);
       window.scrollTo({ top: targetY, left: 0, behavior: "auto" });
     };
     const frame = window.requestAnimationFrame(() => {
@@ -2588,9 +2588,11 @@ function HomePage() {
 function ProjectImageGallery({
   project,
   reduce,
+  motionEntry = false,
 }: {
   project: Project;
   reduce: boolean | null;
+  motionEntry?: boolean;
 }) {
   const { t } = useI18n();
   const isEnergyProject = project.slug === "energy-tax";
@@ -2613,13 +2615,14 @@ function ProjectImageGallery({
           <motion.figure
             id={`case-gallery-${index}`}
             key={image}
-            initial={reduce ? false : { opacity: 0, y: 24, clipPath: "inset(0 0 6% 0)" }}
+            initial={reduce || motionEntry && index === 0 ? false : { opacity: 0, y: 24, clipPath: "inset(0 0 6% 0)" }}
             whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
             viewport={{ once: true, amount: 0.12 }}
             transition={{ duration: 0.58, ease }}
           >
             <ImageWithFallback
               src={image}
+              data-motion-source={image}
               alt={t(project.galleryAlt?.[index] ?? `${project.title}项目展示 ${index + 1}`)}
               loading={index === 0 ? "eager" : "lazy"}
               fetchPriority={index === 0 ? "high" : "auto"}
@@ -2631,7 +2634,7 @@ function ProjectImageGallery({
   );
 }
 
-function ProjectPage({ project, projectView }: { project: Project; projectView?: NationalPlatformView }) {
+function ProjectPage({ project, projectView, motionEntry = false }: { project: Project; projectView?: NationalPlatformView; motionEntry?: boolean }) {
   const { t } = useI18n();
   const [menuOpen, setMenuOpen] = useState(false);
   const reduce = useReducedMotion();
@@ -2648,6 +2651,7 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
         onMenu={() => setMenuOpen(true)}
         onProjectBack={handleProjectBack}
         projectView
+        openingPhase={motionEntry ? "settled" : undefined}
       />
       <MenuOverlay open={menuOpen} onClose={() => setMenuOpen(false)} />
       <main
@@ -2657,12 +2661,12 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
         {t(!isCustomCase ? <header className="case-hero" id="project-overview">
           <motion.div
             className="case-heading"
-            initial={reduce ? false : { opacity: 0, y: 24 }}
+            initial={reduce || motionEntry ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease }}
           >
             <p>{t(project.type)}</p>
-            <h1>{t(project.title)}</h1>
+            <h1 data-project-motion-title>{t(project.title)}</h1>
             <div className="case-summary">
               <p>{t(project.summary)}</p>
               <span>{t(project.period)}</span>
@@ -2676,7 +2680,7 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
         ) : isNationalPlatformCase ? (
           <GkxCase project={project} legacyView={projectView} />
         ) : (
-          <ProjectImageGallery project={project} reduce={reduce} />
+          <ProjectImageGallery project={project} reduce={reduce} motionEntry={motionEntry} />
         ))}
         </Suspense>
         </ProjectContentBoundary>
@@ -2687,9 +2691,9 @@ function ProjectPage({ project, projectView }: { project: Project; projectView?:
   );
 }
 
-function PortfolioContent({ projectSlug, projectView }: { projectSlug?: string; projectView?: NationalPlatformView }) {
+function PortfolioContent({ projectSlug, projectView, motionEntry, homeRestore }: { projectSlug?: string; projectView?: NationalPlatformView; motionEntry?: boolean; homeRestore?: { slug: string; y: number } }) {
   const { t } = useI18n();
-  if (!projectSlug) return <HomePage />;
+  if (!projectSlug) return <HomePage restoration={homeRestore} />;
   const project = projects.find((item) => item.slug === projectSlug);
   if (!project) {
     return (
@@ -2700,9 +2704,10 @@ function PortfolioContent({ projectSlug, projectView }: { projectSlug?: string; 
       </main>
     );
   }
-  return <ProjectPage project={project} projectView={projectView} />;
+  return <ProjectPage key={project.slug} project={project} projectView={projectView} motionEntry={motionEntry} />;
 }
 
 export default function PortfolioClient(props: { projectSlug?: string; projectView?: NationalPlatformView }) {
-  return <LocaleProvider projectSlug={props.projectSlug}><PortfolioContent {...props} /></LocaleProvider>;
+  const route = useProjectNavigation(props, { slugs: projects.map(project => project.slug), prepare: prepareProject });
+  return <LocaleProvider projectSlug={route.projectSlug}><div className={`portfolio-route-scene${route.motionEntry ? " is-motion-arrival" : ""}`}><PortfolioContent {...route} /></div></LocaleProvider>;
 }

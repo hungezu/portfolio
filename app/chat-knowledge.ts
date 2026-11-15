@@ -89,7 +89,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "complex-systems", title: "复杂系统如何拆解",
-    content: "先厘清系统、角色、任务与页面边界，再判断哪些操作可以共用、哪些结构应随任务变化。例如GKX统一查询、选择与反馈规则，同时为论文管理、持续阅读和模型选择保留不同的页面结构。",
+    content: "先厘清系统、角色、任务与页面边界，再判断哪些操作可以共用、哪些结构应随任务变化。GKX案例通过对象维护、流程建模与导入异常说明任务空间取舍；智能科研与智能阅读不属于我的设计范围。",
     keywords: ["复杂系统", "B端", "B 端", "角色", "权限", "业务规则", "架构", "流程", "多系统"],
     references: [project("GKX · 跨系统策略", "gkx", "gkx-systems")],
   },
@@ -119,13 +119,13 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "project-gkx-challenge", title: "GKX的设计难点",
-    content: "主要难点是**多系统要容易学，各类任务又需要不同空间**。论文管理重在查找与维护，智能阅读需要稳定阅读区，模型广场重在发现与选择。我统一导航、查询、选择和反馈规则，再按任务选择列表、弹窗或独立工作区，并把这些规则用于多方交付核对。",
+    content: "主要难点是**多系统共用操作经验，各类任务保留合适空间**。我在主要业务页面中区分对象管理、单条维护和流程建模，并独立整理共用规范与设计 MD，用于原型校正和交付核对。智能科研与智能阅读不属于本人设计范围，MaaS 仅作规范应用对照。",
     keywords: ["GKX难点", "GKX挑战", "跨系统", "统一", "一致性", "取舍"],
     references: [project("GKX · 跨系统策略", "gkx", "gkx-systems"), project("GKX · 交互决策", "gkx", "nsp-rules")],
   },
   {
     id: "project-gkx-role", title: "我在GKX负责什么",
-    content: "我负责交互与 UI 设计、门户样式规范、定制组件及协作审核。我借助 AI 编写和维护设计 MD，按项目规范校正原型，并参与合作方 UI 评审，将修改要求与处理状态记录下来。",
+    content: "我主导主要业务页面的 UI 与交互，独立完成规范与设计 MD，并参与交付评审。智能科研与智能阅读不属于本人设计范围；MaaS 页面用于规范应用对照，不代表我主导整个 MaaS。",
     keywords: ["GKX职责", "GKX负责", "门户规范", "协作审核"],
     references: [project("GKX · 规范与交付", "gkx", "gkx-design-system"), project("GKX · 署名评审记录", "gkx", "gkx-supplier")],
   },
@@ -365,6 +365,10 @@ export function findChatKnowledge(query: string, limit = 5, contextQuery = "") {
   if (/你是谁|你叫什么|你是(?:不是)?(?:本人|李家豪|Leo|AI|机器人|真人)|你能(?:做什么|帮我什么|回答什么|聊什么)|能问什么|可以问什么|能聊什么|可以聊什么|能帮我什么/.test(normalized)) return entriesFor(["assistant-scope"], limit);
   // A project named as the reason for contacting Leo must not override the contact request.
   if (/联系方式|怎么联系|如何联系|联系(?:一下)?\s*(?:Leo|李家豪|他|你)|邮箱|微信|手机号|电话|约聊/i.test(normalized)) return entriesFor(["contact"], limit);
+  if (
+    /智能科研|智能阅读|MaaS|smart reading|smart research/i.test(normalized) &&
+    /是谁|谁做|谁设计|是你|你做|你设计|职责|负责|主导|分工|design|responsib|led|own/i.test(normalized)
+  ) return entriesFor(["project-gkx-role"], limit);
 
   const topic = requestedTopic(normalized);
   const projects = queryProjects(normalized, contextQuery);

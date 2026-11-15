@@ -1,0 +1,11 @@
+.project-motion-layer{position:fixed;inset:0;z-index:120;pointer-events:auto;isolation:isolate}
+.project-motion-canvas{position:absolute;inset:0;background:var(--page,#fff);will-change:clip-path,opacity}
+.project-motion-actor{position:fixed;z-index:2;pointer-events:none;transform-origin:top left;will-change:transform,opacity}
+.project-motion-actor *{pointer-events:none!important}
+.project-motion-source :is(.project-type,.project-summary,.project-meta,.project-footer){opacity:0;transition:opacity 80ms ease-out}
+html[data-project-motion="preparing"] .portfolio-route-scene{visibility:hidden}
+html[data-project-motion="running"] .portfolio-route-scene{opacity:0}
+[data-project-motion-hidden]{visibility:hidden!important}
+.portfolio-route-scene.is-motion-arrival .case-page{animation:none!important}
+.portfolio-route-scene.is-motion-arrival .case-heading{animation:none!important}
+@media(prefers-reduced-motion:reduce){.project-motion-source :is(.project-type,.project-summary,.project-meta,.project-footer){transition:none}}

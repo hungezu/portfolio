@@ -5,37 +5,48 @@ export type HomeOpeningPhase = "waiting" | "visible" | "settled";
 export function initialHomeOpeningPhase(): HomeOpeningPhase {
   if (typeof window === "undefined") return "settled";
   const params = new URLSearchParams(window.location.search);
-  const returningToWork = params.has("returnProject") || params.get("returnSection") === "work";
+  const returningToWork = params.has("returnProject") || params.get("returnSection") === "work" || document.documentElement.hasAttribute("data-project-motion");
   const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
   return returningToWork || navigation?.type === "reload" || navigation?.type === "back_forward" ? "settled" : "waiting";
 }
 
 export function homeEntranceTiming(reduce: boolean | null) {
+  if (reduce) {
+    return {
+      copyDelay: 0,
+      copyDuration: 0.16,
+      actionDelay: 0,
+      actionDuration: 0.16,
+      navigationDelay: 0,
+      assistantDelay: 0.16,
+      mediaDuration: 0.2,
+    };
+  }
   const followsIntro = typeof document !== "undefined" &&
     document.documentElement.classList.contains("portfolio-lj-intro-complete");
   if (followsIntro) {
     return {
-      copyDelay: reduce ? 0 : 0.06,
-      copyDuration: reduce ? 0.25 : 0.7,
-      actionDelay: reduce ? 0 : 0.08,
-      actionDuration: reduce ? 0.16 : 0.24,
+      copyDelay: 0.06,
+      copyDuration: 0.7,
+      actionDelay: 0.08,
+      actionDuration: 0.24,
       navigationDelay: 0,
-      assistantDelay: reduce ? 0.3 : 0.85,
-      mediaDuration: reduce ? 0.3 : 0.65,
+      assistantDelay: 0.85,
+      mediaDuration: 0.65,
     };
   }
-  const copyDelay = reduce ? 0.28 : 0.42;
-  const copyDuration = reduce ? 1.05 : 1.2;
+  const copyDelay = 0.42;
+  const copyDuration = 1.2;
   const actionDelay = copyDelay + copyDuration + 0.08;
-  const actionDuration = reduce ? 0.3 : 0.4;
+  const actionDuration = 0.4;
   return {
     copyDelay,
     copyDuration,
     actionDelay,
     actionDuration,
-    navigationDelay: reduce ? 0.18 : 0.28,
+    navigationDelay: 0.28,
     assistantDelay: actionDelay + actionDuration + 0.04,
-    mediaDuration: reduce ? 0.7 : 1.1,
+    mediaDuration: 1.1,
   };
 }
 

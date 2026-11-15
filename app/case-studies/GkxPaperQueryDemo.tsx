@@ -127,7 +127,7 @@ export function GkxPaperQueryDemo() {
         <div className="gkx-paper-demo__controlbar">
           <span className="gkx-paper-demo__sample">本次复现 · 示例数据</span>
           <GkxSegmentedControl<QueryLayout> label="查询布局对照" value={layout} onChange={switchLayout} options={[{ label: "原查询布局", value: "original" }, { label: "统一查询布局", value: "unified" }]} />
-          <div className="gkx-paper-demo__reuse"><span>复用演示</span><GkxSegmentedControl<RecordKind> label="复用演示：切换记录类型" value={kind} onChange={switchKind} options={[{ label: "论文记录", value: "paper" }, { label: "专利记录", value: "patent" }]} /></div>
+          <div className="gkx-paper-demo__reuse"><GkxSegmentedControl<RecordKind> label="复用演示：切换记录类型" value={kind} onChange={switchKind} options={[{ label: "论文记录", value: "paper" }, { label: "专利记录", value: "patent" }]} /></div>
         </div>
         <div className="gkx-paper-demo__workspace">
           <div className="gkx-paper-demo__workarea">
@@ -137,7 +137,6 @@ export function GkxPaperQueryDemo() {
               {layout === "unified" && <div className="gkx-paper-demo__field"><label htmlFor={`${id}-institution`}>筛选条件：</label><Select id={`${id}-institution`} aria-label="作者机构" style={{ width: "var(--gkx-query-width, 220px)" }} value={draft.institution} onChange={(value) => setDraft({ ...draft, institution: value })} options={[{ label: "全部机构", value: "" }, ...institutions]} getPopupContainer={popupContainer} /></div>}
               <Space size={10}><Button type="primary" htmlType="submit">查询</Button><Button onClick={clearConditions}>重置</Button></Space>
             </form>
-            <div className="gkx-paper-demo__toolbar"><Space size={16}><Button type="primary" icon={<IconPlus />} disabled>新增</Button><Button disabled>批量导入</Button></Space>{selected.length > 0 && <span>已选 {selected.length} 条</span>}</div>
             <div className="gkx-paper-demo__table-space">
               <p className="gkx-paper-demo__table-hint">左右滑动查看完整表格</p>
               <Table<ResearchRecord> aria-label={`${recordName}查询结果`} rowKey="id" columns={columns} data={visibleRows} pagination={false} size="middle" tableLayoutFixed border={{ wrapper: true, headerCell: false, bodyCell: false }} scroll={{ x: 1124 }} rowSelection={{ type: "checkbox", checkAll: true, columnWidth: 36, selectedRowKeys: selected, onChange: setSelected, checkboxProps: (record) => ({ disabled: true, "aria-label": `选择记录 ${record.id}` }) }} noDataElement={<Empty description={<div>没有找到匹配的{recordName}<div><Button type="text" onClick={clearConditions}>清空查询条件</Button></div></div>} />} />

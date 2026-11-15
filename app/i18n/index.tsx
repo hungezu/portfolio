@@ -36,7 +36,7 @@ function initialLocale(): Locale {
 const LocaleContext = createContext<{ locale: Locale; setLocale: (locale: Locale) => void }>({ locale: "zh-CN", setLocale: () => {} });
 
 const metadata: Record<string, [string, string]> = {
-  home: ["李家豪｜AI 体验产品设计师", "李家豪（Leo.li）AI 体验产品设计作品集，聚焦 AI 问答、金融智能产品、复杂系统与 AI 辅助设计工作流。"],
+  home: ["李家豪｜AI 产品体验设计师", "李家豪（Leo.li）AI 体验产品设计作品集，聚焦 AI 问答、金融智能产品、复杂系统与 AI 辅助设计工作流。"],
   gkx: ["GKX｜门户与多系统体验设计｜李家豪", "GKX 项目案例：统一门户与多系统设计，梳理业务任务、操作反馈、AI 原型和设计交付核对。"],
   "zhaocai-smart": ["招财 Smart｜对话体验与回答规范｜李家豪", "招财 Smart 设计案例，聚焦财务问数中的口径确认、任务控制与 Markdown 回答规范，以原始设计稿和示例交互说明设计取舍。"],
   "tax-cloud": ["税纪云｜李家豪", "税纪云 2.0 跨端体验与全税种申报平台设计案例。"],
@@ -112,7 +112,8 @@ export function useI18n() {
 
 export function LanguageSwitch() {
   const { locale, setLocale } = useI18n();
-  return <div className="language-switch" role="group" aria-label={locale === "en" ? "Language" : "语言"}>
+  return <div className="language-switch" data-locale={locale} role="group" aria-label={locale === "en" ? "Language" : "语言"}>
+    <span className="language-switch-selection" aria-hidden="true" />
     <button type="button" lang="zh-CN" aria-pressed={locale === "zh-CN"} onClick={() => setLocale("zh-CN")}>中文</button>
     <button type="button" lang="en" aria-pressed={locale === "en"} onClick={() => setLocale("en")}>EN</button>
     <button className="language-switch-compact" type="button" lang={locale === "en" ? "zh-CN" : "en"}

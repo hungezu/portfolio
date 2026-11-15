@@ -1,30 +1,93 @@
-.language-switch{display:flex;align-items:center;gap:2px;padding:2px;border:1px solid #dedede;border-radius:999px;background:#fff;color:#111}
-.language-switch button{position:relative;min-width:40px;min-height:26px;padding:3px 9px;border:0;border-radius:999px;background:transparent;color:#626262;font-family:inherit;font-size:12px;font-weight:500;line-height:1.4;cursor:pointer}
-.language-switch button::before{position:absolute;inset:-9px 0;content:""}
-.language-switch button[aria-pressed="true"]{background:#111;color:#fff}
-.language-switch button:hover{background:#efefef;color:#111}
-.language-switch button[aria-pressed="true"]:hover{background:#333;color:#fff}
-.language-switch button:focus-visible{outline:2px solid #111;outline-offset:3px}
-.language-switch .language-switch-compact{display:none}
+.language-switch {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  flex-shrink: 0;
+  isolation: isolate;
+  width: 96px;
+  height: 32px;
+  padding: 2px;
+  border: 1px solid #e2e2e2;
+  border-radius: 999px;
+  background: #f4f4f4;
+  color: #111;
+}
+.language-switch-selection {
+  position: absolute;
+  z-index: 0;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / 2);
+  border-radius: 999px;
+  background: #111;
+  pointer-events: none;
+  transform: translateX(0);
+  transition: transform 220ms cubic-bezier(.16, 1, .3, 1);
+}
+.language-switch[data-locale="en"] .language-switch-selection {
+  transform: translateX(100%);
+}
+.language-switch button {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 26px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #606060;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 140ms ease-out, background-color 140ms ease-out;
+}
+.language-switch button::before {
+  position: absolute;
+  inset: -9px 0;
+  content: "";
+}
+.language-switch button[aria-pressed="true"] { color: #fff; }
+@media (hover: hover) {
+  .language-switch button:not([aria-pressed="true"]):hover { background: #e9e9e9; color: #111; }
+}
+.language-switch button:active { background: rgba(0, 0, 0, .06); }
+.language-switch button[aria-pressed="true"]:active { background: rgba(255, 255, 255, .1); }
+.language-switch button:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+.language-switch .language-switch-compact { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .language-switch-selection, .language-switch button { transition: none; }
+}
 :root .site-nav.site-navigation .nav-right{display:flex;align-items:center;gap:12px}
 @media(min-width:768px) and (max-width:1499px){:root body .case-page .zhaocai-locator{right:248px}:root:lang(en) body .case-page .zhaocai-locator{left:302px}}
 :root:lang(en) .hero-name{letter-spacing:-.035em;font-weight:400}
-:root:lang(en) .hero-statement{max-width:32ch;white-space:normal;font-weight:300}
-:root:lang(en) .hero-statement .hero-role-en{font-weight:inherit}
-:root:lang(en) .hero-name{font-size:clamp(56px,8vw,132px)}
+:root:lang(en) .hero-name{gap:.22em}
+:root:lang(en) .hero-name-prefix{font-weight:400}
+:root:lang(en) .hero-statement{max-width:min(100%,40rem);white-space:normal}
+:root:lang(en) .hero-description{max-width:42ch}
+:root:lang(en) .hero-name{font-size:clamp(56px,6.4vw,88px)}
 :root:lang(en) .project-copy h3{overflow-wrap:normal}
 :root:lang(en) .experience-company{overflow-wrap:anywhere}
 :root:lang(en) .zc4-opening-thesis h2{max-width:22ch;text-wrap:balance}
 :root:lang(en) .zc4-keep-phrase{white-space:normal}
 :root:lang(en) .gkx-scope-rule,:root:lang(en) .gkx-section-header p{white-space:normal}
 @media(max-width:767px){
-  .language-switch{padding:0;border:0;background:transparent}
+  .language-switch{display:grid;grid-template-columns:1fr;place-items:center;width:44px;height:44px;padding:0;border:0;background:transparent}
+  .language-switch-selection{display:none}
   .language-switch button{display:none}
-  .language-switch .language-switch-compact{display:block;min-width:44px;min-height:44px;padding:0;border:1px solid #dedede;font-size:12px;color:#111}
-  .language-switch button::before{display:none}
+  .language-switch .language-switch-compact{display:grid;width:44px;height:44px;min-width:44px;min-height:44px;padding:0;border:1px solid #e2e2e2;background:#f4f4f4;font-size:12px;color:#111}
+  .language-switch .language-switch-compact::before{display:none}
   :root .site-nav.site-navigation .nav-right{gap:8px}
   :root body .case-page .zhaocai-locator{right:124px}
   :root:lang(en) .hero-name{font-size:clamp(44px,11vw,68px);line-height:1.05}
+  :root:lang(en) .hero-description{max-width:min(42ch,calc(100% - 64px))}
   :root:lang(en) .experience-company{max-width:100%;font-size:18px}
   :root:lang(en) .zc4-opening-facts{flex-wrap:wrap}
 }

@@ -122,11 +122,11 @@ function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen
   );
 }
 
-export function GkxSupplementalMaterials({ onOpen, compact = false }: { onOpen: OpenMaterial; compact?: boolean }) {
+export function GkxSupplementalMaterials({ onOpen, compact = false, omitWorkflow = false }: { onOpen: OpenMaterial; compact?: boolean; omitWorkflow?: boolean }) {
   const { t } = useI18n();
   if (compact) return <details id="gkx-materials" className="gkx-supplemental-materials gkx-supplemental-materials__disclosure is-compact">
-    <summary>{t("更多业务图稿：流程建模、科技交流与内容管理")}</summary>
-    <MaterialGrid items={materials.filter(material => material.src !== gkxThinkTankDetail.src)} onOpen={onOpen} />
+    <summary>{t("更多业务图稿")}</summary>
+    <MaterialGrid items={materials.filter(material => material.src !== gkxThinkTankDetail.src && (!omitWorkflow || material.title !== "流程设计器"))} onOpen={onOpen} />
   </details>;
   return (
     <section className="gkx-supplemental-materials" aria-labelledby="gkx-supplemental-title">

@@ -1,38 +1,38 @@
 {
   "hero": {
-    "title": "GKX-主导多系统设计，沉淀 AI 协作方法",
+    "title": "GKX 智慧门户 · 多系统体验设计与 AI 协作方法",
     "titleAccent": "AI 协作方法",
-    "subtitle": "以统一规范衔接不同业务任务，结合 AI 原型优化与人工审核，让设计与实现有据核对",
+    "subtitle": "主导主要业务页面的 UI 与交互，独立完成规范与设计 MD，并参与交付评审。",
     "roleLabel": "我的职责",
-    "role": "项目设计主导 · 规范与设计 MD 独立完成 · 参与交付评审",
+    "role": "主要业务页面设计主导 · 规范与设计 MD 独立完成 · 参与交付评审",
     "scopeLabel": "项目范围",
     "scope": "智慧门户及其四大主要业务系统",
-    "periodLabel": "项目周期"
+    "periodLabel": "合同周期"
   },
   "navigation": [
     {
       "id": "gkx-project-context",
-      "label": "范围与目标"
+      "label": "挑战与职责"
     },
     {
       "id": "gkx-systems",
-      "label": "跨系统策略"
-    },
-    {
-      "id": "nsp-prototype",
-      "label": "AI 实践"
+      "label": "统一边界"
     },
     {
       "id": "nsp-rules",
-      "label": "交互决策"
+      "label": "空间取舍"
+    },
+    {
+      "id": "nsp-prototype",
+      "label": "AI 校正"
     },
     {
       "id": "gkx-design-system",
-      "label": "规范与交付"
+      "label": "规范与评审"
     },
     {
       "id": "gkx-outcomes",
-      "label": "成果复盘"
+      "label": "复盘"
     }
   ],
   "sections": [
@@ -81,7 +81,7 @@
             "kind": "lead",
             "role": "主导设计",
             "stage": "方案与界面设计",
-            "text": "我主导项目的 UI 与交互设计，另一名设计师辅助；案例广场由产品提供 AI 原型，我按GKX规范完成相应优化。"
+            "text": "我主导主要业务页面的 UI 与交互设计，另一名设计师辅助；案例广场由产品提供 AI 原型，我按 GKX 规范完成优化。门户中的智能科研与智能阅读不属于本人设计范围。"
           },
           {
             "kind": "independent",
@@ -101,7 +101,7 @@
     {
       "id": "gkx-systems",
       "title": "操作经验共用，页面结构随任务调整",
-      "lead": "以论文管理与智库案例对照共用的查询方式，再看阅读、模型发现与情报概览如何保留任务差异。",
+      "lead": "从门户检索进入具体任务，对照共用查询方式，再看阅读、模型发现与情报概览的结构差异。",
       "sharedRule": {
         "title": "共用查询与重置，保留业务筛选",
         "lead": "搜索放在工具区最前，输入框与下拉框均带前置字段名；筛选维度和结果组织按任务调整。",
@@ -115,7 +115,7 @@
             "compactViewBox": "224 123 348 52",
             "adaptation": "以论文标题、关键词定位记录，条件筛选独立；结果使用列表，保留字段与行操作，支持逐条核对和维护。",
             "roleLabel": "本人主导",
-            "role": "我主导项目的界面与交互设计，另一名设计师辅助；论文列表沿用共用的查询结构。"
+            "role": "界面与交互由本人主导，另一名设计师辅助。"
           },
           {
             "figureId": "ui-cases-designer",
@@ -123,6 +123,7 @@
             "title": "案例广场",
             "viewBox": "64 332 1392 72",
             "compactViewBox": "64 332 544 72",
+            "displayScale": 0.55,
             "adaptation": "报告浏览保留行业、时间与排序条件；结果使用卡片，便于浏览标题、作者与内容标签。",
             "roleLabel": "本人调整",
             "role": "产品提供 AI 原型；我按GKX规范统一查询工具区、整理卡片层级。"
@@ -133,7 +134,7 @@
         {
           "title": "智能阅读",
           "task": "持续阅读与辅助理解",
-          "decision": "目录、原文与辅助信息需要同时可见，因此保留三栏工作区，为持续阅读与内容对照提供稳定空间。",
+          "decision": "团队界面仅用于对照目录、原文与辅助信息的组织，不属于本人主导的设计案例。",
           "figureId": "ui-reading"
         },
         {
@@ -203,7 +204,7 @@
           "key": "containers",
           "title": "短时操作使用弹窗，长任务使用独立工作区",
           "problem": "查看一条论文、修改一条记录和持续阅读，需要的界面空间与操作时长不同。",
-          "decision": "论文详情与单条编辑采用同页弹窗；智能阅读采用独立工作区，同时组织目录、原文与辅助信息。",
+          "decision": "论文详情与单条编辑采用同页弹窗；流程建模使用独立工作区。",
           "reason": "根据任务时长、修改范围与同时查看的信息量分配空间：单条查看和修改贴近来源列表，持续阅读获得稳定的内容区域。",
           "details": [
             "列表承担多条记录的浏览与选择。",
@@ -233,27 +234,6 @@
                     "cost": "对本次单条核对而言，会增加进入与返回的切换；还需恢复来源列表的位置与条件。"
                   }
                 ]
-              },
-              {
-                "key": "reading",
-                "label": "持续阅读",
-                "reason": "智能阅读需要同时组织目录、原文与辅助信息，因此采用独立工作区；保留稳定的阅读空间，并将来源与返回路径作为后续核对重点。",
-                "options": [
-                  {
-                    "name": "独立工作区",
-                    "usage": "智能阅读",
-                    "selected": true,
-                    "condition": "持续阅读，并且需要同时呈现目录、原文与辅助内容，任务需要较大且稳定的空间。",
-                    "cost": "增加进入与返回的切换成本；需要交代来源，并核对返回后原任务的位置与状态。"
-                  },
-                  {
-                    "name": "同页弹窗",
-                    "usage": "更适合短时核对与有限修改",
-                    "selected": false,
-                    "condition": "仅查看摘要或少量字段、核对结束后立即回到列表时，可用弹窗承载。",
-                    "cost": "持续阅读时空间较受限，目录、原文与辅助信息更容易相互挤占，也会阻断来源列表的操作。"
-                  }
-                ]
               }
             ],
             "pendingCheck": "弹窗的提交反馈与未保存修改处理，以及工作区返回后的筛选、页码和列表位置，仍需结合实际流程逐项核对。"
@@ -270,10 +250,6 @@
             {
               "label": "编辑弹窗",
               "figureId": "ui-paper-edit"
-            },
-            {
-              "label": "阅读工作区",
-              "figureId": "ui-reading"
             }
           ]
         },
@@ -332,9 +308,30 @@
       "lead": "参与合作方交付的 UI 评审，将审核结论、修改要求与处理状态留在评审台账中。",
       "reviewer": "李家豪",
       "reviewRecords": [
-        { "date": "2026/06/04", "module": "工单管理", "conclusion": "需修改", "currentStatus": "通过", "finalStatus": "通过", "sourceRow": 8 },
-        { "date": "2026/08/03", "module": "信息发布", "conclusion": "需修改", "currentStatus": "通过", "finalStatus": "通过", "sourceRow": 11 },
-        { "date": "2026/10/08", "module": "基础数据管理模块", "conclusion": "通过", "currentStatus": "通过", "finalStatus": "通过", "sourceRow": 15 }
+        {
+          "date": "2026/06/04",
+          "module": "工单管理",
+          "conclusion": "需修改",
+          "currentStatus": "通过",
+          "finalStatus": "通过",
+          "sourceRow": 8
+        },
+        {
+          "date": "2026/08/03",
+          "module": "信息发布",
+          "conclusion": "需修改",
+          "currentStatus": "通过",
+          "finalStatus": "通过",
+          "sourceRow": 11
+        },
+        {
+          "date": "2026/10/08",
+          "module": "基础数据管理模块",
+          "conclusion": "通过",
+          "currentStatus": "通过",
+          "finalStatus": "通过",
+          "sourceRow": 15
+        }
       ],
       "recordNote": "基础数据管理模块备注：微调即可，组件样式调整。",
       "teamFinding": {

@@ -106,3 +106,21 @@ document.addEventListener('submit',event=>{
 document.addEventListener('input',event=>{if(event.target.matches('[data-preview-range]')){const output=event.target.closest('[data-interaction-preview]').querySelector('[data-range-output]');const min=Number(event.target.min||0);const max=Number(event.target.max||100);const progress=(Number(event.target.value)-min)/(max-min)*100;if(output)output.value=event.target.value;event.target.style.setProperty('--range-progress',`${progress}%`)}});
 document.addEventListener('change',event=>{if(event.target.matches('[data-preview-upload]')){const label=event.target.closest('[data-interaction-preview]').querySelector('[data-upload-name]');if(label)label.textContent=event.target.files?.[0]?.name||'尚未选择文件'}});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'){selectTriggers.forEach(trigger=>closeSelect(trigger));dateTriggers.forEach(trigger=>closeDatePicker(trigger));closePreviewDialog()}});
+
+// Keep the same public introduction visible at every embed width and language.
+if (document.documentElement.classList.contains('embedded-preview')) {
+  const card = document.querySelector('.docs-shell .work-card');
+  const hero = card?.querySelector('.component-hero');
+  const notice = card?.querySelector('.confidential-mask > div');
+  if (card && hero && notice) {
+    const fitPublicIntroduction = () => {
+      const publicEnd = Math.ceil(hero.getBoundingClientRect().bottom - card.getBoundingClientRect().top) + 16;
+      card.style.setProperty('--gkx-public-header-height', `${publicEnd}px`);
+      card.style.minHeight = `${Math.max(440, publicEnd + notice.scrollHeight + 128)}px`;
+    };
+    const observer = new ResizeObserver(fitPublicIntroduction);
+    observer.observe(hero);
+    observer.observe(notice);
+    requestAnimationFrame(fitPublicIntroduction);
+  }
+}
