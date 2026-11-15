@@ -1,0 +1,17 @@
+.gkx-narrative .gkx-explainer-figure{width:100%;margin:24px 0 0}
+.gkx-narrative .gkx-explainer-open{display:block;width:100%;padding:0;overflow:hidden;border:0;border-radius:6px;background:#030405;cursor:zoom-in}
+.gkx-narrative .gkx-explainer-open picture,.gkx-narrative .gkx-explainer-open img{display:block;width:100%}
+.gkx-narrative .gkx-explainer-open img{height:auto}
+.gkx-narrative .gkx-explainer-figure figcaption{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:4px 0;color:#666;font-size:14px;line-height:1.8}
+.gkx-narrative .gkx-explainer-figure figcaption>span{min-width:0}
+.gkx-narrative .gkx-explainer-figure figcaption>button{flex-shrink:0;min-height:44px;font-size:14px!important;white-space:nowrap;cursor:zoom-in}
+.gkx-narrative .gkx-explainer-figure+.gkx-workflow-pair,.gkx-narrative .gkx-explainer-figure+.gkx-ai-card-comparison,.gkx-narrative .gkx-explainer-figure+.gkx-ai-toolbar-comparison{margin-top:28px}
+.gkx-narrative .gkx-diagram-notes{margin-top:20px;padding-top:4px;border-top:0}
+.gkx-narrative .gkx-diagram-notes p{max-width:720px;font-size:16px;line-height:1.9;color:#666}
+.gkx-narrative .gkx-recovery-evidence{margin-top:28px}
+.gkx-narrative .gkx-flow-story__visual .gkx-workflow-pair{margin-top:28px}
+.case-page-gkx .gkx-narrative #gkx-design-system .gkx-review-team-details .gkx-review-finding{margin-top:0}
+@media(max-width:1000px){
+ .gkx-narrative .gkx-explainer-figure{width:min(100%,440px);margin-top:20px}
+ .gkx-narrative .gkx-explainer-figure figcaption{gap:12px;font-size:14px}
+}

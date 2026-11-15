@@ -791,6 +791,14 @@
     "originalBytes": 1392358,
     "optimizedBytes": 111786
   },
+  "/assets/projects/gkx/case-study/ui/portal-entry-prototype-20261114.webp": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/portal-entry-prototype-20261114.webp",
+    "width": 1232,
+    "height": 576,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/portal-entry-prototype-20261114-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/portal-entry-prototype-20261114.webp 1232w",
+    "originalBytes": 58188,
+    "optimizedBytes": 42588
+  },
   "/assets/projects/gkx/case-study/ui/portal-reading.png": {
     "src": "/assets/optimized/projects/gkx/case-study/ui/portal-reading.webp",
     "width": 1400,
@@ -798,6 +806,14 @@
     "srcSet": "/assets/optimized/projects/gkx/case-study/ui/portal-reading-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/portal-reading-1280.webp 1280w, /assets/optimized/projects/gkx/case-study/ui/portal-reading.webp 1400w",
     "originalBytes": 310846,
     "optimizedBytes": 89580
+  },
+  "/assets/projects/gkx/case-study/ui/portal-results-prototype-20261114.webp": {
+    "src": "/assets/optimized/projects/gkx/case-study/ui/portal-results-prototype-20261114.webp",
+    "width": 952,
+    "height": 225,
+    "srcSet": "/assets/optimized/projects/gkx/case-study/ui/portal-results-prototype-20261114-640.webp 640w, /assets/optimized/projects/gkx/case-study/ui/portal-results-prototype-20261114.webp 952w",
+    "originalBytes": 20102,
+    "optimizedBytes": 15640
   },
   "/assets/projects/gkx/case-study/ui/portal-workspace.png": {
     "src": "/assets/optimized/projects/gkx/case-study/ui/portal-workspace.webp",
@@ -847,6 +863,22 @@
     "originalBytes": 2049773,
     "optimizedBytes": 255078
   },
+  "/assets/projects/gkx/science-information-exchange-20261018.webp": {
+    "src": "/assets/optimized/projects/gkx/science-information-exchange-20261018.webp",
+    "width": 1784,
+    "height": 1425,
+    "srcSet": "/assets/optimized/projects/gkx/science-information-exchange-20261018-640.webp 640w, /assets/optimized/projects/gkx/science-information-exchange-20261018-1280.webp 1280w, /assets/optimized/projects/gkx/science-information-exchange-20261018.webp 1784w",
+    "originalBytes": 773476,
+    "optimizedBytes": 125474
+  },
+  "/assets/projects/gkx/science-information-exchange-preview-20261018.webp": {
+    "src": "/assets/optimized/projects/gkx/science-information-exchange-preview-20261018.webp",
+    "width": 1224,
+    "height": 680,
+    "srcSet": "/assets/optimized/projects/gkx/science-information-exchange-preview-20261018-640.webp 640w, /assets/optimized/projects/gkx/science-information-exchange-preview-20261018.webp 1224w",
+    "originalBytes": 391144,
+    "optimizedBytes": 74410
+  },
   "/assets/projects/gkx/strategy-reports.jpg": {
     "src": "/assets/optimized/projects/gkx/strategy-reports.webp",
     "width": 1800,
@@ -854,6 +886,30 @@
     "srcSet": "/assets/optimized/projects/gkx/strategy-reports-640.webp 640w, /assets/optimized/projects/gkx/strategy-reports-1280.webp 1280w, /assets/optimized/projects/gkx/strategy-reports.webp 1800w",
     "originalBytes": 318435,
     "optimizedBytes": 43088
+  },
+  "/assets/projects/gkx/system-report-tasks-figma-20261018.webp": {
+    "src": "/assets/optimized/projects/gkx/system-report-tasks-figma-20261018.webp",
+    "width": 1192,
+    "height": 688,
+    "srcSet": "/assets/optimized/projects/gkx/system-report-tasks-figma-20261018-640.webp 640w, /assets/optimized/projects/gkx/system-report-tasks-figma-20261018.webp 1192w",
+    "originalBytes": 22780,
+    "optimizedBytes": 66370
+  },
+  "/assets/projects/gkx/system-technology-qa-figma-20261018.webp": {
+    "src": "/assets/optimized/projects/gkx/system-technology-qa-figma-20261018.webp",
+    "width": 1224,
+    "height": 716,
+    "srcSet": "/assets/optimized/projects/gkx/system-technology-qa-figma-20261018-640.webp 640w, /assets/optimized/projects/gkx/system-technology-qa-figma-20261018.webp 1224w",
+    "originalBytes": 73238,
+    "optimizedBytes": 31192
+  },
+  "/assets/projects/gkx/system-template-library-figma-context-20261018.webp": {
+    "src": "/assets/optimized/projects/gkx/system-template-library-figma-context-20261018.webp",
+    "width": 1256,
+    "height": 752,
+    "srcSet": "/assets/optimized/projects/gkx/system-template-library-figma-context-20261018-640.webp 640w, /assets/optimized/projects/gkx/system-template-library-figma-context-20261018.webp 1256w",
+    "originalBytes": 160224,
+    "optimizedBytes": 49814
   },
   "/assets/projects/gkx/talent-news.jpg": {
     "src": "/assets/optimized/projects/gkx/talent-news.webp",
@@ -871,6 +927,22 @@
     "originalBytes": 324781,
     "optimizedBytes": 36992
   },
+  "/assets/projects/gkx/technology-route-20261018.webp": {
+    "src": "/assets/optimized/projects/gkx/technology-route-20261018.webp",
+    "width": 1224,
+    "height": 1730,
+    "srcSet": "/assets/optimized/projects/gkx/technology-route-20261018-640.webp 640w, /assets/optimized/projects/gkx/technology-route-20261018.webp 1224w",
+    "originalBytes": 365628,
+    "optimizedBytes": 87776
+  },
+  "/assets/projects/gkx/technology-route-preview-20261018.webp": {
+    "src": "/assets/optimized/projects/gkx/technology-route-preview-20261018.webp",
+    "width": 1224,
+    "height": 560,
+    "srcSet": "/assets/optimized/projects/gkx/technology-route-preview-20261018-640.webp 640w, /assets/optimized/projects/gkx/technology-route-preview-20261018.webp 1224w",
+    "originalBytes": 140788,
+    "optimizedBytes": 30078
+  },
   "/assets/projects/gkx/technology-route.jpg": {
     "src": "/assets/optimized/projects/gkx/technology-route.webp",
     "width": 1800,
@@ -878,6 +950,14 @@
     "srcSet": "/assets/optimized/projects/gkx/technology-route-640.webp 640w, /assets/optimized/projects/gkx/technology-route-1280.webp 1280w, /assets/optimized/projects/gkx/technology-route.webp 1800w",
     "originalBytes": 343412,
     "optimizedBytes": 42702
+  },
+  "/assets/projects/gkx/think-tank-detail-20261018.webp": {
+    "src": "/assets/optimized/projects/gkx/think-tank-detail-20261018.webp",
+    "width": 1784,
+    "height": 1160,
+    "srcSet": "/assets/optimized/projects/gkx/think-tank-detail-20261018-640.webp 640w, /assets/optimized/projects/gkx/think-tank-detail-20261018-1280.webp 1280w, /assets/optimized/projects/gkx/think-tank-detail-20261018.webp 1784w",
+    "originalBytes": 492740,
+    "optimizedBytes": 81886
   },
   "/assets/projects/gkx/think-tank-home.jpg": {
     "src": "/assets/optimized/projects/gkx/think-tank-home.webp",
@@ -1519,6 +1599,70 @@
     "originalBytes": 548188,
     "optimizedBytes": 121718
   },
+  "/assets/projects/zhaocai-smart/verification/20261019/01-missing-conditions.jpg": {
+    "src": "/assets/optimized/projects/zhaocai-smart/verification/20261019/01-missing-conditions.webp",
+    "width": 1641,
+    "height": 866,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/verification/20261019/01-missing-conditions-640.webp 640w, /assets/optimized/projects/zhaocai-smart/verification/20261019/01-missing-conditions-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/verification/20261019/01-missing-conditions.webp 1641w",
+    "originalBytes": 62702,
+    "optimizedBytes": 35484
+  },
+  "/assets/projects/zhaocai-smart/verification/20261019/02-metric-confirmation.jpg": {
+    "src": "/assets/optimized/projects/zhaocai-smart/verification/20261019/02-metric-confirmation.webp",
+    "width": 1641,
+    "height": 866,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/verification/20261019/02-metric-confirmation-640.webp 640w, /assets/optimized/projects/zhaocai-smart/verification/20261019/02-metric-confirmation-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/verification/20261019/02-metric-confirmation.webp 1641w",
+    "originalBytes": 59664,
+    "optimizedBytes": 33646
+  },
+  "/assets/projects/zhaocai-smart/verification/20261019/03-stopped-context.jpg": {
+    "src": "/assets/optimized/projects/zhaocai-smart/verification/20261019/03-stopped-context.webp",
+    "width": 1641,
+    "height": 866,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/verification/20261019/03-stopped-context-640.webp 640w, /assets/optimized/projects/zhaocai-smart/verification/20261019/03-stopped-context-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/verification/20261019/03-stopped-context.webp 1641w",
+    "originalBytes": 54685,
+    "optimizedBytes": 33598
+  },
+  "/assets/projects/zhaocai-smart/verification/20261019/04-quarter-comparison.jpg": {
+    "src": "/assets/optimized/projects/zhaocai-smart/verification/20261019/04-quarter-comparison.webp",
+    "width": 1641,
+    "height": 866,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/verification/20261019/04-quarter-comparison-640.webp 640w, /assets/optimized/projects/zhaocai-smart/verification/20261019/04-quarter-comparison-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/verification/20261019/04-quarter-comparison.webp 1641w",
+    "originalBytes": 65066,
+    "optimizedBytes": 37896
+  },
+  "/assets/projects/zhaocai-smart/verification/20261019/05-cause-boundary.jpg": {
+    "src": "/assets/optimized/projects/zhaocai-smart/verification/20261019/05-cause-boundary.webp",
+    "width": 1641,
+    "height": 866,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/verification/20261019/05-cause-boundary-640.webp 640w, /assets/optimized/projects/zhaocai-smart/verification/20261019/05-cause-boundary-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/verification/20261019/05-cause-boundary.webp 1641w",
+    "originalBytes": 68097,
+    "optimizedBytes": 41904
+  },
+  "/assets/projects/zhaocai-smart/verification/20261019/06-source-table.jpg": {
+    "src": "/assets/optimized/projects/zhaocai-smart/verification/20261019/06-source-table.webp",
+    "width": 1641,
+    "height": 866,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/verification/20261019/06-source-table-640.webp 640w, /assets/optimized/projects/zhaocai-smart/verification/20261019/06-source-table-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/verification/20261019/06-source-table.webp 1641w",
+    "originalBytes": 70695,
+    "optimizedBytes": 41802
+  },
+  "/assets/projects/zhaocai-smart/verification/20261019/07-missing-dimension.jpg": {
+    "src": "/assets/optimized/projects/zhaocai-smart/verification/20261019/07-missing-dimension.webp",
+    "width": 1641,
+    "height": 866,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/verification/20261019/07-missing-dimension-640.webp 640w, /assets/optimized/projects/zhaocai-smart/verification/20261019/07-missing-dimension-1280.webp 1280w, /assets/optimized/projects/zhaocai-smart/verification/20261019/07-missing-dimension.webp 1641w",
+    "originalBytes": 59348,
+    "optimizedBytes": 35820
+  },
+  "/assets/projects/zhaocai-smart/verification/20261019/08-mobile-table.jpg": {
+    "src": "/assets/optimized/projects/zhaocai-smart/verification/20261019/08-mobile-table.webp",
+    "width": 380,
+    "height": 822,
+    "srcSet": "/assets/optimized/projects/zhaocai-smart/verification/20261019/08-mobile-table.webp 380w",
+    "originalBytes": 44197,
+    "optimizedBytes": 33624
+  },
   "/assets/projects/zhaocai-smart/web/board-selection-v3.png": {
     "src": "/assets/optimized/projects/zhaocai-smart/web/board-selection-v3.webp",
     "width": 1920,
@@ -1638,69 +1782,5 @@
     "srcSet": "/assets/optimized/visual/sidebar-character/wave.webp 1254w",
     "originalBytes": 934480,
     "optimizedBytes": 135210
-  },
-  "/assets/projects/gkx/think-tank-detail-20261018.webp": {
-    "src": "/assets/optimized/projects/gkx/think-tank-detail-20261018.webp",
-    "width": 1784,
-    "height": 1160,
-    "srcSet": "/assets/optimized/projects/gkx/think-tank-detail-20261018-640.webp 640w, /assets/optimized/projects/gkx/think-tank-detail-20261018-1280.webp 1280w, /assets/optimized/projects/gkx/think-tank-detail-20261018.webp 1784w",
-    "originalBytes": 492740,
-    "optimizedBytes": 81886
-  },
-  "/assets/projects/gkx/technology-route-20261018.webp": {
-    "src": "/assets/optimized/projects/gkx/technology-route-20261018.webp",
-    "width": 1224,
-    "height": 1730,
-    "srcSet": "/assets/optimized/projects/gkx/technology-route-20261018-640.webp 640w, /assets/optimized/projects/gkx/technology-route-20261018.webp 1224w",
-    "originalBytes": 365628,
-    "optimizedBytes": 87776
-  },
-  "/assets/projects/gkx/technology-route-preview-20261018.webp": {
-    "src": "/assets/optimized/projects/gkx/technology-route-preview-20261018.webp",
-    "width": 1224,
-    "height": 560,
-    "srcSet": "/assets/optimized/projects/gkx/technology-route-preview-20261018-640.webp 640w, /assets/optimized/projects/gkx/technology-route-preview-20261018.webp 1224w",
-    "originalBytes": 140788,
-    "optimizedBytes": 30078
-  },
-  "/assets/projects/gkx/science-information-exchange-20261018.webp": {
-    "src": "/assets/optimized/projects/gkx/science-information-exchange-20261018.webp",
-    "width": 1784,
-    "height": 1425,
-    "srcSet": "/assets/optimized/projects/gkx/science-information-exchange-20261018-640.webp 640w, /assets/optimized/projects/gkx/science-information-exchange-20261018-1280.webp 1280w, /assets/optimized/projects/gkx/science-information-exchange-20261018.webp 1784w",
-    "originalBytes": 773476,
-    "optimizedBytes": 125474
-  },
-  "/assets/projects/gkx/science-information-exchange-preview-20261018.webp": {
-    "src": "/assets/optimized/projects/gkx/science-information-exchange-preview-20261018.webp",
-    "width": 1224,
-    "height": 680,
-    "srcSet": "/assets/optimized/projects/gkx/science-information-exchange-preview-20261018-640.webp 640w, /assets/optimized/projects/gkx/science-information-exchange-preview-20261018.webp 1224w",
-    "originalBytes": 391144,
-    "optimizedBytes": 74410
-  },
-  "/assets/projects/gkx/system-template-library-figma-context-20261018.webp": {
-    "src": "/assets/optimized/projects/gkx/system-template-library-figma-context-20261018.webp",
-    "width": 1256,
-    "height": 752,
-    "srcSet": "/assets/optimized/projects/gkx/system-template-library-figma-context-20261018-640.webp 640w, /assets/optimized/projects/gkx/system-template-library-figma-context-20261018.webp 1256w",
-    "originalBytes": 160224,
-    "optimizedBytes": 49814
-  },
-  "/assets/projects/gkx/system-report-tasks-figma-20261018.webp": {
-    "src": "/assets/optimized/projects/gkx/system-report-tasks-figma-20261018.webp",
-    "width": 1192,
-    "height": 688,
-    "srcSet": "/assets/optimized/projects/gkx/system-report-tasks-figma-20261018-640.webp 640w, /assets/optimized/projects/gkx/system-report-tasks-figma-20261018.webp 1192w",
-    "originalBytes": 22780,
-    "optimizedBytes": 66370
-  },
-  "/assets/projects/gkx/system-technology-qa-figma-20261018.webp": {
-    "src": "/assets/optimized/projects/gkx/system-technology-qa-figma-20261018.webp",
-    "width": 1224,
-    "height": 716,
-    "srcSet": "/assets/optimized/projects/gkx/system-technology-qa-figma-20261018-640.webp 640w, /assets/optimized/projects/gkx/system-technology-qa-figma-20261018.webp 1224w",
-    "originalBytes": 73238,
-    "optimizedBytes": 31192
   }
 }

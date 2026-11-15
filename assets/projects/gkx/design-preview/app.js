@@ -107,20 +107,55 @@ document.addEventListener('input',event=>{if(event.target.matches('[data-preview
 document.addEventListener('change',event=>{if(event.target.matches('[data-preview-upload]')){const label=event.target.closest('[data-interaction-preview]').querySelector('[data-upload-name]');if(label)label.textContent=event.target.files?.[0]?.name||'尚未选择文件'}});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'){selectTriggers.forEach(trigger=>closeSelect(trigger));dateTriggers.forEach(trigger=>closeDatePicker(trigger));closePreviewDialog()}});
 
-// Keep the same public introduction visible at every embed width and language.
+// Embed sizing follows the natural shell, never the iframe viewport. Restricted
+// sections stay out of layout and keyboard access, just as they stay masked.
 if (document.documentElement.classList.contains('embedded-preview')) {
-  const card = document.querySelector('.docs-shell .work-card');
-  const hero = card?.querySelector('.component-hero');
-  const notice = card?.querySelector('.confidential-mask > div');
-  if (card && hero && notice) {
-    const fitPublicIntroduction = () => {
-      const publicEnd = Math.ceil(hero.getBoundingClientRect().bottom - card.getBoundingClientRect().top) + 16;
-      card.style.setProperty('--gkx-public-header-height', `${publicEnd}px`);
-      card.style.minHeight = `${Math.max(440, publicEnd + notice.scrollHeight + 128)}px`;
+  const shell = document.querySelector('.docs-shell');
+  const hostOrigin = location.origin;
+  const protectRestrictedContent = () => {
+    document.querySelectorAll('.doc-content > :not(.component-hero), .doc-toc, .work-card > .footer-note').forEach(section => {
+      if (!section.hidden) section.hidden = true;
+      if (!section.inert) section.inert = true;
+      if (section.getAttribute('aria-hidden') !== 'true') section.setAttribute('aria-hidden', 'true');
+    });
+  };
+  protectRestrictedContent();
+
+  if (shell && window.parent !== window && hostOrigin !== 'null') {
+    let pendingFrame = 0;
+    let lastHeight = 0;
+    let forceReport = false;
+    const reportHeight = () => {
+      pendingFrame = 0;
+      protectRestrictedContent();
+      // scrollHeight on html/body includes the viewport and can never shrink.
+      const height = Math.ceil(shell.getBoundingClientRect().height);
+      if (height > 0 && (forceReport || height !== lastHeight)) {
+        lastHeight = height;
+        window.parent.postMessage({ type: 'gkx:design-preview:height', version: 1, height }, hostOrigin);
+      }
+      forceReport = false;
     };
-    const observer = new ResizeObserver(fitPublicIntroduction);
-    observer.observe(hero);
-    observer.observe(notice);
-    requestAnimationFrame(fitPublicIntroduction);
+    const scheduleReport = (force = false) => {
+      forceReport = forceReport || force;
+      if (!pendingFrame) pendingFrame = requestAnimationFrame(reportHeight);
+    };
+    if (typeof ResizeObserver !== 'undefined') {
+      const observer = new ResizeObserver(() => scheduleReport());
+      observer.observe(shell);
+    }
+    const mutations = new MutationObserver(() => scheduleReport());
+    mutations.observe(shell, { subtree: true, childList: true, attributes: true, characterData: true });
+    window.addEventListener('message', event => {
+      if (event.origin !== hostOrigin || event.source !== window.parent) return;
+      if (event.data?.type === 'gkx:design-preview:measure' && event.data.version === 1) scheduleReport(true);
+    });
+    window.addEventListener('resize', () => scheduleReport());
+    window.addEventListener('load', () => scheduleReport());
+    document.addEventListener('toggle', () => scheduleReport(), true);
+    document.addEventListener('input', () => scheduleReport());
+    document.addEventListener('change', () => scheduleReport());
+    document.fonts?.ready.then(() => scheduleReport());
+    scheduleReport(true);
   }
 }

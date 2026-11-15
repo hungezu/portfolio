@@ -1,0 +1,20 @@
+.case-page-gkx .gkx-narrative .gkx-standards-stage{margin-top:20px}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__content{min-width:0}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__copy{max-width:720px;margin-bottom:24px}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__check{margin:0;color:#555;font-size:16px;line-height:1.9}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__boundary{margin:10px 0 0;color:#777;font-size:14px;line-height:1.85}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__figure{width:100%;max-width:100%;margin:0}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__image{display:block;width:100%;padding:0;overflow:hidden;border:0;border-radius:4px;background:#f3f5f9;cursor:zoom-in}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__image svg{display:block;width:100%;height:auto}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__image .gkx-standard-stage__compact{display:none}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px 24px;margin-top:16px}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__actions button{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0;border:0;background:transparent;color:#444;font-size:14px;line-height:1.7;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__actions svg{width:16px;height:16px}
+.case-page-gkx .gkx-narrative .gkx-standard-stage__actions button:focus-visible{outline:2px solid var(--gkx-ink,#202020);outline-offset:4px}
+@media(max-width:680px){
+ .case-page-gkx .gkx-narrative .gkx-standard-stage__copy{margin-bottom:20px}
+ .case-page-gkx .gkx-narrative .gkx-standard-stage__check{font-size:15px}
+ .case-page-gkx .gkx-narrative .gkx-standard-stage__figure{max-width:100%}
+ .case-page-gkx .gkx-narrative .gkx-standard-stage__image .gkx-standard-stage__wide{display:none}
+ .case-page-gkx .gkx-narrative .gkx-standard-stage__image .gkx-standard-stage__compact{display:block}
+}

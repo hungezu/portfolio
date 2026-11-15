@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
+import "./portfolio-editorial.css";
+import "./project-showcase.css";
+import "./case-editorial.css";
 
 export const metadata: Metadata = {
   title: "李家豪｜AI 产品体验设计师",

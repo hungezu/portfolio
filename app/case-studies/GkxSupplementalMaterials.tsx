@@ -99,7 +99,7 @@ function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen
               aria-label={t(`${material.actionLabel ?? (material.preview ? "查看完整模块" : "查看原图")}：${material.title}`)}
               onClick={event => onOpen(material, event.currentTarget)}
             >
-              <span className="gkx-supplemental-material__preview">
+              <span className="gkx-supplemental-material__preview" style={{ maxWidth: material.preview?.width ?? material.width }}>
                 <PortfolioImage
                   src={publicAsset(material.preview?.src ?? material.src)}
                   alt={t(material.preview?.alt ?? material.alt)}
@@ -108,12 +108,6 @@ function MaterialGrid({ items, onOpen }: { items: SupplementalMaterial[]; onOpen
                   loading="lazy"
                   decoding="async"
                 />
-              </span>
-              <span className="gkx-supplemental-material__action">
-                {t(material.actionLabel ?? (material.preview ? "查看完整模块" : "查看原图"))}
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5" />
-                </svg>
               </span>
             </button>
           </article>

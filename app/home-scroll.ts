@@ -170,11 +170,8 @@ export function scrollToHomeSection(id: string, keyboard = false) {
       const margin = Number.parseFloat(window.getComputedStyle(target).scrollMarginTop) || 0;
       const offset = id === "top" ? 0 : Math.max(navigationHeight + 16, margin);
       const maximum = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-      const landing = target.querySelector<HTMLElement>("h2") ?? target;
-      let documentTop = 0;
-      for (let node: HTMLElement | null = landing; node; node = node.offsetParent as HTMLElement | null) {
-        documentTop += node.offsetTop;
-      }
+      const landing = target.querySelector<HTMLElement>(".section-intro, .contact-copy, h2") ?? target;
+      const documentTop = landing.getBoundingClientRect().top + window.scrollY;
       const end = id === "top" ? 0 : Math.min(maximum, Math.max(0, documentTop - offset));
       const distance = end - start;
       const hash = `#${id}`;

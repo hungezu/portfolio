@@ -307,55 +307,36 @@ input[type=search]::-webkit-search-cancel-button{appearance:none}
 /* Portfolio embed readability floor: no explanatory text renders below 12px. */
 .swatch-meta code,.color-meta code,.variable-row code,.mini-filters span,.mini-kpis span,.mini-kpis small,.mini-fields span,.mini-steps i,.badge-demo:after,.avatar{font-size:12px!important}
 
-/* Embedded portfolio preview: keep its directory and public controls usable on phones. */
-@media(max-width:700px){
-  .embedded-preview,.embedded-preview body{width:100%;min-width:0;height:100dvh}
-  .embedded-preview .docs-shell{display:grid;grid-template-rows:176px minmax(0,1fr);width:100%;min-width:0;min-height:0;height:100dvh;overflow:hidden}
-  .embedded-preview .docs-shell .sidebar{position:relative;inset:auto;display:grid;grid-template-rows:32px minmax(0,1fr);gap:8px;width:100%;height:100%;padding:12px 16px;border-bottom:1px solid var(--border);overflow:hidden}
-  .embedded-preview .docs-shell .brand{width:100%;height:32px;padding-left:0}
-  .embedded-preview .component-nav{width:100%;min-height:0;height:100%;padding:0 8px 8px 0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#86909c transparent}
-  .embedded-preview .component-nav::-webkit-scrollbar{display:block;width:4px}
-  .embedded-preview .component-nav::-webkit-scrollbar-thumb{background:#86909c;border-radius:4px}
-  .embedded-preview .component-group a{min-height:44px;height:auto}
-  .embedded-preview .component-scrollbar{display:none!important}
-  .embedded-preview .docs-shell .main{width:100%;min-width:0;min-height:0;height:100%;margin-left:0;padding:12px;overflow:auto;overscroll-behavior:contain}
-  .embedded-preview .docs-shell .glass{width:100%;min-width:0;min-height:100%;height:auto;padding:12px;overflow:visible}
-  .embedded-preview .docs-shell .work-card{width:100%;min-width:0;min-height:420px;flex:0 0 auto;padding:16px 12px}
-  .embedded-preview .public-demo{width:100%;min-width:0;padding:16px 12px}
-  .embedded-preview .public-demo>header{flex-direction:column;gap:16px}
-  .embedded-preview .public-demo-states{width:100%}
-  .embedded-preview .public-demo-states button{flex:1;min-height:44px}
-  .embedded-preview .public-demo-canvas{flex-direction:column;align-items:stretch;gap:16px;padding:12px}
-  .embedded-preview .public-demo-canvas>.btn{min-height:44px;align-self:flex-start}
-  .embedded-preview .confidential-mask{padding:100px 16px 24px}
-  .embedded-preview .toast-stack{width:max-content;max-width:calc(100% - 24px)}
-  .embedded-preview .toast-stack .message{max-width:100%;white-space:normal}
-}
-.embedded-preview .component-group-title{color:var(--secondary)}
-.embedded-preview .public-demo-canvas small{font-size:12px;color:var(--secondary)}
-
-/* Embedded docs fit the host panel; public content scrolls above the protected card. */
-.embedded-preview,.embedded-preview body{width:100%;min-width:0;height:100dvh;overflow:hidden}
-.embedded-preview .docs-shell{--sidebar:224px;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);grid-template-rows:minmax(0,1fr);width:100%;min-width:0;height:100dvh;overflow:hidden}
-.embedded-preview .docs-shell .sidebar{position:relative;inset:auto;display:grid;grid-template-rows:40px minmax(0,1fr);gap:8px;width:100%;min-width:0;height:100%;padding:16px 12px;overflow:hidden}
+/* Embedded docs use natural document height; only their directory has a scroll area. */
+.embedded-preview,.embedded-preview body{width:100%;min-width:0;height:auto;min-height:0;overflow:visible}
+.embedded-preview .docs-shell{--sidebar:224px;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);grid-template-rows:auto;align-items:start;width:100%;min-width:0;height:auto;min-height:0;overflow:visible}
+.embedded-preview .docs-shell .sidebar{position:relative;inset:auto;display:grid;grid-template-rows:40px minmax(0,1fr);align-self:start;gap:8px;width:100%;min-width:0;height:560px;min-height:0;padding:16px 12px;overflow:hidden;transition:none}
 .embedded-preview .docs-shell .brand{width:100%;min-width:0;padding-left:8px}
-.embedded-preview .component-nav{width:100%;min-width:0;min-height:0;height:100%;padding:0 6px 8px 0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#86909c transparent}
+.embedded-preview .component-nav{width:100%;min-width:0;min-height:0;height:100%;padding:0 6px 8px 0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:auto;scrollbar-width:thin;scrollbar-color:#86909c transparent}
 .embedded-preview .component-nav::-webkit-scrollbar{display:block;width:4px}
 .embedded-preview .component-nav::-webkit-scrollbar-thumb{background:#86909c;border-radius:4px}
 .embedded-preview .component-scrollbar{display:none!important}
+.embedded-preview .component-group-title{color:var(--secondary)}
 .embedded-preview .component-group a{width:100%;min-width:0;min-height:40px;height:auto;flex-wrap:wrap;white-space:normal;overflow-wrap:anywhere;padding:10px 12px}
-.embedded-preview .docs-shell .main{width:100%;min-width:0;min-height:0;height:100%;margin-left:0;padding:16px;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;scrollbar-width:thin}
-.embedded-preview .docs-shell .glass{width:100%;min-width:0;height:auto;min-height:100%;padding:16px;overflow:visible}
+.embedded-preview .docs-shell .main{width:100%;min-width:0;height:auto;min-height:0;margin-left:0;padding:16px;overflow:visible;overscroll-behavior:auto;transition:none}
+.embedded-preview .docs-shell .glass{width:100%;min-width:0;height:auto;min-height:0;padding:16px;overflow:visible}
 .embedded-preview .breadcrumb{height:auto;min-height:20px;flex-wrap:wrap;white-space:normal}
 .embedded-preview .public-demo,.embedded-preview .doc-layout,.embedded-preview .doc-content{width:100%;min-width:0}
 .embedded-preview .public-demo>header{flex-wrap:wrap;gap:16px}
 .embedded-preview .public-demo>header>div:first-child,.embedded-preview .public-demo-canvas>div:first-child{min-width:0}
 .embedded-preview .public-demo-states{flex:none;flex-wrap:wrap;max-width:100%}
 .embedded-preview .public-demo-canvas{flex-wrap:wrap;gap:12px}
+.embedded-preview .public-demo-canvas small{font-size:12px;color:var(--secondary)}
 .embedded-preview :is(h1,h2,h3,p){overflow-wrap:anywhere}
-.embedded-preview .docs-shell .work-card{height:440px;min-height:440px;flex:0 0 auto;overflow:hidden}
-.embedded-preview .confidential-mask{padding:72px 24px 24px;align-items:center}
+.embedded-preview .docs-shell .work-card{width:100%;min-width:0;height:auto;min-height:0;flex:0 0 auto;overflow:hidden}
+.embedded-preview .doc-layout{grid-template-columns:minmax(0,1fr);gap:0}
+/* Keep every previously masked detail out of the embed, including focus/accessibility. */
+.embedded-preview .doc-content>:not(.component-hero),.embedded-preview .doc-toc,.embedded-preview .work-card>.footer-note{display:none!important}
+.embedded-preview .confidential-mask{position:relative;inset:auto;padding:32px 24px 24px;align-items:center;background:#fff}
 .embedded-preview .confidential-mask p{font-size:14px}
+.embedded-preview .docs-shell .main:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}
+.embedded-preview .toast-stack{width:max-content;max-width:calc(100% - 24px)}
+.embedded-preview .toast-stack .message{max-width:100%;white-space:normal}
 @media(max-width:960px){
  .embedded-preview .public-demo>header{flex-direction:column;align-items:stretch}
  .embedded-preview .public-demo-states{width:max-content}
@@ -363,19 +344,17 @@ input[type=search]::-webkit-search-cancel-button{appearance:none}
  .embedded-preview .public-demo-canvas>.btn{align-self:flex-start}
 }
 @media(max-width:700px){
- .embedded-preview .docs-shell{grid-template-columns:minmax(0,1fr);grid-template-rows:176px minmax(0,1fr)}
- .embedded-preview .docs-shell .sidebar{grid-template-rows:32px minmax(0,1fr);padding:12px 16px;border-bottom:1px solid var(--border)}
+ .embedded-preview .docs-shell{grid-template-columns:minmax(0,1fr);grid-template-rows:176px auto}
+ .embedded-preview .docs-shell .sidebar{grid-template-rows:32px minmax(0,1fr);height:176px;padding:12px 16px;border-bottom:1px solid var(--border)}
  .embedded-preview .docs-shell .brand{height:32px;padding-left:0}
  .embedded-preview .docs-shell .main{padding:12px}
  .embedded-preview .docs-shell .glass{padding:12px}
- .embedded-preview .docs-shell .work-card{height:520px;min-height:520px;padding:16px 12px}
+ .embedded-preview .docs-shell .work-card{padding:16px 12px}
  .embedded-preview .component-group a{min-height:44px}
  .embedded-preview .public-demo{padding:16px 12px}
  .embedded-preview .public-demo-states{width:100%}
  .embedded-preview .public-demo-states button{flex:1;min-height:44px}
+ .embedded-preview .public-demo-canvas{padding:12px}
  .embedded-preview .public-demo-canvas>.btn{min-height:44px}
- .embedded-preview .confidential-mask{padding:72px 16px 24px}
+ .embedded-preview .confidential-mask{padding:24px 16px 16px}
 }
-.embedded-preview .docs-shell .sidebar,.embedded-preview .docs-shell .main{transition:none}
-.embedded-preview .confidential-mask{top:var(--gkx-public-header-height,132px)}
-.embedded-preview .docs-shell .main:focus-visible{outline:2px solid var(--brand);outline-offset:-2px}

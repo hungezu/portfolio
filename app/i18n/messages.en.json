@@ -1,4 +1,8 @@
 {
+  "上一类页面": "Previous page type",
+  "下一类页面": "Next page type",
+  "选择规范应用页面": "Choose a standards application page",
+  "仅作规范应用对照，不代表本人主导 MaaS 整体设计。": "This illustrates standards application and does not imply that I led the overall MaaS design.",
   "项目内容暂时未能加载": "Project content could not be loaded",
   "重新加载": "Reload",
   "统一多系统的查询与反馈规则，保留各业务的任务差异，让设计与交付有据核对。": "Unified search and feedback rules across systems while preserving task-specific needs, giving design and delivery a shared basis for review.",
@@ -2579,5 +2583,19 @@
   "微调即可，组件样式调整": "Minor adjustments; component styling.",
   "查看原表第 15 行": "View original row 15",
   "这条通过记录仍保留了具体的样式微调建议。可确认的是本人参与了该模块评审并保留意见；核对时，需要将样式建议对应到组件规则，而不只看通过标签。": "The Passed record still contains a specific suggestion for minor styling changes. It establishes my participation and recorded feedback. Review should connect styling suggestions to component rules rather than relying on a Passed label alone.",
-  "规范内容区域": "Standards content"
+  "规范内容区域": "Standards content",
+  "页面章节": "Page sections",
+  "重点案例": "Featured case",
+  "项目精选": "Selected project",
+  "继续探索": "Keep exploring",
+  "下一个项目": "Next project",
+  "当前项目": "Current project",
+  "展开项目": "Expand project",
+  "当前展开": "Now showing",
+  "匹配": "Match",
+  "选择一个项目，展开设计故事": "Select a project to explore the design story",
+  "精选项目展柜": "Selected project showcase",
+  "项目概况": "Project profile",
+  "阅读方式": "Reading mode",
+  "从关键设计开始": "Start with the key design"
 }

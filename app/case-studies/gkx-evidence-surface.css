@@ -1,0 +1,35 @@
+.gkx-evidence-surface {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(36px, 3.5vw, 48px);
+  border-radius: 12px;
+  background: #eef0f2;
+}
+
+.gkx-evidence-surface > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* The backing stays full width; only the portrait artwork has a reading limit. */
+.gkx-narrative .gkx-explainer-figure.gkx-explainer-figure--surfaced {
+  width: 100%;
+  max-width: none;
+}
+.gkx-explainer-figure--surfaced .gkx-explainer-surface > .gkx-explainer-open {
+  width: 100%;
+  margin: 0;
+}
+
+@media (max-width: 1000px) {
+  .gkx-evidence-surface { padding: 24px; }
+  .gkx-explainer-figure--surfaced .gkx-explainer-surface > .gkx-explainer-open { max-width: 440px; }
+}
+
+@media (max-width: 680px) {
+  .gkx-evidence-surface { padding: 16px; }
+}

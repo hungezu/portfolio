@@ -8,10 +8,7 @@ import "./resume-download.css";
 import {
   AnimatePresence,
   motion,
-  useMotionValue,
   useReducedMotion,
-  useSpring,
-  useTransform,
 } from "motion/react";
 import ArrowLeft from "lucide-react/dist/esm/icons/arrow-left.mjs";
 import ArrowDown from "lucide-react/dist/esm/icons/arrow-down.mjs";
@@ -255,6 +252,23 @@ function SiteNav({
   const reduce = useReducedMotion();
   const { navigationDelay } = homeEntranceTiming(reduce);
   const [navigationReady, setNavigationReady] = useState(!openingPhase || openingPhase === "settled");
+  const [activeSection, setActiveSection] = useState("top");
+  useEffect(() => {
+    if (projectView) return;
+    const sections = ["top", "work", "ability", "experience", "contact"];
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const current = sections.filter(id => (document.getElementById(id)?.getBoundingClientRect().top ?? Infinity) < innerHeight * .4).at(-1);
+        setActiveSection(current ?? "top");
+      });
+    };
+    update();
+    addEventListener("scroll", update, { passive: true });
+    addEventListener("resize", update);
+    return () => { cancelAnimationFrame(frame); removeEventListener("scroll", update); removeEventListener("resize", update); };
+  }, [projectView]);
   const projectBack = projectView ? (
     <a className="nav-pill nav-back" href="/portfolio/#work" onClick={onProjectBack}>
       <span className="nav-circle nav-circle-dark"><ArrowLeft size={12} strokeWidth={2.6} /></span>
@@ -283,6 +297,11 @@ function SiteNav({
         </a>
         {t(projectBack)}
       </div>
+      {!projectView && <div className="desktop-section-nav" aria-label={t("页面章节")}>
+        {[["work", "精选作品"], ["ability", "核心能力"], ["experience", "工作经历"], ["contact", "联系"]].map(([id, label]) => (
+          <a key={id} href={`#${id}`} aria-current={activeSection === id ? "location" : undefined}>{t(label)}</a>
+        ))}
+      </div>}
       <div className="nav-right">
         <LanguageSwitch />
         <NavPill className="nav-pill-dark" onClick={onMenu} aria-label={t("打开导航菜单")}>
@@ -1957,6 +1976,7 @@ function Hero() {
               } },
               settled: { transform: "none", opacity: 1, transition: { duration: 0 } },
             }}>
+              <span className="hero-eyebrow" aria-hidden="true">PRODUCT DESIGN · PORTFOLIO</span>
               <span className="hero-name">
                 {locale === "en" ? <>
                   <span className="hero-name-prefix">I'm </span>
@@ -1988,6 +2008,11 @@ function Hero() {
             <ResumeDownloadLink className="hero-resume-download" />
           </motion.div>
         </div>
+        <motion.div className="hero-editorial-note" aria-hidden="true" variants={{ waiting: { opacity: 0 }, visible: { opacity: 1, transition: { delay: actionEntranceDelay, duration: actionDuration } }, settled: { opacity: 1 } }}>
+          <span>IDEAS INTO EXPERIENCES</span>
+          <p>{t("AI 体验")}<br />{t("复杂系统")}<br />{t("设计系统")}</p>
+          <span>SCROLL TO EXPLORE <ArrowDown size={13} /></span>
+        </motion.div>
       </motion.div>
     </section>
   );
@@ -1996,9 +2021,11 @@ function Hero() {
 function SectionIntro({
   title,
   description,
+  index,
 }: {
   title: string;
   description?: string;
+  index?: string;
 }) {
   const { t } = useI18n();
   const reduce = useReducedMotion();
@@ -2014,6 +2041,7 @@ function SectionIntro({
         visible: { opacity: 1, y: 0, transition: { duration: reduce ? 0 : 0.42, ease, delayChildren: reduce ? 0 : 0.08 } },
       }}
     >
+      {index && <span className="editorial-kicker">{index} / {index === "01" ? "SELECTED WORK" : "EXPERIENCE"}</span>}
       <h2>{t(title)}</h2>
       {t(description ? <p>{t(description)}</p> : null)}
       <motion.span
@@ -2047,242 +2075,136 @@ function ImageWithFallback({
   );
 }
 
-function ProjectCard({
-  project,
-  index,
-  highlightedAbilityId,
-}: {
+const showcaseSelectionKey = "portfolio-showcase-active-project";
+const showcaseSelectionEvent = "portfolio-showcase-select";
+
+function ProjectExhibit({ project, index, expanded, highlightedAbilityId, onSelect, onMove }: {
   project: Project;
   index: number;
+  expanded: boolean;
   highlightedAbilityId: AbilityId | null;
+  onSelect: (slug: string) => void;
+  onMove: (index: number, key: string) => void;
 }) {
   const { t } = useI18n();
-  const cardRef = useRef<HTMLElement>(null);
-  const reduce = useReducedMotion();
-  const fadeProgress = useMotionValue(0);
-  const smoothProgress = useSpring(fadeProgress, {
-    stiffness: 260,
-    damping: 34,
-    mass: .45,
-    restDelta: .002,
-  });
-  const titleId = `project-${project.slug}-title`;
-  const summaryId = `project-${project.slug}-summary`;
-  const abilityMatch = highlightedAbilityId
-    ? project.abilityIds.includes(highlightedAbilityId)
-    : false;
-  const highlightedAbilityLabel = highlightedAbilityId
-    ? abilityLabelById.get(highlightedAbilityId)
-    : null;
-  const homeContent = homeProjectContent[project.slug] ?? {
-    titleLines: [project.title],
-    category: project.type,
-    platform: "",
-    summary: project.summary,
-    role: project.role,
+  const content = homeProjectContent[project.slug] ?? {
+    titleLines: [project.title], category: project.type, platform: "",
+    summary: project.summary, role: project.role,
   };
+  const title = content.titleLines.join(" ");
+  const titleId = `project-${project.slug}-title`;
+  const toggleId = `project-${project.slug}-toggle`;
+  const panelId = `project-${project.slug}-panel`;
+  const matched = highlightedAbilityId ? project.abilityIds.includes(highlightedAbilityId) : false;
 
-  useEffect(() => {
-    if (reduce) {
-      fadeProgress.set(0);
-      return;
-    }
-
-    const card = cardRef.current;
-    const nextCard = card?.nextElementSibling as HTMLElement | null;
-    if (!card || !nextCard) {
-      fadeProgress.set(0);
-      return;
-    }
-
-    const documentTop = (element: HTMLElement) => {
-      const parent = element.parentElement;
-      if (!parent) return element.getBoundingClientRect().top + window.scrollY;
-
-      let top = parent.getBoundingClientRect().top + window.scrollY;
-      for (const child of Array.from(parent.children)) {
-        if (!(child instanceof HTMLElement)) continue;
-        top += Number.parseFloat(window.getComputedStyle(child).marginTop) || 0;
-        if (child === element) return top;
-        top += child.offsetHeight;
-      }
-      return element.getBoundingClientRect().top + window.scrollY;
-    };
-
-    let nextCardTop = documentTop(nextCard);
-    let stickyTop = 72;
-    let frame = 0;
-
-    const render = () => {
-      const approachDistance = Math.min(260, Math.max(200, window.innerHeight * 0.28));
-      const start = nextCardTop - approachDistance;
-      const end = nextCardTop - stickyTop;
-      const progress = (window.scrollY - start) / Math.max(1, end - start);
-      fadeProgress.set(Math.min(1, Math.max(0, progress)));
-    };
-
-    const update = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => {
-        frame = 0;
-        render();
-      });
-    };
-
-    const measure = () => {
-      nextCardTop = documentTop(nextCard);
-      stickyTop = Number.parseFloat(window.getComputedStyle(card).top) || 72;
-      render();
-    };
-
-    const resizeObserver = typeof ResizeObserver !== "undefined"
-      ? new ResizeObserver(measure)
-      : null;
-    resizeObserver?.observe(card);
-    resizeObserver?.observe(nextCard);
-    measure();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", measure);
-    return () => {
-      window.cancelAnimationFrame(frame);
-      resizeObserver?.disconnect();
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", measure);
-    };
-  }, [fadeProgress, reduce]);
-
-  const scale = useTransform(
-    smoothProgress,
-    [0, 0.28, 1],
-    [1, 0.995, reduce ? 1 : 0.985],
-  );
-  const opacity = useTransform(
-    smoothProgress,
-    [0, 0.2, 1],
-    [1, 0.995, reduce ? 1 : 0.9],
-  );
-  const y = useTransform(
-    smoothProgress,
-    [0, 0.24, 1],
-    [0, -1, reduce ? 0 : -4],
-  );
-
-  return (
-    <motion.article
-      ref={cardRef}
-      className={`project-card${abilityMatch ? " is-ability-match" : ""}`}
-      data-project={project.slug}
-      data-ability-match={abilityMatch ? "true" : undefined}
-      style={{
-        scale,
-        opacity,
-        y,
-        zIndex: index + 1,
+  return <article className={`project-card project-exhibit${expanded ? " is-expanded" : ""}${matched ? " is-ability-match" : ""}`} data-project={project.slug} aria-labelledby={toggleId}>
+    <div className="project-exhibit-spine" aria-hidden="true" inert>
+      <ImageWithFallback src={project.cardCover ?? project.cover} alt="" width={1672} height={941} loading="lazy" sizes="180px" style={{objectPosition: project.coverPosition ?? "center"}} />
+    </div>
+    <button className="project-exhibit-toggle" id={toggleId} type="button"
+      aria-label={`${t(expanded ? "当前项目" : "展开项目")}：${t(title)}`}
+      aria-expanded={expanded} aria-controls={panelId} aria-disabled={expanded || undefined}
+      onClick={() => { if (!expanded) onSelect(project.slug); }}
+      onKeyDown={event => {
+        if (!["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Home", "End"].includes(event.key)) return;
+        event.preventDefault(); onMove(index, event.key);
       }}
-    >
-      <a
-        className="project-card-link"
-        href={`/portfolio/project/${project.slug}/`}
+      onPointerEnter={() => { void prepareProject(project.slug).catch(() => undefined); }}
+      onFocus={() => { void prepareProject(project.slug).catch(() => undefined); }}>
+      <span className="project-exhibit-number">{String(index + 1).padStart(2, "0")}<span> / {String(projects.length).padStart(2, "0")}</span></span>
+      <span className="project-exhibit-state" aria-hidden="true">{t("当前展开")}</span>
+      <span className="project-exhibit-label"><span>{t(content.platform)}</span><span>{t(title)}</span></span>
+      <span className="project-exhibit-toggle-icon" aria-hidden="true"><Plus size={18} strokeWidth={1.5} /></span>
+      {matched && <span className="project-exhibit-match" aria-hidden="true">{t("匹配")}</span>}
+    </button>
+    <div className="project-exhibit-panel" id={panelId} role="region" aria-labelledby={toggleId} aria-hidden={!expanded} inert={!expanded}>
+      <a className="project-card-link" href={`/portfolio/project/${project.slug}/`}
         onPointerEnter={() => { void prepareProject(project.slug).catch(() => undefined); }}
         onFocus={() => { void prepareProject(project.slug).catch(() => undefined); }}
-        onTouchStart={() => { void prepareProject(project.slug).catch(() => undefined); }}
         onClick={event => openProjectFromPortfolio(event, project.slug)}
-        aria-labelledby={titleId}
-        aria-describedby={summaryId}
-      >
-        {t(abilityMatch && highlightedAbilityLabel ? (
-          <span className="project-match-indicator" aria-hidden="true">
-            {t("匹配 · ")}{t(highlightedAbilityLabel)}
-          </span>
-        ) : null)}
-        <div className="project-copy">
-          <div className="project-info-group">
-            <h3 id={titleId}>
-              {homeContent.titleLines.map((line, lineIndex) => (
-                <span key={line}>
-                  {t(line)}
-                  {t(lineIndex < homeContent.titleLines.length - 1 ? <br /> : null)}
-                </span>
-              ))}
-            </h3>
-            <p className="project-type">
-              <span>{t(homeContent.category)}</span>
-              {t(homeContent.platform ? <span className="project-platform">{t(homeContent.platform)}</span> : null)}
-            </p>
-            <p className="project-summary" id={summaryId}>{t(homeContent.summary)}</p>
-          </div>
-          <div className="project-meta">
-            <dl className="project-role">
-              <dt>{t("我的职责")}</dt>
-              <dd>{t(homeContent.role)}</dd>
-            </dl>
-          </div>
-          <div className="project-footer">
-            <div className="project-ability-tags" aria-label={t("项目对应能力")}>
-              {project.abilityIds.slice(0, 3).map(abilityId => (
-                <span key={abilityId}>{t(abilityLabelById.get(abilityId))}</span>
-              ))}
-            </div>
-            <span className="project-link" aria-hidden="true">
-              {t("查看案例")}<ArrowUpRight size={15} strokeWidth={1.8} />
-            </span>
-          </div>
-        </div>
+        aria-labelledby={titleId} aria-describedby={`project-${project.slug}-summary`}>
         <div className="project-visual" data-project-motion-media={project.cardCover ?? project.cover}>
-          <ImageWithFallback
-            src={project.cardCover ?? project.cover}
-            alt={t(`${project.title}项目封面`)}
-            width={1672}
-            height={941}
-            loading="lazy"
-            sizes="(max-width: 767px) calc(100vw - 40px), (max-width: 1200px) 50vw, 720px"
-            style={{ objectPosition: project.coverPosition ?? "center" }}
-          />
+          <ImageWithFallback src={project.cardCover ?? project.cover} alt={t(`${project.title}项目封面`)} width={1672} height={941} loading="lazy"
+            sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1100px) 60vw, 900px" style={{objectPosition: project.coverPosition ?? "center"}} />
+          <span className="project-exhibit-open" aria-hidden="true"><ArrowUpRight size={24} strokeWidth={1.4} /></span>
+        </div>
+        <div className="project-copy">
+          <p className="project-type">{t(content.category)}<span>{t(content.platform)}</span></p>
+          <h3 id={titleId}>{t(title)}</h3>
+          <p className="project-summary" id={`project-${project.slug}-summary`}>{t(content.summary)}</p>
+          <div className="project-footer"><div className="project-ability-tags" aria-label={t("项目对应能力")}>
+            {project.abilityIds.slice(0,3).map(id => <span key={id}>{t(abilityLabelById.get(id))}</span>)}
+          </div><span className="project-link" aria-hidden="true">{t("查看案例")} <ArrowUpRight size={15} /></span></div>
         </div>
       </a>
-    </motion.article>
-  );
+    </div>
+  </article>;
 }
 
-function WorkSection({
-  highlightedAbilityId,
-  onClearHighlight,
-}: {
+function WorkSection({ highlightedAbilityId, onClearHighlight, restoredProjectSlug }: {
   highlightedAbilityId: AbilityId | null;
   onClearHighlight: () => void;
+  restoredProjectSlug?: string;
 }) {
   const { t } = useI18n();
+  const showcaseRef = useRef<HTMLDivElement>(null);
+  const validSlug = (slug: string | null | undefined) => projects.some(project => project.slug === slug);
+  const [activeSlug, setActiveSlug] = useState(() => {
+    if (validSlug(restoredProjectSlug)) return restoredProjectSlug!;
+    return projects[0].slug;
+  });
+  const activeRef = useRef(activeSlug);
+  const selectProject = (slug: string) => {
+    if (!validSlug(slug)) return;
+    activeRef.current = slug;
+    setActiveSlug(slug);
+    try { sessionStorage.setItem(showcaseSelectionKey, slug); } catch { /* Keep the visible selection. */ }
+  };
+  useLayoutEffect(() => {
+    // Keep server and client first renders identical, then restore before measuring scroll.
+    if (!validSlug(restoredProjectSlug)) {
+      const returning = new URLSearchParams(location.search).get("returnProject");
+      if (validSlug(returning)) selectProject(returning!);
+      else {
+        try { const saved = sessionStorage.getItem(showcaseSelectionKey); if (validSlug(saved)) selectProject(saved!); } catch { /* Selection remains available without storage. */ }
+      }
+    }
+    const select = (event: Event) => {
+      const detail = (event as CustomEvent<{slug?: string; abilityId?: AbilityId}>).detail;
+      if (detail?.slug) selectProject(detail.slug);
+      else if (detail?.abilityId) {
+        const current = projects.find(project => project.slug === activeRef.current);
+        if (!current?.abilityIds.includes(detail.abilityId)) {
+          const match = projects.find(project => project.abilityIds.includes(detail.abilityId!));
+          if (match) selectProject(match.slug);
+        }
+      }
+    };
+    addEventListener(showcaseSelectionEvent, select);
+    return () => removeEventListener(showcaseSelectionEvent, select);
+  }, []);
+  const moveSelection = (index: number, key: string) => {
+    const next = key === "Home" ? 0 : key === "End" ? projects.length - 1
+      : (index + (["ArrowLeft", "ArrowUp"].includes(key) ? -1 : 1) + projects.length) % projects.length;
+    selectProject(projects[next].slug);
+    showcaseRef.current?.querySelectorAll<HTMLButtonElement>(".project-exhibit-toggle")[next]?.focus({preventScroll: window.innerWidth >= 768});
+  };
   const highlightedAbility = abilities.find(ability => ability.id === highlightedAbilityId);
-  const matchedCount = highlightedAbilityId
-    ? projects.filter(project => project.abilityIds.includes(highlightedAbilityId)).length
-    : 0;
-
-  return (
-    <section className={`section work-section${highlightedAbility ? " has-ability-highlight" : ""}`} id="work">
-      <div className="section-shell">
-        <SectionIntro
-          title={t("精选作品")}
-          description={t("覆盖 AI 问数、复杂业务平台与数据可视化，围绕关键任务说明设计取舍与交付内容。")}
-        />
-        {t(highlightedAbility ? (
-          <div className="project-highlight-status" aria-live="polite">
-            <span>{t("正在突出“")}{t(highlightedAbility.name)}{t("”对应的 ")}{t(matchedCount)} {t(" 个项目")}</span>
-            <button type="button" onClick={onClearHighlight}>{t("显示全部项目")}</button>
-          </div>
-        ) : null)}
-        <div className="project-stack">
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={project.slug}
-              project={project}
-              index={index}
-              highlightedAbilityId={highlightedAbilityId}
-            />
-          ))}
-        </div>
+  const matchedCount = highlightedAbilityId ? projects.filter(project => project.abilityIds.includes(highlightedAbilityId)).length : 0;
+  const activeIndex = projects.findIndex(project => project.slug === activeSlug);
+  return <section className={`section work-section${highlightedAbility ? " has-ability-highlight" : ""}`} id="work">
+    <div className="section-shell">
+      <SectionIntro index="01" title={t("精选作品")} description={t("覆盖 AI 问数、复杂业务平台与数据可视化，围绕关键任务说明设计取舍与交付内容。")} />
+      {highlightedAbility && <div className="project-highlight-status" aria-live="polite">
+        <span>{t("正在突出“")}{t(highlightedAbility.name)}{t("”对应的 ")}{matchedCount} {t(" 个项目")}</span>
+        <button type="button" onClick={onClearHighlight}>{t("显示全部项目")}</button>
+      </div>}
+      <div className="project-showcase-caption"><span>{t("选择一个项目，展开设计故事")}</span><span>{String(activeIndex + 1).padStart(2,"0")} / {String(projects.length).padStart(2,"0")}</span></div>
+      <div className="project-showcase" ref={showcaseRef} aria-label={t("精选项目展柜")} style={{"--showcase-tracks": projects.map(project => `minmax(0, ${project.slug === activeSlug ? 5.6 : 1}fr)`).join(" ")} as CSSProperties}>
+        {projects.map((project,index) => <ProjectExhibit key={project.slug} project={project} index={index} expanded={project.slug === activeSlug} highlightedAbilityId={highlightedAbilityId} onSelect={selectProject} onMove={moveSelection} />)}
       </div>
-    </section>
-  );
+    </div>
+  </section>;
 }
 
 function ExperienceSection() {
@@ -2295,6 +2217,7 @@ function ExperienceSection() {
       <div className="section-shell">
         <div className="experience-heading">
           <SectionIntro
+            index="03"
             title={t("工作经历")}
             description={t(experienceIntro)}
           />
@@ -2411,6 +2334,7 @@ function ContactSection() {
     <section className="section contact-section" id="contact">
       <div className="section-shell contact-shell">
         <div className="contact-copy">
+          <span className="editorial-kicker">04 / LET’S TALK</span>
           <h2>{t("聊聊新的合作机会")}</h2>
           <p>{t("如果你在寻找一位能理解复杂业务、并把 AI 能力转化为清晰产品体验的设计师，欢迎联系我。")}</p>
         </div>
@@ -2460,6 +2384,7 @@ function ContactSection() {
 
         <div className="contact-copyright">
           <span>{t("© 2026 李家豪 portfolio")}</span>
+          <a href="#top">{t("返回顶部")} <ArrowUpRight size={14} /></a>
         </div>
       </div>
     </section>
@@ -2473,6 +2398,7 @@ function HomePage({ restoration }: { restoration?: { slug: string; y: number } }
   const [highlightedAbilityId, setHighlightedAbilityId] = useState<AbilityId | null>(null);
   const showRelatedProjects = (abilityId: AbilityId, keyboard = false) => {
     setHighlightedAbilityId(abilityId);
+    window.dispatchEvent(new CustomEvent(showcaseSelectionEvent, { detail: { abilityId } }));
     try {
       window.sessionStorage.setItem("portfolio-work-highlight", abilityId);
     } catch {
@@ -2568,6 +2494,7 @@ function HomePage({ restoration }: { restoration?: { slug: string; y: number } }
       <main className="portfolio-home">
         <Hero />
         <WorkSection
+          restoredProjectSlug={restoration?.slug}
           highlightedAbilityId={highlightedAbilityId}
           onClearHighlight={clearProjectHighlight}
         />
@@ -2627,11 +2554,33 @@ function ProjectImageGallery({
               loading={index === 0 ? "eager" : "lazy"}
               fetchPriority={index === 0 ? "high" : "auto"}
             />
+            <figcaption><span>{String(index + 1).padStart(2, "0")} / {String(project.gallery.length).padStart(2, "0")}</span><span>{t(project.galleryLabels?.[index] ?? project.gallerySections?.find(section => section.startIndex === index)?.label ?? project.shortTitle)}</span></figcaption>
           </motion.figure>
         ))}
       </section>
     </>
   );
+}
+
+function ProjectPagination({ project }: { project: Project }) {
+  const { t } = useI18n();
+  const index = projects.findIndex(item => item.slug === project.slug);
+  const nextProject = projects[(index + 1) % projects.length];
+  return <footer className="case-pagination">
+    <div className="case-pagination-kicker"><span>{t("继续探索")}</span><span>{String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}</span></div>
+    <a className="case-next-project" href={`/portfolio/project/${nextProject.slug}/`}
+      onPointerEnter={() => { void prepareProject(nextProject.slug).catch(() => undefined); }}
+      onFocus={() => { void prepareProject(nextProject.slug).catch(() => undefined); }}
+      onClick={event => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        event.preventDefault();
+        requestProjectNavigation({ url: event.currentTarget.href, slug: nextProject.slug, direction: "forward", trigger: event.currentTarget, keyboard: event.detail === 0 });
+      }}>
+      <div className="case-next-copy"><span>{t("下一个项目")}</span><span className="case-next-title">{t(nextProject.title)} <ArrowUpRight size={40} strokeWidth={1.1} /></span><p>{t(nextProject.type)}</p></div>
+      <div className="case-next-visual"><ImageWithFallback src={nextProject.cardCover ?? nextProject.cover} alt={t(`${nextProject.title}项目封面`)} width={1672} height={941} loading="lazy" sizes="(max-width: 767px) 180px, 360px" /></div>
+    </a>
+    <div className="case-pagination-bottom"><a href="/portfolio/#work" onClick={event => returnToProjectLocation(event, project.slug)}><ArrowLeft size={15} />{t("返回作品")}</a><a href="/portfolio/#contact">{t("聊聊新的合作机会")} <ArrowUpRight size={15} /></a></div>
+  </footer>;
 }
 
 function ProjectPage({ project, projectView, motionEntry = false }: { project: Project; projectView?: NationalPlatformView; motionEntry?: boolean }) {
@@ -2665,12 +2614,13 @@ function ProjectPage({ project, projectView, motionEntry = false }: { project: P
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease }}
           >
-            <p>{t(project.type)}</p>
+            <p>{String(projects.findIndex(item => item.slug === project.slug) + 1).padStart(2, "0")} / {t(project.type)}</p>
             <h1 data-project-motion-title>{t(project.title)}</h1>
             <div className="case-summary">
               <p>{t(project.summary)}</p>
               <span>{t(project.period)}</span>
             </div>
+            <dl className="case-brief"><div><dt>{t("我的职责")}</dt><dd>{t(project.role)}</dd></div><div><dt>{t("项目对应能力")}</dt><dd>{project.abilityIds.map(id => t(abilityLabelById.get(id))).join(" / ")}</dd></div></dl>
           </motion.div>
         </header> : null)}
         <ProjectContentBoundary>
@@ -2684,6 +2634,7 @@ function ProjectPage({ project, projectView, motionEntry = false }: { project: P
         ))}
         </Suspense>
         </ProjectContentBoundary>
+        <ProjectPagination project={project} />
       </main>
       <BackToTop />
       <PortfolioChat project={project} />

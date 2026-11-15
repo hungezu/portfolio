@@ -97,6 +97,13 @@
 .gkx-image-button:hover>span,.gkx-image-button:focus-visible>span{opacity:1}
 .gkx-project-figure figcaption{padding:12px 16px;background:#fff;color:var(--gkx-ink)}
 .gkx-project-figure figcaption strong{font-size:14px;font-weight:500;line-height:1.6}
+.gkx-narrative .gkx-ai-evidence-heading{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.gkx-narrative .gkx-ai-key-evidence{margin-top:28px}
+.gkx-narrative .gkx-ai-key-evidence .gkx-image-button{padding:20px;aspect-ratio:auto}
+.gkx-narrative .gkx-ai-key-evidence .gkx-project-figure__detail{display:block;width:100%;height:auto;min-height:0}
+.gkx-narrative .gkx-ai-source-evidence h4{margin:24px 0 16px;font-size:18px;line-height:1.7;font-weight:500}
+.gkx-narrative .gkx-ai-source-evidence .gkx-ai-full-version{margin-top:20px}
+.gkx-narrative .gkx-key-decision{max-width:720px;margin-top:24px;font-size:16px;line-height:1.9;color:var(--gkx-ink)}
 .gkx-rule-intro{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:56px;padding:32px;border-radius:12px;background:#ededed}
 .gkx-rule-intro h3{max-width:16em;font-size:24px;font-weight:550;line-height:1.5}
 .gkx-rule-intro dl{display:grid;gap:24px}
@@ -229,6 +236,8 @@ body:has(.gkx-lightbox) .site-nav,body:has(.gkx-lightbox) .portfolio-chat,body:h
 .gkx-lightbox__panel.is-original .gkx-lightbox__evidence{width:1651px;height:871px;max-width:none;max-height:none}
 .gkx-lightbox__panel.is-original .gkx-lightbox__canvas{grid-template:none;place-items:start}
 .gkx-lightbox__panel.is-original .gkx-lightbox__canvas img{max-width:none;max-height:none}
+.gkx-lightbox__panel.is-reading .gkx-lightbox__canvas{display:block;padding-inline:8px}
+.gkx-lightbox__panel.is-reading .gkx-lightbox__canvas img{width:100%;height:auto;max-width:600px;max-height:none;margin-inline:auto}
 @media(max-width:1499px){
   .gkx-case{padding-top:88px}
   .gkx-case [id]{scroll-margin-top:104px}

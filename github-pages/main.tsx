@@ -2,6 +2,9 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import PortfolioClient from "../app/portfolio-client";
 import "../app/globals.css";
+import "../app/portfolio-editorial.css";
+import "../app/project-showcase.css";
+import "../app/case-editorial.css";
 
 const basePath = "/portfolio";
 const routePath = window.location.pathname.startsWith(basePath)
