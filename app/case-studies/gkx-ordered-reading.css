@@ -365,6 +365,23 @@
   line-height: 1.75;
 }
 .case-page.case-page-gkx .gkx-narrative .gkx-supporting-material[open] > summary { margin-bottom: 24px; }
+.case-page.case-page-gkx .gkx-narrative #gkx-workflow > .gkx-query-notes { margin-top: 12px; }
+.case-page.case-page-gkx .gkx-narrative .gkx-query-notes[open] > summary { margin-bottom: 8px; }
+.case-page.case-page-gkx .gkx-narrative .gkx-query-notes > ul {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.case-page.case-page-gkx .gkx-narrative .gkx-query-notes > ul > li { min-width: 0; margin: 0; }
+@media (max-width: 820px) {
+  .case-page.case-page-gkx .gkx-narrative .gkx-query-notes > ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+}
 .case-page.case-page-gkx .gkx-narrative .gkx-source-note,
 .case-page.case-page-gkx .gkx-narrative .gkx-case-boundary {
   max-width: 780px;

@@ -2590,5 +2590,9 @@
   "阅读方式": "Reading mode",
   "从关键设计开始": "Start with the key design",
   "我设计智慧门户及其主要业务系统，连接科研检索、内容管理与模型应用，统一跨系统的操作经验与交付依据。": "I designed the smart portal and its main business systems, connecting research discovery, content management and model applications through shared interaction patterns and delivery standards.",
-  "按类别、能力与厂商比较候选。这是我设计的模型选择流程。": "Compare candidates by category, capability and vendor. This is the model selection flow I designed."
+  "按类别、能力与厂商比较候选。这是我设计的模型选择流程。": "Compare candidates by category, capability and vendor. This is the model selection flow I designed.",
+  "搜索匹配标题、关键词": "Search matches titles and keywords",
+  "机构条件与搜索共同生效": "Institution filters work with the query",
+  "无结果时可以清除条件": "Clear conditions when no results match",
+  "重置恢复全部记录": "Reset restores all records"
 }

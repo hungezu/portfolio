@@ -387,7 +387,7 @@ function PaperWorkflowExample({ onReferenceClick }: {
     <div className="gkx-query-validation-intro"><h3>{t("将设计要求写成可检查的规则")}</h3><p>{t("组合筛选、无结果与重置已在作品集交互复现中核对，使用论文与专利示例数据。")}</p></div>
     <div id="gkx-ai-query-validation"><OriginalLanguage><GkxPaperQueryDemo /></OriginalLanguage></div>
     <div className="gkx-query-contract"><a id="gkx-ai-rules-reference" href="#gkx-standards-applications" onClick={onReferenceClick}>{t("查看对应规范")}<IconArrowRight aria-hidden="true" /></a></div>
-    <details className="gkx-supporting-material"><summary>{t("搜索、筛选与重置")}</summary><pre><code>{t("搜索匹配标题、关键词\n机构条件与搜索共同生效\n无结果时可以清除条件\n重置恢复全部记录")}</code></pre></details>
+    <details className="gkx-supporting-material gkx-query-notes"><summary>{t("搜索、筛选与重置")}</summary><ul>{["搜索匹配标题、关键词", "机构条件与搜索共同生效", "无结果时可以清除条件", "重置恢复全部记录"].map(note => <li key={note}>{t(note)}</li>)}</ul></details>
   </article>;
 }
 
@@ -591,7 +591,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
         <article id="gkx-rule-search"><header className="gkx-content-heading"><h3>{t(searchModule.title)}</h3></header><DecisionComparison comparison={searchModule.comparison} titleId="gkx-search-comparison-title"><div className="gkx-query-comparison"><FigureDetail asset={assets.paperList} viewBox="224 123 875 52" label={t(searchModule.afterLabel ?? assets.paperList.caption)} onOpen={openImage} /><FigureDetail asset={assets.paperBefore} viewBox="224 123 875 52" label={t(searchModule.beforeLabel ?? assets.paperBefore.caption)} onOpen={openImage} /></div></DecisionComparison></article>
         <article id="gkx-rule-operations"><header className="gkx-content-heading"><h3>{t(operationsModule.title)}</h3><p>{t(operationsModule.decision)}</p></header><FigureDetail asset={assets.paperList} viewBox="232 228 1160 282" label={t("记录与右侧行操作")} onOpen={openImage} /><p className="gkx-source-note">{t("超过三项的扩展操作尚未在当前图稿中展示。")}</p></article>
       </details>
-      <article id="gkx-reading-workspace" className="gkx-topic"><header className="gkx-content-heading"><h3>{t("智能阅读工作区")}</h3><p>{t("我为持续阅读与辅助理解设计工作区：左侧目录、中间原文、右侧辅助信息，用来对照不同任务的信息组织。")}</p></header><ProjectFigure asset={assets.reading} onOpen={openImage} showCaption /></article>
+      <article id="gkx-reading-workspace" className="gkx-topic"><header className="gkx-content-heading"><h3>{t("智能阅读工作区")}</h3><p>{t("我为持续阅读与辅助理解设计工作区：左侧目录、中间原文、右侧辅助信息，用来对照不同任务的信息组织。")}</p></header><ProjectFigure asset={assets.reading} onOpen={openImage} /></article>
       </div></details>
     </section>
 

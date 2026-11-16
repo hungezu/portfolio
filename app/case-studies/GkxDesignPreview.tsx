@@ -20,7 +20,7 @@ export function GkxDesignPreview({ title, documentId = "page-index", className =
   const frameRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState(() => Math.max(240, Math.min(maximumHeight, initialHeight)));
-  const source = publicAsset(`/assets/projects/gkx/design-preview/index.html?id=${encodeURIComponent(documentId)}&embed=1&v=20261115-natural-height`);
+  const source = publicAsset(`/assets/projects/gkx/design-preview/index.html?id=${encodeURIComponent(documentId)}&embed=1&v=20261116-single-line-notice`);
   const requestMeasurement = useCallback(() => {
     frameRef.current?.contentWindow?.postMessage({ type: measureMessage, version: 1 }, window.location.origin);
   }, []);
