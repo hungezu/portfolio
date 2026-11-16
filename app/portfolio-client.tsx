@@ -131,8 +131,8 @@ const homeProjectContent: Record<string, {
     titleLines: ["GKX 智慧门户"],
     category: "政企多业务平台",
     platform: "Web",
-    summary: "围绕对象维护、流程建模与异常恢复设计任务空间，以共用规范衔接多系统和交付评审。",
-    role: "主导主要业务页面的 UI 与交互，独立完成规范与设计 MD，并参与交付评审。",
+    summary: "我主导智慧门户与多系统任务空间，覆盖对象维护、流程建模、异常恢复、智能科研与智能阅读，并将案例广场从 AI 初稿修订为可核对的界面。",
+    role: "主导方案与界面 · 独立完成设计规范与设计 MD · 参与交付评审",
   },
   "zhaocai-smart": {
     titleLines: ["招财 Smart"],
@@ -2122,7 +2122,7 @@ function ProjectExhibit({ project, index, expanded, highlightedAbilityId, onSele
         onPointerEnter={() => { void prepareProject(project.slug).catch(() => undefined); }}
         onFocus={() => { void prepareProject(project.slug).catch(() => undefined); }}
         onClick={event => openProjectFromPortfolio(event, project.slug)}
-        aria-labelledby={titleId} aria-describedby={`project-${project.slug}-summary`}>
+        aria-labelledby={titleId} aria-describedby={`${project.slug === "gkx" ? "project-gkx-role " : ""}project-${project.slug}-summary`}>
         <div className="project-visual" data-project-motion-media={project.cardCover ?? project.cover}>
           <ImageWithFallback src={project.cardCover ?? project.cover} alt={t(`${project.title}项目封面`)} width={1672} height={941} loading="lazy"
             sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1100px) 60vw, 900px" style={{objectPosition: project.coverPosition ?? "center"}} />
@@ -2131,6 +2131,7 @@ function ProjectExhibit({ project, index, expanded, highlightedAbilityId, onSele
         <div className="project-copy">
           <p className="project-type">{t(content.category)}<span>{t(content.platform)}</span></p>
           <h3 id={titleId}>{t(title)}</h3>
+          {project.slug === "gkx" && <p className="project-card-role" id="project-gkx-role">{t(content.role)}</p>}
           <p className="project-summary" id={`project-${project.slug}-summary`}>{t(content.summary)}</p>
           <div className="project-footer"><div className="project-ability-tags" aria-label={t("项目对应能力")}>
             {project.abilityIds.slice(0,3).map(id => <span key={id}>{t(abilityLabelById.get(id))}</span>)}

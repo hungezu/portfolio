@@ -133,7 +133,7 @@ type ImageAsset = { src: string; alt: string; caption: string; width: number; he
 
 const assets = {
   workflowBuilder: { src: "/assets/projects/gkx/workflow-builder.jpg", alt: "流程设计器脱敏与重构图稿，展示对象管理列表与节点建模工作区", caption: "流程设计器 · 脱敏与重构图稿", width: 1800, height: 1012 },
-  portalEntry: { src: `${assetRoot}/ui/portal-entry-prototype-20261114.webp`, alt: "最新门户原型的科研知识智能搜索入口，包含关键词搜索、AI 搜索与论文、专家等任务入口，机构标识已裁去", caption: "智慧门户 · 最新检索入口原型", width: 1232, height: 576 },
+  portalEntry: { src: `${assetRoot}/ui/portal-entry-prototype-20261114.webp`, alt: "最新门户原型的科研知识智能搜索入口，包含关键词搜索、AI 搜索与论文、专家等任务入口，机构标识已裁去", caption: "智慧门户检索入口 · 由我设计", width: 1232, height: 576 },
   portalResults: { src: `${assetRoot}/ui/portal-results-prototype-20261114.webp`, alt: "最新门户原型的关键词结果局部，展示资源类型切换与一条结果的标题、来源、摘要和标签；数量与内容为演示数据", caption: "智慧门户 · 多类型结果局部（原型）", width: 952, height: 225 },
   designSystemArchitecture: { src: `${assetRoot}/ui/design-system-gkx-mapping.webp`, alt: "GKX规范组织示意图，从基础样式、组件与交互规则到页面任务与交付核对，对应新型高端智库、科技情报挖掘平台、情报管理系统和超大规模智算引擎", caption: "规范体系 · 从共用规则到GKX业务页面", width: 1862, height: 845 },
   designSystemPageTypes: { src: `${assetRoot}/ui/design-system-page-types.webp`, alt: "页面信息架构与页面类型图，展示标题栏、内容区、底部栏的组成，以及列表、详情、表单、仪表盘、模态和状态提示页", caption: "页面类型 · 从信息结构到页面骨架", width: 1796, height: 876 },
@@ -177,7 +177,7 @@ function reviewRecordImage(record?: SupplierSection["reviewRecords"][number]): I
   };
 }
 
-function ProjectFigure({ asset, onOpen, className = "", priority = false, description, viewBox, compactViewBox, stageSize, caption }: {
+function ProjectFigure({ asset, onOpen, className = "", priority = false, description, viewBox, compactViewBox, stageSize, caption, showCaption = false }: {
   asset: ImageAsset;
   onOpen: (asset: ImageAsset, trigger: HTMLButtonElement) => void;
   className?: string;
@@ -187,6 +187,7 @@ function ProjectFigure({ asset, onOpen, className = "", priority = false, descri
   compactViewBox?: string;
   stageSize?: { width: number; height: number; align?: "center" };
   caption?: string;
+  showCaption?: boolean;
 }) {
   const { t } = useI18n();
   const wideWidth = stageSize?.width ?? (viewBox ? Number(viewBox.split(/\s+/)[2]) : asset.width);
@@ -202,6 +203,7 @@ function ProjectFigure({ asset, onOpen, className = "", priority = false, descri
     <GkxEvidenceSurface><button type="button" className="gkx-image-button" aria-label={openLabel} aria-description={t(description)} onClick={event => onOpen(asset, event.currentTarget)}>
       {viewBox || compactViewBox ? <>{renderCrop(viewBox ?? `0 0 ${asset.width} ${asset.height}`, compactViewBox ? "is-wide" : "")}{compactViewBox && renderCrop(compactViewBox, "is-compact")}</> : <PortfolioImage src={publicAsset(asset.src)} alt={t(asset.alt)} width={asset.width} height={asset.height} loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />}
     </button></GkxEvidenceSurface>
+    {showCaption && <figcaption>{t(caption ?? asset.caption)}</figcaption>}
   </figure>;
 }
 
@@ -351,7 +353,7 @@ function TaskComparison({ onOpen }: { onOpen: (asset: ImageAsset, trigger: HTMLB
   const visual = useVisualCopy();
   return <div className="gkx-domain-studies">{depth.strategy.examples.map((item, index) => <article key={item.figureId}>
     <header><h3>{t(item.title)}</h3><p>{visual.taskExamples[index]}</p></header>
-    <ProjectFigure asset={figureById[item.figureId]} onOpen={onOpen} viewBox={item.figureId === "ui-maas" ? "226 168 1130 382" : "299 601 1384 559"} compactViewBox={item.figureId === "ui-maas" ? "244 284 386 242" : "299 601 692 350"} caption={item.figureId === "ui-maas" ? "MaaS 模型广场 · 规范应用对照" : "高端智库 · 领域与技术概览"} />
+    <ProjectFigure asset={figureById[item.figureId]} onOpen={onOpen} viewBox={item.figureId === "ui-maas" ? "226 168 1130 382" : "299 601 1384 559"} compactViewBox={item.figureId === "ui-maas" ? "244 284 386 242" : "299 601 692 350"} caption={item.figureId === "ui-maas" ? "MaaS 模型广场" : "高端智库 · 领域与技术概览"} showCaption={item.figureId === "ui-maas"} />
   </article>)}</div>;
 }
 
@@ -520,10 +522,9 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
           </dl>
         </aside>
       </div>
-      <ProjectFigure asset={assets.portalEntry} onOpen={openImage} className="gkx-hero__frame" priority />
-      <details className="gkx-supporting-material gkx-hero__details"><summary>{visual.ordered.heroDetails}</summary>
+      <ProjectFigure asset={assets.portalEntry} onOpen={openImage} className="gkx-hero__frame" priority showCaption />
+      <details className="gkx-supporting-material gkx-hero__details" open><summary>{visual.ordered.heroDetails}</summary>
         <dl id="gkx-scope" className="gkx-hero__meta"><div><dt>{t("项目范围")}</dt><dd>{t(copy.hero.scope)}</dd></div><div><dt>{t("合同周期")}</dt><dd>{t(project.period)}</dd></div></dl>
-        <p className="gkx-source-note">{visual.roleBoundary}</p>
       </details>
       <div className="gkx-reader-bar">
         <div className="gkx-reader-controls"><span>{t("阅读方式")}</span><GkxSegmentedControl<"overview" | "full"> label={t("阅读模式")} value={reader} onChange={setReader} options={localize([{ value: "overview", label: "项目概览" }, { value: "full", label: "完整案例" }])} /></div>
@@ -538,9 +539,8 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
       <GkxProjectScope scope={overviewCopy.scope} />
       <div className="gkx-project-priorities">{depth.challenges.map((item, index) => <article key={item.title}><h3>{t(item.title)}</h3><p>{visual.challenges[index]}</p></article>)}</div>
       </div>
-      <details id="gkx-role-scope" className="gkx-supporting-material"><summary>{t("我的职责与协作")}</summary><section className="gkx-contributions" aria-label={t("我的职责与协作")}>
+      <details id="gkx-role-scope" className="gkx-supporting-material" open><summary>{t("我的职责与协作")}</summary><section className="gkx-contributions" aria-label={t("我的职责与协作")}>
         {overviewCopy.responsibilities.items.map((item, index) => <article key={item.kind}><h3>{t(item.stage)}</h3><p>{visual.roles[index]}</p></article>)}
-        <p className="gkx-source-note">{visual.roleBoundary}</p>
       </section></details>
       {reader === "overview" && <section className="gkx-quick-judgments" aria-label={t("两项关键设计判断")}>
         {depth.overview.decisions.map(item => <article key={item.target}><h3>{t(item.title)}</h3><div><p>{t(item.text)}</p><a href={`#${item.target}`}>{t(item.link)}<IconArrowRight aria-hidden="true" /></a></div></article>)}
@@ -555,7 +555,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
       <div className="gkx-topic"><GkxExplainerFigure name="01-shared-structure" onOpen={openImage} /></div>
       <PortalTaskEvidence onOpen={openImage} />
       <TaskComparison onOpen={openImage} />
-      <details className="gkx-supporting-material"><summary>{t("共用查询控件的两个应用")}</summary><SharedQueryEvidence onOpen={openImage} /></details>
+      <details className="gkx-supporting-material" open><summary>{t("共用查询控件的两个应用")}</summary><SharedQueryEvidence onOpen={openImage} /></details>
       <GkxSupplementalMaterials onOpen={openImage} compact omitWorkflow />
       </div></details>
     </section>
@@ -591,7 +591,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
         <article id="gkx-rule-search"><header className="gkx-content-heading"><h3>{t(searchModule.title)}</h3></header><DecisionComparison comparison={searchModule.comparison} titleId="gkx-search-comparison-title"><div className="gkx-query-comparison"><FigureDetail asset={assets.paperList} viewBox="224 123 875 52" label={t(searchModule.afterLabel ?? assets.paperList.caption)} onOpen={openImage} /><FigureDetail asset={assets.paperBefore} viewBox="224 123 875 52" label={t(searchModule.beforeLabel ?? assets.paperBefore.caption)} onOpen={openImage} /></div></DecisionComparison></article>
         <article id="gkx-rule-operations"><header className="gkx-content-heading"><h3>{t(operationsModule.title)}</h3><p>{t(operationsModule.decision)}</p></header><FigureDetail asset={assets.paperList} viewBox="232 228 1160 282" label={t("记录与右侧行操作")} onOpen={openImage} /><p className="gkx-source-note">{t("超过三项的扩展操作尚未在当前图稿中展示。")}</p></article>
       </details>
-      <details id="gkx-reading-workspace" className="gkx-supporting-material"><summary>{t("团队界面对照：智能阅读")}</summary><p className="gkx-story-intro">{t("智能科研与智能阅读不属于本人设计范围。此处仅保留团队界面，用于对照不同任务的信息组织，不作为个人设计决策或成果。")}</p><ProjectFigure asset={assets.reading} onOpen={openImage} caption="智能阅读 · 团队界面对照" /></details>
+      <article id="gkx-reading-workspace" className="gkx-topic"><header className="gkx-content-heading"><h3>{t("智能阅读工作区")}</h3><p>{t("我为持续阅读与辅助理解设计工作区：左侧目录、中间原文、右侧辅助信息，用来对照不同任务的信息组织。")}</p></header><ProjectFigure asset={assets.reading} onOpen={openImage} showCaption /></article>
       </div></details>
     </section>
 

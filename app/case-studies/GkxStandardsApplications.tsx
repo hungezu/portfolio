@@ -12,12 +12,12 @@ import "./gkx-standards-stage.css";
 export type GkxStandardsApplicationAsset = { src: string; alt: string; caption: string; width: number; height: number };
 type AssetKey = "paperList" | "paperDetail" | "paperEdit" | "importError" | "workflowBuilder" | "maas";
 const applications: Array<{
-  id: string; page: string; check: string; boundary?: string;
+  id: string; page: string; check: string;
   preview: { assetKey: AssetKey; viewBox: string; compactViewBox: string };
   supplemental?: Array<{ label: string; assetKey: AssetKey }>;
 }> = [
   { id: "workflow", page: "流程设计器", check: "列表保留流程身份与发布状态；画布组织节点关系，属性面板配置当前节点。", preview: { assetKey: "workflowBuilder", viewBox: "854 258 856 490", compactViewBox: "854 258 856 490" } },
-  { id: "maas", page: "MaaS 模型广场", check: "类别、能力与厂商用于筛选；模型状态与后续入口留在候选卡片中。", boundary: "仅作规范应用对照，不代表本人主导 MaaS 整体设计。", preview: { assetKey: "maas", viewBox: "226 168 1130 382", compactViewBox: "244 284 386 242" } },
+  { id: "maas", page: "MaaS 模型广场", check: "本例展示我设计的模型选择流程：按类别、能力与厂商筛选，再通过卡片查看模型状态、进入后续操作，说明共用控件如何适配资源选择。", preview: { assetKey: "maas", viewBox: "226 168 1130 382", compactViewBox: "244 284 386 242" } },
   { id: "record", page: "对象列表与单条处理", check: "详情与编辑围绕同一记录；核对提交反馈、未保存修改与返回后的列表条件。", preview: { assetKey: "paperDetail", viewBox: "384 32 672 736", compactViewBox: "384 32 672 736" }, supplemental: [{ label: "列表", assetKey: "paperList" }, { label: "编辑", assetKey: "paperEdit" }] },
   { id: "import", page: "批量导入异常", check: "错误反馈定位到问题行，并提供重新上传入口；完整恢复流程需结合实现核对。", preview: { assetKey: "importError", viewBox: "464 104 512 592", compactViewBox: "464 104 512 592" } },
 ];
@@ -52,7 +52,6 @@ export function GkxStandardsApplications({ assets, onOpen, onReturn }: {
           content: <div className="gkx-standard-stage__content">
             <div className="gkx-standard-stage__copy">
               <p className="gkx-standard-stage__check">{t(item.check)}</p>
-              {item.boundary && <p className="gkx-standard-stage__boundary">{t(item.boundary)}</p>}
               {item.supplemental && <div className="gkx-standard-stage__actions">{item.supplemental.map(example => <button type="button" key={example.assetKey} aria-label={t(`查看原图：${assets[example.assetKey].caption}`)} onClick={event => onOpen(assets[example.assetKey], event.currentTarget)}>{t(example.label)}<IconArrowRight aria-hidden="true" /></button>)}</div>}
             </div>
             <figure className="gkx-standard-stage__figure">

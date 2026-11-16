@@ -10,7 +10,7 @@ const figures = {
   "01-shared-structure": {
     mobileHeight: 1340,
     title: ["共用操作与业务骨架", "Shared operations and task-specific layouts"],
-    alt: ["查询、选择反馈、返回与操作反馈作为共用层，分别支持资源卡片、领域分析、对象列表和节点画布。MaaS仅作规范应用对照。", "Shared query, selection feedback, return paths and operation feedback support resource cards, domain analysis, record lists and node canvases. MaaS is a standards application example."],
+    alt: ["查询、选择反馈、返回与操作反馈作为共用层，分别支持资源卡片、领域分析、对象列表和节点画布。MaaS 模型广场应用共用操作规范。", "Shared query, selection feedback, return paths and operation feedback support resource cards, domain analysis, record lists and node canvases. The MaaS model gallery applies shared operation standards."],
   },
   "02-task-space": {
     mobileHeight: 1336,

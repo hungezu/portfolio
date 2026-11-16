@@ -230,8 +230,8 @@ const projectData: Project[] = [
     period: "2025.11 - 2027.03",
     type: "平台级体验设计 / Web",
     summary:
-      "负责门户内多业务系统的设计样式规范，借助 AI 编写整套设计 MD，统一页面与组件规则，并用于原型设计和评审优化。",
-    role: "设计系统样式规范制定 · AI 协作编写设计 MD · 原型设计与评审优化",
+      "我主导智慧门户与多系统任务空间，覆盖对象维护、流程建模、异常恢复、智能科研与智能阅读，并将案例广场从 AI 初稿修订为可核对的界面。",
+    role: "主导方案与界面 · 独立完成设计规范与设计 MD · 参与交付评审",
     cover: "/assets/projects/covers/gkx-cover.webp",
     cardCover: "/assets/projects/covers/gkx-card-cover-20260906.webp",
     coverPosition: "center",

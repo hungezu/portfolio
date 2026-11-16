@@ -9,9 +9,8 @@
       "gkx-outcomes-title": "留下了图稿、规范、原型修订与署名评审记录；后续继续补全修改与复核证据。"
     },
     "challenges": ["按任务保留业务结构，共用查询、反馈与返回规则。", "将页面、组件和交互要求写入规范与设计 MD，用于交付核对。"],
-    "roles": ["主导主要业务页面 UI 与交互，另一位设计师辅助；产品提供案例广场 AI 原型，我负责优化。", "独立完成项目设计规范与设计 MD。", "参与合作方 UI 评审，提出修改意见；下文保留本人署名台账。"],
-    "roleBoundary": "门户中的智能科研与智能阅读不属于本人设计范围。",
-    "taskExamples": ["按类别、能力与厂商比较候选。MaaS 仅作规范应用对照，不代表本人主导整体设计。", "技术、报告与人才围绕同一领域组织，切换内容时保留分析对象。"],
+    "roles": ["我主导智慧门户（含智能科研、智能阅读）及主要业务页面的 UI 与交互设计，另一名设计师辅助；案例广场由产品提供 AI 原型，我按 GKX 规范完成优化。", "独立完成项目设计规范与设计 MD。", "参与合作方 UI 评审，提出修改意见；下文保留本人署名台账。"],
+    "taskExamples": ["按类别、能力与厂商比较候选。这是我设计的模型选择流程。", "技术、报告与人才围绕同一领域组织，切换内容时保留分析对象。"],
     "recordReason": "只处理一条记录，结束后继续当前列表任务。",
     "recordCost": "弹窗空间有限；字段或步骤增加时，需重新评估承载方式。",
     "aiIntro": "沿用产品 AI 原型的业务功能，调整信息层级与操作位置。",
@@ -30,7 +29,7 @@
     "teamDetails": "查看团队评审意见与原表",
     "flowBoundary": "未保存提示、发布反馈与返回后的列表状态仍待实现核对。",
     "ordered": {
-      "heroLead": "连接科研检索、内容管理与模型应用，统一跨系统的操作经验与交付依据。",
+      "heroLead": "我设计智慧门户及其主要业务系统，连接科研检索、内容管理与模型应用，统一跨系统的操作经验与交付依据。",
       "heroDetails": "项目范围与职责边界",
       "original": "产品 AI 原型",
       "revised": "人工修订",
@@ -67,9 +66,8 @@
       "gkx-outcomes-title": "Designs, standards, prototype revisions and signed review records remain available. Change and follow-up evidence needs further work."
     },
     "challenges": ["Retain task-specific structures while sharing query, feedback and return patterns.", "Document page, component and interaction requirements in standards and design MD for delivery checks."],
-    "roles": ["Led the main business UI and interactions with support from another designer. Refined the product team’s AI prototype for the case gallery.", "Independently authored the project’s design standards and design MD.", "Participated in supplier UI reviews and recorded feedback. Signed ledger entries are available below."],
-    "roleBoundary": "The portal’s smart research and smart reading interfaces are outside my design scope.",
-    "taskExamples": ["Compare candidates by category, capability and vendor. MaaS is a standards application example, not a claim of overall design ownership.", "Technology, reports and talent remain organised around the same domain while content changes."],
+    "roles": ["I led UI and interaction design for the smart portal, including smart research and smart reading, and its main business pages with support from another designer. I refined the product team’s case-gallery AI prototype against GKX standards.", "Independently authored the project’s design standards and design MD.", "Participated in supplier UI reviews and recorded feedback. Signed ledger entries are available below."],
+    "taskExamples": ["Compare candidates by category, capability and vendor. This is the model selection flow I designed.", "Technology, reports and talent remain organised around the same domain while content changes."],
     "recordReason": "Handle a single record, then continue the current list task.",
     "recordCost": "Dialog space is limited. More fields or steps require reassessing the container.",
     "aiIntro": "Retain the product AI prototype’s business capabilities; revise hierarchy and operation placement.",
@@ -88,7 +86,7 @@
     "teamDetails": "View team feedback and source record",
     "flowBoundary": "Unsaved-change prompts, publication feedback and restored list state still need implementation checks.",
     "ordered": {
-      "heroLead": "Connecting research discovery, content management and model applications through shared interaction patterns and delivery standards.",
+      "heroLead": "I designed the smart portal and its main business systems, connecting research discovery, content management and model applications through shared interaction patterns and delivery standards.",
       "heroDetails": "Project scope and ownership boundaries",
       "original": "Product AI prototype",
       "revised": "Designer revision",

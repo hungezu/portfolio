@@ -110,8 +110,8 @@ function sharedStructure() {
   });
   body += line(20, 1206, 340, 1206, '#2b3b46');
   body += lines(20, 1236, ['共用的是操作关系，', '变化的是业务组织。'], 18, C.ink, 26);
-  body += lines(20, 1296, ['结构示意 · MaaS 仅作规范应用对照，', '不代表本人主导整体设计。'], 14, C.muted, 21);
-  return doc({ id: '01-shared-structure', number: '01', height: 1340, title: '共用操作，页面骨架随任务变化', desc: '手机版结构示意：共用查询入口、选择反馈、返回路径和操作反馈，通过同一主干连接四种任务骨架：候选资源卡片、同一领域内容、对象列表及节点画布。MaaS 仅作规范应用对照，不代表本人主导整体设计。', body });
+  body += lines(20, 1296, ['结构示意 · MaaS 模型广场，', '应用共用操作规范。'], 14, C.muted, 21);
+  return doc({ id: '01-shared-structure', number: '01', height: 1340, title: '共用操作，页面骨架随任务变化', desc: '手机版结构示意：共用查询入口、选择反馈、返回路径和操作反馈，通过同一主干连接四种任务骨架：候选资源卡片、同一领域内容、对象列表及节点画布。MaaS 模型广场应用共用操作规范。', body });
 }
 
 function taskSpace() {

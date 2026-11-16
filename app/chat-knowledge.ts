@@ -89,7 +89,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "complex-systems", title: "复杂系统如何拆解",
-    content: "先厘清系统、角色、任务与页面边界，再判断哪些操作可以共用、哪些结构应随任务变化。GKX案例通过对象维护、流程建模与导入异常说明任务空间取舍；智能科研与智能阅读不属于我的设计范围。",
+    content: "先厘清系统、角色、任务与页面边界，再判断哪些操作可以共用、哪些结构应随任务变化。GKX案例通过对象维护、流程建模、导入异常与智能阅读工作区说明我对任务空间的设计取舍。",
     keywords: ["复杂系统", "B端", "B 端", "角色", "权限", "业务规则", "架构", "流程", "多系统"],
     references: [project("GKX · 跨系统策略", "gkx", "gkx-systems")],
   },
@@ -119,13 +119,13 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "project-gkx-challenge", title: "GKX的设计难点",
-    content: "主要难点是**多系统共用操作经验，各类任务保留合适空间**。我在主要业务页面中区分对象管理、单条维护和流程建模，并独立整理共用规范与设计 MD，用于原型校正和交付核对。智能科研与智能阅读不属于本人设计范围，MaaS 仅作规范应用对照。",
+    content: "主要难点是**多系统共用操作经验，各类任务保留合适空间**。我设计智慧门户（含智能科研、智能阅读）、对象维护、流程建模、异常恢复与 MaaS 模型选择流程，并独立整理共用规范与设计 MD，用于原型校正和交付核对。",
     keywords: ["GKX难点", "GKX挑战", "跨系统", "统一", "一致性", "取舍"],
     references: [project("GKX · 跨系统策略", "gkx", "gkx-systems"), project("GKX · 交互决策", "gkx", "nsp-rules")],
   },
   {
     id: "project-gkx-role", title: "我在GKX负责什么",
-    content: "我主导主要业务页面的 UI 与交互，独立完成规范与设计 MD，并参与交付评审。智能科研与智能阅读不属于本人设计范围；MaaS 页面用于规范应用对照，不代表我主导整个 MaaS。",
+    content: "我主导智慧门户（含智能科研、智能阅读）及主要业务页面的 UI 与交互设计，另一名设计师辅助；案例广场由产品提供 AI 原型，我按 GKX 规范完成优化。我独立完成设计规范与设计 MD，并参与交付评审；MaaS 模型广场展示我设计的模型选择流程。",
     keywords: ["GKX职责", "GKX负责", "门户规范", "协作审核"],
     references: [project("GKX · 规范与交付", "gkx", "gkx-design-system"), project("GKX · 署名评审记录", "gkx", "gkx-supplier")],
   },
