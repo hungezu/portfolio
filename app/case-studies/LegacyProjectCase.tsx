@@ -1,77 +1,131 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useI18n } from "../i18n";
-import { publicAsset, type Project } from "../portfolio-data";
+import { optimizedImage, PortfolioImage } from "../portfolio-image";
+import type { Project } from "../portfolio-data";
 import { ProjectLocator, type ProjectLocatorSection } from "../project-locator";
-import { legacyCases, type LegacyEvidence, type LegacyProjectSlug, type LegacyText } from "./legacy-case-content";
 import "./legacy-project-case.css";
 
-const assetRoot = "/assets/projects/legacy-evidence-20261124";
-export function isLegacyProjectSlug(slug: string): slug is LegacyProjectSlug { return Object.hasOwn(legacyCases, slug); }
+const previousAnchors: Record<string, Readonly<Record<string, string>>> = {
+  "tax-cloud": {
+    "legacy-tax-scope": "case-gallery-0",
+    "legacy-tax-workspace": "case-gallery-7",
+    "legacy-tax-forms": "case-gallery-4",
+    "legacy-tax-mobile": "case-gallery-14",
+  },
+  "energy-tax": {
+    "legacy-energy-scope": "case-gallery-0",
+    "legacy-energy-workspace": "case-gallery-3",
+    "legacy-energy-grid": "case-gallery-2",
+    "legacy-energy-reflection": "case-gallery-5",
+  },
+  "data-visualisation": {
+    "legacy-visual-layout": "case-gallery-0",
+    "legacy-visual-display": "case-gallery-4",
+    "legacy-visual-data": "case-gallery-4",
+  },
+};
 
-function LayoutDiagram({ kind, pick }: { kind: "workspace" | "grid" | "dashboard" | "panels"; pick: (text: LegacyText) => string }) {
-  if (kind === "workspace") return <div className="legacy-workspaces" aria-label={pick(["两类卡片库的任务组织示意", "Task organization across two card libraries"])}>
-    {[{ title: ["集团视角", "Group context"] as LegacyText, items: [["跨企业概览", "Cross-company overview"], ["公司排行", "Company comparison"], ["风险概览", "Risk overview"]] }, { title: ["单企业视角", "Company context"] as LegacyText, items: [["当前任务", "Current tasks"], ["税种与风险", "Tax types and risks"], ["办税日历", "Tax calendar"]] }].map(group => <div key={group.title[0]}><strong>{pick(group.title)}</strong>{group.items.map(item => <span key={item[0]}>{pick(item as unknown as LegacyText)}</span>)}</div>)}
-    <p>{pick(["任务配置归纳 · 不含业务数据", "Task configuration summary · No business data"])}</p>
-  </div>;
-  if (kind === "grid") return <div className="legacy-grid-note"><dl>{[["设计基准", "Design baseline", "1920 px"], ["导航高度", "Navigation height", "56 px"], ["默认侧栏", "Default sidebar", "252 px"], ["两侧留白", "Side margins", "16 px × 2"]].map(([zh, en, value]) => <div key={zh}><dt>{pick([zh, en])}</dt><dd>{value}</dd></div>)}</dl><p>1920 − 252 − 16 × 2 = <strong>1636 px</strong></p></div>;
-  if (kind === "panels") return <div className="legacy-panel-note"><div className="legacy-panel-array" role="img" aria-label={pick(["三列两行的六块显示器，每块分辨率1920乘1080", "A three-column, two-row display array; each panel is 1920 by 1080"])}>{Array.from({ length: 6 }, (_, index) => <div key={index}><span>1920 × 1080</span></div>)}</div><p>3 × 1920 = 5760 · 2 × 1080 = 2160</p><strong>{pick(["组合画布：5760 × 2160", "Combined canvas: 5760 × 2160"])}</strong></div>;
-  return <div className="legacy-dashboard-diagram" role="img" aria-label={pick(["布局示意：概览指标在上，主要空间信息居中，趋势与排行分列两侧；不含业务数据。", "Layout illustration: overview above, spatial information in the main area, trends and rankings at the sides; no business data."])}><div className="legacy-dashboard-overview">{pick(["概览指标", "Overview"])}</div><div className="legacy-dashboard-trends">{pick(["趋势与比较", "Trends and comparison"])}</div><div className="legacy-dashboard-main"><span>{pick(["主要分析对象", "Main analysis object"])}</span><strong>{pick(["空间分布 / 对象关系", "Spatial distribution / relationships"])}</strong></div><div className="legacy-dashboard-ranks">{pick(["排行与重点", "Rankings and priorities"])}</div><p>{pick(["阅读层级示意 · 不含业务数据", "Reading hierarchy illustration · No business data"])}</p></div>;
-}
+type GalleryBoard = { src: string; title: string; alt: string };
 
-function EvidenceTabs({ items, pick, onOpen }: { items: LegacyEvidence[]; pick: (text: LegacyText) => string; onOpen: (asset: LegacyEvidence, trigger: HTMLButtonElement) => void }) {
-  const [index, setIndex] = useState(0);
-  const id = useId();
-  const tabs = useRef<Array<HTMLButtonElement | null>>([]);
-  const current = items[index] ?? items[0];
-  const onKey = (event: KeyboardEvent<HTMLButtonElement>, active: number) => {
-    const next = event.key === "ArrowRight" ? (active + 1) % items.length : event.key === "ArrowLeft" ? (active - 1 + items.length) % items.length : event.key === "Home" ? 0 : event.key === "End" ? items.length - 1 : -1;
-    if (next < 0) return;
-    event.preventDefault(); setIndex(next); tabs.current[next]?.focus();
-  };
-  return <div className="legacy-evidence">
-    {items.length > 1 && <div className="legacy-evidence-tabs" role="tablist" aria-label={pick(["选择设计证据", "Choose design evidence"])}>{items.map((item, tab) => <button key={item.id} ref={element => { tabs.current[tab] = element; }} id={`${id}-tab-${tab}`} type="button" role="tab" aria-selected={index === tab} aria-controls={`${id}-panel-${tab}`} tabIndex={index === tab ? 0 : -1} onClick={() => setIndex(tab)} onKeyDown={event => onKey(event, tab)}>{pick(item.title)}</button>)}</div>}
-    {items.map((item, panel) => <div key={item.id} id={`${id}-panel-${panel}`} hidden={index !== panel} role={items.length > 1 ? "tabpanel" : "group"} aria-labelledby={items.length > 1 ? `${id}-tab-${panel}` : undefined} aria-label={items.length === 1 ? pick(item.title) : undefined}>
-      {index === panel && <figure><div className="legacy-evidence-surface"><button type="button" className="legacy-evidence-open" style={{ maxWidth: current.width }} aria-label={`${pick(["放大：", "Enlarge: "])}${pick(current.title)}`} onClick={event => onOpen(current, event.currentTarget)}><img src={publicAsset(`${assetRoot}/${current.id}.webp`)} alt={pick(current.alt)} width={current.width} height={current.height} loading="lazy" decoding="async" /></button></div><figcaption><span>{pick(current.title)}</span><button type="button" onClick={event => onOpen(current, event.currentTarget)}>{pick(["放大证据", "Enlarge evidence"])}</button></figcaption></figure>}
-    </div>)}
-  </div>;
-}
-
-export function LegacyProjectCase({ project }: { project: Pick<Project, "slug"> }) {
-  const { locale } = useI18n();
-  const pick = (text: LegacyText) => text[locale === "en" ? 1 : 0];
-  const content = isLegacyProjectSlug(project.slug) ? legacyCases[project.slug] : null;
-  const [viewer, setViewer] = useState<LegacyEvidence | null>(null);
+export function LegacyProjectCase({ project }: { project: Project }) {
+  const { locale, t } = useI18n();
+  const english = locale === "en";
+  const [viewer, setViewer] = useState<GalleryBoard | null>(null);
   const [original, setOriginal] = useState(false);
   const trigger = useRef<HTMLButtonElement | null>(null);
-  const dialog = useRef<HTMLDialogElement | null>(null);
-  const titleId = useId();
-  const legacyAnchors = useMemo(() => Object.fromEntries((content?.sections ?? []).flatMap(section => section.aliases.map(index => [`case-gallery-${index}`, section.id]))), [content]);
-  const locatorSections = useMemo<ProjectLocatorSection[]>(() => [["project-overview", locale === "en" ? "Project overview" : "项目介绍"], ...(content?.sections ?? []).map(section => [section.id, section.label[locale === "en" ? 1 : 0]] as const)], [content, locale]);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const dialogTitle = useId();
+  const sections = useMemo<ProjectLocatorSection[]>(() => {
+    const chapters = project.gallerySections ?? project.gallery.map((_, index) => ({
+      startIndex: index,
+      label: project.galleryLabels?.[index] ?? project.shortTitle,
+    }));
+    return [
+      ["project-overview", "项目介绍"],
+      ...chapters.map(({ startIndex, label }) => ["case-gallery-" + startIndex, label] as const),
+    ];
+  }, [project]);
+  const boards = project.gallery.map((src, index) => {
+    const title = project.galleryLabels?.[index] ?? project.shortTitle;
+    return { src, title, alt: project.galleryAlt?.[index] ?? title };
+  });
 
   useEffect(() => {
-    if (!viewer) return;
+    if (!viewer || !dialog.current) return;
     const element = dialog.current;
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    element?.showModal();
-    return () => { element?.close(); document.body.style.overflow = overflow; trigger.current?.focus({ preventScroll: true }); };
+    element.showModal();
+    return () => {
+      element.close();
+      document.body.style.overflow = overflow;
+      trigger.current?.focus({ preventScroll: true });
+    };
   }, [viewer]);
-  useEffect(() => { setViewer(null); setOriginal(false); }, [project.slug]);
 
-  if (!content) return null;
-  const onOpen = (asset: LegacyEvidence, button: HTMLButtonElement) => { trigger.current = button; setOriginal(false); setViewer(asset); };
-  return <article className={`legacy-case legacy-case--${project.slug}`} aria-label={pick(["案例设计说明与原稿证据", "Design decisions and source evidence"])}>
-    <ProjectLocator sections={locatorSections} legacyAnchors={legacyAnchors} ariaLabel={pick(["案例章节定位", "Case study navigation"])} />
-    {content.sections.map((section, index) => <section key={section.id} id={section.id} className="legacy-case-section" aria-labelledby={`${section.id}-title`}>
-      {section.aliases.map(alias => <span key={alias} id={`case-gallery-${alias}`} className="legacy-case-anchor" aria-hidden="true" />)}
-      <header><span className="legacy-case-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><h2 id={`${section.id}-title`}>{pick(section.title)}</h2></header>
-      <div className="legacy-case-prose">{section.paragraphs.map(paragraph => <p key={paragraph[0]}>{pick(paragraph)}</p>)}</div>
-      {section.diagram && <LayoutDiagram kind={section.diagram} pick={pick} />}
-      {section.evidence && <EvidenceTabs key={section.id} items={section.evidence} pick={pick} onOpen={onOpen} />}
-    </section>)}
-    <aside className="legacy-material-note"><p>{pick(content.materialNote)}</p></aside>
-    {viewer && <dialog className="legacy-viewer" ref={dialog} aria-labelledby={titleId} onCancel={event => { event.preventDefault(); setViewer(null); }} onClick={event => { if (event.target === event.currentTarget) setViewer(null); }}><div className="legacy-viewer-panel"><header><h2 id={titleId}>{pick(viewer.title)}</h2><div><button type="button" aria-pressed={original} onClick={() => setOriginal(value => !value)}>{pick(original ? ["适合宽度", "Fit width"] : ["原始尺寸", "Original size"])}</button><button type="button" autoFocus onClick={() => setViewer(null)}>{pick(["关闭", "Close"])}</button></div></header><div className={`legacy-viewer-canvas${original ? " is-original" : ""}`}><img src={publicAsset(`${assetRoot}/${viewer.id}.webp`)} alt={pick(viewer.alt)} width={viewer.width} height={viewer.height} style={original ? { width: viewer.width } : { maxWidth: viewer.width }} /></div><p>{pick(viewer.alt)}</p></div></dialog>}
+  const open = (board: GalleryBoard, button: HTMLButtonElement) => {
+    trigger.current = button;
+    setOriginal(false);
+    setViewer(board);
+  };
+
+  return <article className="legacy-case" aria-label={english ? "Complete design boards" : "完整设计展板"}>
+    <ProjectLocator sections={sections} legacyAnchors={previousAnchors[project.slug]} ariaLabel="项目章节定位" />
+    <p className="legacy-gallery-note">
+      {english
+        ? "Original design boards in Chinese. The figures are shown as part of the interface design and are not project outcome metrics."
+        : "原设计展板，按原顺序展示。图内数值用于说明界面，不作为项目成效。"}
+    </p>
+    <div className="legacy-gallery">
+      {boards.map((board, index) => <figure className="legacy-board" key={board.src} id={"case-gallery-" + index}>
+        <div className="legacy-board-frame">
+          <PortfolioImage
+            src={board.src}
+            alt={board.alt}
+            data-motion-source={board.src}
+            sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1264px) calc(100vw - 64px), 1200px"
+          />
+          <button
+            type="button"
+            className="legacy-board-hit"
+            aria-label={(english ? "Enlarge " : "放大查看：") + t(board.title)}
+            onClick={event => open(board, event.currentTarget)}
+          />
+        </div>
+        <figcaption>
+          <span>{t(board.title)}</span>
+          <button type="button" onClick={event => open(board, event.currentTarget)}>
+            {english ? "Enlarge" : "放大查看"}
+          </button>
+        </figcaption>
+      </figure>)}
+    </div>
+    {viewer && <dialog
+      ref={dialog}
+      className="legacy-viewer"
+      aria-labelledby={dialogTitle}
+      onCancel={event => { event.preventDefault(); setViewer(null); }}
+      onClick={event => { if (event.target === event.currentTarget) setViewer(null); }}
+    >
+      <div className="legacy-viewer-panel">
+        <header>
+          <h2 id={dialogTitle}>{t(viewer.title)}</h2>
+          <div>
+            <button type="button" aria-pressed={original} onClick={() => setOriginal(value => !value)}>
+              {original ? (english ? "Fit width" : "适合宽度") : (english ? "Original size" : "原始尺寸")}
+            </button>
+            <button type="button" autoFocus onClick={() => setViewer(null)}>{t("关闭")}</button>
+          </div>
+        </header>
+        <div className={"legacy-viewer-canvas" + (original ? " is-original" : "")} tabIndex={0}>
+          <PortfolioImage src={viewer.src} alt={viewer.alt} original={original} loading="eager"
+            sizes="(max-width: 767px) calc(100vw - 48px), 1460px"
+            style={original ? undefined : { maxWidth: optimizedImage(viewer.src)?.width }}
+          />
+        </div>
+      </div>
+    </dialog>}
   </article>;
 }

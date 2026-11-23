@@ -255,6 +255,102 @@
     "originalBytes": 35982,
     "optimizedBytes": 39160
   },
+  "/assets/projects/data-visualisation/01-project-overview.png": {
+    "src": "/assets/optimized/projects/data-visualisation/01-project-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/01-project-overview-640.webp 640w, /assets/optimized/projects/data-visualisation/01-project-overview-1280.webp 1280w, /assets/optimized/projects/data-visualisation/01-project-overview.webp 1920w",
+    "originalBytes": 1257786,
+    "optimizedBytes": 103262
+  },
+  "/assets/projects/data-visualisation/02-multi-industry-dashboard.png": {
+    "src": "/assets/optimized/projects/data-visualisation/02-multi-industry-dashboard.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/02-multi-industry-dashboard-640.webp 640w, /assets/optimized/projects/data-visualisation/02-multi-industry-dashboard-1280.webp 1280w, /assets/optimized/projects/data-visualisation/02-multi-industry-dashboard.webp 1920w",
+    "originalBytes": 1053078,
+    "optimizedBytes": 138378
+  },
+  "/assets/projects/data-visualisation/03-transportation-dashboard.png": {
+    "src": "/assets/optimized/projects/data-visualisation/03-transportation-dashboard.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/03-transportation-dashboard-640.webp 640w, /assets/optimized/projects/data-visualisation/03-transportation-dashboard-1280.webp 1280w, /assets/optimized/projects/data-visualisation/03-transportation-dashboard.webp 1920w",
+    "originalBytes": 1143928,
+    "optimizedBytes": 118432
+  },
+  "/assets/projects/data-visualisation/04-real-estate-dashboard.png": {
+    "src": "/assets/optimized/projects/data-visualisation/04-real-estate-dashboard.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/04-real-estate-dashboard-640.webp 640w, /assets/optimized/projects/data-visualisation/04-real-estate-dashboard-1280.webp 1280w, /assets/optimized/projects/data-visualisation/04-real-estate-dashboard.webp 1920w",
+    "originalBytes": 496060,
+    "optimizedBytes": 99692
+  },
+  "/assets/projects/data-visualisation/05-design-guidelines.png": {
+    "src": "/assets/optimized/projects/data-visualisation/05-design-guidelines.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/data-visualisation/05-design-guidelines-640.webp 640w, /assets/optimized/projects/data-visualisation/05-design-guidelines-1280.webp 1280w, /assets/optimized/projects/data-visualisation/05-design-guidelines.webp 1920w",
+    "originalBytes": 603066,
+    "optimizedBytes": 117074
+  },
+  "/assets/projects/energy-tax/00-cover.png": {
+    "src": "/assets/optimized/projects/energy-tax/00-cover.webp",
+    "width": 2400,
+    "height": 2742,
+    "srcSet": "/assets/optimized/projects/energy-tax/00-cover-640.webp 640w, /assets/optimized/projects/energy-tax/00-cover-1280.webp 1280w, /assets/optimized/projects/energy-tax/00-cover.webp 2400w",
+    "originalBytes": 4083797,
+    "optimizedBytes": 238460
+  },
+  "/assets/projects/energy-tax/01-context.png": {
+    "src": "/assets/optimized/projects/energy-tax/01-context.webp",
+    "width": 2400,
+    "height": 3680,
+    "srcSet": "/assets/optimized/projects/energy-tax/01-context-640.webp 640w, /assets/optimized/projects/energy-tax/01-context-1280.webp 1280w, /assets/optimized/projects/energy-tax/01-context.webp 2400w",
+    "originalBytes": 1118905,
+    "optimizedBytes": 303506
+  },
+  "/assets/projects/energy-tax/02-system.png": {
+    "src": "/assets/optimized/projects/energy-tax/02-system.webp",
+    "width": 2400,
+    "height": 5892,
+    "srcSet": "/assets/optimized/projects/energy-tax/02-system-640.webp 640w, /assets/optimized/projects/energy-tax/02-system-1280.webp 1280w, /assets/optimized/projects/energy-tax/02-system.webp 2400w",
+    "originalBytes": 2921193,
+    "optimizedBytes": 395938
+  },
+  "/assets/projects/energy-tax/03-home.png": {
+    "src": "/assets/optimized/projects/energy-tax/03-home.webp",
+    "width": 2400,
+    "height": 4822,
+    "srcSet": "/assets/optimized/projects/energy-tax/03-home-640.webp 640w, /assets/optimized/projects/energy-tax/03-home-1280.webp 1280w, /assets/optimized/projects/energy-tax/03-home.webp 2400w",
+    "originalBytes": 5184628,
+    "optimizedBytes": 444128
+  },
+  "/assets/projects/energy-tax/04-tax-workbench.png": {
+    "src": "/assets/optimized/projects/energy-tax/04-tax-workbench.webp",
+    "width": 2400,
+    "height": 4447,
+    "srcSet": "/assets/optimized/projects/energy-tax/04-tax-workbench-640.webp 640w, /assets/optimized/projects/energy-tax/04-tax-workbench-1280.webp 1280w, /assets/optimized/projects/energy-tax/04-tax-workbench.webp 2400w",
+    "originalBytes": 2369237,
+    "optimizedBytes": 284814
+  },
+  "/assets/projects/energy-tax/05-management.png": {
+    "src": "/assets/optimized/projects/energy-tax/05-management.webp",
+    "width": 2400,
+    "height": 4782,
+    "srcSet": "/assets/optimized/projects/energy-tax/05-management-640.webp 640w, /assets/optimized/projects/energy-tax/05-management-1280.webp 1280w, /assets/optimized/projects/energy-tax/05-management.webp 2400w",
+    "originalBytes": 3805295,
+    "optimizedBytes": 345748
+  },
+  "/assets/projects/energy-tax/06-reflection.png": {
+    "src": "/assets/optimized/projects/energy-tax/06-reflection.webp",
+    "width": 2400,
+    "height": 4737,
+    "srcSet": "/assets/optimized/projects/energy-tax/06-reflection-640.webp 640w, /assets/optimized/projects/energy-tax/06-reflection-1280.webp 1280w, /assets/optimized/projects/energy-tax/06-reflection.webp 2400w",
+    "originalBytes": 3745758,
+    "optimizedBytes": 333738
+  },
   "/assets/projects/gkx/case-study/evidence/ai-cases-designer-panel-20261017.webp": {
     "src": "/assets/optimized/projects/gkx/case-study/evidence/ai-cases-designer-panel-20261017.webp",
     "width": 1662,
@@ -654,6 +750,158 @@
     "srcSet": "/assets/optimized/projects/gkx/workflow-builder-640.webp 640w, /assets/optimized/projects/gkx/workflow-builder-1280.webp 1280w, /assets/optimized/projects/gkx/workflow-builder.webp 1800w",
     "originalBytes": 388074,
     "optimizedBytes": 60580
+  },
+  "/assets/projects/tax-cloud/01-user-core-path.png": {
+    "src": "/assets/optimized/projects/tax-cloud/01-user-core-path.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/01-user-core-path-640.webp 640w, /assets/optimized/projects/tax-cloud/01-user-core-path-1280.webp 1280w, /assets/optimized/projects/tax-cloud/01-user-core-path.webp 1920w",
+    "originalBytes": 161361,
+    "optimizedBytes": 112202
+  },
+  "/assets/projects/tax-cloud/02-lean-canvas.png": {
+    "src": "/assets/optimized/projects/tax-cloud/02-lean-canvas.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/02-lean-canvas-640.webp 640w, /assets/optimized/projects/tax-cloud/02-lean-canvas-1280.webp 1280w, /assets/optimized/projects/tax-cloud/02-lean-canvas.webp 1920w",
+    "originalBytes": 417350,
+    "optimizedBytes": 91004
+  },
+  "/assets/projects/tax-cloud/03-global-style.png": {
+    "src": "/assets/optimized/projects/tax-cloud/03-global-style.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/03-global-style-640.webp 640w, /assets/optimized/projects/tax-cloud/03-global-style-1280.webp 1280w, /assets/optimized/projects/tax-cloud/03-global-style.webp 1920w",
+    "originalBytes": 251435,
+    "optimizedBytes": 78362
+  },
+  "/assets/projects/tax-cloud/04-design-components.png": {
+    "src": "/assets/optimized/projects/tax-cloud/04-design-components.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/04-design-components-640.webp 640w, /assets/optimized/projects/tax-cloud/04-design-components-1280.webp 1280w, /assets/optimized/projects/tax-cloud/04-design-components.webp 1920w",
+    "originalBytes": 173974,
+    "optimizedBytes": 58660
+  },
+  "/assets/projects/tax-cloud/05-page-showcase-archives.png": {
+    "src": "/assets/optimized/projects/tax-cloud/05-page-showcase-archives.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/05-page-showcase-archives-640.webp 640w, /assets/optimized/projects/tax-cloud/05-page-showcase-archives-1280.webp 1280w, /assets/optimized/projects/tax-cloud/05-page-showcase-archives.webp 1920w",
+    "originalBytes": 413116,
+    "optimizedBytes": 120282
+  },
+  "/assets/projects/tax-cloud/06-page-showcase-rules.png": {
+    "src": "/assets/optimized/projects/tax-cloud/06-page-showcase-rules.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/06-page-showcase-rules-640.webp 640w, /assets/optimized/projects/tax-cloud/06-page-showcase-rules-1280.webp 1280w, /assets/optimized/projects/tax-cloud/06-page-showcase-rules.webp 1920w",
+    "originalBytes": 314539,
+    "optimizedBytes": 82606
+  },
+  "/assets/projects/tax-cloud/07-redesign-custom-card.png": {
+    "src": "/assets/optimized/projects/tax-cloud/07-redesign-custom-card.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/07-redesign-custom-card-640.webp 640w, /assets/optimized/projects/tax-cloud/07-redesign-custom-card-1280.webp 1280w, /assets/optimized/projects/tax-cloud/07-redesign-custom-card.webp 1920w",
+    "originalBytes": 354476,
+    "optimizedBytes": 65600
+  },
+  "/assets/projects/tax-cloud/08-redesign-old-home.png": {
+    "src": "/assets/optimized/projects/tax-cloud/08-redesign-old-home.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/08-redesign-old-home-640.webp 640w, /assets/optimized/projects/tax-cloud/08-redesign-old-home-1280.webp 1280w, /assets/optimized/projects/tax-cloud/08-redesign-old-home.webp 1920w",
+    "originalBytes": 541389,
+    "optimizedBytes": 90176
+  },
+  "/assets/projects/tax-cloud/09-redesign-card-scenes.png": {
+    "src": "/assets/optimized/projects/tax-cloud/09-redesign-card-scenes.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/09-redesign-card-scenes-640.webp 640w, /assets/optimized/projects/tax-cloud/09-redesign-card-scenes-1280.webp 1280w, /assets/optimized/projects/tax-cloud/09-redesign-card-scenes.webp 1920w",
+    "originalBytes": 683260,
+    "optimizedBytes": 113988
+  },
+  "/assets/projects/tax-cloud/10-redesign-new-home.png": {
+    "src": "/assets/optimized/projects/tax-cloud/10-redesign-new-home.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/10-redesign-new-home-640.webp 640w, /assets/optimized/projects/tax-cloud/10-redesign-new-home-1280.webp 1280w, /assets/optimized/projects/tax-cloud/10-redesign-new-home.webp 1920w",
+    "originalBytes": 460299,
+    "optimizedBytes": 99780
+  },
+  "/assets/projects/tax-cloud/11-experience-walkthrough.png": {
+    "src": "/assets/optimized/projects/tax-cloud/11-experience-walkthrough.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/11-experience-walkthrough-640.webp 640w, /assets/optimized/projects/tax-cloud/11-experience-walkthrough-1280.webp 1280w, /assets/optimized/projects/tax-cloud/11-experience-walkthrough.webp 1920w",
+    "originalBytes": 544402,
+    "optimizedBytes": 132438
+  },
+  "/assets/projects/tax-cloud/12-form-page.png": {
+    "src": "/assets/optimized/projects/tax-cloud/12-form-page.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/12-form-page-640.webp 640w, /assets/optimized/projects/tax-cloud/12-form-page-1280.webp 1280w, /assets/optimized/projects/tax-cloud/12-form-page.webp 1920w",
+    "originalBytes": 294025,
+    "optimizedBytes": 119252
+  },
+  "/assets/projects/tax-cloud/13-project-background.png": {
+    "src": "/assets/optimized/projects/tax-cloud/13-project-background.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/13-project-background-640.webp 640w, /assets/optimized/projects/tax-cloud/13-project-background-1280.webp 1280w, /assets/optimized/projects/tax-cloud/13-project-background.webp 1920w",
+    "originalBytes": 740089,
+    "optimizedBytes": 127150
+  },
+  "/assets/projects/tax-cloud/14-basic-info-config.png": {
+    "src": "/assets/optimized/projects/tax-cloud/14-basic-info-config.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/14-basic-info-config-640.webp 640w, /assets/optimized/projects/tax-cloud/14-basic-info-config-1280.webp 1280w, /assets/optimized/projects/tax-cloud/14-basic-info-config.webp 1920w",
+    "originalBytes": 197786,
+    "optimizedBytes": 82420
+  },
+  "/assets/projects/tax-cloud/15-app-overview.png": {
+    "src": "/assets/optimized/projects/tax-cloud/15-app-overview.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/15-app-overview-640.webp 640w, /assets/optimized/projects/tax-cloud/15-app-overview-1280.webp 1280w, /assets/optimized/projects/tax-cloud/15-app-overview.webp 1920w",
+    "originalBytes": 554438,
+    "optimizedBytes": 91154
+  },
+  "/assets/projects/tax-cloud/16-app-home.png": {
+    "src": "/assets/optimized/projects/tax-cloud/16-app-home.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/16-app-home-640.webp 640w, /assets/optimized/projects/tax-cloud/16-app-home-1280.webp 1280w, /assets/optimized/projects/tax-cloud/16-app-home.webp 1920w",
+    "originalBytes": 419331,
+    "optimizedBytes": 62858
+  },
+  "/assets/projects/tax-cloud/17-app-report-approval.png": {
+    "src": "/assets/optimized/projects/tax-cloud/17-app-report-approval.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/17-app-report-approval-640.webp 640w, /assets/optimized/projects/tax-cloud/17-app-report-approval-1280.webp 1280w, /assets/optimized/projects/tax-cloud/17-app-report-approval.webp 1920w",
+    "originalBytes": 339958,
+    "optimizedBytes": 86228
+  },
+  "/assets/projects/tax-cloud/18-app-regulations.png": {
+    "src": "/assets/optimized/projects/tax-cloud/18-app-regulations.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/18-app-regulations-640.webp 640w, /assets/optimized/projects/tax-cloud/18-app-regulations-1280.webp 1280w, /assets/optimized/projects/tax-cloud/18-app-regulations.webp 1920w",
+    "originalBytes": 595183,
+    "optimizedBytes": 122722
+  },
+  "/assets/projects/tax-cloud/19-app-showcase.png": {
+    "src": "/assets/optimized/projects/tax-cloud/19-app-showcase.webp",
+    "width": 1920,
+    "height": 1080,
+    "srcSet": "/assets/optimized/projects/tax-cloud/19-app-showcase-640.webp 640w, /assets/optimized/projects/tax-cloud/19-app-showcase-1280.webp 1280w, /assets/optimized/projects/tax-cloud/19-app-showcase.webp 1920w",
+    "originalBytes": 1214663,
+    "optimizedBytes": 185368
   },
   "/assets/projects/zhaocai-smart/00-contact-sheet.jpg": {
     "src": "/assets/optimized/projects/zhaocai-smart/00-contact-sheet.webp",

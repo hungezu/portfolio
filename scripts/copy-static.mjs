@@ -40,11 +40,13 @@ await cp(
   resolve(publicDirectory, "assets", "projects", "zhaocai-smart"),
   { recursive: true },
 );
-await cp(
-  resolve(root, "assets", "projects", "legacy-evidence-20261124"),
-  resolve(publicDirectory, "assets", "projects", "legacy-evidence-20261124"),
-  { recursive: true },
-);
+for (const slug of ["tax-cloud", "energy-tax", "data-visualisation"]) {
+  await cp(
+    resolve(root, "assets", "projects", slug),
+    resolve(publicDirectory, "assets", "projects", slug),
+    { recursive: true },
+  );
+}
 await cp(
   resolve(root, "assets", "projects", "gkx"),
   resolve(publicDirectory, "assets", "projects", "gkx"),

@@ -34,7 +34,7 @@ function visible(element: HTMLElement | null): element is HTMLElement {
 function caseAnchors() {
   return {
     title: document.querySelector<HTMLElement>('[data-project-motion-title], .gkx-hero__name, .zc4-opening-identity h1, .case-heading h1'),
-    media: document.querySelector<HTMLElement>('.gkx-hero__frame .gkx-image-button, .zc4-opening-task, .legacy-evidence-open img'),
+    media: document.querySelector<HTMLElement>('.gkx-hero__frame .gkx-image-button, .zc4-opening-task, .legacy-board-frame img'),
   };
 }
 
