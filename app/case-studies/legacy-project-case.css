@@ -11,10 +11,92 @@
   line-height: 1.6;
 }
 
+.legacy-case-intro,
+.legacy-decision,
+.legacy-case-closing {
+  max-width: 80ch;
+}
+
+.legacy-case-intro { margin-bottom: 32px; }
+
+.legacy-case .legacy-case-eyebrow {
+  margin: 0 0 12px;
+  color: #62666c;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: .04em;
+}
+
+.legacy-case-intro h2,
+.legacy-decision h2,
+.legacy-case-closing h2 {
+  margin: 0 0 20px;
+  color: #202020;
+  font-size: clamp(24px, 2.7vw, 34px);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+
+.legacy-case-context {
+  display: grid;
+  gap: 18px;
+  margin: 0;
+}
+
+.legacy-case-context > div {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 18px;
+}
+
+.legacy-case-context dt {
+  padding-top: 3px;
+  color: #6b6f75;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.legacy-case-context dd,
+.legacy-decision > p,
+.legacy-case-closing > p {
+  margin: 0;
+  color: #545960;
+  font-size: 16px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.legacy-decision {
+  padding-top: clamp(20px, 4vw, 48px);
+  margin-bottom: 28px;
+}
+
+.legacy-decision > p + p { margin-top: 12px; }
+.legacy-decision .legacy-decision-choice { color: #2b2e33; font-size: 17px; }
+
+.legacy-decision .legacy-decision-evidence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin-top: 18px;
+  color: #62666d;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.legacy-decision-evidence > span { flex: none; font-weight: 500; }
+.legacy-case-closing { margin-top: clamp(40px, 6vw, 72px); }
+.legacy-case-closing .legacy-case-scope { margin-top: 16px; color: #676b72; font-size: 14px; }
+
 .legacy-gallery {
   display: grid;
   gap: clamp(20px, 3vw, 40px);
 }
+
+.legacy-board-entry { min-width: 0; scroll-margin-top: 100px; }
 
 .legacy-board {
   min-width: 0;
@@ -202,7 +284,13 @@
 
 @media (max-width: 767px) {
   .case-page .legacy-case { width: calc(100% - 32px); margin-bottom: 64px; }
-  .legacy-board { scroll-margin-top: 80px; }
+  .legacy-case-intro { margin-bottom: 28px; }
+  .legacy-case-context > div { grid-template-columns: minmax(0, 1fr); gap: 5px; }
+  .legacy-case-context { gap: 20px; }
+  .legacy-case-context dt { padding-top: 0; }
+  .legacy-decision { margin-bottom: 22px; }
+  .legacy-board,
+  .legacy-board-entry { scroll-margin-top: 80px; }
   .legacy-viewer { width: calc(100vw - 16px); height: calc(100dvh - 16px); }
   .legacy-viewer-panel > header, .legacy-viewer-canvas { padding: 12px; }
   .legacy-viewer-close { order: 0; }

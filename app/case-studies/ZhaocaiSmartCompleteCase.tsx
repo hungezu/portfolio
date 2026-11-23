@@ -40,6 +40,12 @@ type DemoScene = "clarify" | "running" | "result" | "exception";
 type ExecutionMode = "normal" | "slow-demo";
 type RecoveryStage = "timeout" | "empty" | "stopped";
 
+const metricChoices = [
+  { label: "营业利润", zh: "采用利润表中的营业利润项目。", en: "Use the operating profit line in the income statement." },
+  { label: "利润总额", zh: "计入营业外收支，尚未扣除所得税费用。", en: "Includes non-operating income and expenses, before income tax." },
+  { label: "净利润", zh: "扣除所得税费用后的利润。", en: "Profit after income tax expense." },
+] as const;
+
 const profitData = [
   { quarter: "一季度", value: 1.32 },
   { quarter: "二季度", value: 1.46 },
@@ -454,11 +460,19 @@ function ProductDemo({ resetToken, stage, setStage, query, setQuery, metric, set
               {t(missingRangeOpen ? <div className="zc4-missing-conditions"><label>{t("统计时间")}<select aria-label={t("补充统计时间")} value={year} onChange={event => setYear(event.target.value)}><option value="">{t("选择统计时间")}</option>{["2023", "2024", "2025"].map(value => <option key={value} value={value}>{t(value)} {t(" 年")}</option>)}</select></label><label>{t("组织范围")}<select aria-label={t("补充组织范围")} value={scope} onChange={event => setScope(event.target.value)}><option value="">{t("选择组织范围")}</option>{["全集团", "华南分公司", "华东分公司", "华北分公司"].map(value => <option key={value} value={value}>{t(value)}</option>)}</select></label></div> : null)}
               {t(!supplementOpen ? <fieldset>
                 <legend className="zc4-sr-only">{t("选择利润口径")}</legend>
-                {(["营业利润", "利润总额", "净利润"] as Metric[]).map((option, index) => {
+                {metricChoices.map(({ label, zh, en }, index) => {
                   const inputId = `zc4-metric-${index}`;
+                  const descriptionId = `${inputId}-description`;
                   return (
-                    <div className={`zc4-metric-option${metric === option ? " active" : ""}`} key={option}>
-                      <label htmlFor={inputId}><input id={inputId} type="radio" name="metric" value={option} checked={metric === option} onChange={() => setMetric(option)}/><span>{t(option)}</span>{t(metric === option ? <Check aria-hidden="true" size={16}/> : null)}</label>
+                    <div className={`zc4-metric-option${metric === label ? " active" : ""}`} key={label}>
+                      <label htmlFor={inputId}>
+                        <input id={inputId} type="radio" name="metric" value={label} checked={metric === label} onChange={() => setMetric(label)} aria-labelledby={`${inputId}-label`} aria-describedby={descriptionId}/>
+                        <span className="zc4-metric-copy">
+                          <span id={`${inputId}-label`}>{t(label)}</span>
+                          <small id={descriptionId}>{locale === "en" ? en : zh}</small>
+                        </span>
+                        {metric === label && <Check aria-hidden="true" size={16}/>}
+                      </label>
                     </div>
                   );
                 })}
@@ -646,13 +660,13 @@ export function ZhaocaiSmartCompleteCase() {
           <div className="zc4-opening-identity"><h1>{t("招财 ")}<span className="zc4-project-accent">Smart</span></h1><p>{t("企业财务智能问数")}</p></div>
           <dl className="zc4-opening-facts"><div><dt>{t("我的角色")}</dt><dd>{t("UX/UI 设计")}</dd></div><div><dt>{t("项目时间")}</dt><dd>2025.07—2025.11</dd></div><div><dt>{t("产品平台")}</dt><dd>{t("企业级 Web")}</dd></div></dl>
         </div>
-        <div className="zc4-opening-thesis"><h2>{t("让财务问数有来有回，")}<span className="zc4-keep-phrase zc4-text-accent">{t("有据可查")}</span></h2><p>{t("我负责对话体验与 Markdown 回答规范，重点解决两件事：执行前确认业务口径，回答后能核对结论与依据。")}</p></div>
+        <div className="zc4-opening-thesis"><h2>{t("让财务问数有来有回，")}<span className="zc4-keep-phrase zc4-text-accent">{t("有据可查")}</span></h2><p>{locale === "en" ? "I designed the query conversation and Markdown answer rules so users can confirm what to measure, control the query, check its sources, and save an analysis for later." : "我负责对话体验与 Markdown 回答规范，让用户能确认统计口径、控制查询、核对来源，再把有用的分析保存下来。"}</p></div>
         <nav className="zc4-reading-summary" aria-label={locale === "en" ? "Case summary and reading shortcuts" : "案例摘要与阅读入口"}>
           <span>{locale === "en" ? "Quick summary" : "快速摘要"}</span>
           {([
             ["zcs-clarification", "口径确认", "Confirm the metric"],
             ["zcs-process-feedback", "任务控制", "Control the task"],
-            ["zcs-markdown-system", "回答依据", "Check the evidence"],
+            ["zcs-result-decision", "回答依据", "Check the evidence"],
           ] as const).map(([id, label, english]) => <a key={id} href={`#${id}`} onClick={event => {
             if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             event.preventDefault();
@@ -705,7 +719,12 @@ export function ZhaocaiSmartCompleteCase() {
               </div>
             </article>
           </div>
-          <details className="zc4-disclosure"><summary>{t("补充查阅：等待控制与结果核对")}</summary><div className="zc4-disclosure-body zc4-decision-list">
+        </section>
+
+        <section className="zc4-section" id="zcs-experience-journey">
+          <Heading title={t("把确认后的条件，带到结果与追问里")} intro={t("确认口径之后，用户仍可停止、重试、核对来源或继续追问。任务上下文随对话保留，改变组织时重新查询。")}/>
+          <ol className="zc4-flow zc4-flow-five">{[["提问","自然语言描述需求"],["对齐","识别条件，只确认歧义项"],["执行","数据服务查询，界面展示阶段"],["核对","查看结论、条件、来源与原始表"],["复用","保存结果和查询上下文"]].map((item,index)=><li key={item[0]}><span>{t(String(index+1).padStart(2,"0"))}</span><strong>{t(item[0])}</strong><p>{t(item[1])}</p></li>)}</ol>
+          <div className="zc4-decision-list zc4-execution-decisions">
             <article className="zc4-decision" id="zcs-process-feedback">
               <span className="zc4-anchor" id="process"/><span className="zc4-anchor" id="zcs-ai-governance"/>
               <header className="zc4-decision-heading"><h3>{t("等待有阶段，中断有下一步")}</h3><p>{t("持续加载无法说明任务停在哪里。反馈需要同时回答“正在做什么”和“接下来能做什么”。")}</p></header>
@@ -717,30 +736,32 @@ export function ZhaocaiSmartCompleteCase() {
               <header className="zc4-decision-heading"><h3>{t("结论先读，依据按需核对")}</h3><p>{t("完整明细不必一次铺开，但统计条件和来源不能离开结论。")}</p></header>
               <div className="zc4-decision-layout"><div className="zc4-decision-copy"><dl><div><dt>{t("采用方案")}</dt><dd>{t("先展示结论与趋势，再按需展开口径、期间、组织、来源及本次原始表。")}</dd></div><div><dt>{t("适用条件")}</dt><dd>{t("同一结果需要兼顾快速阅读与进一步核对，明细较多且有明确的数据来源。")}</dd></div><div><dt>{t("代价与边界")}</dt><dd>{t("展开依据增加一次操作，因此入口紧邻结果；不同执行版本分别保留查询快照。")}</dd></div></dl><button className="zc4-decision-action" type="button" onClick={event=>openDemo("result",event.currentTarget)}>{t("体验结果与依据")}<ArrowUpRight aria-hidden="true" size={16}/></button></div><aside className="zc4-decision-support"><h4>{t("解释也要有边界")}</h4><p>{t("当前数据能说明季度变化，不能据此推断增长原因。继续追问时，先沿用已确认条件，再明确新增或改变的范围。")}</p><a className="zc4-decision-action" href="#zcs-markdown-system" onClick={event=>{if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault();reference.openReference(event.currentTarget,"zcs-markdown-system");}}>{t("对照回答规范")}<ArrowUpRight aria-hidden="true" size={16}/></a></aside></div>
             </article>
-          </div></details>
-        </section>
-
-        <section className="zc4-section" id="zcs-experience-journey">
-          <Heading title={t("把确认后的条件，带到结果与追问里")} intro={t("确认口径之后，用户仍可停止、重试、核对来源或继续追问。任务上下文随对话保留，改变组织时重新查询。")}/>
-          <ol className="zc4-flow zc4-flow-five">{[["提问","自然语言描述需求"],["对齐","识别条件，只确认歧义项"],["执行","数据服务查询，界面展示阶段"],["核对","查看结论、条件、来源与原始表"],["复用","保存结果和查询上下文"]].map((item,index)=><li key={item[0]}><span>{t(String(index+1).padStart(2,"0"))}</span><strong>{t(item[0])}</strong><p>{t(item[1])}</p></li>)}</ol>
+          </div>
           <div className="zc4-demo" id="zcs-core-interaction" ref={demoRef}><span className="zc4-anchor" id="clarification"/>{t(reference.returnAvailable && reference.targetId === "zcs-core-interaction" ? <div className="zc4-reference-return"><span>{t("对话体验")}</span><button type="button" onClick={reference.returnToSource}>{t("返回刚才位置")}<RotateCcw size={15}/></button></div> : null)}<header><div><span>{t("交互演示 · 示例数据")}</span><strong>{t("完整任务")}</strong></div><div role="group" aria-label={t("切换演示场景")}>{([['clarify','口径确认'],['running','慢查询演示'],['result','顺利完成查询'],['exception','异常恢复']] as [DemoScene,string][]).map(([id,label])=><button type="button" className={scene===id?"active":""} aria-pressed={scene===id} onClick={()=>setDemo(id)} key={id}>{t(label)}</button>)}</div></header>{t(scene==="exception"?<div className="zc4-exception-tabs"><button type="button" onClick={()=>openRecovery("timeout")}>{t("查询超时与重试")}</button><button type="button" onClick={()=>openRecovery("empty")}>{t("模拟无匹配记录")}</button><button type="button" onClick={()=>openRecovery("stopped")}>{t("停止并保留条件")}</button></div>:null)}<ProductDemo {...demoProps}/></div>
-        <details className="zc4-disclosure" id="zcs-board-design">
-          <summary>{t("补充体验：结果保存与看板复用")}</summary><div className="zc4-disclosure-body">
-          <span className="zc4-anchor" id="board"/>
-          <p className="zc4-material-note">{t("保存结果时保留查询条件与数据来源，再按同一业务主题整理。看板是问数结果的后续使用路径。")}</p>
-          <ZhaocaiBoardEvidence/>
-          <details className="zc4-disclosure"><summary>{t("体验看板：添加、排序、合并与撤销")}</summary><div className="zc4-disclosure-body"><BoardDesignDemo/></div></details>
-          </div></details>
         </section>
 
         <section className="zc4-section" id="zcs-markdown-system">
           {t(reference.returnAvailable && reference.targetId === "zcs-markdown-system" ? <div className="zc4-reference-return is-section"><span>{t("回答规范")}</span><button type="button" onClick={reference.returnToSource}>{t("返回刚才位置")}<RotateCcw size={15}/></button></div> : null)}
           <Heading title={t(<>{t("回答规范，从统一格式到")}<span className="zc4-text-accent">{t("支持核对")}</span></>)} intro={t("把阅读任务对应到具体规则、适用条件和检查点，优先处理结论、数值与来源三个容易影响理解的位置。")}/>
           <dl className="zc4-rule-priorities"><div><dt>{t("结论与建议分开")}</dt><dd>{t("先说数据支持的事实，再给下一步建议；依据不足时不推断原因。")}</dd></div><div><dt>{t("数值带着口径出现")}</dt><dd>{t("保留单位、期间、组织和比较基准；未取得、真实为零与不适用分别说明。")}</dd></div><div><dt>{t("来源紧邻对应结论")}</dt><dd>{t("从数据处打开来源，继续核对查询条件与原始明细。")}</dd></div></dl>
+          <figure className="zc4-short-reply">
+            <blockquote>{locale === "en" ? "The data covers the group as a whole. It doesn’t show which subsidiary had the highest profit." : "当前只有集团汇总数据，无法判断哪家子公司的利润最高。"}</blockquote>
+            <figcaption>{locale === "en" ? "For a question like this, state what the data can support in one short answer. Use structured sections when the task calls for a comparison or an evidence check." : "简短回答示例。先交代数据能回答到哪一步。需要比较趋势或逐项查证时，再组织成分节回答。"}</figcaption>
+          </figure>
           <ZhaocaiAnswerWorkbench/>
           <ZhaocaiRuleChecks/>
           <details className="zc4-disclosure" id="zcs-original-output"><summary>{t("查阅原始 Markdown 与回答设计稿")}</summary><div className="zc4-disclosure-body"><ZhaocaiAnswerEvidence/><div className="zc4-history-evidence"><figure className="zc4-history-viewport"><PortfolioImage src={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/completed-output-original-cropped.png")} width="1164" height="1944" alt={t("历史脱敏回答稿局部：业务明细与查看原始表格入口。")} loading="lazy"/></figure><aside><h3>{t("原始表入口，留在结论之后")}</h3><p>{t("历史稿中的业务明细与原始表入口，提供进一步核对结果的路径。")}</p><a href={publicAsset("/assets/projects/zhaocai-smart/long-image/assets/completed-output-original.png")} target="_blank" rel="noreferrer">{t("查看完整回答稿")}<ArrowUpRight aria-hidden="true" size={16}/><span className="zc4-sr-only">{t("（新标签页）")}</span></a></aside></div></div></details>
           <details className="zc4-disclosure"><summary>{t("继续查阅八类场景与完整组件规则")}</summary><div className="zc4-disclosure-body"><SpecWorkbench/><p className="zc4-spec-open"><a href={`${publicAsset("/assets/projects/zhaocai-smart/long-image/spec-workbench.html")}?lang=${locale}`} target="_blank" rel="noreferrer">{t("独立打开回答规范")}<ArrowUpRight aria-hidden="true" size={15}/><span className="zc4-sr-only">{t("（新标签页）")}</span></a></p></div></details>
+        </section>
+
+        <section className="zc4-section" id="zcs-board-design">
+          <span className="zc4-anchor" id="board"/>
+          <Heading
+            title={locale === "en" ? "Save the result with its query context" : "把结果和查询口径一起保存"}
+            intro={t("保存结果时保留查询条件与数据来源，再按同一业务主题整理。看板是问数结果的后续使用路径。")}
+          />
+          <ZhaocaiBoardEvidence/>
+          <details className="zc4-disclosure"><summary>{t("体验看板：添加、排序、合并与撤销")}</summary><div className="zc4-disclosure-body"><BoardDesignDemo/></div></details>
         </section>
 
         <section className="zc4-section zc4-delivery" id="zcs-delivery">

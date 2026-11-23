@@ -8,6 +8,7 @@ import { ProjectLocator, type ProjectLocatorSection } from "../project-locator";
 import boardLayouts from "./legacy-board-layouts.json";
 import { DesignBoardImage } from "./legacy-board-corrections";
 import { TaxCloudContrastSpec } from "./legacy-contrast-spec";
+import { getLegacyCaseNarrative } from "./legacy-project-narrative";
 import "./legacy-project-case.css";
 
 const previousAnchors: Record<string, Readonly<Record<string, string>>> = {
@@ -39,6 +40,7 @@ const layouts: Partial<Record<string, BoardRegion[]>> = boardLayouts;
 export function LegacyProjectCase({ project }: { project: Project }) {
   const { locale, t } = useI18n();
   const english = locale === "en";
+  const narrative = getLegacyCaseNarrative(project.slug, english);
   const [viewer, setViewer] = useState<GalleryBoard | null>(null);
   const [mode, setMode] = useState<ViewMode>("fit");
   const trigger = useRef<HTMLButtonElement | null>(null);
@@ -105,16 +107,35 @@ export function LegacyProjectCase({ project }: { project: Project }) {
     ["original", "原始尺寸", "Original size"],
   ];
 
-  return <article className="legacy-case" aria-label={english ? "Complete design boards" : "完整设计展板"}>
+  return <article className="legacy-case" lang={english ? "en" : "zh-CN"}
+    aria-label={english ? "Design decisions and complete boards" : "设计判断与完整展板"}>
     <ProjectLocator sections={sections} legacyAnchors={previousAnchors[project.slug]} ariaLabel="项目章节定位" />
+    {narrative && <header className="legacy-case-intro">
+      <p className="legacy-case-eyebrow">{english ? "Context and task" : "背景与任务"}</p>
+      <h2>{narrative.title}</h2>
+      <dl className="legacy-case-context">
+        <div><dt>{english ? "Context" : "项目背景"}</dt><dd>{narrative.context}</dd></div>
+        <div><dt>{english ? "My task" : "我的任务"}</dt><dd>{narrative.task}</dd></div>
+      </dl>
+    </header>}
     <p className="legacy-gallery-note">
       {english
-        ? "Original design boards in Chinese. The figures are shown as part of the interface design and are not project outcome metrics."
-        : "原设计展板，按原顺序展示。图内数值用于说明界面，不作为项目成效。"}
+        ? "The complete boards follow their original order. Boards are in Chinese; the accompanying text explains the design in English. Figures are interface samples, not outcome metrics."
+        : "完整展板按原顺序展示，可放大或按原始尺寸阅读。图内数值用于说明界面，不作为项目成效。"}
     </p>
     <div className="legacy-gallery">
-      {boards.map((board, index) => <div className="legacy-board-entry" key={board.src}>
-        <figure className="legacy-board" id={"case-gallery-" + index}>
+      {boards.map((board, index) => {
+        const decision = narrative?.decisions.find(item => item.beforeBoard === index);
+        const decisionNumber = decision ? narrative!.decisions.indexOf(decision) + 1 : 0;
+        return <div className="legacy-board-entry" key={board.src} id={"case-gallery-" + index}>
+        {decision && <header className="legacy-decision">
+          <p className="legacy-case-eyebrow">{english ? "Design decision" : "设计决定"} {String(decisionNumber).padStart(2, "0")}</p>
+          <h2>{decision.title}</h2>
+          <p className="legacy-decision-choice">{decision.choice}</p>
+          <p>{decision.reason}</p>
+          <p className="legacy-decision-evidence"><span>{english ? "Evidence below" : "对应展板"}</span>{decision.evidence}</p>
+        </header>}
+        <figure className="legacy-board">
         <div className="legacy-board-frame">
           <DesignBoardImage
             boardKey={board.key}
@@ -138,8 +159,14 @@ export function LegacyProjectCase({ project }: { project: Project }) {
         </figcaption>
         </figure>
         {board.key === "tax-cloud/03-global-style" && <TaxCloudContrastSpec english={english} />}
-      </div>)}
+      </div>;
+      })}
     </div>
+    {narrative && <section className="legacy-case-closing" aria-labelledby="legacy-case-delivery-title">
+      <h2 id="legacy-case-delivery-title">{narrative.closingTitle}</h2>
+      <p>{narrative.delivery}</p>
+      <p className="legacy-case-scope">{narrative.scope}</p>
+    </section>}
     {viewer && <dialog
       ref={dialog}
       className="legacy-viewer"

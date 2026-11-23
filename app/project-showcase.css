@@ -14,8 +14,8 @@
 .project-exhibit-number>span{display:none;color:#777;font-size:11px;letter-spacing:.04em}
 .project-exhibit-state{display:none}
 .project-exhibit-label{position:absolute;right:16px;bottom:28px;left:20px;display:flex;min-height:100px;flex-direction:column;justify-content:flex-end;gap:12px}
-.project-exhibit-label>span:first-child{color:#545454;font-size:12px;letter-spacing:.04em}
-.project-exhibit-label>span:last-child{font-size:17px;line-height:1.55;font-weight:500;letter-spacing:-.025em;overflow-wrap:anywhere}
+.project-exhibit-platform{color:#545454;font-size:12px;letter-spacing:.04em}
+.project-exhibit-title{font-size:17px;line-height:1.55;font-weight:500;letter-spacing:-.025em;overflow-wrap:anywhere}
 .project-exhibit-toggle-icon{position:absolute;top:20px;right:16px;display:grid;width:24px;height:24px;place-items:center;transition:transform 320ms var(--ease-out-expo)}
 .project-exhibit-match{position:absolute;top:58px;left:20px;padding:2px 6px;border:1px solid #777;border-radius:3px;color:#444;font-size:10px}
 .project-exhibit.is-expanded .project-exhibit-toggle{height:58px;padding:0;cursor:default;background:#fff}
@@ -38,11 +38,11 @@
 .portfolio-home .project-showcase .project-type{display:flex;align-items:center;gap:12px;margin:0 0 8px;color:#545454;font-size:12px;line-height:1.5}
 .portfolio-home .project-showcase .project-type>span{padding-left:12px;border-left:1px solid #ccc;font-size:12px}
 .portfolio-home .project-showcase .project-copy h3{max-width:none;margin:0;font-size:clamp(26px,2.6vw,39px);line-height:1.3;font-weight:400;letter-spacing:-.045em;text-wrap:balance}
-.portfolio-home .project-showcase .project-summary{max-width:58ch;margin:12px 0 0;color:#555;font-size:13px;line-height:1.8}
+.portfolio-home .project-showcase .project-summary{max-width:58ch;margin:12px 0 0;color:#555;font-size:14px;line-height:1.8}
 .portfolio-home .project-showcase .project-card-role{margin:12px 0 0;color:#666;font-size:12px;line-height:1.75}
 .portfolio-home .project-showcase .project-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:18px;padding:13px 0 0;border-top:1px solid #ddd}
 .portfolio-home .project-showcase .project-ability-tags{gap:6px 12px}
-.portfolio-home .project-showcase .project-ability-tags span{padding:0;background:none;border:0;color:#777;font-size:10px}
+.portfolio-home .project-showcase .project-ability-tags span{padding:0;background:none;border:0;color:#555;font-size:12px}
 .portfolio-home .project-showcase .project-link{display:inline-flex;align-items:center;gap:7px;margin:0;padding:0;border:0;color:#111;font-size:12px;line-height:1.5;white-space:nowrap}
 .portfolio-home .project-showcase .project-exhibit:focus-within .project-card-link{transform:none;box-shadow:none}
 .project-exhibit-toggle:focus-visible{outline:2px solid #111;outline-offset:-5px}
@@ -58,10 +58,10 @@
   .portfolio-home .project-showcase .project-card-link:hover .project-visual img{transform:scale(1.025)}
   .project-card-link:hover .project-exhibit-open,.project-card-link:focus-visible .project-exhibit-open{opacity:1;transform:translateY(0)}
 }
-@media(min-width:768px) and (max-width:1100px){
+@media(min-width:1001px) and (max-width:1100px){
   .portfolio-home .project-showcase{height:580px}
   .project-exhibit-label{right:12px;left:12px;bottom:24px}
-  .project-exhibit-label>span:last-child{font-size:15px;line-height:1.65}
+  .project-exhibit-title{font-size:15px;line-height:1.65}
   .project-exhibit-number{left:14px;font-size:13px}
   .project-exhibit-toggle-icon{right:10px;width:20px;height:20px}
   .project-exhibit-toggle-icon svg{width:15px;height:15px}
@@ -69,20 +69,20 @@
   .portfolio-home .project-showcase .project-copy h3{font-size:28px}
   .portfolio-home .project-showcase .project-footer{gap:8px;flex-wrap:wrap}
 }
-@media(max-width:767px){
+@media(max-width:1000px){
   .project-showcase-caption{margin-bottom:14px;font-size:11px}
   .portfolio-home .project-showcase{display:flex;flex-direction:column;height:auto;overflow:hidden;border-radius:8px;transition:none}
-  .portfolio-home .project-showcase .project-exhibit{display:grid;width:100%;height:auto;min-height:0;grid-template-rows:70px 0fr;flex:none;overflow:hidden;border:0;border-bottom:1px solid #d4d4d2;transition:grid-template-rows 420ms cubic-bezier(.22,.68,0,1)}
+  .portfolio-home .project-showcase .project-exhibit{display:grid;width:100%;height:auto;min-height:0;grid-template-rows:minmax(108px,auto) 0fr;flex:none;overflow:hidden;border:0;border-bottom:1px solid #d4d4d2;transition:grid-template-rows 420ms cubic-bezier(.22,.68,0,1)}
   .portfolio-home .project-showcase .project-exhibit:last-child{border-bottom:0}
   .portfolio-home .project-showcase .project-exhibit.is-expanded{grid-template-rows:58px 1fr;background:#fff}
   .project-exhibit-spine{display:none}
-  .project-exhibit-toggle,.project-exhibit.is-expanded .project-exhibit-toggle{position:relative;inset:auto;display:flex;height:70px;min-width:0;align-items:center;gap:14px;padding:0 18px;background:transparent}
-  .project-exhibit.is-expanded .project-exhibit-toggle{height:58px}
+  .project-exhibit-toggle,.project-exhibit.is-expanded .project-exhibit-toggle{position:relative;inset:auto;display:flex;height:auto;min-height:108px;min-width:0;align-items:center;gap:14px;padding:14px 18px;background:transparent}
+  .project-exhibit.is-expanded .project-exhibit-toggle{height:58px;min-height:58px;padding-block:0}
   .project-exhibit-number,.project-exhibit.is-expanded .project-exhibit-number{position:static;flex:none;font-size:12px;line-height:1.5}
   .project-exhibit-number>span,.project-exhibit.is-expanded .project-exhibit-number>span{display:none}
   .project-exhibit-label,.project-exhibit.is-expanded .project-exhibit-label{position:static;display:block;min-width:0;min-height:0;flex:1}
-  .project-exhibit-label>span:first-child{display:none}
-  .project-exhibit-label>span:last-child{font-size:14px;line-height:1.5;font-weight:500;overflow-wrap:normal}
+  .project-exhibit-platform{display:none}
+  .project-exhibit-title{font-size:14px;line-height:1.5;font-weight:500;overflow-wrap:normal}
   .project-exhibit-toggle-icon,.project-exhibit.is-expanded .project-exhibit-toggle-icon{position:static;display:grid;width:24px;height:24px;flex:none}
   .project-exhibit.is-expanded .project-exhibit-toggle-icon{visibility:hidden;transform:none}
   .project-exhibit.is-expanded .project-exhibit-state{display:none}
@@ -93,9 +93,9 @@
   .portfolio-home .project-showcase .project-exhibit .project-visual{flex:none;aspect-ratio:16/10;margin:0 10px;max-width:calc(100% - 20px);min-height:0;height:auto;border-radius:3px}
   .portfolio-home .project-showcase .project-copy{min-height:0;padding:19px 20px 24px}
   .portfolio-home .project-showcase .project-copy h3{font-size:27px;line-height:1.35}
-  .portfolio-home .project-showcase .project-summary{font-size:13px;line-height:1.85;margin-top:12px}
+  .portfolio-home .project-showcase .project-summary{font-size:14px;line-height:1.85;margin-top:12px}
   .portfolio-home .project-showcase .project-footer{margin-top:17px;gap:12px;flex-wrap:wrap}
-  .portfolio-home .project-showcase .project-ability-tags span{font-size:10px}
+  .portfolio-home .project-showcase .project-ability-tags span{font-size:12px}
   .project-exhibit-open{display:none}
 }
 @media(prefers-reduced-motion:reduce){

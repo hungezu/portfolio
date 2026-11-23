@@ -24,12 +24,12 @@ const presentations: Record<AbilityId, {
   "ai-experience": {
     label: "AI 体验",
     statement: "先确认会改变答案的口径",
-    description: "招财 Smart 在执行查询前，让用户确认利润指标和组织范围。",
+    description: "已识别的时间与组织继续保留，只确认有歧义的利润指标。",
   },
   "ai-workflow": {
     label: "AI 工作流",
     statement: "把交互规则写进原型",
-    description: "在 GKX 把搜索、筛选和重置写成 Markdown 规范，再用可操作的示例核对。",
+    description: "用公开规则摘要和查询复现，核对标题与关键词、机构筛选和重置行为。",
   },
   "complex-systems": {
     label: "复杂系统",

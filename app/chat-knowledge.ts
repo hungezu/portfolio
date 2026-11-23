@@ -17,7 +17,7 @@ const project = (label: string, slug: string, anchor = ""): ChatReference => ({ 
 export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   {
     id: "profile", title: "认识我",
-    content: "我是一名 AI 体验产品设计师，项目覆盖 AI 智能问数、复杂 B 端系统、设计系统与数据可视化。我关注的是：让用户理解产品正在做什么，能控制过程，也能核对结果。",
+    content: "我是一名 AI 产品体验设计师，专注企业 AI 与财税产品。工作重点包括问数口径确认、复杂业务流程、设计规范与结果核对；招财 Smart、GKX 和财税平台案例分别展示这些任务中的设计决定。",
     keywords: ["李家豪", "Leo", "介绍", "是谁", "背景", "个人", "职业定位", "做什么"],
     references: [section("查看个人介绍", "top")],
   },
@@ -29,8 +29,8 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "assistant-scope", title: "我能帮你了解什么",
-    content: "我是李家豪的 AI 分身，可以结合这份作品集，聊聊我的项目、设计职责和工作经历，也能帮你找到对应的案例章节。你可以从「你擅长什么」或「先看哪个项目」开始。",
-    keywords: ["你是谁", "你叫什么", "你能", "可以问什么", "能回答什么", "帮助", "范围"],
+    content: "我是李家豪的 AI 分身，只依据本站公开的项目、设计职责、履历与联系方式回答。回答下方的相关章节可用于回看依据；资料不足时会说明无法确认。未公开的个人安排和业务成效，需要联系本人继续核对。",
+    keywords: ["你是谁", "你叫什么", "你能", "可以问什么", "能回答什么", "帮助", "范围", "回答依据", "信息来源", "资料范围", "答不上", "查证", "引用方式"],
     references: [section("浏览精选作品", "work")],
   },
   {
@@ -274,6 +274,7 @@ const FOLLOW_UP = /^(?:那|它|这个|该项目|该案例|上面|刚才|前面|�
 const GREETING = /^(?:你好|您好|嗨|哈[喽啰罗]|hello|hi|在吗|早上好|下午好|晚上好)[!！。,.，?？\s]*$/i;
 const THANKS = /^(?:谢谢(?:你|啦|了)?|多谢|感谢|好的|好哒|明白了|了解了|收到|ok|thanks|thank you)[!！。,.，\s]*$/i;
 const TOPIC_CONTINUATION = /^(?:那)?(?:能不能|可不可以|能|可以|请|再)?(?:再)?(?:具体|详细)?(?:展开|继续|多讲|多说)(?:讲讲|说说|介绍|说明)?(?:一点|一些|一下)?(?:吗|呢|吧)?[!！。,.，?？\s]*$/;
+const ASSISTANT_METHOD = /作品集助手|这个助手|你(?:的)?回答(?:依据|范围|来源)|你(?:依据|根据)什么|你(?:答不上|不知道时|如何回答|怎么回答)/;
 
 function normalizeQuery(query: string) { return query.trim().replace(/\s+/g, " ").slice(0, 600); }
 function previousContext(query: string, contextQuery: string) {
@@ -323,6 +324,7 @@ export function isChatQueryInScope(query: string, contextQuery = "") {
   if (!normalized || PRIVATE_PATTERNS.some(pattern => pattern.test(normalized))) return false;
   if (GREETING.test(normalized) || THANKS.test(normalized)) return true;
   if (UNRELATED_PATTERNS.some(pattern => pattern.test(normalized))) return false;
+  if (ASSISTANT_METHOD.test(normalized)) return true;
   if (PORTFOLIO_SIGNAL.test(normalized) || explicitProjects(normalized).length) return true;
   if (/你是谁|你叫什么|你是(?:不是)?(?:本人|李家豪|Leo|AI|机器人|真人)|你能(?:做什么|帮我什么|回答什么|聊什么)|能问什么|可以问什么|能聊什么|可以聊什么|能帮我|怎么称呼|介绍一下自己|他是谁|他做什么|你是做什么的|你做什么/.test(normalized)) return true;
   const context = previousContext(normalized, contextQuery);
@@ -367,6 +369,7 @@ export function findChatKnowledge(query: string, limit = 5, contextQuery = "") {
   const normalized = normalizeQuery(query);
   if (!normalized || limit <= 0 || !isChatQueryInScope(normalized, contextQuery)) return [];
   if (GREETING.test(normalized) || THANKS.test(normalized)) return [];
+  if (ASSISTANT_METHOD.test(normalized)) return entriesFor(["assistant-scope"], limit);
   if (/学历|毕业|学校|大学|专业是什么|年龄|几岁|到岗|求职|离职|薪资|薪酬|薪水|工资|期望|工作地点|所在城市|哪个城市|在哪.{0,3}城市/.test(normalized)) return entriesFor(["undisclosed-profile"], limit);
   if (/WCAG|无障碍|对比度|accessibility|contrast/i.test(normalized)) return entriesFor(["accessibility-evidence"], limit);
   if (/你是谁|你叫什么|你是(?:不是)?(?:本人|李家豪|Leo|AI|机器人|真人)|你能(?:做什么|帮我什么|回答什么|聊什么)|能问什么|可以问什么|能聊什么|可以聊什么|能帮我什么/.test(normalized)) return entriesFor(["assistant-scope"], limit);

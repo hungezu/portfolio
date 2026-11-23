@@ -1,0 +1,67 @@
+.portfolio-home .project-exhibit-decision {
+  display: block;
+  color: #444;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+
+.portfolio-chat .portfolio-chat-evidence-note {
+  flex: none;
+  padding: 0 20px;
+  border-bottom: 1px solid #e3e3e3;
+  background: #fff;
+  color: #333;
+}
+
+.portfolio-chat-evidence-note > summary {
+  min-height: 44px;
+  padding-block: 12px;
+  margin-left: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.portfolio-chat-evidence-note > summary:focus-visible {
+  outline: 2px solid #333;
+  outline-offset: 3px;
+}
+
+.portfolio-chat-evidence-note dl {
+  margin: 0;
+  padding: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.portfolio-chat-evidence-note dl > div {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.portfolio-chat-evidence-note dt { font-weight: 600; }
+.portfolio-chat-evidence-note dd { margin: 0; }
+
+@media (max-width: 1000px) {
+  .portfolio-home .project-exhibit .project-exhibit-title {
+    display: block;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .portfolio-home .project-exhibit-decision {
+    margin-top: 4px;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .portfolio-home .project-exhibit.is-expanded .project-exhibit-decision {
+    display: none;
+  }
+}

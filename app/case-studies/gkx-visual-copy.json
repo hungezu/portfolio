@@ -4,7 +4,7 @@
       "gkx-overview-title": "智慧门户连接四大业务系统；我的工作覆盖界面设计、共用规范与交付核对。",
       "gkx-strategy-title": "查询与反馈可以共用，页面骨架由任务决定。",
       "gkx-rules-title": "单条维护保留列表上下文，节点建模使用独立工作区。",
-      "gkx-prototype-title": "保留原型业务功能，调整卡片阅读层级与查询工具区。",
+      "gkx-prototype-title": "先核对科研 AI 的依据与下一步，再看 AI 原型怎样经过人工修订与规则复现。",
       "gkx-design-system-title": "用页面示例解释规范，以真实台账核对交付偏差。",
       "gkx-outcomes-title": "留下了图稿、规范、原型修订与署名评审记录；后续继续补全修改与复核证据。"
     },
@@ -61,7 +61,7 @@
       "gkx-overview-title": "One portal connects four major systems. My work covers interface design, shared standards and delivery reviews.",
       "gkx-strategy-title": "Share query and feedback patterns; let the task determine the page layout.",
       "gkx-rules-title": "Keep single-record edits in list context; give node modeling a dedicated workspace.",
-      "gkx-prototype-title": "Retain prototype capabilities while revising card hierarchy and query tools.",
+      "gkx-prototype-title": "Start with evidence checks and next actions in research AI, then examine human revisions and rule reconstruction for AI-assisted design.",
       "gkx-design-system-title": "Explain standards through page examples and check delivery against actual review records.",
       "gkx-outcomes-title": "Designs, standards, prototype revisions and signed review records remain available. Change and follow-up evidence needs further work."
     },

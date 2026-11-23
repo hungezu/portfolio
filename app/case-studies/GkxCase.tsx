@@ -340,6 +340,7 @@ function SharedQueryEvidence({ onOpen }: { onOpen: (asset: ImageAsset, trigger: 
       <dl><div><dt>{t("业务适配")}</dt><dd>{t(example.adaptation)}</dd></div><div className={`gkx-shared-query__role${example.roleLabel === "本人调整" || example.roleLabel === "本人主导" ? " is-contribution" : ""}`}><dt>{t(example.roleLabel)}</dt><dd>{t(example.role)}</dd></div></dl>
     </article>;})}</div>
     <p className="gkx-shared-query__reason"><strong>{t("选择依据")}</strong><span>{review.sharedReason}</span></p>
+    <p className="gkx-source-note">{review.sharedCheck} <a href="#gkx-workflow">{review.sharedCheckLink}</a></p>
   </section>;
 }
 
@@ -539,6 +540,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
     <section id="gkx-project-context" className="gkx-chapter" aria-labelledby="gkx-overview-title">
       <details className="gkx-chapter-disclosure" open={true}><summary aria-labelledby="gkx-overview-title"><SectionHeading section={{ title: review.contextTitle, lead: "" }} titleId="gkx-overview-title" /><IconArrowDown aria-hidden="true" /></summary>
       <div className="gkx-chapter-content">
+      <p className="gkx-task-context">{review.taskContext}</p>
       <div className="gkx-context-layout gkx-topic">
       <GkxProjectScope scope={overviewCopy.scope} />
       <div className="gkx-project-priorities">{depth.challenges.map((item, index) => <article key={item.title}><h3>{t(item.title)}</h3><p>{visual.challenges[index]}</p></article>)}</div>
@@ -583,6 +585,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
       <article id="gkx-rule-recovery" className="gkx-rule-module gkx-secondary-task gkx-topic">
         <header className="gkx-content-heading"><h3>{t(depth.recovery.title)}</h3><p>{review.recoveryLead}</p></header>
         <ProjectFigure asset={assets.importError} onOpen={openImage} viewBox="448 96 544 608" compactViewBox="464 104 512 592" />
+        <p className="gkx-design-check-note">{review.recoveryCheck}</p>
         <details className="gkx-supporting-material"><summary>{visual.ordered.explanation}</summary><GkxExplainerFigure name="05-recovery" onOpen={openImage} /></details>
       </article>
       <details className="gkx-supporting-material"><summary>{t("管理列表的查询与行操作")}</summary>
@@ -600,6 +603,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
         readingEvidence={<ProjectFigure asset={assets.reading} onOpen={openImage} />}
         reportEvidence={<ProjectFigure asset={gkxReportTasks} onOpen={openImage} viewBox="742 181 426 443" />}
       />
+      <header className="gkx-content-heading gkx-topic"><h3>{review.methodTitle}</h3><p>{review.methodIntro}</p></header>
       <AiCollaborationEvidence onOpen={openImage} />
       <PaperWorkflowExample onReferenceClick={openReference} />
       <details className="gkx-supporting-material"><summary>{t("AI 与人工协作工作流")}</summary><ProjectFigure asset={assets.aiWorkflow} onOpen={openImage} /></details>

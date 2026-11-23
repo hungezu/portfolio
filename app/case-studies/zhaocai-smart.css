@@ -186,7 +186,9 @@
 .zc4-metric-option + .zc4-metric-option { border-top: 1px solid #ebebeb; }
 .zc4-metric-option label { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 12px 16px; cursor: pointer; }
 .zc4-metric-option label:hover { background: var(--zcs-subtle); }
-.zc4-metric-option input { width: 16px; height: 16px; margin: 0; }
+.zc4-metric-option input { flex: 0 0 16px; width: 16px; height: 16px; margin: 0; }
+.zc4-metric-copy { display: grid; flex: 1; gap: 2px; }
+.zc4-metric-copy small { color: var(--zcs-muted); font-size: 13px; font-weight: 400; line-height: 1.45; }
 .zc4-metric-option.active { background: var(--zcs-subtle); }
 .zc4 .zc4-metric-option.active label { color: var(--zcs-accent); font-weight: 550; }
 .zc4-metric-option.active svg { margin-left: auto; color: var(--zcs-accent); }
@@ -328,6 +330,10 @@
 
 /* Decisions explain the tradeoff; the complete task remains in one workspace. */
 .zc4-decision-list { display: grid; gap: var(--zcs-block-gap); }
+.zc4-execution-decisions { margin-block: var(--zcs-block-gap); }
+.zc4-short-reply { display: grid; gap: 8px; margin: 24px 0; padding: clamp(16px, 3vw, 28px); border-radius: 12px; background: var(--zcs-subtle); }
+.zc4-short-reply blockquote { margin: 0; font-size: clamp(17px, 2vw, 21px); font-weight: 550; line-height: 1.5; }
+.zc4-short-reply figcaption { color: var(--zcs-muted); font-size: 14px; line-height: 1.55; }
 .zc4-decision { min-width: 0; }
 .zc4-decision + .zc4-decision { padding-top: 40px; border-top: 1px solid var(--zcs-line); }
 .zc4-decision > div, .zc4-decision > aside { min-width: 0; }

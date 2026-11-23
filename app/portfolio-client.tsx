@@ -4,6 +4,7 @@ import { useI18n, LocaleProvider, LanguageSwitch } from "./i18n";
 
 import "./site-navigation.css";
 import "./resume-download.css";
+import "./portfolio-reading-cues.css";
 
 import {
   AnimatePresence,
@@ -130,41 +131,47 @@ const homeProjectContent: Record<string, {
   category: string;
   platform: string;
   summary: string;
+  decision: string;
   role: string;
 }> = {
   gkx: {
     titleLines: ["GKX 智慧门户"],
     category: "政企多业务平台",
     platform: "Web",
-    summary: "我主导智慧门户与多系统任务空间，覆盖对象维护、流程建模、异常恢复、智能科研与智能阅读，并将案例广场从 AI 初稿修订为可核对的界面。",
+    summary: "查询与反馈使用共用规则；单条记录留在列表上下文，节点建模进入独立画布。",
+    decision: "查询共用，建模独立",
     role: "主导方案与界面 · 独立完成设计规范与设计 MD · 参与交付评审",
   },
   "zhaocai-smart": {
     titleLines: ["招财 Smart"],
     category: "AI 财务智能问数",
     platform: "Web",
-    summary: "将模糊的财务提问转为可确认条件，串联执行反馈、结果核对与看板留存。",
+    summary: "保留已识别的时间与组织，只确认有歧义的利润指标，再让用户核对结果来源。",
+    decision: "只确认缺少的利润口径",
     role: "负责对话 UX/UI、异常恢复、看板交互及 Markdown 回答规范。",
   },
   "tax-cloud": {
     titleLines: ["税纪云 2.0"],
     category: "全税种申报平台",
     platform: "Web / App",
-    summary: "围绕申报、审批与复杂表单重组操作路径，统一 Web / App 的页面层级和状态反馈。",
+    summary: "将高密度表单的筛选条件按需展开，用可配置表头保留当前任务需要的字段。",
+    decision: "筛选折叠，表头可配置",
     role: "主导跨端体验改版，完成核心流程原型、界面与组件规范。",
   },
   "energy-tax": {
     titleLines: ["国家能源集团", "报税平台"],
     category: "企业税务系统",
     platform: "Web",
-    summary: "面向集团报税任务，组织首页、纳税申报与管理工作台，明确数据层级和操作入口。",
+    summary: "按首页、纳税申报与管理工作台组织入口，为多级税表建立组件与缺省状态规范。",
+    decision: "分层组织集团报税任务",
     role: "独立负责从 0 到 1 的 UI 设计，完成页面、组件与缺省状态规范。",
   },
   "data-visualisation": {
     titleLines: ["可视化大屏"],
     category: "多行业项目合集",
     platform: "大屏",
-    summary: "面向多行业税务数据，组织地图、趋势与排行，明确总览与关键明细的阅读顺序。",
+    summary: "把总体指标放在顶部，将地区分布、趋势和构成分别组织为独立信息区。",
+    decision: "总览置顶，趋势与明细分区",
     role: "独立负责大屏视觉、交互与动效设计，完成信息层级、图表编排和布局规范。",
   },
 };
@@ -1596,6 +1603,15 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
               </div>
             </header>
 
+            <details className="portfolio-chat-evidence-note">
+              <summary>{t("回答范围与依据")}</summary>
+              <dl>
+                <div><dt>{t("范围")}</dt><dd>{t("本站公开的项目、职责、履历与联系方式。")}</dd></div>
+                <div><dt>{t("查证")}</dt><dd>{t("通过回答下的相关章节，回看公开原文与设计证据。")}</dd></div>
+                <div><dt>{t("缺口")}</dt><dd>{t("资料不足时说明无法确认，可以联系本人继续核对。")}</dd></div>
+              </dl>
+            </details>
+
             <div
               ref={messageListRef}
               className="portfolio-chat-messages"
@@ -1995,9 +2011,7 @@ function Hero() {
               </span>
               <span className="hero-statement">
                 <span className="hero-role">{t("AI 产品体验设计师")}</span>
-                <span className="hero-description">{locale === "en"
-                  ? "Financial AI and complex workflows, from interaction design to delivery."
-                  : "设计财务问数与复杂业务系统，从交互方案做到交付。"}</span>
+                <span className="hero-description">{t("专注企业 AI 与财税产品，设计口径确认、复杂业务流程和可核对的结果。")}</span>
               </span>
             </motion.span>
           </h1>
@@ -2101,12 +2115,13 @@ function ProjectExhibit({ project, index, expanded, highlightedAbilityId, onSele
   const { locale, t } = useI18n();
   const content = homeProjectContent[project.slug] ?? {
     titleLines: [project.title], category: project.type, platform: "",
-    summary: project.summary, role: project.role,
+    summary: project.summary, decision: project.shortTitle, role: project.role,
   };
   const title = content.titleLines.join(" ");
   const titleId = `project-${project.slug}-title`;
   const toggleId = `project-${project.slug}-toggle`;
   const panelId = `project-${project.slug}-panel`;
+  const decisionId = `project-${project.slug}-decision`;
   const matched = highlightedAbilityId ? project.abilityIds.includes(highlightedAbilityId) : false;
 
   return <article className={`project-card project-exhibit${expanded ? " is-expanded" : ""}${matched ? " is-ability-match" : ""}`} data-project={project.slug} aria-labelledby={toggleId}>
@@ -2115,6 +2130,7 @@ function ProjectExhibit({ project, index, expanded, highlightedAbilityId, onSele
     </div>
     <button className="project-exhibit-toggle" id={toggleId} type="button"
       aria-label={`${t(expanded ? "当前项目" : "展开项目")}：${t(title)}`}
+      aria-describedby={expanded ? undefined : decisionId}
       aria-expanded={expanded} aria-controls={panelId} aria-disabled={expanded || undefined}
       onClick={() => { if (!expanded) onSelect(project.slug); }}
       onKeyDown={event => {
@@ -2125,7 +2141,7 @@ function ProjectExhibit({ project, index, expanded, highlightedAbilityId, onSele
       onFocus={() => { void prepareProject(project.slug).catch(() => undefined); }}>
       <span className="project-exhibit-number">{String(index + 1).padStart(2, "0")}<span> / {String(projects.length).padStart(2, "0")}</span></span>
       <span className="project-exhibit-state" aria-hidden="true">{t("当前展开")}</span>
-      <span className="project-exhibit-label"><span>{t(content.platform)}</span><span>{t(title)}</span></span>
+      <span className="project-exhibit-label"><span className="project-exhibit-platform">{t(content.platform)}</span><span className="project-exhibit-title">{t(title)}</span><span className="project-exhibit-decision" id={decisionId}>{t(content.decision)}</span></span>
       <span className="project-exhibit-toggle-icon" aria-hidden="true"><Plus size={18} strokeWidth={1.5} /></span>
       {matched && <span className="project-exhibit-match" aria-hidden="true">{t("匹配")}</span>}
     </button>
@@ -2146,8 +2162,8 @@ function ProjectExhibit({ project, index, expanded, highlightedAbilityId, onSele
             ? (locale === "en" ? "Additional work" : "补充案例")
             : t(content.platform)}</span></p>
           <h3 id={titleId}>{t(title)}</h3>
-          {project.slug === "gkx" && <p className="project-card-role" id="project-gkx-role">{t(content.role)}</p>}
           <p className="project-summary" id={`project-${project.slug}-summary`}>{t(content.summary)}</p>
+          {project.slug === "gkx" && <p className="project-card-role" id="project-gkx-role">{t(content.role)}</p>}
           <div className="project-footer"><div className="project-ability-tags" aria-label={t("项目对应能力")}>
             {project.abilityIds.slice(0,3).map(id => <span key={id}>{t(abilityLabelById.get(id))}</span>)}
           </div><span className="project-link" aria-hidden="true">{t("查看案例")} <ArrowUpRight size={15} /></span></div>
@@ -2203,7 +2219,7 @@ function WorkSection({ highlightedAbilityId, onClearHighlight, restoredProjectSl
     const next = key === "Home" ? 0 : key === "End" ? projects.length - 1
       : (index + (["ArrowLeft", "ArrowUp"].includes(key) ? -1 : 1) + projects.length) % projects.length;
     selectProject(projects[next].slug);
-    showcaseRef.current?.querySelectorAll<HTMLButtonElement>(".project-exhibit-toggle")[next]?.focus({preventScroll: window.innerWidth >= 768});
+    showcaseRef.current?.querySelectorAll<HTMLButtonElement>(".project-exhibit-toggle")[next]?.focus({preventScroll: window.innerWidth > 1000});
   };
   const highlightedAbility = abilities.find(ability => ability.id === highlightedAbilityId);
   const matchedCount = highlightedAbilityId ? projects.filter(project => project.abilityIds.includes(highlightedAbilityId)).length : 0;

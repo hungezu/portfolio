@@ -1,6 +1,13 @@
 import type { ReactNode } from "react";
 import { useI18n } from "../i18n";
 
+function DesignAcceptance({ title, points }: { title: string; points: ReadonlyArray<readonly [string, string]> }) {
+  return <aside className="gkx-design-acceptance" aria-label={title}>
+    <h4>{title}</h4>
+    <dl>{points.map(([label, detail]) => <div key={label}><dt>{label}</dt><dd>{detail}</dd></div>)}</dl>
+  </aside>;
+}
+
 export function GkxSkeletonJudgment() {
   const { locale } = useI18n();
   const english = locale === "en";
@@ -44,12 +51,16 @@ export function GkxProductAiExperience({ readingEvidence, reportEvidence }: { re
   return <>
     <section id="gkx-ai-experience" className="gkx-topic gkx-experience-decisions" aria-labelledby="gkx-ai-experience-title">
       <header className="gkx-content-heading">
-        <h3 id="gkx-ai-experience-title">{english ? "Research AI: discovery, verification and release" : "科研 AI 体验：发现、核对与发布"}</h3>
+        <h3 id="gkx-ai-experience-title">{english ? "Research AI: find material, verify it, then prepare a report" : "科研 AI 体验：找到材料，再判断能否用于报告"}</h3>
         <p>{english
-          ? "Research work moves between finding material and judging whether it supports a decision. I kept the source material and the user's control visible at those points."
-          : "科研用户既要找到材料，也要判断材料能不能支撑下一步。我的判断是，在需要做决定的地方，把原始依据和可执行操作留在用户面前。"}
+          ? "A research user needs to find relevant material, check a claim against the paper, and decide what can enter a report. The portal search and reading designs and the think-tank report task design show how I addressed these separate decisions."
+          : "科研使用者要找相关材料、回论文核对解读，再决定哪些内容可以进入报告。我分别用门户搜索与阅读图稿、智库报告任务图稿，说明如何保留依据与操作控制。"}
         </p>
       </header>
+      <p className="gkx-source-note">{english
+        ? "The designs below show the interface structure. The acceptance points are requirements for a subsequent prototype or implementation check, not completed tests of the live product."
+        : "下方图稿展示界面结构；各段验收要点用于后续原型或实现核对，不代表已经完成线上测试。"}
+      </p>
       <div className="gkx-experience-decisions__scenario">
         <h4>{english ? "Keep discovery modes separate" : "按查找目的选择入口"}</h4>
         <p>{english
@@ -58,16 +69,29 @@ export function GkxProductAiExperience({ readingEvidence, reportEvidence }: { re
         </p>
         <a href="#gkx-portal-task">{english ? "See the portal result design" : "查看门户结果图稿"}</a>
       </div>
+      <DesignAcceptance title={english ? "Acceptance point · Keep the search recoverable" : "设计验收要点 · 查询后仍能继续调整"} points={[
+        [english ? "Entry and recovery" : "入口与恢复", english
+          ? "Try a known paper title and an open research question through their respective entry points. Check that the active mode and conditions remain identifiable. An empty result or request failure should retain the question and let the user revise conditions or retry."
+          : "分别用已知题名和开放研究问题进入，核对当前模式与条件是否清楚。无结果或请求失败后，应保留问题与条件，让用户可以调整后再查。"],
+      ]} />
     </section>
     <section id="gkx-reading-workspace" className="gkx-topic gkx-experience-decisions" aria-labelledby="gkx-reading-workspace-title">
       <header className="gkx-content-heading">
-        <h3 id="gkx-reading-workspace-title">{english ? "Keep the source visible while reading AI output" : "读 AI 解读时，原文始终可见"}</h3>
+        <h3 id="gkx-reading-workspace-title">{english ? "Read AI output alongside the source" : "让 AI 解读与论文原文可以对照"}</h3>
         <p>{english
-          ? "The reading workspace keeps the outline and paper visible alongside the AI summary, contributions and limitations. I would verify that a reader can move from a specific finding to its original passage before relying on it."
-          : "智能阅读把目录、论文原文和 AI 总结、核心贡献、研究局限并列。下一步要核对的是：用户能否从某条解读回到对应原文，看到实验条件和限制，再决定是否引用。"}
+          ? "The design places the outline and paper beside the AI summary, contributions and limitations. This gives readers room to compare the interpretation with the paper; linked passage navigation still needs an interactive check."
+          : "图稿将目录、论文原文与 AI 总结、核心贡献、研究局限并列，给人工对照留下空间；解读能否联动定位到具体段落，仍需在可操作原型中验收。"}
         </p>
       </header>
       {readingEvidence}
+      <DesignAcceptance title={english ? "Acceptance points · Check support before using a claim" : "设计验收要点 · 先核对依据，再使用结论"} points={[
+        [english ? "Check one claim" : "核对一条解读", english
+          ? "Use a neutral test claim, “the method outperforms a baseline.” Locate the passage and compare the study object, baseline, evaluation measure and limitations. Check whether the interpretation states the same conditions as the paper."
+          : "用中性示例“某方法优于基线”，定位原文，核对研究对象、对照方法、评价指标与适用限制，判断解读是否保留了原文条件。"],
+        [english ? "When support is missing" : "依据不足时", english
+          ? "If the passage cannot be found, the interpretation conflicts with it, or the file fails to load, make the unresolved state clear. Retain the paper and question so the reader can inspect the source or revise the question before citing the claim."
+          : "找不到支撑、解读与原文冲突或文件未读成功时，应说明未完成核对，保留论文与问题，让用户回原文人工检查或调整提问，再决定是否引用。"],
+      ]} />
     </section>
     <section id="gkx-ai-release-boundary" className="gkx-topic gkx-experience-decisions gkx-experience-decisions__with-evidence"
       aria-labelledby="gkx-ai-release-boundary-title">
@@ -79,10 +103,14 @@ export function GkxProductAiExperience({ readingEvidence, reportEvidence }: { re
             : "智库报告任务图稿分别展示生成状态和发布审核。报告已生成后仍可能未申请或审核中，让用户知道下一步是等待、检查草稿，还是跟进审核。"}
           </p>
         </header>
-        <p className="gkx-source-note">{english
-          ? "Next checks: return to the source passage, retain the query after an empty result or error, and verify how a rejected report returns for revision. The published designs establish the entry points, workspace and status split."
-          : "待核对原文定位、无结果或失败后是否保留查询，以及审核驳回后的修改路径。现有图稿支持入口、阅读分栏和状态拆分。"}
-        </p>
+        <DesignAcceptance title={english ? "Acceptance points · Make the next action identifiable" : "设计验收要点 · 状态对应下一步"} points={[
+          [english ? "Distinguish the two states" : "区分两组状态", english
+            ? "Use the shown combinations “Completed + Not submitted” and “Completed + Under review.” The former should lead to checking the draft and applying for release; the latter to tracking approval. Completion must not imply publication."
+            : "用图中的“已完成＋未申请”和“已完成＋审核中”核对：前者应能检查草稿并申请发布，后者应能跟进审核；生成完成不能被理解为已经发布。"],
+          [english ? "Failure and rejection" : "失败与驳回", english
+            ? "Generation failure should retain the task and its conditions, explain the cause and indicate how to continue. Rejection should link the review feedback to draft revision. These exceptions are absent from this image and need a prototype before acceptance."
+            : "生成失败应保留任务与条件，说明原因和继续入口；审核驳回应把意见连接到草稿修订。当前图未覆盖这两种异常，需补齐原型后验收。"],
+        ]} />
       </div>
       {reportEvidence}
     </section>
