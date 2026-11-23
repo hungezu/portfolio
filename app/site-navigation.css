@@ -43,4 +43,6 @@
   :root .site-nav.site-navigation .nav-back>span:last-child{position:absolute;display:block;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
   :root .case-page .zhaocai-locator{top:10px;left:124px;right:72px;min-height:44px;padding:0}
   :root .case-page .zhaocai-locator a{padding-inline:10px}
+  :root[lang="en"] .case-page:not(.case-page-gkx) .zhaocai-locator a{min-width:0;max-width:clamp(74px,calc(100vw - 250px),132px);padding:5px 8px}
+  :root[lang="en"] .case-page:not(.case-page-gkx) .zhaocai-locator a em{font-size:12px;white-space:normal;overflow-wrap:anywhere}
 }
