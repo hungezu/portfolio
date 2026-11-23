@@ -647,9 +647,26 @@ export function ZhaocaiSmartCompleteCase() {
           <dl className="zc4-opening-facts"><div><dt>{t("我的角色")}</dt><dd>{t("UX/UI 设计")}</dd></div><div><dt>{t("项目时间")}</dt><dd>2025.07—2025.11</dd></div><div><dt>{t("产品平台")}</dt><dd>{t("企业级 Web")}</dd></div></dl>
         </div>
         <div className="zc4-opening-thesis"><h2>{t("让财务问数有来有回，")}<span className="zc4-keep-phrase zc4-text-accent">{t("有据可查")}</span></h2><p>{t("我负责对话体验与 Markdown 回答规范，重点解决两件事：执行前确认业务口径，回答后能核对结论与依据。")}</p></div>
+        <nav className="zc4-reading-summary" aria-label={locale === "en" ? "Case summary and reading shortcuts" : "案例摘要与阅读入口"}>
+          <span>{locale === "en" ? "Quick summary" : "快速摘要"}</span>
+          {([
+            ["zcs-clarification", "口径确认", "Confirm the metric"],
+            ["zcs-process-feedback", "任务控制", "Control the task"],
+            ["zcs-markdown-system", "回答依据", "Check the evidence"],
+          ] as const).map(([id, label, english]) => <a key={id} href={`#${id}`} onClick={event => {
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
+            let disclosure = document.getElementById(id)?.closest("details") ?? null;
+            while (disclosure) {
+              disclosure.open = true;
+              disclosure = disclosure.parentElement?.closest("details") ?? null;
+            }
+            reference.openReference(event.currentTarget, id);
+          }}>{locale === "en" ? english : label}<ArrowUpRight aria-hidden="true" size={15}/></a>)}
+        </nav>
         <div className="zc4-task-analysis zc4-opening-task" aria-label={t("从业务提问到查询条件的设计拆解")}>
           <header><span>{t("从一句业务提问开始")}</span></header>
-          <div className="zc4-opening-question"><p>{t("查看 ")}<strong>{t("2024 年")}</strong><strong>{t("全集团")}</strong><em>{t("利润")}</em>{t("变化")}</p></div>
+          <div className="zc4-opening-question"><p>{locale === "en" ? <>Show <em>profit</em>{" trends for "}<strong>the entire group</strong>{" in "}<strong>2024</strong>.</> : <>查看 <strong>2024 年</strong>{" "}<strong>全集团</strong>{" "}<em>利润</em>变化</>}</p></div>
           <div className="zc4-opening-condition-flow">
             <div className="zc4-opening-known"><span>{t("已识别，继续沿用")}</span><dl><div><dt>{t("统计时间")}</dt><dd>{t("2024 年")}<Check aria-hidden="true" size={16}/></dd></div><div><dt>{t("组织范围")}</dt><dd>{t("全集团")}<Check aria-hidden="true" size={16}/></dd></div></dl></div>
             <div className="zc4-opening-unknown"><span>{t("只确认影响结果的歧义")}</span><h3>{t("“利润”指的是哪一种口径？")}</h3><ul aria-label={t("可确认的指标口径")}><li>{t("营业利润")}</li><li>{t("利润总额")}</li><li>{t("净利润")}</li></ul></div>
@@ -661,7 +678,8 @@ export function ZhaocaiSmartCompleteCase() {
             <span className="zc4-anchor" id="zcs-design-goals"/>
             <header className="zc4-business-heading"><h2>{t("一句“查利润”，还不能确定查什么")}</h2><p>{t("原始语义澄清稿指出，用户难以准确表达问题会影响回答准确性。本案用利润查询说明这一风险：时间和组织已经明确，但“利润”仍可能对应不同指标。")}</p></header>
             <dl className="zc4-problem-summary"><div><dt>{t("问题在哪里")}</dt><dd>{t("直接按某一种“利润”执行，可能得到形式完整、口径却不符合用户本意的回答。")}</dd></div><div><dt>{t("设计切入点")}</dt><dd>{t("保留已知条件，只确认影响结果的歧义；把确认后的口径继续带入答案和来源。")}</dd></div><div><dt>{t("自然语言的适用范围")}</dt><dd>{t("承接临时组合的查询需求；高频、标准任务仍适合筛选器或模板，指标定义与权限由业务规则确定。")}</dd></div></dl>
-            <p className="zc4-material-note zc4-evidence-link">{t("问题依据：")}<a href={publicAsset("/assets/projects/zhaocai-smart/13-semantic-clarification.webp")} target="_blank" rel="noreferrer">{t("查阅语义澄清原稿")}<ArrowUpRight aria-hidden="true" size={15}/><span className="zc4-sr-only">{t("（新标签页）")}</span></a>{t("。原稿记录表达不完整的风险；本页以利润查询具体说明，角色任务为设计整理。")}</p>
+            <p className="zc4-role-summary">{locale === "en" ? "Finance staff check definitions and sources; analysts compare trends and organize results; business leads read conclusions first and inspect evidence as needed." : "财务人员核对口径与来源；经营分析人员比较趋势并整理结果；业务负责人先看结论、按需核对依据。"}</p>
+            <p className="zc4-material-note zc4-evidence-link">{t("问题依据：")}<a href={publicAsset("/assets/projects/zhaocai-smart/13-semantic-clarification.webp")} target="_blank" rel="noreferrer">{t("查阅语义澄清原稿")}<ArrowUpRight aria-hidden="true" size={15}/><span className="zc4-sr-only">{t("（新标签页）")}</span></a>{locale === "en" ? ". The original documents the risk of incomplete questions. This case uses a profit query to explain the design; the role tasks are design summaries, not formal user-research findings." : "。原稿记录表达不完整的风险；本页用利润查询解释方案，角色任务为设计整理，不作为正式用户调研结论。"}</p>
             <details className="zc4-disclosure"><summary>{t("补充查阅：三类用户的阅读任务")}</summary><div className="zc4-disclosure-body"><section className="zc4-task-matrix" aria-labelledby="zc4-problem-roles-title">
               <h3 id="zc4-problem-roles-title">{t("围绕任务，确定信息的先后")}</h3>
               <table><caption className="zc4-sr-only">{t("三类用户的任务、信息需求与设计重点")}</caption><thead><tr><th scope="col">{t("使用角色")}</th><th scope="col">{t("主要任务")}</th><th scope="col">{t("需要看清")}</th><th scope="col">{t("设计重点")}</th></tr></thead><tbody>{problemRoles.map(role => <tr key={role.number}><th scope="row">{t(role.title)}</th><td data-label="主要任务">{t(role.task)}</td><td data-label="需要看清">{t(role.support)}</td><td data-label="设计重点"><strong>{t(role.focus)}</strong></td></tr>)}</tbody></table>
@@ -726,15 +744,14 @@ export function ZhaocaiSmartCompleteCase() {
         </section>
 
         <section className="zc4-section zc4-delivery" id="zcs-delivery">
-          <Heading title={t("方案交付了什么，验证覆盖到哪里")} intro={t("原始设计稿对应交互与排版方案，同题推演解释取舍，规则样例核对回答。再用本页原型的任务走查，检查这些规则是否能被执行。")}/>
+          <Heading title={t("方案交付了什么，验证覆盖到哪里")} intro={locale === "en" ? "Original design drafts document the interaction and layout work. Portfolio comparisons explain the tradeoffs, rule examples check answers, and a self-check records how the current frontend prototype behaves." : "原始设计稿对应交互与排版方案，同题对照解释取舍，规则样例核对回答；作品集原型自查记录当前前端示例的实际反馈。"}/>
           <div className="zc4-delivery-boundary" id="zcs-ai-strategy"><span className="zc4-anchor" id="zcs-trust-mechanism"/><h3>{t("协作中的责任边界")}</h3><dl className="zc4-ownership-summary"><div><dt>{t("设计交付")}</dt><dd>{t("任务流程、条件确认、等待与恢复、结果阅读及 Markdown 规则。")}</dd></div><div><dt>{t("产品与业务确认")}</dt><dd>{t("指标定义、统计范围与权限规则，明确哪些条件需要用户决定。")}</dd></div><div><dt>{t("研发实现")}</dt><dd>{t("权限校验、查询服务、结果校验与版本记录；界面提示不能代替服务能力。")}</dd></div></dl></div>
-          <section className="zc4-walkthrough" id="zcs-prototype-review" aria-labelledby="zcs-prototype-review-title"><h3 id="zcs-prototype-review-title">{t("当前原型的任务走查")}</h3><p>{t("2026.10.19 · 本页交互示例。按预设任务逐项操作，记录界面反馈与实际状态，覆盖桌面与 390px 手机。")}</p>
-            <div className="zc4-table-wrap zc4-case-table zc4-walkthrough-table" role="region" aria-label={t("原型任务走查记录，可横向滚动")} tabIndex={0}><table><caption>{t("任务、观察结果与界面实录")}</caption><thead><tr><th scope="col">{t("检查任务")}</th><th scope="col">{t("实际观察")}</th><th scope="col">{t("查看实录")}</th></tr></thead><tbody>{walkthroughRecords.map(record=><tr key={record.task}><th scope="row">{t(record.task)}</th><td>{t(record.observed)}</td><td><ul>{record.evidence.map(([file,label])=><li key={file}><a href={publicAsset(`/assets/projects/zhaocai-smart/verification/20261019/${file}`)} target="_blank" rel="noreferrer">{t(label)}<ArrowUpRight aria-hidden="true" size={14}/><span className="zc4-sr-only">{t("（新标签页）")}</span></a></li>)}</ul></td></tr>)}</tbody></table></div>
-            <p className="zc4-material-note">{t("这份记录验证预设示例的行为与呈现；真人任务理解、模型表现和业务服务仍需单独验证。")}</p>
-            <p className="zc4-walkthrough-log"><a href={publicAsset("/assets/projects/zhaocai-smart/verification/20261019/review-record.html")} target="_blank" rel="noreferrer">{t("查看完整任务记录")}<ArrowUpRight aria-hidden="true" size={16}/><span className="zc4-sr-only">{t("（新标签页）")}</span></a></p>
+          <section className="zc4-walkthrough" id="zcs-prototype-review" aria-labelledby="zcs-prototype-review-title"><h3 id="zcs-prototype-review-title">{locale === "en" ? "Portfolio prototype self-check" : "作品集原型自查"}</h3><p>{locale === "en" ? "2026.10.19 · Preset tasks were performed on this page's frontend prototype, recording states and interface feedback on desktop and a 390px mobile viewport." : "2026.10.19 · 对本页前端原型按预设任务逐项操作，记录状态和界面反馈，覆盖桌面与 390px 手机。"}</p>
+            <div className="zc4-table-wrap zc4-case-table zc4-walkthrough-table" role="region" aria-label={locale === "en" ? "Prototype self-check records, horizontally scrollable" : "原型自查记录，可横向滚动"} tabIndex={0}><table><caption>{locale === "en" ? "Preset tasks, self-check observations, and interface records" : "预设任务、自查观察与界面实录"}</caption><thead><tr><th scope="col">{t("检查任务")}</th><th scope="col">{t("实际观察")}</th><th scope="col">{t("查看实录")}</th></tr></thead><tbody>{walkthroughRecords.map(record=><tr key={record.task}><th scope="row">{t(record.task)}</th><td>{t(record.observed)}</td><td><ul>{record.evidence.map(([file,label])=><li key={file}><a href={publicAsset(`/assets/projects/zhaocai-smart/verification/20261019/${file}`)} target="_blank" rel="noreferrer">{t(label)}<ArrowUpRight aria-hidden="true" size={14}/><span className="zc4-sr-only">{t("（新标签页）")}</span></a></li>)}</ul></td></tr>)}</tbody></table></div>
+            <p className="zc4-evidence-boundary">{locale === "en" ? "This self-check covers the current portfolio frontend prototype, not a study with business users. RMB 608 million and 29.55% are sample calculations. It does not establish the 2025 product's release status, model or service performance, permission enforcement, or business gains." : "这是对当前作品集前端原型的自查，不是业务用户测试。6.08 亿元与 29.55% 为示例计算；本次自查不证明 2025 年产品的上线状态、模型与服务表现、权限校验或效率收益。"}</p>
+            <p className="zc4-walkthrough-log"><a href={publicAsset("/assets/projects/zhaocai-smart/verification/20261019/review-record.html")} target="_blank" rel="noreferrer">{locale === "en" ? "View the complete self-check record" : "查看完整自查记录"}<ArrowUpRight aria-hidden="true" size={16}/><span className="zc4-sr-only">{t("（新标签页）")}</span></a></p>
           </section>
-          <details className="zc4-disclosure"><summary>{t("查阅验证范围与后续观察")}</summary><div className="zc4-disclosure-body"><dl className="zc4-problem-summary"><div><dt>{t("已经核对")}</dt><dd>{t("条件保护、停止后继续、回答边界、来源返回、复制反馈与手机表格。原始日志和界面截图保留在本次走查记录中。")}</dd></div><div><dt>{t("下一轮用户任务")}</dt><dd>{t("观察业务用户能否选对口径、找到依据，并解释“未取得”与零的区别；记录具体误解，再调整文案和入口。")}</dd></div><div><dt>{t("业务产品状态")}</dt><dd>{t("原项目上线阶段、真实数据正确性、权限校验与效率收益，需要对应业务记录；本页材料覆盖设计方案与交互示例。")}</dd></div></dl></div></details>
-          <p className="zc4-evidence-boundary">{t("6.08 亿元与 29.55% 是示例计算，用于核对回答规则；本次走查记录的是当前原型，不作为 2025 年业务产品的验收或收益。")}</p>
+          <details className="zc4-disclosure"><summary>{t("查阅验证范围与后续观察")}</summary><div className="zc4-disclosure-body"><dl className="zc4-problem-summary"><div><dt>{t("已经核对")}</dt><dd>{t("条件保护、停止后继续、回答边界、来源返回、复制反馈与手机表格。原始日志和界面截图保留在本次走查记录中。")}</dd></div><div><dt>{t("下一轮用户任务")}</dt><dd>{t("观察业务用户能否选对口径、找到依据，并解释“未取得”与零的区别；记录具体误解，再调整文案和入口。")}</dd></div></dl></div></details>
         </section>
 
         <section className="zc4-section" id="zcs-reflection">

@@ -23,33 +23,33 @@ const presentations: Record<AbilityId, {
 }> = {
   "ai-experience": {
     label: "AI 体验",
-    statement: "把不确定，变成可控的体验。",
-    description: "串联意图澄清、过程反馈与依据说明，让 AI 任务可理解、可确认。",
+    statement: "先确认会改变答案的口径",
+    description: "招财 Smart 在执行查询前，让用户确认利润指标和组织范围。",
   },
   "ai-workflow": {
     label: "AI 工作流",
-    statement: "让设计判断，在原型中被验证。",
-    description: "用 AI 搭建可运行原型，以 Markdown 维护规范，关键设计判断由我完成。",
+    statement: "把交互规则写进原型",
+    description: "在 GKX 把搜索、筛选和重置写成 Markdown 规范，再用可操作的示例核对。",
   },
   "complex-systems": {
     label: "复杂系统",
-    statement: "把复杂业务，组织成清晰的系统。",
-    description: "先理清系统、角色与业务边界，再组织任务流程、权限和页面结构。",
+    statement: "共用操作，按任务保留结构",
+    description: "GKX 对齐列表操作，同时为流程建模保留画布和配置面板。",
   },
   "interaction-design": {
     label: "交互策略",
-    statement: "让每一步操作，都有清楚的反馈。",
-    description: "围绕任务路径定义信息结构与状态，通过原型验证关键操作和异常场景。",
+    statement: "让执行状态可见",
+    description: "招财 Smart 的交互示例区分条件确认、查询执行与异常恢复。",
   },
   "design-system": {
     label: "设计系统",
-    statement: "让一致性，成为可复用的规则。",
-    description: "以栅格、组件与状态规则统一页面，把评审共识沉淀为可维护的规范。",
+    statement: "用页面实例说明规范",
+    description: "GKX 用页面原型说明通用布局、列表状态和操作反馈，供交付时对照。",
   },
   "data-visualization": {
     label: "数据可视化",
-    statement: "让关键数据，成为看得懂的判断。",
-    description: "按指标优先级组织地图、趋势与对比，建立从整体态势到关键细节的阅读路径。",
+    statement: "把总览和细节分层",
+    description: "税务大屏把总体指标置顶，把地区分布、趋势和构成放进独立的信息区。",
   },
 };
 
@@ -62,7 +62,7 @@ type CapabilitySectionProps = {
 export function CapabilitySection({
   highlightedAbilityId, onShowProjects, onOpenEvidence,
 }: CapabilitySectionProps) {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const reduce = useReducedMotion();
   const [activeId, setActiveId] = useState<AbilityId>("ai-experience");
   const [expandedId, setExpandedId] = useState<AbilityId | null>("ai-experience");
@@ -195,7 +195,6 @@ export function CapabilitySection({
         variants={{ hidden: { opacity: 0.85, y: 12 }, visible: { opacity: 1, y: 0 } }}
         transition={{ duration: reduce ? 0 : 0.42, ease: [0.16, 1, 0.3, 1] }}>
         <h2>{t("核心能力")}</h2>
-        <p>{t("从方法，到项目实践。")}</p>
         <motion.span className="section-intro-rule" aria-hidden="true"
           variants={{ hidden: { scaleX: 0.6, opacity: 0.85 }, visible: { scaleX: 1, opacity: 1 } }}
           transition={{ duration: reduce ? 0 : 0.36, delay: reduce ? 0 : 0.08, ease: [0.16, 1, 0.3, 1] }} />
@@ -309,7 +308,9 @@ export function CapabilitySection({
               aria-controls="work"
               onClick={event => { holdForReading(); onShowProjects(activeId, event.detail === 0); }}
             >
-              <span>{t("在作品区查看 ")}{t(matchedProjects.length)} {t(" 个项目")}</span>
+              <span>{locale === "en"
+                ? `Highlight ${matchedProjects.length} ${matchedProjects.length === 1 ? "project" : "projects"} in Selected Work`
+                : `在作品区查看 ${matchedProjects.length} 个项目`}</span>
               <ArrowUpRight size={18} strokeWidth={1.5} aria-hidden="true" />
             </button>
           </div>

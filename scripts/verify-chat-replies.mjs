@@ -33,13 +33,13 @@ check("Assistant answers use first person and visitor prompts address you", () =
   assert.match(buildLocalChatReply("你是本人吗？").reply, /AI 分身/);
   assert.match(buildLocalChatReply("你好").reply, /AI 分身/);
 });
-check("Home suggestions cover distinct topics with one GKX project question", () => {
+check("Home suggestions cover hiring, design, product and contact", () => {
   const prompts = getChatQuickPrompts();
   assert.equal(prompts.length, 4);
-  assert.equal(prompts.filter(prompt => /GKX/.test(prompt)).length, 1);
-  assert.ok(prompts.some(prompt => /擅长/.test(prompt)));
-  assert.ok(prompts.some(prompt => /工作经历/.test(prompt)));
-  assert.ok(prompts.some(prompt => /协作/.test(prompt)));
+  assert.match(prompts[0], /年限/);
+  assert.match(prompts[1], /招财 Smart/);
+  assert.match(prompts[2], /财税项目/);
+  assert.match(prompts[3], /联系/);
   for (const prompt of prompts) {
     const answer = buildLocalChatReply(prompt);
     assert.notEqual(answer.reply, OUT_OF_SCOPE_REPLY);
@@ -54,10 +54,10 @@ check("A project list includes other work and greetings stay general", () => {
   assert.match(answer.reply, /国家能源/);
   assert.doesNotMatch(buildLocalChatReply("你好").reply, /GKX/);
 });
-check("Recommendations prioritize GKX", () => {
+check("Recommendations prioritize Smart", () => {
   const answer = buildLocalChatReply("第一次来，建议先看哪个项目？");
-  assert.match(answer.reply, /建议先看 \*\*GKX/);
-  assert.match(collectChatReferences(answer.entries)[0].href, /\/gkx\//);
+  assert.match(answer.reply, /建议先看 \*\*招财 Smart/);
+  assert.match(collectChatReferences(answer.entries)[0].href, /\/zhaocai-smart\//);
 });
 check("GKX project matching accepts uppercase, lowercase and mixed-case names", () => {
   for (const name of ["GKX", "gkx", "GkX"]) {
@@ -118,10 +118,10 @@ check("Longer history preserves the most recent project", () => {
 });
 check("A recommendation supplies the project for a natural follow-up", () => {
   const recommended = buildLocalChatReply("先看哪个项目？");
-  assert.equal(recommended.context.projectSlug, "gkx");
+  assert.equal(recommended.context.projectSlug, "zhaocai-smart");
   const challenge = continueReply("具体的难点是什么？", recommended.context);
-  assert.match(challenge.reply, /GKX的设计难点/);
-  assert.deepEqual(challenge.context, { projectSlug: "gkx", entryIds: ["project-gkx-challenge"] });
+  assert.match(challenge.reply, /招财 Smart 的设计难点/);
+  assert.equal(challenge.context.projectSlug, "zhaocai-smart");
 });
 check("Switching projects updates subsequent pronoun questions", () => {
   const switched = continueReply("那招财 Smart 呢？", { projectSlug: "gkx", entryIds: ["project-gkx-role"] });
@@ -199,7 +199,7 @@ check("Recommendations honor an explicitly requested project direction", () => {
     const followUp = continueReply("具体的难点是什么？", answer.context);
     assert.equal(followUp.context.projectSlug, slug);
   }
-  assert.equal(buildLocalChatReply("推荐先看哪个项目？").context.projectSlug, "gkx");
+  assert.equal(buildLocalChatReply("推荐先看哪个项目？").context.projectSlug, "zhaocai-smart");
 });
 check("Naming a project as the reason for contact keeps the contact intent", () => {
   for (const question of ["如何联系 Leo 聊GKX项目？", "想联系 Leo 聊招财 Smart。", "税纪云项目合作怎么联系？"]) {
@@ -214,7 +214,13 @@ check("Explicit compound questions answer both requested topics", () => {
   assert.deepEqual(buildLocalChatReply("Leo 有哪些工作经历和设计能力？").context.entryIds, ["capability-overview", "experience-overview"]);
 });
 
-const dataUrl = moduleUrl(await readFile(new URL("../app/portfolio-data.ts", import.meta.url), "utf8"));
+const gkxAssetsUrl = moduleUrl(await readFile(new URL("../app/case-studies/gkx-image-assets.ts", import.meta.url), "utf8"));
+const resumeJson = await readFile(new URL("../docs/resume/content.zh-CN.json", import.meta.url), "utf8");
+const resumeUrl = moduleUrl(`export default ${JSON.stringify(JSON.parse(resumeJson))};`);
+const dataSource = (await readFile(new URL("../app/portfolio-data.ts", import.meta.url), "utf8"))
+  .replace('"./case-studies/gkx-image-assets"', JSON.stringify(gkxAssetsUrl))
+  .replace('"../docs/resume/content.zh-CN.json"', JSON.stringify(resumeUrl));
+const dataUrl = moduleUrl(dataSource);
 const routeSource = (await readFile(new URL("../app/api/chat/route.ts", import.meta.url), "utf8"))
   .replace('"../../chat-knowledge"', JSON.stringify(knowledgeUrl))
   .replace('"../../portfolio-data"', JSON.stringify(dataUrl));
@@ -241,13 +247,13 @@ check("API guardrail exposes the expected response contract", () => {
 const recommended = await (await post({ messages: [{ role: "user", content: "先看哪个项目？" }] })).json();
 const recommendationFollowUp = await (await post({ conversationContext: recommended.context, messages: [{ role: "user", content: "先看哪个项目？" }, { role: "user", content: "具体的难点是什么？" }] })).json();
 check("API context carries a recommendation into the next question", () => {
-  assert.match(recommendationFollowUp.reply, /GKX的设计难点/);
-  assert.equal(recommendationFollowUp.context.projectSlug, "gkx");
+  assert.match(recommendationFollowUp.reply, /招财 Smart 的设计难点/);
+  assert.equal(recommendationFollowUp.context.projectSlug, "zhaocai-smart");
 });
 const expandedChallenge = await (await post({ conversationContext: recommendationFollowUp.context, messages: [{ role: "user", content: "能展开讲讲吗？" }] })).json();
 check("API continuation keeps the precise previous knowledge topic", () => {
   assert.deepEqual(expandedChallenge.context, recommendationFollowUp.context);
-  assert.match(expandedChallenge.reply, /GKX的设计难点/);
+  assert.match(expandedChallenge.reply, /招财 Smart 的设计难点/);
 });
 const afterSwitch = await (await post({ projectSlug: "gkx", conversationContext: recommended.context, messages: [{ role: "user", content: "招财 Smart 有什么挑战？" }] })).json();
 const switchedFollowUp = await (await post({ projectSlug: "gkx", conversationContext: afterSwitch.context, messages: [{ role: "user", content: "怎么协作？" }] })).json();
@@ -283,11 +289,11 @@ try {
     assert.equal(generated.mode, "api");
     assert.match(modelRequest.messages[0].content, /第一人称“我”/);
     assert.doesNotMatch(modelRequest.messages[0].content, /用“他”或“Leo”指代/);
-    assert.deepEqual(generated.context, { projectSlug: "gkx", entryIds: ["project-gkx-outcomes"] });
+    assert.deepEqual(generated.context, { projectSlug: "zhaocai-smart", entryIds: ["project-zhaocai-outcomes"] });
     assert.ok(modelRequest.messages.every(message => message.role !== "assistant"));
     assert.doesNotMatch(JSON.stringify(modelRequest.messages), /未经证实的客户成效/);
     assert.doesNotMatch(JSON.stringify(modelRequest.messages), /此前的无关项目问题/);
-    assert.match(modelRequest.messages[0].content, /本轮指代的公开项目：gkx/);
+    assert.match(modelRequest.messages[0].content, /本轮指代的公开项目：zhaocai-smart/);
   });
   globalThis.fetch = async () => new Response(null, { status: 503 });
   const fallback = await (await post({ conversationContext: afterSwitch.context, messages: [{ role: "user", content: "这个项目的难点是什么？" }] })).json();

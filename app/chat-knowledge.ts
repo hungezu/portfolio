@@ -41,15 +41,15 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "project-overview", title: "我做过哪些项目",
-    content: "作品集中的项目覆盖几个方向：\n\n- **AI 与平台体验**：GKX、招财 Smart。\n- **财税系统与跨端设计**：税纪云、国家能源集团报税平台。\n- **数据表达**：可视化大屏项目合集。\n\n你可以按感兴趣的方向继续了解项目职责、设计难点和具体方案。",
+    content: "作品集中的项目按以下顺序展示：\n\n- **招财 Smart**：AI 财务问数中的口径确认、过程反馈与回答规范。\n- **GKX**：多系统任务结构、AI 原型修订与规范交付。\n- **税纪云、国家能源集团报税平台**：财税任务、跨端界面与组件规范。\n- **可视化大屏**：多行业税务数据的信息层级与图表编排。\n\n你可以按感兴趣的方向继续了解项目职责、设计难点和具体方案。",
     keywords: ["项目", "作品", "案例", "有哪些", "做过什么", "项目概览"],
-    references: [section("浏览全部精选作品", "work"), project("查看GKX案例", "gkx"), project("查看招财 Smart 案例", "zhaocai-smart")],
+    references: [section("浏览全部精选作品", "work"), project("查看招财 Smart 案例", "zhaocai-smart"), project("查看GKX案例", "gkx")],
   },
   {
     id: "project-recommendation", title: "如果只看一个项目",
-    content: "建议先看 **GKX**。这个案例把多系统体验、AI 辅助设计与规范交付串在一起，比较完整地展示了我如何做设计判断。\n\n可以先看**跨系统策略**，再看 **AI 原型与人工校正**，最后看**规范和交付评审**。如果想继续了解 AI 问数体验，可以看招财 Smart；跨端财税流程则可以看税纪云。",
+    content: "建议先看 **招财 Smart**。这个案例从一句有歧义的财务提问出发，说明为什么保留已识别的条件、只确认会改变结果的口径，以及如何呈现执行反馈和可核对的回答。\n\n可以先看**口径澄清**，再看**任务控制与异常恢复**，最后看**回答规范**。如果想了解多系统体验与 AI 辅助设计，可以接着看 GKX；跨端财税流程则可以看税纪云。",
     keywords: ["推荐项目", "推荐案例", "先看哪个", "代表项目", "只看一个"],
-    references: [project("GKX · 跨系统策略", "gkx", "gkx-systems"), project("GKX · AI 原型实践", "gkx", "nsp-prototype"), project("GKX · 规范与交付", "gkx", "gkx-design-system")],
+    references: [project("招财 Smart · 口径澄清", "zhaocai-smart", "zcs-clarification"), project("招财 Smart · 任务控制", "zhaocai-smart", "zcs-process-feedback"), project("招财 Smart · 回答规范", "zhaocai-smart", "zcs-markdown-system")],
   },
   {
     id: "experience-current", title: "近期工作",
@@ -59,8 +59,8 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "experience-overview", title: "公开工作经历",
-    content: "- **2025.07 至今**：上海荣宇（外派至智谱 AI），UED & UI 设计师。\n- **2024.05—2025.02**：答税科技，UI & UX 设计师。\n- **2021.07—2024.05**：华盟财税科技，UI & UX 设计师。\n- **2020.07—2021.07**：深圳喆云科技，UI 设计师。\n\n经历覆盖 AI 产品、企业财税系统与多端界面设计。",
-    keywords: ["经历", "经验", "公司", "职位", "任职", "履历", "职业", "年限", "时间线", "工作过"],
+    content: "我有 **7年+ UX/UI 设计经验**；这里公开展示的是 **2020 年起的任职经历**。\n\n- **2025.07 至今**：上海荣宇（外派至智谱 AI），UED & UI 设计师。\n- **2024.05—2025.02**：答税科技，UI & UX 设计师。\n- **2021.07—2024.05**：华盟财税科技，UI & UX 设计师。\n- **2020.07—2021.07**：深圳喆云科技，UI 设计师。\n\n经历覆盖 AI 产品、企业财税系统与多端界面设计。",
+    keywords: ["经历", "经验", "公司", "职位", "任职", "履历", "职业", "年限", "几年", "时间线", "工作过"],
     references: [section("查看完整工作经历", "experience")],
   },
   {
@@ -209,7 +209,7 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
   },
   {
     id: "project-energy-tax", title: "国能报税平台：职责与设计重点",
-    content: "我独立负责国家能源集团报税平台从 0 到 1 的 UI 设计，覆盖首页、纳税申报与综合管理工作台，并建立栅格、组件和缺省状态规范。设计重点是将业务内容组织为明确的工作台和共用规则；公开材料已经脱敏。",
+    content: "我独立负责国家能源集团报税平台从 0 到 1 的 UI 设计，覆盖首页、纳税申报与综合管理工作台，并建立栅格、组件和缺省状态规范。设计重点是将业务内容组织为明确的工作台和共用规则。公开页面保留原始设计稿，图中的演示数据不作为线上经营结果或设计效果。",
     keywords: ["国家能源", "国能", "能源报税", "报税平台", "定制项目"],
     references: [project("打开国能报税平台案例", "energy-tax")],
   },
@@ -226,9 +226,15 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
     references: [section("联系我了解更多", "contact")],
   },
   {
+    id: "accessibility-evidence", title: "无障碍说法的证据范围",
+    content: "目前公开资料没有提供完整的 WCAG 合规验收记录。税纪云历史规范中的色彩标注是设计资料，不等于整个产品已通过无障碍验收；需要结合实际文字、背景、字号和交互状态逐项核对。",
+    keywords: ["WCAG", "无障碍", "对比度", "合规", "验收"],
+    references: [project("查看税纪云原始规范", "tax-cloud"), section("联系我核对具体资料", "contact")],
+  },
+  {
     id: "undisclosed-profile", title: "这项个人信息尚未公开",
     content: "这项信息目前没有在作品集中公开，这里无法确认。可以通过联系区与我沟通具体安排。",
-    keywords: ["学历", "毕业", "学校", "大学", "专业", "年龄", "几岁", "到岗", "求职", "离职", "薪资", "薪酬", "薪水", "工资", "期望", "工作地点"],
+    keywords: ["学历", "毕业", "学校", "大学", "专业", "年龄", "几岁", "到岗", "求职", "离职", "薪资", "薪酬", "薪水", "工资", "期望", "工作地点", "所在城市", "期望城市", "哪个城市"],
     references: [section("联系我", "contact")],
   },
   {
@@ -263,7 +269,7 @@ const UNRELATED_PATTERNS = [
   /天气|气温|新闻|热搜|股票|股市|彩票|汇率|航班|酒店|旅行|旅游|攻略|食谱|菜谱|做饭|电影|音乐|星座|笑话|写诗|作文|小说|数学|物理|化学|医学|症状|药物|法律咨询|考试|作业|购物|优惠|快递/i,
   /翻译|帮我(?:写|做|生成).{0,8}(?:诗|代码|程序|论文)|(?:修复|解决).{0,6}(?:报错|bug)/i,
 ];
-const PORTFOLIO_SIGNAL = /李家豪|leo|作品|项目|案例|经历|经验|工作|职业|公司|职位|能力|优势|擅长|设计|体验|交互|系统|规范|原型|流程|看板|问数|招财|smart|火火兔|税纪云|国能|GKX|可视化|数据|指标|背景|目标|职责|角色|权限|业务|需求|研究|洞察|意图|澄清|反馈|解释|依据|引用|异常|上线|复盘|AI|智能|Codex|Gemini|智汇算|全电发票|法规库|ChaTaxera|联系|邮箱|微信|手机|电话|导航|章节|负责|参与|主导|难点|挑战|痛点|决策|方法|思路|原则|取舍|协作|合作|开发|研发|沟通|评审|走查|交付|学历|毕业|学校|年龄|到岗|薪资|薪酬|薪水|工资/i;
+const PORTFOLIO_SIGNAL = /李家豪|leo|作品|项目|案例|经历|经验|年限|从业|工作|职业|公司|职位|能力|优势|擅长|设计|体验|交互|系统|规范|原型|流程|看板|问数|招财|smart|火火兔|税纪云|国能|GKX|可视化|数据|指标|背景|目标|职责|角色|权限|业务|需求|研究|洞察|意图|澄清|反馈|解释|依据|引用|异常|上线|复盘|AI|智能|Codex|Gemini|智汇算|全电发票|法规库|ChaTaxera|联系|邮箱|微信|手机|电话|导航|章节|负责|参与|主导|难点|挑战|痛点|决策|方法|思路|原则|取舍|协作|合作|开发|研发|沟通|评审|走查|交付|学历|毕业|学校|年龄|城市|到岗|薪资|薪酬|薪水|工资|WCAG|无障碍|对比度/i;
 const FOLLOW_UP = /^(?:那|它|这个|该项目|该案例|上面|刚才|前面|具体|还有|然后|除此之外|详细|能展开|展开|继续)|^(?:为什么|怎么做|如何做|难点|挑战|职责|负责什么|怎么协作|效果如何|有什么成果)/i;
 const GREETING = /^(?:你好|您好|嗨|哈[喽啰罗]|hello|hi|在吗|早上好|下午好|晚上好)[!！。,.，?？\s]*$/i;
 const THANKS = /^(?:谢谢(?:你|啦|了)?|多谢|感谢|好的|好哒|明白了|了解了|收到|ok|thanks|thank you)[!！。,.，\s]*$/i;
@@ -361,7 +367,8 @@ export function findChatKnowledge(query: string, limit = 5, contextQuery = "") {
   const normalized = normalizeQuery(query);
   if (!normalized || limit <= 0 || !isChatQueryInScope(normalized, contextQuery)) return [];
   if (GREETING.test(normalized) || THANKS.test(normalized)) return [];
-  if (/学历|毕业|学校|大学|专业是什么|年龄|几岁|到岗|求职|离职|薪资|薪酬|薪水|工资|期望|工作地点/.test(normalized)) return entriesFor(["undisclosed-profile"], limit);
+  if (/学历|毕业|学校|大学|专业是什么|年龄|几岁|到岗|求职|离职|薪资|薪酬|薪水|工资|期望|工作地点|所在城市|哪个城市|在哪.{0,3}城市/.test(normalized)) return entriesFor(["undisclosed-profile"], limit);
+  if (/WCAG|无障碍|对比度|accessibility|contrast/i.test(normalized)) return entriesFor(["accessibility-evidence"], limit);
   if (/你是谁|你叫什么|你是(?:不是)?(?:本人|李家豪|Leo|AI|机器人|真人)|你能(?:做什么|帮我什么|回答什么|聊什么)|能问什么|可以问什么|能聊什么|可以聊什么|能帮我什么/.test(normalized)) return entriesFor(["assistant-scope"], limit);
   // A project named as the reason for contacting Leo must not override the contact request.
   if (/联系方式|怎么联系|如何联系|联系(?:一下)?\s*(?:Leo|李家豪|他|你)|邮箱|微信|手机号|电话|约聊/i.test(normalized)) return entriesFor(["contact"], limit);
@@ -390,9 +397,10 @@ export function findChatKnowledge(query: string, limit = 5, contextQuery = "") {
     if (/可视化|大屏|图表/.test(normalized)) return entriesFor(["project-data-visualisation"], limit);
   }
   if (/擅长|能力|优势|技能|长处|强项|会什么|能解决/.test(normalized)) return entriesFor(["capability-overview"], limit);
+  if (/年限|从业|几年.{0,4}(?:经验|工作)|经验.{0,4}几年/.test(normalized)) return entriesFor(["experience-overview"], limit);
   if (/现在|目前|最近|当前工作|智谱|荣宇|火火兔/.test(normalized)) return entriesFor(["experience-current"], limit);
   if (/答税|华盟|智汇算|全电发票|法规库|chataxera|财税经历|以前的工作|过去的工作/i.test(normalized)) return entriesFor(["experience-tax"], limit);
-  if (/经历|履历|公司|职位|任职|职业|年限|工作过|做过什么|负责过|参与过/.test(normalized)) return entriesFor(["experience-overview"], limit);
+  if (/经历|履历|公司|职位|任职|职业|年限|几年.{0,4}(?:经验|工作)|经验.{0,4}几年|工作过|做过什么|负责过|参与过/.test(normalized)) return entriesFor(["experience-overview"], limit);
   if (/推荐|先看|哪个项目|代表项目|代表作|只看一个/.test(normalized) && topic === "overview") return entriesFor(["project-recommendation"], limit);
   if (/项目|作品|案例|做过哪些/.test(normalized) && topic === "overview") return entriesFor(["project-overview"], limit);
   if (topic === "outcomes") return entriesFor(["public-evidence"], limit);
@@ -438,16 +446,16 @@ export function buildLocalChatReply(query: string, contextQuery = query, convers
   const mentionedProjects = queryProjects(normalized, contextQuery);
   const entryProjects = (Object.keys(PROJECT_ENTRY_IDS) as ProjectSlug[]).filter(slug => entries.some(entry => entry.id.startsWith("project-") && Object.values(PROJECT_ENTRY_IDS[slug]).includes(entry.id)));
   const projects = inheritedEntries.length && previous?.projectSlug ? [previous.projectSlug as ProjectSlug] : mentionedProjects.length ? mentionedProjects : entryProjects;
-  const projectSlug = entryIds.includes("project-recommendation") ? "gkx"
+  const projectSlug = entryIds.includes("project-recommendation") ? "zhaocai-smart"
     : projects.length === 1 && entries.some(entry => Object.values(PROJECT_ENTRY_IDS[projects[0]]).includes(entry.id)) ? projects[0] : undefined;
   const context: ChatReplyContext = { ...(projectSlug ? { projectSlug } : {}), entryIds };
   return { reply: entries.map(entry => `**${entry.title}**\n\n${entry.content}`).join("\n\n"), entries, context };
 }
 export const CHAT_QUICK_PROMPTS = [
-  "你擅长解决什么设计问题？",
-  "你有哪些工作经历？",
-  "GKX项目里，你负责什么？",
-  "你如何与产品、研发协作？",
+  "你的工作年限和经历是什么？",
+  "招财 Smart 为什么采用候选确认？",
+  "你以前的工作有哪些财税项目？",
+  "如何联系你？",
 ] as const;
 const PROJECT_QUICK_PROMPTS: Record<ProjectSlug, readonly string[]> = {
   gkx: ["GKX的设计难点是什么？", "你在GKX具体负责什么？", "GKX如何用 AI 辅助设计？", "GKX如何审核合作方交付？"],

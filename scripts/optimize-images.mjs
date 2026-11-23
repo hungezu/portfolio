@@ -39,7 +39,7 @@ async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   const files = [];
   for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name, "en"))) {
-    if (entry.name === "optimized") continue;
+    if (entry.name === "optimized" || entry.name === "legacy-evidence-20261124") continue;
     const path = join(directory, entry.name);
     if (entry.isDirectory()) files.push(...await walk(path));
     else if (entry.isFile() && /\.(png|jpe?g|webp)$/i.test(entry.name)) files.push(path);

@@ -18,6 +18,7 @@
   :root .case-page .zhaocai-locator a::after{display:block;right:4px;bottom:2px;width:22px;height:1px;background:#111;opacity:0;transform:scaleX(.3)}
   :root .case-page .zhaocai-locator a.active::after,:root .case-page .zhaocai-locator a:hover::after,:root .case-page .zhaocai-locator a:focus-visible::after{opacity:1;transform:scaleX(1)}
   :root .case-page .zhaocai-locator a.active{background:transparent}
+  :root[lang="en"] .case-page .zhaocai-locator a em{white-space:normal;overflow-wrap:anywhere}
 }
 
 @media(max-width:1499px){

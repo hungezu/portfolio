@@ -71,6 +71,11 @@
 .zc4-opening-thesis { margin-top: 56px; }
 .zc4-opening-thesis h2 { font-size: clamp(30px,3vw,38px); font-weight: 550; line-height: 1.4; letter-spacing: -.025em; }
 .zc4-opening-thesis > p { margin-top: 16px; color: var(--zcs-muted); }
+.zc4-reading-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; margin-top: 24px; }
+.zc4-reading-summary > span { color: var(--zcs-muted); font-size: 14px; }
+.zc4-reading-summary > a { display: inline-flex; min-height: 44px; align-items: center; gap: 6px; color: var(--zcs-ink); font-size: 14px; text-decoration: underline; text-underline-offset: 5px; }
+.zc4-reading-summary > a:hover { color: var(--zcs-accent); }
+.zc4-role-summary { max-width: 78ch; margin-top: 24px; color: var(--zcs-ink); font-size: 16px; line-height: 1.8; }
 .zc4-keep-phrase { white-space: nowrap; }
 .zc4-opening-task { margin-top: 32px; padding: 28px 32px; border-radius: 16px; background: var(--zcs-panel); }
 .zc4-opening-task > header, .zc4-opening-task > footer { display: flex; justify-content: space-between; align-items: center; gap: 24px; font-size: 14px; }

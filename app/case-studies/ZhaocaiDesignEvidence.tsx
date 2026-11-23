@@ -109,7 +109,7 @@ type AlternativeId = typeof alternativePaths[number]["id"];
 
 /** Present-day design comparisons; the previews intentionally have no controls. */
 export function ZhaocaiAlternativeComparison() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const panelId = `zcs-alternatives-${useId().replace(/:/g, "")}`;
   const [activeId, setActiveId] = useState<AlternativeId>("candidates");
   const choicesRef = useRef<HTMLDivElement>(null);
@@ -154,7 +154,7 @@ export function ZhaocaiAlternativeComparison() {
         </div>
       </div>
       <dl className="zc4-alternative-facts"><div><dt>{t("保留条件")}</dt><dd>{t(active.retained)}</dd></div><div><dt>{t("需要补充")}</dt><dd>{t(active.supplement)}</dd></div><div><dt>{t("执行门槛")}</dt><dd>{t(active.gate)}</dd></div><div><dt>{t("代价")}</dt><dd>{t(active.cost)}</dd></div></dl>
-      <figcaption>{t("当前方案推演 · 围绕同一任务补做的只读界面对照，用于说明适用条件与取舍。")}</figcaption>
+      <figcaption>{locale === "en" ? "Read-only comparison views created for this portfolio, using the same query task to explain when each approach fits and what it costs." : "本次作品集整理补画的只读方案对照，用同一查询任务说明适用条件与代价。"}</figcaption>
     </figure>
   </div>;
 }

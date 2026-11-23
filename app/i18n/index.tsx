@@ -12,14 +12,15 @@ const escapedKeys = Object.keys(messages).filter(key => key.trim() && !/^\s+[\u3
 const fragments = new RegExp(escapedKeys.join("|"), "g");
 
 export function translateText(text: string, locale: Locale): string {
-  if (locale === "zh-CN" || !/[\u3400-\u9fff，。；：（）、]/.test(text)) return text;
+  if (locale === "zh-CN") return text;
+  if (Object.hasOwn(messages, text)) return messages[text];
+  if (!/[\u3400-\u9fff，。；：（）、]/.test(text)) return text;
   const annotations = /^已标注\s*(\d+)\s*处$/.exec(text);
   if (annotations) return `${annotations[1]} annotations`;
   const metricQuery = /^按(.+)查询$/.exec(text);
   if (metricQuery) return `Query ${translateText(metricQuery[1], locale)}`;
-  if (messages[text] !== undefined) return messages[text];
   const normalized = text.replace(/\s+/g, " ").trim();
-  if (messages[normalized] !== undefined) return messages[normalized];
+  if (Object.hasOwn(messages, normalized)) return messages[normalized];
   // Compose labels containing a project name, number, or other runtime value.
   return text.replace(fragments, match => messages[match])
     .replace(/(20\d{2})\s*年/g, "$1")

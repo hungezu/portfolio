@@ -37,6 +37,8 @@ import {
 import {
   abilities,
   experienceIntro,
+  experienceTimelineNote,
+  experienceYears,
   experiences,
   projects,
   publicAsset,
@@ -67,7 +69,6 @@ import portfolioPetAssets from "../assets/visual/sidebar-character/assets.json";
 import { optimizedImage, PortfolioImage } from "./portfolio-image";
 import { CapabilitySection } from "./capability-section";
 import type { NationalPlatformView } from "./case-studies/NationalSciencePlatformCase";
-import { ProjectLocator, type ProjectLocatorSection } from "./project-locator";
 import { homeEntranceTiming, initialHomeOpeningPhase, useHomeOpeningPhase, type HomeOpeningPhase } from "./home-entrance";
 import { scrollToHomeSection, useHomeAnchorNavigation } from "./home-scroll";
 import { requestProjectNavigation, useProjectNavigation } from "./project-transition";
@@ -78,19 +79,23 @@ const loadZhaocai = () => zhaocaiModule ??= import("./case-studies/ZhaocaiSmartC
 const loadGkx = () => gkxModule ??= import("./case-studies/GkxCase").then(module => ({ default: module.GkxCase }));
 const ZhaocaiSmartCase = lazy(loadZhaocai);
 const GkxCase = lazy(loadGkx);
+const loadLegacyCase = () => import("./case-studies/LegacyProjectCase").then(module => ({ default: module.LegacyProjectCase }));
+const LegacyProjectCase = lazy(loadLegacyCase);
 const preparedProjects = new Map<string, Promise<unknown>>();
 function prepareProject(slug: string) {
   const existing = preparedProjects.get(slug);
   if (existing) return existing;
   const project = projects.find(project => project.slug === slug);
   if (!project) return Promise.resolve();
-  const source = slug === "gkx" ? publicAsset("/assets/projects/gkx/case-study/ui/portal-entry-prototype-20261114.webp") : project.gallery[0];
+  const source = slug === "gkx"
+    ? publicAsset("/assets/projects/gkx/case-study/ui/portal-entry-prototype-20261114.webp")
+    : slug === "zhaocai-smart" ? project.gallery[0] : undefined;
   if (source) {
     const image = new Image();
     image.src = optimizedImage(source)?.src ? publicAsset(optimizedImage(source)!.src) : source;
     void image.decode().catch(() => undefined);
   }
-  const ready = slug === "gkx" ? loadGkx() : slug === "zhaocai-smart" ? loadZhaocai() : Promise.resolve();
+  const ready = slug === "gkx" ? loadGkx() : slug === "zhaocai-smart" ? loadZhaocai() : loadLegacyCase();
   preparedProjects.set(slug, ready);
   void ready.catch(() => preparedProjects.delete(slug));
   return ready;
@@ -366,17 +371,17 @@ function BackToTop() {
 }
 
 function ResumeDownloadLink({ className = "" }: { className?: string }) {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   return (
     <a
       className={`resume-download-link ${className}`.trim()}
       href={`${publicAsset("/assets/portfolio/li-jiahao-ux-ui-resume.pdf")}?v=eafc3e0551ae`}
       download="李家豪-简历.pdf"
-      aria-label={t("下载李家豪的简历，PDF，共 3 页")}
+      aria-label={locale === "en" ? "Download Leo Li’s résumé in Chinese (3-page PDF)" : "下载李家豪的中文简历，PDF，共 3 页"}
     >
       <Download size={17} strokeWidth={1.6} aria-hidden="true" />
       <span className="resume-download-label">{t("下载简历")}</span>
-      <span className="resume-download-meta" aria-hidden="true">{t("PDF · 3页")}</span>
+      <span className="resume-download-meta" aria-hidden="true">{locale === "en" ? "Chinese PDF" : "中文 PDF"}</span>
     </a>
   );
 }
@@ -813,25 +818,6 @@ function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peek
   const [frameIndex, setFrameIndex] = useState(0);
 
   useEffect(() => {
-    // Warm the full-body poses while the character is still peeking. Loading must
-    // never decide whether an open conversation shows the closed character pose.
-    const sources = new Set(Object.values(portfolioPetStateMap).map(name => portfolioCharacterMap.states[name].source));
-    const images = [...sources].map(name => {
-      const path = `/assets/visual/sidebar-character/${portfolioCharacterMap.sources[name].file}`;
-      const original = publicAsset(path);
-      const image = new Image();
-      image.fetchPriority = "low";
-      image.onerror = () => {
-        image.onerror = null;
-        image.src = original;
-      };
-      image.src = publicAsset(optimizedImage(path)?.src ?? path);
-      return image;
-    });
-    return () => { images.forEach(image => { image.onerror = null; }); };
-  }, []);
-
-  useEffect(() => {
     setFrameIndex(0);
     if (reduce || config.frames.length < 2 || config.fps <= 0) return;
 
@@ -896,7 +882,7 @@ function PortfolioPetSprite({ state, peeking }: { state: PortfolioPetState; peek
 }
 
 function PortfolioChat({ project, openingPhase }: { project?: Project; openingPhase?: HomeOpeningPhase }) {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const reduce = useReducedMotion();
   const { assistantDelay } = homeEntranceTiming(reduce);
   const [entranceComplete, setEntranceComplete] = useState(!openingPhase || openingPhase === "settled");
@@ -1482,6 +1468,8 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
   const quickPrompts = messages.length === 1
     ? getChatQuickPrompts(project?.slug)
     : getChatFollowUpPrompts(activeContext, messages.filter(message => message.role === "user").map(message => message.content));
+  const promptRoles = project || messages.length !== 1 ? []
+    : locale === "en" ? ["Hiring", "Design", "Product", "Contact"] : ["招聘", "设计", "业务", "联系"];
 
   const visiblePetState: PortfolioPetState = sending ? "thinking" : petState;
   const petPositionStyle = {
@@ -1508,7 +1496,10 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
       data-reading-project={project?.slug}
       data-pet-state={visiblePetState}
     >
-      {project?.slug === "gkx" && <button ref={readingLauncherRef} hidden={open} type="button" className="portfolio-reading-assistant" aria-label={t("打开作品集助手")} onClick={handlePetClick}>{t("作品集助手")}</button>}
+      {!open && (
+        <button ref={readingLauncherRef} type="button" className="portfolio-reading-assistant"
+          aria-label={t("打开作品集助手")} onClick={handlePetClick}>{t("作品集助手")}</button>
+      )}
       <AnimatePresence initial={false}>
         {t(!open && contextVisible ? (
           <motion.div
@@ -1631,7 +1622,7 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
                     <div className="portfolio-chat-bubble-wrap">
                       <div className="portfolio-chat-bubble">
                         {t(message.role === "assistant"
-                          ? <PortfolioChatMessageContent content={messageIndex === 0 ? t(message.content) : message.content} />
+                          ? <PortfolioChatMessageContent content={t(message.content)} />
                           : message.content)}
                       </div>
                       {t(message.state === "fallback" ? <p className="portfolio-chat-reply-note">{t("本次根据作品集资料整理")}</p> : null)}
@@ -1677,14 +1668,15 @@ function PortfolioChat({ project, openingPhase }: { project?: Project; openingPh
                     transition={{ duration: reduce ? 0 : 0.22, ease }}
                   >
                     <p>{t(messages.length === 1 ? "可以从这里开始" : "也可以继续了解")}</p>
-                    {quickPrompts.map(prompt => (
+                    {quickPrompts.map((prompt, index) => (
                       <button
                         key={prompt}
                         type="button"
                         disabled={sending}
-                        aria-label={t(`提问：${prompt}`)}
+                        aria-label={[promptRoles[index], t(prompt)].filter(Boolean).join(" · ")}
                         onClick={() => void sendMessage(prompt, true)}
                       >
+                        {promptRoles[index] && <strong>{promptRoles[index]}</strong>}
                         <span>{t(prompt)}</span>
                       </button>
                     ))}
@@ -1818,23 +1810,41 @@ function Hero() {
   }, [entrancePhase]);
 
   useEffect(() => {
+    const video = videoRef.current;
     const connection = (navigator as Navigator & {
-      connection?: { saveData?: boolean };
+      connection?: { saveData?: boolean; effectiveType?: string };
     }).connection;
     // Keep the requested hero film independent of reduced entrance animation.
-    // Data-saving connections and unsupported video still use the poster.
+    // Keep the poster on data-saving or slow connections.
     const fallbackReason = connection?.saveData ? "save-data"
-      : !videoRef.current?.canPlayType("video/mp4") ? "unsupported-format" : undefined;
+      : /^(?:slow-)?2g$|^3g$/.test(connection?.effectiveType ?? "") ? "slow-connection"
+      : !video?.canPlayType("video/mp4") ? "unsupported-format" : undefined;
     setVideoFallbackReason(fallbackReason);
-    if (fallbackReason) {
-      setShouldLoadVideo(false);
-      setVideoPreloadState("disabled");
-      return;
-    }
+    setVideoPreloadState("disabled");
+    if (fallbackReason || !video) return;
 
-    // The opening loader waits for this video to have a first frame available.
-    setVideoPreloadState(current => current === "ready" ? current : "loading");
-    setShouldLoadVideo(true);
+    const hero = video.closest(".hero");
+    if (!hero) return;
+    let timer: number | undefined;
+    const observer = new IntersectionObserver(([entry]) => {
+      window.clearTimeout(timer);
+      if (!entry.isIntersecting) return;
+      timer = window.setTimeout(() => {
+        observer.disconnect();
+        setVideoPreloadState("loading");
+        setShouldLoadVideo(true);
+      }, 1200);
+    }, { threshold: 0.08 });
+    // Let the poster release the opening loader before requesting the film.
+    const watchHero = () => observer.observe(hero);
+    if (document.getElementById("portfolio-boot")) {
+      window.addEventListener("portfolio-loader-exit", watchHero, { once: true });
+    } else watchHero();
+    return () => {
+      window.clearTimeout(timer);
+      observer.disconnect();
+      window.removeEventListener("portfolio-loader-exit", watchHero);
+    };
   }, []);
 
   useEffect(() => {
@@ -1985,7 +1995,9 @@ function Hero() {
               </span>
               <span className="hero-statement">
                 <span className="hero-role">{t("AI 产品体验设计师")}</span>
-                <span className="hero-description">{t("从交互流程到设计系统，打磨清晰、好用的产品")}</span>
+                <span className="hero-description">{locale === "en"
+                  ? "Financial AI and complex workflows, from interaction design to delivery."
+                  : "设计财务问数与复杂业务系统，从交互方案做到交付。"}</span>
               </span>
             </motion.span>
           </h1>
@@ -2086,7 +2098,7 @@ function ProjectExhibit({ project, index, expanded, highlightedAbilityId, onSele
   onSelect: (slug: string) => void;
   onMove: (index: number, key: string) => void;
 }) {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const content = homeProjectContent[project.slug] ?? {
     titleLines: [project.title], category: project.type, platform: "",
     summary: project.summary, role: project.role,
@@ -2125,11 +2137,14 @@ function ProjectExhibit({ project, index, expanded, highlightedAbilityId, onSele
         aria-labelledby={titleId} aria-describedby={`${project.slug === "gkx" ? "project-gkx-role " : ""}project-${project.slug}-summary`}>
         <div className="project-visual" data-project-motion-media={project.cardCover ?? project.cover}>
           <ImageWithFallback src={project.cardCover ?? project.cover} alt={t(`${project.title}项目封面`)} width={1672} height={941} loading="lazy"
-            sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 1100px) 60vw, 900px" style={{objectPosition: project.coverPosition ?? "center"}} />
+            sizes={expanded ? "(max-width: 767px) calc(100vw - 32px), (max-width: 1100px) 60vw, 900px" : "180px"}
+            style={{objectPosition: project.coverPosition ?? "center"}} />
           <span className="project-exhibit-open" aria-hidden="true"><ArrowUpRight size={24} strokeWidth={1.4} /></span>
         </div>
         <div className="project-copy">
-          <p className="project-type">{t(content.category)}<span>{t(content.platform)}</span></p>
+          <p className="project-type">{t(content.category)}<span>{project.slug === "data-visualisation"
+            ? (locale === "en" ? "Additional work" : "补充案例")
+            : t(content.platform)}</span></p>
           <h3 id={titleId}>{t(title)}</h3>
           {project.slug === "gkx" && <p className="project-card-role" id="project-gkx-role">{t(content.role)}</p>}
           <p className="project-summary" id={`project-${project.slug}-summary`}>{t(content.summary)}</p>
@@ -2147,7 +2162,7 @@ function WorkSection({ highlightedAbilityId, onClearHighlight, restoredProjectSl
   onClearHighlight: () => void;
   restoredProjectSlug?: string;
 }) {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const showcaseRef = useRef<HTMLDivElement>(null);
   const validSlug = (slug: string | null | undefined) => projects.some(project => project.slug === slug);
   const [activeSlug, setActiveSlug] = useState(() => {
@@ -2195,9 +2210,13 @@ function WorkSection({ highlightedAbilityId, onClearHighlight, restoredProjectSl
   const activeIndex = projects.findIndex(project => project.slug === activeSlug);
   return <section className={`section work-section${highlightedAbility ? " has-ability-highlight" : ""}`} id="work">
     <div className="section-shell">
-      <SectionIntro index="01" title={t("精选作品")} description={t("覆盖 AI 问数、复杂业务平台与数据可视化，围绕关键任务说明设计取舍与交付内容。")} />
+      <SectionIntro index="01" title={t("精选作品")} description={locale === "en"
+        ? "Start with Smart to see how an AI query is clarified, then GKX to see how interaction rules carry across products."
+        : "建议先看招财 Smart 的问数口径确认，再看 GKX 的跨系统交互规范。"} />
       {highlightedAbility && <div className="project-highlight-status" aria-live="polite">
-        <span>{t("正在突出“")}{t(highlightedAbility.name)}{t("”对应的 ")}{matchedCount} {t(" 个项目")}</span>
+        <span>{locale === "en"
+          ? `${matchedCount} ${matchedCount === 1 ? "project" : "projects"} for ${t(highlightedAbility.name)} highlighted`
+          : `正在突出“${highlightedAbility.name}”对应的 ${matchedCount} 个项目`}</span>
         <button type="button" onClick={onClearHighlight}>{t("显示全部项目")}</button>
       </div>}
       <div className="project-showcase-caption"><span>{t("选择一个项目，展开设计故事")}</span><span>{String(activeIndex + 1).padStart(2,"0")} / {String(projects.length).padStart(2,"0")}</span></div>
@@ -2209,7 +2228,7 @@ function WorkSection({ highlightedAbilityId, onClearHighlight, restoredProjectSl
 }
 
 function ExperienceSection() {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const [open, setOpen] = useState(0);
   const reduce = useReducedMotion();
 
@@ -2235,11 +2254,12 @@ function ExperienceSection() {
               <dd>15<sup>+</sup></dd>
             </div>
             <div>
-              <dt>{t("工作年限")}</dt>
-              <dd>7<sup>+</sup></dd>
+              <dt>{locale === "en" ? "Years in design" : "设计相关经验"}</dt>
+              <dd>{experienceYears.replace(/\+$/, "")}{experienceYears.endsWith("+") && <sup>+</sup>}</dd>
             </div>
           </motion.dl>
         </div>
+        <p className="experience-timeline-note">{t(experienceTimelineNote)}</p>
         <div className="experience-list">
           {experiences.map((experience, index) => {
             const expanded = open === index;
@@ -2304,8 +2324,9 @@ function ExperienceSection() {
 }
 
 function ContactSection() {
-  const { t } = useI18n();
+  const { locale, t } = useI18n();
   const [copied, setCopied] = useState<"wechat" | "email" | null>(null);
+  const [phoneVisible, setPhoneVisible] = useState(false);
   const feedbackTimer = useRef<number | null>(null);
 
   useEffect(() => () => {
@@ -2336,16 +2357,22 @@ function ContactSection() {
       <div className="section-shell contact-shell">
         <div className="contact-copy">
           <span className="editorial-kicker">04 / LET’S TALK</span>
-          <h2>{t("聊聊新的合作机会")}</h2>
+          <h2>{locale === "en" ? "Hiring and collaborations" : "招聘与合作"}</h2>
           <p>{t("如果你在寻找一位能理解复杂业务、并把 AI 能力转化为清晰产品体验的设计师，欢迎联系我。")}</p>
         </div>
 
         <aside className="contact-panel" aria-label={t("联系方式")}>
           <div className="contact-list">
-            <a className="contact-item" href="tel:13670115683">
+            <div className="contact-item">
               <span className="contact-label">{t("手机")}</span>
-              <span className="contact-value">13670115683</span>
-            </a>
+              <span id="contact-phone" className="contact-value">
+                {phoneVisible && <a className="contact-value-link" href="tel:13670115683">13670115683</a>}
+              </span>
+              <button className="contact-copy-button" type="button" aria-expanded={phoneVisible}
+                aria-controls="contact-phone" onClick={() => setPhoneVisible(visible => !visible)}>
+                {locale === "en" ? (phoneVisible ? "Hide number" : "Show number") : (phoneVisible ? "收起手机号" : "查看手机号")}
+              </button>
+            </div>
             <div className="contact-item">
               <span className="contact-label">{t("微信号")}</span>
               <span className="contact-value">Hungezu</span>
@@ -2513,56 +2540,6 @@ function HomePage({ restoration }: { restoration?: { slug: string; y: number } }
   );
 }
 
-function ProjectImageGallery({
-  project,
-  reduce,
-  motionEntry = false,
-}: {
-  project: Project;
-  reduce: boolean | null;
-  motionEntry?: boolean;
-}) {
-  const { t } = useI18n();
-  const isEnergyProject = project.slug === "energy-tax";
-  const locatorSections: ProjectLocatorSection[] = [
-    ["project-overview", "项目介绍"],
-    ...(project.gallerySections ?? project.gallery.map((_, index) => ({
-      startIndex: index,
-      label: project.galleryLabels?.[index] ?? `项目图片 ${index + 1}`,
-    }))).map(({ startIndex, label }) => [
-      `case-gallery-${startIndex}`,
-      label,
-    ] as const),
-  ];
-
-  return (
-    <>
-      <ProjectLocator sections={locatorSections} ariaLabel={t(`${project.shortTitle}项目章节定位`)} />
-      <section className={`case-gallery${isEnergyProject ? " case-gallery-energy" : ""}`} aria-label={t(`${project.title}项目图片`)}>
-        {project.gallery.map((image, index) => (
-          <motion.figure
-            id={`case-gallery-${index}`}
-            key={image}
-            initial={reduce || motionEntry && index === 0 ? false : { opacity: 0, y: 24, clipPath: "inset(0 0 6% 0)" }}
-            whileInView={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
-            viewport={{ once: true, amount: 0.12 }}
-            transition={{ duration: 0.58, ease }}
-          >
-            <ImageWithFallback
-              src={image}
-              data-motion-source={image}
-              alt={t(project.galleryAlt?.[index] ?? `${project.title}项目展示 ${index + 1}`)}
-              loading={index === 0 ? "eager" : "lazy"}
-              fetchPriority={index === 0 ? "high" : "auto"}
-            />
-            <figcaption><span>{String(index + 1).padStart(2, "0")} / {String(project.gallery.length).padStart(2, "0")}</span><span>{t(project.galleryLabels?.[index] ?? project.gallerySections?.find(section => section.startIndex === index)?.label ?? project.shortTitle)}</span></figcaption>
-          </motion.figure>
-        ))}
-      </section>
-    </>
-  );
-}
-
 function ProjectPagination({ project }: { project: Project }) {
   const { t } = useI18n();
   const index = projects.findIndex(item => item.slug === project.slug);
@@ -2608,15 +2585,17 @@ function ProjectPage({ project, projectView, motionEntry = false }: { project: P
         className={`case-page${isZhaocaiCase ? " case-page-zhaocai" : ""}${isNationalPlatformCase ? " case-page-gkx" : ""}`}
         data-project={project.slug}
       >
-        {t(!isCustomCase ? <header className="case-hero" id="project-overview">
+        {t(!isCustomCase ? <header className="case-hero legacy-project-hero" id="project-overview" data-case-ready="text">
           <motion.div
             className="case-heading"
             initial={reduce || motionEntry ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease }}
           >
-            <p>{String(projects.findIndex(item => item.slug === project.slug) + 1).padStart(2, "0")} / {t(project.type)}</p>
-            <h1 data-project-motion-title>{t(project.title)}</h1>
+            <p>{t(project.type)}</p>
+            <h1 data-project-motion-title>{project.slug === "tax-cloud" && t(project.title) === project.title
+              ? <>税纪云 <span className="case-title-keep">全税种申报平台</span></>
+              : t(project.title)}</h1>
             <div className="case-summary">
               <p>{t(project.summary)}</p>
               <span>{t(project.period)}</span>
@@ -2631,7 +2610,7 @@ function ProjectPage({ project, projectView, motionEntry = false }: { project: P
         ) : isNationalPlatformCase ? (
           <GkxCase project={project} legacyView={projectView} />
         ) : (
-          <ProjectImageGallery project={project} reduce={reduce} motionEntry={motionEntry} />
+          <LegacyProjectCase project={project} />
         ))}
         </Suspense>
         </ProjectContentBoundary>

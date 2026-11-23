@@ -31,14 +31,26 @@ export function CapabilityVisual({ abilityId }: { abilityId: AbilityId }) {
   const presentationRef = useRef(capabilitySceneSpecs[abilityId]);
   presentationRef.current = { ...localize(capabilitySceneSpecs[abilityId]), reducedMotion: Boolean(reducedMotion) };
   const [state, setState] = useState<"loading" | "ready" | "unavailable">("loading");
+  const [nearViewport, setNearViewport] = useState(false);
 
   useEffect(() => {
-    if (!hostRef.current) return;
+    if (!hostRef.current || nearViewport) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setNearViewport(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: "300px 0px" });
+    observer.observe(hostRef.current);
+    return () => observer.disconnect();
+  }, [nearViewport]);
+
+  useEffect(() => {
+    if (!hostRef.current || !nearViewport) return;
     const host = hostRef.current;
     let cancelled = false;
     let controller: SceneController | undefined;
     setState("loading");
-    // Start behind the existing page loader, before the first downward scroll.
     loadSceneModule().then(async module => {
       if (cancelled) return;
       controller = module.createCapabilityScene(host, presentationRef.current, localizedFamily);
@@ -58,7 +70,7 @@ export function CapabilityVisual({ abilityId }: { abilityId: AbilityId }) {
       controller?.dispose();
       if (sceneRef.current === controller) sceneRef.current = undefined;
     };
-  }, [locale]);
+  }, [locale, nearViewport, localizedFamily]);
 
   useEffect(() => {
     const changed = previousAbilityRef.current !== abilityId;
