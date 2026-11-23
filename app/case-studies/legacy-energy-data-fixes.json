@@ -1,0 +1,564 @@
+{
+  "energy-tax/03-home": {
+    "w": 2880,
+    "h": 5786,
+    "patches": [
+      {
+        "box": [
+          238,
+          1258,
+          160,
+          43
+        ],
+        "background": "#ffffff",
+        "text": [
+          "26.78"
+        ],
+        "size": 32,
+        "color": "#222222",
+        "weight": 500,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 39
+      },
+      {
+        "box": [
+          242,
+          1338,
+          112,
+          29
+        ],
+        "background": "#ffffff",
+        "text": [
+          "12.54% ↑"
+        ],
+        "size": 18,
+        "color": "#de4f4b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 22
+      },
+      {
+        "box": [
+          357,
+          1338,
+          116,
+          29
+        ],
+        "background": "#ffffff",
+        "text": [
+          "4.51% ↑"
+        ],
+        "size": 18,
+        "color": "#16aa8b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 22
+      },
+      {
+        "box": [
+          238,
+          1790,
+          248,
+          34
+        ],
+        "background": "#ffffff",
+        "text": [
+          "税负率（示例均值）"
+        ],
+        "size": 16,
+        "color": "#6e7786",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 20
+      },
+      {
+        "box": [
+          238,
+          1826,
+          200,
+          46
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14.25%"
+        ],
+        "size": 32,
+        "color": "#222222",
+        "weight": 500,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 39
+      },
+      {
+        "box": [
+          236,
+          1878,
+          246,
+          67
+        ],
+        "background": "#ffffff",
+        "text": [
+          "12月税负率 14.00%",
+          "较11月 -1.00百分点"
+        ],
+        "size": 16,
+        "color": "#6e7786",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 22
+      },
+      {
+        "box": [
+          202,
+          2052,
+          602,
+          316
+        ],
+        "background": "#f7fbff",
+        "lineChart": {
+          "rates": [
+            12,
+            13,
+            14,
+            16,
+            15,
+            14,
+            13,
+            14,
+            15,
+            16,
+            15,
+            14
+          ],
+          "previousDecember": 11,
+          "highlightMonth": 4
+        }
+      },
+      {
+        "box": [
+          196,
+          3596,
+          770,
+          398
+        ],
+        "background": "#f7fbff",
+        "lineChart": {
+          "rates": [
+            12,
+            13,
+            14,
+            16,
+            15,
+            14,
+            13,
+            14,
+            15,
+            16,
+            15,
+            14
+          ],
+          "previousDecember": 11,
+          "highlightMonth": 4
+        }
+      },
+      {
+        "box": [
+          1536,
+          4820,
+          1148,
+          630
+        ],
+        "background": "#f7fbff",
+        "lineChart": {
+          "rates": [
+            12,
+            13,
+            14,
+            16,
+            15,
+            14,
+            13,
+            14,
+            15,
+            16,
+            15,
+            14
+          ],
+          "previousDecember": 11,
+          "highlightMonth": 4
+        }
+      }
+    ]
+  },
+  "energy-tax/04-tax-workbench": {
+    "w": 2880,
+    "h": 5336,
+    "patches": [
+      {
+        "box": [
+          1354,
+          1510,
+          125,
+          28
+        ],
+        "background": "#ffffff",
+        "text": [
+          "2022-04"
+        ],
+        "size": 18,
+        "color": "#737b87",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 22
+      },
+      {
+        "box": [
+          1260,
+          3709,
+          128,
+          28
+        ],
+        "background": "#ffffff",
+        "text": [
+          "2022-04"
+        ],
+        "size": 19,
+        "color": "#737b87",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 23
+      }
+    ]
+  },
+  "energy-tax/05-management": {
+    "w": 2880,
+    "h": 5738,
+    "patches": [
+      {
+        "box": [
+          726,
+          1373,
+          124,
+          54
+        ],
+        "background": "#f8fbff",
+        "text": [
+          "40%"
+        ],
+        "size": 44,
+        "color": "#222222",
+        "weight": 500,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 53
+      },
+      {
+        "box": [
+          1758,
+          3770,
+          80,
+          32
+        ],
+        "background": "#f8fbff",
+        "text": [
+          "40%"
+        ],
+        "size": 22,
+        "color": "#222222",
+        "weight": 500,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      },
+      {
+        "box": [
+          338,
+          5137,
+          146,
+          59
+        ],
+        "background": "#f8fbff",
+        "text": [
+          "40%"
+        ],
+        "size": 44,
+        "color": "#222222",
+        "weight": 500,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 53
+      },
+      {
+        "box": [
+          576,
+          1547,
+          758,
+          340
+        ],
+        "background": "#ffffff",
+        "donut": {
+          "items": [
+            {
+              "label": "本科",
+              "value": 40,
+              "color": "#2495ff"
+            },
+            {
+              "label": "大专",
+              "value": 25,
+              "color": "#ffd100"
+            },
+            {
+              "label": "硕士",
+              "value": 20,
+              "color": "#0875ff"
+            },
+            {
+              "label": "博士",
+              "value": 10,
+              "color": "#1ac78e"
+            },
+            {
+              "label": "中专",
+              "value": 5,
+              "color": "#ff6b70"
+            }
+          ]
+        }
+      },
+      {
+        "box": [
+          1356,
+          1547,
+          755,
+          340
+        ],
+        "background": "#ffffff",
+        "donut": {
+          "items": [
+            {
+              "label": "CPA",
+              "value": 40,
+              "color": "#2495ff"
+            },
+            {
+              "label": "CFA",
+              "value": 20,
+              "color": "#ffd100"
+            },
+            {
+              "label": "CMA",
+              "value": 15,
+              "color": "#0875ff"
+            },
+            {
+              "label": "ACCA",
+              "value": 15,
+              "color": "#1ac78e"
+            },
+            {
+              "label": "CIA",
+              "value": 10,
+              "color": "#7065ff"
+            }
+          ]
+        }
+      },
+      {
+        "box": [
+          2138,
+          1984,
+          495,
+          344
+        ],
+        "background": "#ffffff",
+        "donut": {
+          "items": [
+            {
+              "label": "A",
+              "value": 45,
+              "color": "#2495ff"
+            },
+            {
+              "label": "B",
+              "value": 25,
+              "color": "#ffd100"
+            },
+            {
+              "label": "C",
+              "value": 15,
+              "color": "#0875ff"
+            },
+            {
+              "label": "D",
+              "value": 10,
+              "color": "#1ac78e"
+            },
+            {
+              "label": "M",
+              "value": 5,
+              "color": "#7065ff"
+            }
+          ]
+        }
+      },
+      {
+        "box": [
+          1692,
+          3857,
+          360,
+          164
+        ],
+        "background": "#ffffff",
+        "donut": {
+          "items": [
+            {
+              "label": "本科",
+              "value": 40,
+              "color": "#2495ff"
+            },
+            {
+              "label": "大专",
+              "value": 25,
+              "color": "#ffd100"
+            },
+            {
+              "label": "硕士",
+              "value": 20,
+              "color": "#0875ff"
+            },
+            {
+              "label": "博士",
+              "value": 10,
+              "color": "#1ac78e"
+            },
+            {
+              "label": "中专",
+              "value": 5,
+              "color": "#ff6b70"
+            }
+          ]
+        }
+      },
+      {
+        "box": [
+          2060,
+          3857,
+          360,
+          164
+        ],
+        "background": "#ffffff",
+        "donut": {
+          "items": [
+            {
+              "label": "CPA",
+              "value": 40,
+              "color": "#2495ff"
+            },
+            {
+              "label": "CFA",
+              "value": 20,
+              "color": "#ffd100"
+            },
+            {
+              "label": "CMA",
+              "value": 15,
+              "color": "#0875ff"
+            },
+            {
+              "label": "ACCA",
+              "value": 15,
+              "color": "#1ac78e"
+            },
+            {
+              "label": "CIA",
+              "value": 10,
+              "color": "#7065ff"
+            }
+          ]
+        }
+      },
+      {
+        "box": [
+          2430,
+          4062,
+          237,
+          164
+        ],
+        "background": "#ffffff",
+        "donut": {
+          "items": [
+            {
+              "label": "A",
+              "value": 45,
+              "color": "#2495ff"
+            },
+            {
+              "label": "B",
+              "value": 25,
+              "color": "#ffd100"
+            },
+            {
+              "label": "C",
+              "value": 15,
+              "color": "#0875ff"
+            },
+            {
+              "label": "D",
+              "value": 10,
+              "color": "#1ac78e"
+            },
+            {
+              "label": "M",
+              "value": 5,
+              "color": "#7065ff"
+            }
+          ]
+        }
+      },
+      {
+        "box": [
+          592,
+          1998,
+          168,
+          32
+        ],
+        "background": "#ffffff",
+        "text": [
+          "单位：人（示例）"
+        ],
+        "size": 18,
+        "color": "#8a8f98",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 22
+      },
+      {
+        "box": [
+          1698,
+          4067,
+          86,
+          18
+        ],
+        "background": "#ffffff",
+        "text": [
+          "单位：人（示例）"
+        ],
+        "size": 9,
+        "color": "#8a8f98",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 11
+      }
+    ]
+  }
+}

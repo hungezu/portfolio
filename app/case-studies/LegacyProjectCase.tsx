@@ -2,10 +2,12 @@
 
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useI18n } from "../i18n";
-import { optimizedImage, PortfolioImage } from "../portfolio-image";
+import { optimizedImage } from "../portfolio-image";
 import { publicAsset, type Project } from "../portfolio-data";
 import { ProjectLocator, type ProjectLocatorSection } from "../project-locator";
 import boardLayouts from "./legacy-board-layouts.json";
+import { DesignBoardImage } from "./legacy-board-corrections";
+import { TaxCloudContrastSpec } from "./legacy-contrast-spec";
 import "./legacy-project-case.css";
 
 const previousAnchors: Record<string, Readonly<Record<string, string>>> = {
@@ -111,9 +113,11 @@ export function LegacyProjectCase({ project }: { project: Project }) {
         : "原设计展板，按原顺序展示。图内数值用于说明界面，不作为项目成效。"}
     </p>
     <div className="legacy-gallery">
-      {boards.map((board, index) => <figure className="legacy-board" key={board.src} id={"case-gallery-" + index}>
+      {boards.map((board, index) => <div className="legacy-board-entry" key={board.src}>
+        <figure className="legacy-board" id={"case-gallery-" + index}>
         <div className="legacy-board-frame">
-          <PortfolioImage
+          <DesignBoardImage
+            boardKey={board.key}
             src={board.src}
             alt={board.alt}
             data-motion-source={board.src}
@@ -132,7 +136,9 @@ export function LegacyProjectCase({ project }: { project: Project }) {
             {board.regions ? (english ? "Read by section" : "分区阅读") : (english ? "Enlarge" : "放大查看")}
           </button>
         </figcaption>
-      </figure>)}
+        </figure>
+        {board.key === "tax-cloud/03-global-style" && <TaxCloudContrastSpec english={english} />}
+      </div>)}
     </div>
     {viewer && <dialog
       ref={dialog}
@@ -165,7 +171,9 @@ export function LegacyProjectCase({ project }: { project: Project }) {
                 <div className={scrollable ? "legacy-board-region-scroll" : undefined}
                   tabIndex={scrollable ? 0 : undefined} aria-label={scrollable ? label : undefined}
                   role={scrollable ? "region" : undefined}>
-                  <PortfolioImage
+                  <DesignBoardImage
+                    boardKey={viewer.key}
+                    region={region.box}
                     original
                     src={publicAsset(`/assets/projects/legacy-board-details/${viewer.key}/${region.id}.webp`)}
                     alt={label}
@@ -176,7 +184,8 @@ export function LegacyProjectCase({ project }: { project: Project }) {
                 </div>
               </figure>;
             })}
-          </div> : <PortfolioImage
+          </div> : <DesignBoardImage
+            boardKey={viewer.key}
             src={viewer.src}
             alt={viewer.alt}
             original={mode === "original"}

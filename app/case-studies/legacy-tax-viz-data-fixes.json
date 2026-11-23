@@ -1,0 +1,657 @@
+{
+  "tax-cloud/12-form-page": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          60,
+          534,
+          480,
+          39
+        ],
+        "background": "#fafcff",
+        "text": [
+          "界面演示：代码与号码均为虚拟示例。",
+          "税额按示例税率重算；非真实发票或税务建议。"
+        ],
+        "size": 15,
+        "color": "#5e6d86",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 18
+      },
+      {
+        "box": [
+          535,
+          794,
+          113,
+          26
+        ],
+        "background": "#e6fff2",
+        "text": [
+          "虚拟示例代码"
+        ],
+        "size": 11,
+        "color": "#4e5652",
+        "weight": 400,
+        "align": "left",
+        "inset": 10,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          653,
+          794,
+          168,
+          26
+        ],
+        "background": "#e6fff2",
+        "text": [
+          "虚拟示例号码"
+        ],
+        "size": 11,
+        "color": "#4e5652",
+        "weight": 400,
+        "align": "left",
+        "inset": 12,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1321,
+          823,
+          136,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "1,665,427,671.44"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1460,
+          823,
+          162,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14,476,409,759.43"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1321,
+          848,
+          136,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "1,665,427,671.44"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1460,
+          848,
+          162,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14,476,409,759.43"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1321,
+          874,
+          136,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "1,665,427,671.44"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1460,
+          874,
+          162,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14,476,409,759.43"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1321,
+          899,
+          136,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "1,665,427,671.44"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1460,
+          899,
+          162,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14,476,409,759.43"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1321,
+          924,
+          136,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "1,665,427,671.44"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1460,
+          924,
+          162,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14,476,409,759.43"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1321,
+          950,
+          136,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "1,665,427,671.44"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1460,
+          950,
+          162,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14,476,409,759.43"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1321,
+          975,
+          136,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "1,665,427,671.44"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1460,
+          975,
+          162,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14,476,409,759.43"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1321,
+          1000,
+          136,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "1,665,427,671.44"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1460,
+          1000,
+          162,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14,476,409,759.43"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1321,
+          1026,
+          136,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "1,665,427,671.44"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1460,
+          1026,
+          162,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14,476,409,759.43"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1321,
+          1051,
+          136,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "1,665,427,671.44"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      },
+      {
+        "box": [
+          1460,
+          1051,
+          162,
+          21
+        ],
+        "background": "#ffffff",
+        "text": [
+          "14,476,409,759.43"
+        ],
+        "size": 11,
+        "color": "#404040",
+        "weight": 400,
+        "align": "right",
+        "inset": 13,
+        "lineHeight": 14
+      }
+    ]
+  },
+  "data-visualisation/03-transportation-dashboard": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1091,
+          177,
+          115,
+          44
+        ],
+        "background": "#3f4451",
+        "text": [
+          "8.56%"
+        ],
+        "size": 35,
+        "color": "#ff782b",
+        "weight": 500,
+        "align": "center",
+        "inset": 0,
+        "lineHeight": 42
+      },
+      {
+        "box": [
+          1255,
+          177,
+          120,
+          44
+        ],
+        "background": "#47464b",
+        "text": [
+          "34.25%"
+        ],
+        "size": 35,
+        "color": "#ff782b",
+        "weight": 500,
+        "align": "center",
+        "inset": 0,
+        "lineHeight": 42
+      },
+      {
+        "box": [
+          526,
+          236,
+          854,
+          24
+        ],
+        "background": "#202430",
+        "text": [
+          "界面演示：两项比率按同一组概览数 25÷292、25÷73 重算。"
+        ],
+        "size": 16,
+        "color": "#bec5d1",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 20
+      },
+      {
+        "box": [
+          30,
+          703,
+          442,
+          22
+        ],
+        "background": "#202430",
+        "text": [
+          "分图的单位、标注比率口径未核实，保留样式示意。"
+        ],
+        "size": 14,
+        "color": "#b5becc",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 18
+      }
+    ]
+  },
+  "data-visualisation/04-real-estate-dashboard": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          575,
+          268,
+          769,
+          23
+        ],
+        "background": "#d1dcf6",
+        "text": [
+          "顶部与分图为独立演示：期间、范围未统一，不作同口径求和。"
+        ],
+        "size": 15,
+        "color": "#5d6d87",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 19
+      },
+      {
+        "box": [
+          43,
+          568,
+          487,
+          22
+        ],
+        "background": "#dde8fa",
+        "text": [
+          "金额、占比按明细重算；环形仅为样式示意。"
+        ],
+        "size": 14,
+        "color": "#5e6d86",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 18
+      },
+      {
+        "box": [
+          367,
+          731,
+          115,
+          25
+        ],
+        "background": "#e5ecfb",
+        "text": [
+          "税金合计（万元）"
+        ],
+        "size": 12,
+        "color": "#8c9aaf",
+        "weight": 400,
+        "align": "center",
+        "inset": 0,
+        "lineHeight": 16
+      },
+      {
+        "box": [
+          373,
+          757,
+          109,
+          33
+        ],
+        "background": "#e5ecfb",
+        "text": [
+          "1,206.74"
+        ],
+        "size": 20,
+        "color": "#ff4b58",
+        "weight": 600,
+        "align": "center",
+        "inset": 0,
+        "lineHeight": 25
+      },
+      {
+        "box": [
+          457,
+          795,
+          46,
+          24
+        ],
+        "background": "#ffffff",
+        "text": [
+          "8.52%"
+        ],
+        "size": 12,
+        "color": "#242424",
+        "weight": 600,
+        "align": "center",
+        "inset": 0,
+        "lineHeight": 16
+      }
+    ]
+  },
+  "data-visualisation/02-multi-industry-dashboard": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          530,
+          115,
+          435,
+          23
+        ],
+        "background": "#bcd4f0",
+        "text": [
+          "各面板为独立界面示例（非实际经营数据）。"
+        ],
+        "size": 14,
+        "color": "#3f5a7b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 18
+      },
+      {
+        "box": [
+          1040,
+          115,
+          350,
+          23
+        ],
+        "background": "#031525",
+        "text": [
+          "期间与范围未统一，不可交叉求和。"
+        ],
+        "size": 14,
+        "color": "#a7bed2",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 18
+      },
+      {
+        "box": [
+          315,
+          524,
+          95,
+          33
+        ],
+        "background": "#d0e3f9",
+        "text": [
+          "732万元"
+        ],
+        "size": 20,
+        "color": "#0064ff",
+        "weight": 600,
+        "align": "center",
+        "inset": 0,
+        "lineHeight": 25
+      }
+    ]
+  }
+}

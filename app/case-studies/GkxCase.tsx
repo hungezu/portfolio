@@ -9,6 +9,7 @@ import { publicAsset, type Project } from "../portfolio-data";
 import { PortfolioImage } from "../portfolio-image";
 import { ProjectLocator } from "../project-locator";
 import { GkxRuleVerification } from "./GkxRuleVerification";
+import { GkxProductAiExperience, GkxSkeletonJudgment } from "./GkxExperienceDecisions";
 import { useGkxReviewCopy } from "./gkx-review-copy";
 import { GkxSupplementalMaterials } from "./GkxSupplementalMaterials";
 import { GkxStandardsApplications } from "./GkxStandardsApplications";
@@ -19,7 +20,7 @@ import { GkxEvidenceSurface } from "./GkxEvidenceSurface";
 import { GkxDesignPreview } from "./GkxDesignPreview";
 import { GkxProjectScope, type GkxProjectScopeData } from "./GkxProjectScope";
 import { useGkxReferenceNavigation } from "./use-gkx-reference-navigation";
-import { gkxThinkTankDetail } from "./gkx-image-assets";
+import { gkxReportTasks, gkxThinkTankDetail } from "./gkx-image-assets";
 import publicCopy from "./gkx-public-copy.json";
 import depth from "./gkx-depth-copy.json";
 import visualCopy from "./gkx-visual-copy.json";
@@ -551,6 +552,7 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
     <section id="gkx-systems" className="gkx-chapter" aria-labelledby="gkx-strategy-title">
       <details className="gkx-chapter-disclosure" open={reader === "full"}><summary aria-labelledby="gkx-strategy-title"><SectionHeading section={{ ...depth.sections.strategy, title: review.strategyTitle }} titleId="gkx-strategy-title" /><IconArrowDown aria-hidden="true" /></summary>
       <div className="gkx-chapter-content">
+      <GkxSkeletonJudgment />
       <div className="gkx-topic"><GkxExplainerFigure name="01-shared-structure" onOpen={openImage} /></div>
       <PortalTaskEvidence onOpen={openImage} />
       <TaskComparison onOpen={openImage} />
@@ -587,7 +589,6 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
         <article id="gkx-rule-search"><header className="gkx-content-heading"><h3>{t(searchModule.title)}</h3></header><DecisionComparison comparison={searchModule.comparison} titleId="gkx-search-comparison-title"><div className="gkx-query-comparison"><FigureDetail asset={assets.paperList} viewBox="224 123 875 52" label={t(searchModule.afterLabel ?? assets.paperList.caption)} onOpen={openImage} /><FigureDetail asset={assets.paperBefore} viewBox="224 123 875 52" label={t(searchModule.beforeLabel ?? assets.paperBefore.caption)} onOpen={openImage} /></div></DecisionComparison></article>
         <article id="gkx-rule-operations"><header className="gkx-content-heading"><h3>{t(operationsModule.title)}</h3><p>{t(operationsModule.decision)}</p></header><FigureDetail asset={assets.paperList} viewBox="232 228 1160 282" label={t("记录与右侧行操作")} onOpen={openImage} /><p className="gkx-source-note">{t("超过三项的扩展操作尚未在当前图稿中展示。")}</p></article>
       </details>
-      <article id="gkx-reading-workspace" className="gkx-topic"><header className="gkx-content-heading"><h3>{t("智能阅读工作区")}</h3><p>{t("我为持续阅读与辅助理解设计工作区：左侧目录、中间原文、右侧辅助信息，用来对照不同任务的信息组织。")}</p></header><ProjectFigure asset={assets.reading} onOpen={openImage} /></article>
       </div></details>
       </div></details>
     </section>
@@ -595,6 +596,10 @@ export function GkxCase({ project, legacyView }: GkxCaseProps) {
     <section id="nsp-prototype" className="gkx-chapter" aria-labelledby="gkx-prototype-title">
       <details className="gkx-chapter-disclosure" open={reader === "full"}><summary aria-labelledby="gkx-prototype-title"><SectionHeading section={{ ...depth.sections.ai, title: review.aiTitle }} titleId="gkx-prototype-title" /><IconArrowDown aria-hidden="true" /></summary>
       <div className="gkx-chapter-content">
+      <GkxProductAiExperience
+        readingEvidence={<ProjectFigure asset={assets.reading} onOpen={openImage} />}
+        reportEvidence={<ProjectFigure asset={gkxReportTasks} onOpen={openImage} viewBox="742 181 426 443" />}
+      />
       <AiCollaborationEvidence onOpen={openImage} />
       <PaperWorkflowExample onReferenceClick={openReference} />
       <details className="gkx-supporting-material"><summary>{t("AI 与人工协作工作流")}</summary><ProjectFigure asset={assets.aiWorkflow} onOpen={openImage} /></details>

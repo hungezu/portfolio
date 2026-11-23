@@ -226,10 +226,10 @@ export const chatKnowledge: readonly ChatKnowledgeEntry[] = [
     references: [section("联系我了解更多", "contact")],
   },
   {
-    id: "accessibility-evidence", title: "无障碍说法的证据范围",
-    content: "目前公开资料没有提供完整的 WCAG 合规验收记录。税纪云历史规范中的色彩标注是设计资料，不等于整个产品已通过无障碍验收；需要结合实际文字、背景、字号和交互状态逐项核对。",
+    id: "accessibility-evidence", title: "税纪云的文字与控件对比度",
+    content: "我在税纪云作品中修订了按钮和状态的配色用法。主操作用深蓝底白字，文字对比度为 6.29:1；告警和成功标签采用深色文字，分别为 8.05:1 和 8.08:1。案例展示修订前后对照，并区分普通文字和必要非文字控件的对比度要求。公开核对范围是展示的配色和主按钮状态，完整产品的 WCAG 验收仍需要逐页验证。",
     keywords: ["WCAG", "无障碍", "对比度", "合规", "验收"],
-    references: [project("查看税纪云原始规范", "tax-cloud"), section("联系我核对具体资料", "contact")],
+    references: [project("查看税纪云修订后的对比度规范", "tax-cloud", "tax-cloud-color-contrast"), section("联系我核对具体资料", "contact")],
   },
   {
     id: "undisclosed-profile", title: "这项个人信息尚未公开",

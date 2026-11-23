@@ -1,0 +1,613 @@
+{
+  "tax-cloud/01-user-core-path": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1699,
+          68,
+          159,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 24,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      },
+      {
+        "box": [
+          354,
+          918,
+          1476,
+          29
+        ],
+        "background": "#f0f0f0",
+        "text": [
+          "税务数据零散，收集格式或口径不统一，难以统一管理；缺少统一平台，历史税表与税务数据难以查询；门店众多，应对税务局检查时效性低。"
+        ],
+        "size": 20,
+        "color": "#2f3134",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 26
+      }
+    ]
+  },
+  "tax-cloud/02-lean-canvas": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1699,
+          68,
+          159,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 24,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      }
+    ]
+  },
+  "tax-cloud/03-global-style": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1712,
+          90,
+          148,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 22,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      },
+      {
+        "box": [
+          62,
+          174,
+          1000,
+          28
+        ],
+        "background": "#fafcff",
+        "text": [
+          "在 B 端界面中采用原子设计，将基础元素组合为组件，再构成完整页面。"
+        ],
+        "size": 16,
+        "color": "#77818e",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 22
+      },
+      {
+        "box": [
+          62,
+          210,
+          34,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "同时"
+        ],
+        "size": 16,
+        "color": "#77818e",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 22
+      }
+    ]
+  },
+  "tax-cloud/04-design-components": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1712,
+          90,
+          148,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 22,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      },
+      {
+        "box": [
+          62,
+          174,
+          1000,
+          28
+        ],
+        "background": "#fafcff",
+        "text": [
+          "在 B 端界面中采用原子设计，将基础元素组合为组件，再构成完整页面。"
+        ],
+        "size": 16,
+        "color": "#77818e",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 22
+      },
+      {
+        "box": [
+          62,
+          210,
+          34,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "同时"
+        ],
+        "size": 16,
+        "color": "#77818e",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 22
+      }
+    ]
+  },
+  "tax-cloud/05-page-showcase-archives": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1712,
+          90,
+          148,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 22,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      }
+    ]
+  },
+  "tax-cloud/06-page-showcase-rules": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1712,
+          90,
+          148,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 22,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      }
+    ]
+  },
+  "tax-cloud/07-redesign-custom-card": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1699,
+          68,
+          159,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 24,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      },
+      {
+        "box": [
+          78,
+          195,
+          430,
+          37
+        ],
+        "background": "#fafcff",
+        "text": [
+          "自定义卡片布局"
+        ],
+        "size": 24,
+        "color": "#4c4f56",
+        "weight": 600,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 31
+      }
+    ]
+  },
+  "tax-cloud/08-redesign-old-home": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1699,
+          68,
+          159,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 24,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      }
+    ]
+  },
+  "tax-cloud/09-redesign-card-scenes": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1699,
+          68,
+          159,
+          27
+        ],
+        "background": "#f6f7f8",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 24,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      }
+    ]
+  },
+  "tax-cloud/10-redesign-new-home": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1699,
+          68,
+          159,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 24,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      }
+    ]
+  },
+  "tax-cloud/11-experience-walkthrough": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1712,
+          90,
+          148,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 22,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      }
+    ]
+  },
+  "tax-cloud/12-form-page": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1712,
+          90,
+          148,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 22,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      },
+      {
+        "box": [
+          59,
+          201,
+          460,
+          61
+        ],
+        "background": "#fafcff",
+        "text": [
+          "按字段的使用频率与必要性排列，",
+          "便于用户查找常用信息。"
+        ],
+        "size": 20,
+        "color": "#393939",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 30
+      },
+      {
+        "box": [
+          624,
+          233,
+          492,
+          112
+        ],
+        "background": "#fafcff",
+        "text": [
+          "由于业务系统复杂、检索条件较多，",
+          "检索区容易占据过多页面空间。",
+          "结合客户反馈与使用体验，设置展开 / 收起",
+          "开关，保证表单在页面中的展示空间。"
+        ],
+        "size": 20,
+        "color": "#393939",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 30
+      }
+    ]
+  },
+  "tax-cloud/14-basic-info-config": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1699,
+          68,
+          159,
+          27
+        ],
+        "background": "#fafcff",
+        "text": [
+          "PORTFOLIO"
+        ],
+        "size": 24,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      },
+      {
+        "box": [
+          62,
+          692,
+          382,
+          29
+        ],
+        "background": "#fafcff",
+        "text": [
+          "用户感到烦躁的时候，缓解填写焦虑。"
+        ],
+        "size": 20,
+        "color": "#606c84",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 26
+      }
+    ]
+  },
+  "tax-cloud/13-project-background": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          98,
+          206,
+          510,
+          34
+        ],
+        "background": "#fafcff",
+        "text": [
+          "全税种自动纳税申报 SaaS 系统"
+        ],
+        "size": 24,
+        "color": "#77818e",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 31
+      },
+      {
+        "box": [
+          99,
+          801,
+          502,
+          58
+        ],
+        "background": "#fafcff",
+        "text": [
+          "业务需求转化为功能时，未充分关注用户调研，",
+          "导致功能流程与多数客户的实际操作不符。"
+        ],
+        "size": 18,
+        "color": "#77818e",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 27
+      }
+    ]
+  },
+  "tax-cloud/16-app-home": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1117,
+          274,
+          574,
+          37
+        ],
+        "background": "#fafcff",
+        "text": [
+          "通过侧边栏切换集团 / 企业视角和公司。"
+        ],
+        "size": 24,
+        "color": "#9b9b9b",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 31
+      }
+    ]
+  },
+  "tax-cloud/17-app-report-approval": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1351,
+          334,
+          100,
+          30
+        ],
+        "background": "#f7faff",
+        "text": [
+          "信息亲密度"
+        ],
+        "size": 20,
+        "color": "#000000",
+        "weight": 600,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 26
+      },
+      {
+        "box": [
+          1632,
+          374,
+          20,
+          27
+        ],
+        "background": "#e3ecfd",
+        "text": [
+          "式"
+        ],
+        "size": 20,
+        "color": "#000000",
+        "weight": 400,
+        "align": "center",
+        "inset": 0,
+        "lineHeight": 26
+      }
+    ]
+  },
+  "tax-cloud/18-app-regulations": {
+    "w": 1920,
+    "h": 1080,
+    "patches": [
+      {
+        "box": [
+          1290,
+          672,
+          550,
+          30
+        ],
+        "background": "#616264",
+        "text": [
+          "有明确目标时，通过检索查找所需文章。"
+        ],
+        "size": 20,
+        "color": "#ffffff",
+        "weight": 400,
+        "align": "left",
+        "inset": 0,
+        "lineHeight": 26
+      }
+    ]
+  }
+}

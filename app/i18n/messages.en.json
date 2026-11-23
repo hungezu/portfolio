@@ -799,7 +799,7 @@
   "分字段查询": "Field-specific queries",
   "已知准确编号，或需要分别指定多个字段进行严格限定。": "Use when the exact ID is known or separate fields need strict constraints.",
   "输入项更多，需要先判断线索对应哪个字段；查询区也占用更多页面空间。": "More inputs require choosing the correct field for each clue and take more toolbar space.",
-  "若加入编号精确检索或复杂字段组合，需另行明确入口、匹配规则及与现有条件的组合关系；当前复现未覆盖编号检索。": "Exact ID search or complex field combinations require defined entry points, matching rules, and condition combinations. ID lookup is not covered by this reconstruction.",
+  "原布局复现支持编号精确匹配；统一布局核对标题与关键词。若统一布局新增编号检索，还需定义入口和条件组合。": "The original layout reconstruction supports exact ID matching. The unified layout checks titles and keywords. Adding ID lookup to the unified layout requires defined entry points and filter combinations.",
   "固定行操作顺序，收纳扩展项": "Keep row actions ordered; group additional actions",
   "列表需要兼顾单条记录操作与批量处理，操作入口过多会增加扫描负担。": "Lists must support single-record actions and batch work. Too many visible actions increase scanning effort.",
   "常用行操作按“详情、编辑、删除”排列；超过 3 项时，从第 4 项起进入更多操作。": "Order common actions as Details, Edit, Delete. Place the fourth and later actions in More.",
@@ -2640,7 +2640,8 @@
   "2021.07 - 2024.05": "Jul 2021 – May 2024",
   "2020.07 - 2021.07": "Jul 2020 – Jul 2021",
   "无障碍说法的证据范围": "Evidence behind accessibility claims",
-  "查看税纪云原始规范": "View the original Tax Cloud standards",
+  "查看税纪云修订后的对比度规范": "View the revised Tax Cloud contrast guidance",
+  "税纪云的文字与控件对比度": "Text and control contrast in Tax Cloud",
   "联系我核对具体资料": "Contact me to check specific materials",
   "招财 Smart · 口径澄清": "Zhaocai Smart · Metric clarification",
   "招财 Smart · 任务控制": "Zhaocai Smart · Task control",
@@ -2648,5 +2649,5 @@
   "建议先看 **招财 Smart**。这个案例从一句有歧义的财务提问出发，说明为什么保留已识别的条件、只确认会改变结果的口径，以及如何呈现执行反馈和可核对的回答。\n\n可以先看**口径澄清**，再看**任务控制与异常恢复**，最后看**回答规范**。如果想了解多系统体验与 AI 辅助设计，可以接着看 GKX；跨端财税流程则可以看税纪云。": "Start with **Zhaocai Smart**. An ambiguous financial question shows why I retain recognized conditions, confirm only the definition that changes the result, and design progress feedback and answers readers can check.\n\nRead **metric clarification**, then **task control and exception recovery**, followed by **answer guidelines**. Continue with GKX for multi-system design and AI-assisted work, or Tax Cloud for cross-platform tax workflows.",
   "我有 **7年+ UX/UI 设计经验**；这里公开展示的是 **2020 年起的任职经历**。\n\n- **2025.07 至今**：上海荣宇（外派至智谱 AI），UED & UI 设计师。\n- **2024.05—2025.02**：答税科技，UI & UX 设计师。\n- **2021.07—2024.05**：华盟财税科技，UI & UX 设计师。\n- **2020.07—2021.07**：深圳喆云科技，UI 设计师。\n\n经历覆盖 AI 产品、企业财税系统与多端界面设计。": "I have **7+ years of UX/UI design experience**. The publicly listed employment history here starts in **2020**.\n\n- **Jul 2025 – Present**: Shanghai Rongyu, assigned to Zhipu AI; UED & UI Designer.\n- **May 2024 – Feb 2025**: Dashui Technology; UI & UX Designer.\n- **Jul 2021 – May 2024**: Huameng Finance and Tax Technology; UI & UX Designer.\n- **Jul 2020 – Jul 2021**: Shenzhen Zheyun Technology; UI Designer.\n\nMy work spans AI products, enterprise tax systems, and interfaces across platforms.",
   "我独立负责国家能源集团报税平台从 0 到 1 的 UI 设计，覆盖首页、纳税申报与综合管理工作台，并建立栅格、组件和缺省状态规范。设计重点是将业务内容组织为明确的工作台和共用规则。公开页面保留原始设计稿，图中的演示数据不作为线上经营结果或设计效果。": "I independently designed the CHN Energy tax platform UI from the ground up, covering the home page, tax filing, and management workspace, with grids, components, and empty-state standards. The focus is clear workspaces and shared rules for business tasks. The public case retains original design artwork; its sample data does not establish live business results or design impact.",
-  "目前公开资料没有提供完整的 WCAG 合规验收记录。税纪云历史规范中的色彩标注是设计资料，不等于整个产品已通过无障碍验收；需要结合实际文字、背景、字号和交互状态逐项核对。": "The public materials do not provide a complete WCAG conformance evaluation. Color annotations in the historical Tax Cloud standards are design documentation, not proof that the entire product passed an accessibility evaluation. Actual text, backgrounds, font sizes, and interaction states require individual checks."
+  "我在税纪云作品中修订了按钮和状态的配色用法。主操作用深蓝底白字，文字对比度为 6.29:1；告警和成功标签采用深色文字，分别为 8.05:1 和 8.08:1。案例展示修订前后对照，并区分普通文字和必要非文字控件的对比度要求。公开核对范围是展示的配色和主按钮状态，完整产品的 WCAG 验收仍需要逐页验证。": "I revised the color pairings for buttons and statuses in the Tax Cloud case. The primary action uses white on deep blue at 6.29:1. Warning and success labels use dark text at 8.05:1 and 8.08:1. The case compares the pairs before and after revision and distinguishes text and essential non-text contrast. The published checks cover the shown pairs and primary button states. An assessment of the complete product requires page-by-page verification."
 }
