@@ -1,0 +1,28 @@
+{
+  "tax-cloud/12-form-page": [
+    { "id": "search-order", "title": "检索字段排序", "english": "Search field priority", "box": [40, 180, 480, 355] },
+    { "id": "filter-states", "title": "筛选条件状态", "english": "Filter states", "box": [605, 180, 505, 340] },
+    { "id": "columns", "title": "自定义表头", "english": "Custom table columns", "box": [1235, 180, 510, 350] },
+    { "id": "table", "title": "表单界面全貌", "english": "Complete form preview", "box": [60, 575, 1800, 505] }
+  ],
+  "tax-cloud/16-app-home": [
+    { "id": "app-home", "title": "移动端首页", "english": "Mobile homepage", "box": [550, 145, 425, 890] },
+    { "id": "organisation", "title": "集团与企业切换", "english": "Group and company switching", "box": [1085, 175, 640, 180] },
+    { "id": "approvals", "title": "重点审批入口", "english": "Approval shortcuts", "box": [1065, 490, 740, 365] },
+    { "id": "priority", "title": "功能优先级", "english": "Feature priorities", "box": [65, 250, 430, 745] }
+  ],
+  "tax-cloud/17-app-report-approval": [
+    { "id": "list", "title": "审批列表", "english": "Approval list", "box": [145, 250, 485, 830] },
+    { "id": "actions", "title": "任务状态与操作", "english": "Task status and actions", "box": [670, 0, 480, 910] },
+    { "id": "structure", "title": "信息组织说明", "english": "Information structure", "box": [1325, 320, 560, 440] }
+  ],
+  "energy-tax/04-tax-workbench": [
+    { "id": "progress", "title": "任务进度", "english": "Task progress", "box": [140, 2674, 1610, 414] },
+    { "id": "filters-and-actions", "title": "筛选与任务列表", "english": "Filters and task list", "box": [1100, 3220, 1640, 860] }
+  ],
+  "data-visualisation/03-transportation-dashboard": [
+    { "id": "overview", "title": "原稿指标与地图", "english": "Original figures and map", "box": [512, 82, 892, 814] },
+    { "id": "charts-left", "title": "集团与业务线税金", "english": "Tax by group and business line", "box": [16, 82, 484, 636] },
+    { "id": "charts-right", "title": "业态趋势与行业税负", "english": "Business trends and industry tax burden", "box": [1424, 82, 480, 620] }
+  ]
+}

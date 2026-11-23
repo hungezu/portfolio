@@ -103,8 +103,9 @@
   padding: 12px 20px;
   border-bottom: 1px solid #45484b;
 }
-.legacy-viewer-panel h2 { margin: 0; font-size: 18px; font-weight: 500; }
-.legacy-viewer-panel header > div { display: flex; gap: 8px; margin-inline-start: auto; }
+.legacy-viewer-panel h2 { flex: 1; min-width: 12ch; margin: 0; font-size: 18px; font-weight: 500; }
+.legacy-viewer-modes { display: flex; justify-content: flex-start; gap: 6px; }
+.legacy-viewer-close { order: 2; }
 .legacy-viewer button {
   min-height: 44px;
   padding: 8px 14px;
@@ -115,6 +116,7 @@
   font: inherit;
   cursor: pointer;
 }
+.legacy-viewer-modes button[aria-pressed="true"] { color: #222; background: #fff; }
 .legacy-viewer :is(button, [tabindex]):focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
 .legacy-viewer-canvas {
   overflow: auto;
@@ -122,7 +124,35 @@
   padding: 20px;
 }
 .legacy-viewer-canvas > img { display: block; width: 100%; height: auto; margin: 0 auto; }
-.legacy-viewer-canvas.is-original > img { width: auto; max-width: none; margin: 0; }
+.legacy-viewer-canvas.is-read > img,
+.legacy-viewer-canvas.is-original > img { max-width: none; margin: 0; }
+.legacy-viewer-canvas.is-original > img { width: auto; }
+.legacy-viewer-canvas.is-regions { background: #eef0f3; }
+.legacy-board-regions { display: grid; gap: 16px; width: min(100%, 980px); margin: 0 auto; }
+.legacy-board-region {
+  min-width: 0;
+  margin: 0;
+  padding: clamp(12px, 2vw, 24px);
+  border: 1px solid #dce0e6;
+  border-radius: 12px;
+  background: #fff;
+  color: #26272a;
+}
+.legacy-board-region figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin-bottom: 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.legacy-board-region small { display: none; color: #626771; font-size: 12px; font-weight: 400; }
+.legacy-board-region img { display: block; width: 100%; height: auto; margin-inline: auto; }
+.legacy-board-region-scroll { overflow-x: auto; }
+.legacy-board-region-scroll:focus-visible { outline: 2px solid #282828; outline-offset: -3px; }
+.legacy-board-region-scroll img { min-width: min(620px, 92vw); margin-inline: 0; }
 
 @media (min-width: 1500px) {
   .case-page .legacy-case { width: min(1200px, calc(100% - 308px)); }
@@ -133,4 +163,10 @@
   .legacy-board { scroll-margin-top: 80px; }
   .legacy-viewer { width: calc(100vw - 16px); height: calc(100dvh - 16px); }
   .legacy-viewer-panel > header, .legacy-viewer-canvas { padding: 12px; }
+  .legacy-viewer-close { order: 0; }
+  .legacy-viewer-modes { width: 100%; }
+  .legacy-viewer-modes button { flex: 1; padding: 8px 6px; line-height: 1.25; font-size: 13px; }
+  .legacy-viewer-canvas.is-regions { padding: 10px; }
+  .legacy-board-region small { display: inline; }
+  .legacy-board-region-scroll img { min-width: 960px; }
 }

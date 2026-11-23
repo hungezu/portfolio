@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useI18n } from "../i18n";
 import { optimizedImage, PortfolioImage } from "../portfolio-image";
-import type { Project } from "../portfolio-data";
+import { publicAsset, type Project } from "../portfolio-data";
 import { ProjectLocator, type ProjectLocatorSection } from "../project-locator";
+import boardLayouts from "./legacy-board-layouts.json";
 import "./legacy-project-case.css";
 
 const previousAnchors: Record<string, Readonly<Record<string, string>>> = {
@@ -27,15 +28,21 @@ const previousAnchors: Record<string, Readonly<Record<string, string>>> = {
   },
 };
 
-type GalleryBoard = { src: string; title: string; alt: string };
+type BoardRegion = { id: string; title: string; english: string; box: number[] };
+type GalleryBoard = { src: string; title: string; alt: string; key: string; regions?: BoardRegion[] };
+type ViewMode = "fit" | "read" | "regions" | "original";
+
+const layouts: Partial<Record<string, BoardRegion[]>> = boardLayouts;
 
 export function LegacyProjectCase({ project }: { project: Project }) {
   const { locale, t } = useI18n();
   const english = locale === "en";
   const [viewer, setViewer] = useState<GalleryBoard | null>(null);
-  const [original, setOriginal] = useState(false);
+  const [mode, setMode] = useState<ViewMode>("fit");
   const trigger = useRef<HTMLButtonElement | null>(null);
   const dialog = useRef<HTMLDialogElement>(null);
+  const canvas = useRef<HTMLDivElement>(null);
+  const readingProgress = useRef<number | null>(null);
   const dialogTitle = useId();
   const sections = useMemo<ProjectLocatorSection[]>(() => {
     const chapters = project.gallerySections ?? project.gallery.map((_, index) => ({
@@ -49,7 +56,8 @@ export function LegacyProjectCase({ project }: { project: Project }) {
   }, [project]);
   const boards = project.gallery.map((src, index) => {
     const title = project.galleryLabels?.[index] ?? project.shortTitle;
-    return { src, title, alt: project.galleryAlt?.[index] ?? title };
+    const key = src.split("/assets/projects/").at(-1)?.replace(/\.png$/i, "") ?? "";
+    return { src, title, alt: project.galleryAlt?.[index] ?? title, key, regions: layouts[key] };
   });
 
   useEffect(() => {
@@ -65,11 +73,35 @@ export function LegacyProjectCase({ project }: { project: Project }) {
     };
   }, [viewer]);
 
-  const open = (board: GalleryBoard, button: HTMLButtonElement) => {
+  useLayoutEffect(() => {
+    const panel = canvas.current;
+    if (!panel || readingProgress.current === null) return;
+    panel.scrollTop = (panel.scrollHeight - panel.clientHeight) * readingProgress.current;
+    if (mode === "fit" || mode === "regions") panel.scrollLeft = 0;
+    readingProgress.current = null;
+  }, [mode]);
+
+  const changeMode = (next: ViewMode) => {
+    if (mode === next) return;
+    const panel = canvas.current;
+    if (next === "regions" || mode === "regions") readingProgress.current = 0;
+    else if (panel) readingProgress.current = panel.scrollTop / Math.max(1, panel.scrollHeight - panel.clientHeight);
+    setMode(next);
+  };
+
+  const open = (board: GalleryBoard, button: HTMLButtonElement, initial?: ViewMode) => {
     trigger.current = button;
-    setOriginal(false);
+    readingProgress.current = null;
+    const phone = window.matchMedia("(max-width: 767px)").matches;
+    setMode(initial ?? (phone ? (board.regions ? "regions" : "read") : "fit"));
     setViewer(board);
   };
+  const fitWidth = viewer ? optimizedImage(viewer.src)?.width : undefined;
+  const modes: Array<[ViewMode, string, string]> = [
+    ["fit", "整图适宽", "Fit width"],
+    viewer?.regions ? ["regions", "分区阅读", "By section"] : ["read", "放大阅读", "Read larger"],
+    ["original", "原始尺寸", "Original size"],
+  ];
 
   return <article className="legacy-case" aria-label={english ? "Complete design boards" : "完整设计展板"}>
     <ProjectLocator sections={sections} legacyAnchors={previousAnchors[project.slug]} ariaLabel="项目章节定位" />
@@ -96,8 +128,8 @@ export function LegacyProjectCase({ project }: { project: Project }) {
         </div>
         <figcaption>
           <span>{t(board.title)}</span>
-          <button type="button" onClick={event => open(board, event.currentTarget)}>
-            {english ? "Enlarge" : "放大查看"}
+          <button type="button" onClick={event => open(board, event.currentTarget, board.regions ? "regions" : undefined)}>
+            {board.regions ? (english ? "Read by section" : "分区阅读") : (english ? "Enlarge" : "放大查看")}
           </button>
         </figcaption>
       </figure>)}
@@ -112,18 +144,48 @@ export function LegacyProjectCase({ project }: { project: Project }) {
       <div className="legacy-viewer-panel">
         <header>
           <h2 id={dialogTitle}>{t(viewer.title)}</h2>
-          <div>
-            <button type="button" aria-pressed={original} onClick={() => setOriginal(value => !value)}>
-              {original ? (english ? "Fit width" : "适合宽度") : (english ? "Original size" : "原始尺寸")}
-            </button>
-            <button type="button" autoFocus onClick={() => setViewer(null)}>{t("关闭")}</button>
+          <button className="legacy-viewer-close" type="button" autoFocus onClick={() => setViewer(null)}>{t("关闭")}</button>
+          <div className="legacy-viewer-modes" role="group" aria-label={english ? "Image reading mode" : "图片阅读方式"}>
+            {modes.map(([key, title, label]) => <button
+              type="button" key={key} aria-pressed={mode === key} onClick={() => changeMode(key)}
+            >{english ? label : title}</button>)}
           </div>
         </header>
-        <div className={"legacy-viewer-canvas" + (original ? " is-original" : "")} tabIndex={0}>
-          <PortfolioImage src={viewer.src} alt={viewer.alt} original={original} loading="eager"
-            sizes="(max-width: 767px) calc(100vw - 48px), 1460px"
-            style={original ? undefined : { maxWidth: optimizedImage(viewer.src)?.width }}
-          />
+        <div className={`legacy-viewer-canvas is-${mode}`} ref={canvas} tabIndex={0}>
+          {mode === "regions" ? <div className="legacy-board-regions">
+            {viewer.regions?.map(region => {
+              const label = english ? region.english : region.title;
+              const [, , width, height] = region.box;
+              const scrollable = width >= 800 && width / height >= 1.8;
+              return <figure className="legacy-board-region" key={region.id}>
+                <figcaption>
+                  <span>{label}</span>
+                  {scrollable && <small>{english ? "Scroll sideways" : "可左右滑动"}</small>}
+                </figcaption>
+                <div className={scrollable ? "legacy-board-region-scroll" : undefined}
+                  tabIndex={scrollable ? 0 : undefined} aria-label={scrollable ? label : undefined}
+                  role={scrollable ? "region" : undefined}>
+                  <PortfolioImage
+                    original
+                    src={publicAsset(`/assets/projects/legacy-board-details/${viewer.key}/${region.id}.webp`)}
+                    alt={label}
+                    width={width}
+                    height={height}
+                    style={{ maxWidth: width }}
+                  />
+                </div>
+              </figure>;
+            })}
+          </div> : <PortfolioImage
+            src={viewer.src}
+            alt={viewer.alt}
+            original={mode === "original"}
+            loading="eager"
+            sizes={mode === "read" ? "(max-width: 767px) calc(250vw - 120px), 1920px"
+              : "(max-width: 767px) calc(100vw - 40px), 1460px"}
+            style={mode === "read" && fitWidth ? { width: `min(250%, ${fitWidth}px)` }
+              : mode === "fit" ? { maxWidth: fitWidth } : undefined}
+          />}
         </div>
       </div>
     </dialog>}

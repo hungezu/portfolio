@@ -40,7 +40,7 @@ await cp(
   resolve(publicDirectory, "assets", "projects", "zhaocai-smart"),
   { recursive: true },
 );
-for (const slug of ["tax-cloud", "energy-tax", "data-visualisation"]) {
+for (const slug of ["tax-cloud", "energy-tax", "data-visualisation", "legacy-board-details"]) {
   await cp(
     resolve(root, "assets", "projects", slug),
     resolve(publicDirectory, "assets", "projects", slug),
